@@ -510,3 +510,12 @@ button{cursor:pointer}
 .section-head h2{max-width:760px}
 .footer-grid{gap:32px}
 @media(max-width:980px){.hero-actions .btn{width:auto}.footer-grid{grid-template-columns:1fr}}
+
+/* v1.54.5 Premium Public Experience Pass */
+.lead{font-size:clamp(19px,2vw,24px);line-height:1.55}
+.section-head>p{font-size:18px;line-height:1.65}
+.hero-card h3{font-size:30px;line-height:1.15}
+.js-ai-input,.big-input{min-height:180px;width:100%;font-size:18px;line-height:1.5;padding:18px}
+.smartteacher-actions{margin-top:18px}
+.nav-cta{background:var(--teal);color:#fff!important}
+@media(max-width:700px){.lead{font-size:18px}.section-head>p{font-size:16px}}
