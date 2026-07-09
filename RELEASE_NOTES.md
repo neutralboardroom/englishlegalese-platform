@@ -1,3 +1,36 @@
+# EnglishLegalese Platform v1.54.2 — Navigation + Custom-Domain Readiness Hardening
+
+This is a narrow launch-safety patch on top of v1.54.1. It does not broaden the feature set or change production data behavior.
+
+## Changed
+- Added legacy anchor compatibility in `app.js` so older v1.29–v1.54 hash links from the header, footer, mobile sticky bar, bookmarks, or prior public beta links map to the stabilized v1.54.1 public frontend sections.
+- Simplified public top/mobile navigation targets to stable canonical sections: launch, start, language bridge, skills, courses, SmartTeacher AI, teachers, employers, trust, and dashboards.
+- Updated the package version to `1.54.2` and added `scripts/verify-v1542-navigation-domain-hardening.js`.
+- Added a v1.54.2 health-feature note and documentation warning that Hover forwarding should not be removed until Render shows the exact DNS records.
+
+## Preserved
+- All existing backend routes and API versions remain in place.
+- No migrations were added.
+- No production data structures were removed or reset.
+- No live credentials or secrets were added.
+- The v1.54.0 prototype remains preserved as `app-legacy-v1.54.0.js`.
+- SmartTeacher AI remains ChatGPT/OpenAI-only.
+- Translation Bridge remains a learning bridge back to Legal English.
+- Global-access classroom fallback and Google-optional scheduling remain intact.
+
+## Verification
+Run:
+
+```bash
+npm run check
+```
+
+Or run only the v1.54.2 verifier:
+
+```bash
+node scripts/verify-v1542-navigation-domain-hardening.js
+```
+
 # EnglishLegalese Platform v1.54.1 — Render Bootstrap Fix
 
 v1.54.1 production-facing frontend stabilization keeps the original additive v1.54.0 front-end preserved as app-legacy-v1.54.0.js, while app.js now renders a stable public beta homepage, role dashboards, language bridge, course set, SmartTeacher demo, launch gates, and trust boundaries on Render.

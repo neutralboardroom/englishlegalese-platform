@@ -1,11 +1,12 @@
-/* EnglishLegalese v1.54.1 — Public launch frontend stabilization.
-   The original additive v1.54.0 prototype is preserved in app-legacy-v1.54.0.js.
-   This production-facing bootstrap renders a stable public beta UX while backend routes remain intact. */
+/* EnglishLegalese v1.54.2 — Navigation + custom-domain readiness hardening.
+   The original additive v1.54.0 prototype remains preserved in app-legacy-v1.54.0.js.
+   This production-facing bootstrap keeps v1.54.1 stable and restores legacy anchor compatibility
+   so header/footer/mobile links from earlier builds keep routing to the correct launch-safe sections. */
 (() => {
   const $ = (sel, root=document) => root.querySelector(sel);
   const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
   const app = $('#app');
-  const version = 'v1.54.1 Public Launch Readiness Sprint';
+  const version = 'v1.54.2 Navigation + Domain Readiness Hardening';
   const preferredLanguageKey = 'elPreferredExplanationLanguage';
   const languages = ['English','Spanish','Chinese','Arabic','French','Portuguese','Russian','Turkish','Hindi','Urdu','Korean','Japanese','Vietnamese','Indonesian','German','Italian','Polish','Ukrainian','Persian / Farsi','Bengali','Thai','Italian','Dutch','Greek','Hebrew','Swedish','Norwegian','Danish','Finnish','Romanian','Czech','Hungarian','Malay','Tagalog','Swahili'];
   const topLanguages = ['Spanish','Chinese','Arabic','French','Portuguese','Russian','Turkish','Hindi','Urdu','Korean','Japanese','Vietnamese','Indonesian','German','Italian','Polish','Ukrainian','Persian / Farsi','Bengali','Thai'];
@@ -22,6 +23,57 @@
     ['Employer Team Training','Teams','Privacy-safe reporting, attendance, completion, skill readiness, and next-training recommendations.']
   ];
   const launchGates = ['PostgreSQL DATABASE_URL and migrations','Owner/admin account and role access','Stripe checkout, prices, and webhooks','OpenAI server-side key and usage controls','SMTP email notifications','Object storage for uploads/reports/certificates','Manual classroom link fallback plus optional video/calendar vendors','Legal/trust pages reviewed','Device/browser QA','Backup and restore test'];
+
+  const legacyAnchorMap = {
+    'v154-public-launch-readiness': 'launch',
+    'v153-role-clarity-continuity': 'start',
+    'v150-language-learning-bridge': 'language-bridge',
+    'v146-live-skills-feedback': 'skills',
+    'v143-course-placement': 'courses',
+    'v131-teacher-classroom-tools': 'teachers',
+    'v129-employer-roi-math': 'employers',
+    'v141-major-language-bridge': 'language-bridge',
+    'trust-center': 'trust',
+    'v149-intuitive-ux-continuity': 'start',
+    'v148-usability-continuity': 'start',
+    'v147-simplicity-command': 'start',
+    'v145-integrated-skills-studio': 'skills',
+    'v144-four-skills-academy': 'skills',
+    'v142-continuity-command': 'launch',
+    'v140-workflow-proof-layer': 'launch',
+    'v139-seamless-learning-operations': 'start',
+    'v139-universal-language-bridge': 'language-bridge',
+    'v139-teacher-live-cockpit': 'teachers',
+    'v139-data-preservation': 'launch',
+    'v138-ai-era-action-layer': 'start',
+    'v138-student-proof-loop': 'student-dashboard',
+    'v137-guided-help-navigator': 'start',
+    'v137-one-tap-help': 'start',
+    'v136-native-language-support': 'language-bridge',
+    'v136-smartteacher-language-modes': 'smartteacher',
+    'v134-calendar-interop': 'launch',
+    'v133-global-access': 'language-bridge',
+    'v133-provider-routing': 'language-bridge',
+    'v132-chatgpt-only-policy': 'smartteacher',
+    'v130-smartteacher-brand': 'smartteacher',
+    'v129-benchmark-integration': 'courses',
+    'v129-buyer-faq': 'trust',
+    'v129-course-catalog': 'courses',
+    'v134-calendar-provider-board': 'launch',
+    'student-intake': 'student-dashboard',
+    'firm-intake': 'employer-dashboard',
+    'teacher-apply': 'teacher-dashboard',
+    'ai-translation-safety': 'smartteacher',
+    'scheduling': 'launch',
+    'resources': 'trust',
+    'global-access-classrooms': 'language-bridge',
+    'calendar-reminders': 'launch',
+    'skills-studio': 'skills',
+    'speaking-listening-reading-writing': 'skills',
+    'reading-lab': 'courses',
+    'writing-workshop': 'courses',
+    '100-language-learning-bridge': 'language-bridge'
+  };
 
   function escapeHtml(value=''){
     return String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -87,13 +139,14 @@
   function home(){ pageShell(`${hero()}${startSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${smartTeacher()}${teachersEmployers()}${launchReady()}${trust()}`); }
   function route(){
     const hash = (window.location.hash || '#home').replace('#','');
-    if(hash === 'student-dashboard') return pageShell(dashboardPanel('student'));
-    if(hash === 'teacher-dashboard') return pageShell(dashboardPanel('teacher'));
-    if(hash === 'employer-dashboard') return pageShell(dashboardPanel('employer'));
-    if(hash === 'admin-dashboard' || hash === 'dashboards') return pageShell(`${dashboardPanel('admin')}${dashboardPanel('student')}${dashboardPanel('teacher')}${dashboardPanel('employer')}`);
-    if(hash === 'classrooms') return pageShell(`${skillsStudio()}${dashboardPanel('teacher')}`);
+    const canonicalHash = legacyAnchorMap[hash] || hash;
+    if(canonicalHash === 'student-dashboard') return pageShell(dashboardPanel('student'));
+    if(canonicalHash === 'teacher-dashboard') return pageShell(dashboardPanel('teacher'));
+    if(canonicalHash === 'employer-dashboard') return pageShell(dashboardPanel('employer'));
+    if(canonicalHash === 'admin-dashboard' || canonicalHash === 'dashboards') return pageShell(`${dashboardPanel('admin')}${dashboardPanel('student')}${dashboardPanel('teacher')}${dashboardPanel('employer')}`);
+    if(canonicalHash === 'classrooms') return pageShell(`${skillsStudio()}${dashboardPanel('teacher')}`);
     home();
-    const target = document.getElementById(hash);
+    const target = document.getElementById(canonicalHash) || document.getElementById(hash);
     if(target) setTimeout(() => target.scrollIntoView({behavior:'smooth', block:'start'}), 0);
   }
   function bindActions(){

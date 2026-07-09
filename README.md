@@ -1,3 +1,24 @@
+# EnglishLegalese Platform v1.54.2 — Navigation + Custom-Domain Readiness Hardening
+
+v1.54.2 is a narrow launch-safety patch on top of v1.54.1. It preserves the v1.54.1 Render Bootstrap / Public Frontend Stabilization and the original additive v1.54.0 prototype in `app-legacy-v1.54.0.js`, while hardening public navigation and custom-domain readiness before broader production activation.
+
+What changed:
+- Restored compatibility for legacy header/footer/mobile anchor links from the pre-stabilization frontend so older links route to the correct stable public-beta sections instead of appearing to do nothing.
+- Simplified top/mobile navigation to stable section anchors while preserving legacy hash support in `app.js`.
+- Added a v1.54.2 verifier that checks syntax, legacy anchor coverage, canonical launch sections, route-preservation markers, and domain-safety documentation.
+- Updated package metadata and release notes.
+
+What did not change:
+- No backend routes were removed.
+- No database migrations were added.
+- No data reset, seed, drop, destructive migration, or production credential changes were added.
+- No live secrets were added.
+- SmartTeacher AI remains ChatGPT/OpenAI-only.
+- Translation Bridge remains a learning bridge, not certified translation, court interpretation, legal advice, or final legal meaning.
+- Google/Meet remain optional; EnglishLegalese internal scheduling and manual/regional links remain the global fallback.
+
+Deployment note: the current immediate deployment flow remains custom-domain connection through Render and Hover. Do not remove Hover forwarding until Render has provided the exact DNS records for `englishlegalese.com` and `www.englishlegalese.com`.
+
 # EnglishLegalese Platform v1.54.1 — Render Bootstrap Fix
 
 v1.54.1 production-facing frontend stabilization keeps the original additive v1.54.0 front-end preserved as app-legacy-v1.54.0.js, while app.js now renders a stable public beta homepage, role dashboards, language bridge, course set, SmartTeacher demo, launch gates, and trust boundaries on Render.

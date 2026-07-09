@@ -4,7 +4,7 @@ const pkg = require('./package.json');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const VERSION = `${pkg.version}-public-launch-readiness-sprint`;
+const VERSION = `${pkg.version}-navigation-domain-hardening`;
 const { PersistentStore, REQUIRED_TABLES } = require('./src/persistence');
 const { ProductionServices, authMiddleware, requireRoles, configured, ROLE_PERMISSIONS } = require('./src/productionServices');
 const persistentStore = new PersistentStore();
@@ -18,6 +18,7 @@ app.get('/health', (req, res) => {
     app: 'EnglishLegalese.com',
     version: VERSION,
     features: [
+      'v1.54.2 hardens public launch navigation and domain-readiness handoff: legacy header/footer/mobile anchors from earlier builds are mapped to the stable v1.54.1 Render frontend sections, custom-domain setup notes remain non-destructive, and no backend routes, migrations, credentials, or data structures are removed.',
       'v1.54 adds a Public Launch Readiness Sprint: production configuration gates, public beta mode, first-course lesson templates, teacher onboarding, diagnostic-to-course flow, end-to-end launch test planning, and no-data-loss launch safeguards so real API keys, Stripe, video/calendar vendors, SMTP, object storage, OpenAI, and production PostgreSQL can be connected safely after the code is deployed.',
       'v1.53 adds a Role Clarity + Data Continuity Pass: every role sees one plain next step, what is saved, what stays private, who can help, and what must be protected before deployment while keeping EnglishLegalese positioned as Legal English training for the AI era and preserving the current logo, user work, calendars, payments, reports, certificates, test scores, notes, uploads, audit logs, and payouts',
       'v1.52 adds a Three-Layer Language Access Strategy: core UI help for major navigation and instructions, on-demand page explanations in 100+ major languages, and a human-reviewed top-market page plan for Spanish, Chinese, Arabic, French, Portuguese, Russian, Turkish, Hindi, Urdu, Korean, Japanese, Vietnamese, Indonesian, German, Italian, Polish, Ukrainian, Persian/Farsi, Bengali, and Thai — while clearly avoiding a promise that every page is perfectly translated and preserving all work, calendars, payments, reports, certificates, scores, notes, uploads, audits, and payouts',
