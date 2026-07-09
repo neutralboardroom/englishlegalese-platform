@@ -1,3 +1,7 @@
+# EnglishLegalese Platform v1.54.1 — Render Bootstrap Fix
+
+v1.54.1 production-facing frontend stabilization keeps the original additive v1.54.0 front-end preserved as app-legacy-v1.54.0.js, while app.js now renders a stable public beta homepage, role dashboards, language bridge, course set, SmartTeacher demo, launch gates, and trust boundaries on Render.
+
 # EnglishLegalese Platform v1.54.0 — Public Launch Readiness Sprint
 
 This version shifts from broad feature expansion to public-launch readiness. It adds a launch command center, production gate checks, controlled public beta rules, first-course lesson templates, teacher onboarding, diagnostic-to-course routing, end-to-end launch test planning, and no-data-loss launch safeguards.

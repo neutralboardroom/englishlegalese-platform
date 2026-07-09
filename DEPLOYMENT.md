@@ -1,3 +1,7 @@
+# EnglishLegalese Platform v1.54.1 — Render Bootstrap Fix
+
+v1.54.1 production-facing frontend stabilization keeps the original additive v1.54.0 front-end preserved as app-legacy-v1.54.0.js, while app.js now renders a stable public beta homepage, role dashboards, language bridge, course set, SmartTeacher demo, launch gates, and trust boundaries on Render.
+
 # v1.54.0 Deployment Note — Public Launch Readiness Sprint
 
 Deploy v1.54.0 as a normal code-only update over v1.53.0. Do not run destructive database commands. Do not wipe local, PostgreSQL, object-storage, payment, calendar, report, certificate, test-score, teacher-note, employer, upload, audit, or payout records.

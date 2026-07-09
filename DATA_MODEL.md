@@ -1,3 +1,7 @@
+# EnglishLegalese Platform v1.54.1 — Render Bootstrap Fix
+
+v1.54.1 production-facing frontend stabilization keeps the original additive v1.54.0 front-end preserved as app-legacy-v1.54.0.js, while app.js now renders a stable public beta homepage, role dashboards, language bridge, course set, SmartTeacher demo, launch gates, and trust boundaries on Render.
+
 # v1.54.0 Data Model Note — Public Launch Readiness Sprint
 
 v1.54 uses existing persistence patterns instead of creating destructive schema changes. Launch gate checks, teacher onboarding plans, beta readiness items, and preservation reviews are stored through existing staff task, saved work, homework/template, employer snapshot, deployment, launch event, and audit-log patterns.
