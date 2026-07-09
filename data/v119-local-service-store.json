@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "created_at": "2026-07-08T00:00:00.000Z",
+    "warning": "Development-only service store. Production uses PostgreSQL, object storage, Stripe, email, Google/Zoom and OpenAI credentials."
+  },
+  "users": [],
+  "password_credentials": [],
+  "user_sessions": [],
+  "payment_transactions": [],
+  "webhook_events": [],
+  "file_objects": [],
+  "email_notifications": [],
+  "ai_interactions": [],
+  "integration_events": [],
+  "progress_reports": []
+}
