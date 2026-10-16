@@ -42,7 +42,7 @@ check('adopt/adapt/reject-only-with-cause exists', register.includes('Adopt / ad
 check('transfer ledger documents no sister-project mutation', transfer.includes('No sister project was mutated'));
 check('research ledger distinguishes formal assessment from practice', research.includes('Formal certification is **not** claimed') && research.includes('will not invent accredited/proficiency scores'));
 check('research ledger includes Legal-English specialists and AI/corporate platforms', ['TOLES','TransLegal','ELSA Speak','EF Corporate Learning','Preply Business'].every(x => research.includes(x)));
-check('candidate state is not falsely called deployed', state.current_release_state === 'CANDIDATE_NOT_YET_ACCEPTED_OR_MERGED' && state.deployment_state === 'NOT_DEPLOYED_BY_THIS_RELEASE_WORK');
+check('mutable acceptance/deployment state is evidence-derived, not hand-copied', state.source_acceptance_state === 'DERIVE_FROM_GIT_MAIN_AND_RELEASE_PR_EVIDENCE' && String(state.deployment_state).startsWith('DERIVE_FROM_EXACT_DEPLOYMENT_EVIDENCE'));
 
 let gitChecked = false;
 try {
