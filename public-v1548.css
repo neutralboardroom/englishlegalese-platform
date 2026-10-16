@@ -1,0 +1,117 @@
+/* EnglishLegalese.com v1.54.8 — public UX hardening layer.
+   Additive only: preserves the v1.54.6 design system and backend behavior. */
+
+:root {
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-padding-top: 96px;
+}
+
+[id] {
+  scroll-margin-top: 96px;
+}
+
+:focus-visible {
+  outline: 3px solid #C9972B;
+  outline-offset: 3px;
+}
+
+.site-header {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.main-nav a[aria-current="location"],
+.mobile-sticky-start a[aria-current="location"] {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 2px;
+}
+
+.hero-actions .btn,
+.main-nav .nav-cta,
+.mobile-sticky-start a {
+  min-height: 44px;
+}
+
+.hero-logo,
+.brand img,
+.footer-logo {
+  height: auto;
+}
+
+.public-proof-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: .75rem;
+}
+
+.public-proof-list li {
+  position: relative;
+  padding-left: 1.75rem;
+  line-height: 1.55;
+}
+
+.public-proof-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 800;
+}
+
+.public-confidence-note {
+  margin-top: 1rem;
+}
+
+@media (max-width: 820px) {
+  html {
+    scroll-padding-top: 78px;
+  }
+
+  [id] {
+    scroll-margin-top: 78px;
+  }
+
+  .mobile-sticky-start {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .mobile-sticky-start a {
+    display: grid;
+    place-items: center;
+    padding: .65rem .25rem;
+    font-size: .72rem;
+    line-height: 1.15;
+    text-align: center;
+  }
+
+  .hero-actions {
+    align-items: stretch;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
