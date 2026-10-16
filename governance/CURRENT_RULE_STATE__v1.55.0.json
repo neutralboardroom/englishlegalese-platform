@@ -1,0 +1,24 @@
+{
+  "product": "EnglishLegalese.com",
+  "product_scope": "EnglishLegalese.com ONLY",
+  "candidate_version": "1.55.0",
+  "accepted_predecessor_version": "1.54.8",
+  "accepted_predecessor_commit": "5f6c8ddef400d758541686fcd9132c28f11259e7",
+  "rule_register": "EL-RULES-1.0.0",
+  "rule_register_path": "governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.55.0.md",
+  "roger_rule_count": 17,
+  "durable_builder_rule_count": 10,
+  "roger_rule_ids": [
+    "EL-RGR-001","EL-RGR-002","EL-RGR-003","EL-RGR-004","EL-RGR-005","EL-RGR-006","EL-RGR-007","EL-RGR-008","EL-RGR-009","EL-RGR-010","EL-RGR-011","EL-RGR-012","EL-RGR-013","EL-RGR-014","EL-RGR-015","EL-RGR-016","EL-RGR-017"
+  ],
+  "durable_builder_rule_ids": [
+    "EL-DUR-001","EL-DUR-002","EL-DUR-003","EL-DUR-004","EL-DUR-005","EL-DUR-006","EL-DUR-007","EL-DUR-008","EL-DUR-009","EL-DUR-010"
+  ],
+  "cross_project_transfer_ledger": "governance/CROSS_PROJECT_RULE_TRANSFER_LEDGER__v1.55.0.md",
+  "research_competitor_ledger": "governance/RESEARCH_AND_COMPETITOR_ADOPTION_LEDGER__v1.55.0.md",
+  "rule_change_authority": "Roger Rules may be changed only by Roger; durable builder rules require explicit auditable successorship.",
+  "no_drift_policy": "FAIL_CLOSED",
+  "current_release_state": "CANDIDATE_NOT_YET_ACCEPTED_OR_MERGED",
+  "deployment_state": "NOT_DEPLOYED_BY_THIS_RELEASE_WORK",
+  "created": "2026-10-16"
+}
