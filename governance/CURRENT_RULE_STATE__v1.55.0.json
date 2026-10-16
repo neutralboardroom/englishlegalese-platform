@@ -1,7 +1,7 @@
 {
   "product": "EnglishLegalese.com",
   "product_scope": "EnglishLegalese.com ONLY",
-  "candidate_version": "1.55.0",
+  "release_version": "1.55.0",
   "accepted_predecessor_version": "1.54.8",
   "accepted_predecessor_commit": "5f6c8ddef400d758541686fcd9132c28f11259e7",
   "rule_register": "EL-RULES-1.0.0",
@@ -18,7 +18,8 @@
   "research_competitor_ledger": "governance/RESEARCH_AND_COMPETITOR_ADOPTION_LEDGER__v1.55.0.md",
   "rule_change_authority": "Roger Rules may be changed only by Roger; durable builder rules require explicit auditable successorship.",
   "no_drift_policy": "FAIL_CLOSED",
-  "current_release_state": "CANDIDATE_NOT_YET_ACCEPTED_OR_MERGED",
-  "deployment_state": "NOT_DEPLOYED_BY_THIS_RELEASE_WORK",
+  "source_acceptance_state": "DERIVE_FROM_GIT_MAIN_AND_RELEASE_PR_EVIDENCE",
+  "deployment_state": "DERIVE_FROM_EXACT_DEPLOYMENT_EVIDENCE; NO_DEPLOYMENT_AUTHORIZED_OR_PERFORMED_BY_V1.55.0_BUILD_WORK",
+  "state_truth_rule": "Do not hand-copy mutable accepted/deployed/live state into this static release file. BUILT, ACCEPTED, DEPLOYED and LIVE_CORRECT are distinct and must be proven by exact repository/deployment evidence.",
   "created": "2026-10-16"
 }
