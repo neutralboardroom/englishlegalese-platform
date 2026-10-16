@@ -47,7 +47,7 @@ try {
   const diff = cp.execFileSync('git', ['diff','--name-status',`${base}...HEAD`], {cwd: root, encoding:'utf8'}).trim();
   const rows = diff ? diff.split(/\r?\n/).map(line => line.split(/\t+/)) : [];
   const allowed = p => [
-    'index.html','package.json','product-v1550.js','product-v1550.css',
+    'index.html','package.json','product-v1550.js','product-v1550.css','product-v1550-preserve.js',
     'scripts/verify-v1550-adaptive-practice.js','scripts/verify-v1550-governance.js'
   ].includes(p) || p.startsWith('governance/') || p.startsWith('docs/v1.55.0/');
   check('no files deleted from v1.54.8', rows.every(parts => !String(parts[0]).startsWith('D')));
