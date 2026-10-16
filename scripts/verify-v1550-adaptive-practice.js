@@ -25,10 +25,9 @@ const checks = [
   ['legal advice boundary is explicit', product.includes('not legal advice')],
   ['six skill dimensions exist', ['precision','tone','speaking','writing','reading','aiReview'].every(k => product.includes(`'${k}'`))],
   ['practice-area breadth exists', ['Client Communication','Contracts','Legal Reading','Legal Writing','Meetings & Negotiation','Academic & Career','AI & Legal Communication'].every(x => product.includes(x))],
-  ['desktop navigation preserves Courses, Teachers, Employers, Language Support and Trust', ['#courses','#teachers','#employers','#language-bridge','#trust'].every(x => preserve.includes(`'${x}'`))],
-  ['new Practice link is additive', preserve.includes("['#practice-studio','Practice']") && preserve.includes("['#teachers','Teachers']"))],
-  ['mobile navigation preserves Language and adds Practice', preserve.includes("['#language-bridge','Language']") && preserve.includes("['#practice-studio','Practice']"))],
-  ['six-item mobile layout is supported', css.includes('repeat(6,minmax(0,1fr))')],
+  ['desktop navigation is exact predecessor set', ["['#start','Start']","['#courses','Courses']","['#smartteacher','SmartTeacher AI']","['#teachers','Teachers']","['#employers','Employers']","['#language-bridge','Language Support']","['#trust','Trust']","['#dashboards','Login / Dashboard','nav-cta']"].every(x => preserve.includes(x)) && !preserve.includes("['#practice-studio','Practice']"))],
+  ['mobile quick navigation is exact predecessor five-item set', ["['#start','Start']","['#courses','Courses']","['#smartteacher','AI Practice']","['#language-bridge','Languages']","['#dashboards','Dashboard']"].every(x => preserve.includes(x))],
+  ['new Practice feature remains discoverable outside locked primary nav', index.includes('href="#practice-studio">Scenario Practice</a>') && product.includes('Practice a legal scenario'))],
   ['responsive styles exist', css.includes('@media(max-width:680px)') && css.includes('@media(max-width:980px)')],
   ['reduced-motion support exists', css.includes('prefers-reduced-motion')],
   ['new check is wired into npm check', String(pkg.scripts?.check || '').includes('verify-v1550-adaptive-practice.js')]
