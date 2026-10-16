@@ -1,20 +1,31 @@
-# EnglishLegalese.com — Next Version Improvement List after v1.54.8
+# EnglishLegalese.com — Next Version Improvement List after v1.55.0
 
-This list records qualified follow-on work that was deliberately not forced into v1.54.8 because it would either require broader backend modification, production credentials, browser-level validation, or content/product decisions beyond the safe scope of this hardening release.
+This list is active input for the next material release under `EL-RGR-016`. Each still-relevant item must be explicitly dispositioned; qualified work must not be repeatedly carried forward without cause.
 
 ## Highest-value next work
 
-1. Fold the v1.54.8 public `Learning experience` copy directly into `app.js` so the public/internal separation is native rather than handled by an additive post-render hardening layer.
-2. Add automated browser-level accessibility and responsive checks for desktop, tablet, and mobile, including keyboard-only navigation, focus order, menu behavior, reduced motion, and major breakpoints.
-3. Add HTML/head validation to CI so malformed metadata like the v1.54.6 quote defect cannot recur.
-4. Add explicit social-preview validation for the production canonical URL and Open Graph image after DNS/domain routing is confirmed.
-5. Review every public section for remaining prototype/internal wording and move operational implementation details to staff/admin-only surfaces.
-6. Add clear real-user conversion paths for diagnostic signup, teacher inquiry, employer/team inquiry, and login only when the corresponding backend destinations and consent/privacy handling are production-ready.
-7. Validate production integrations end to end with account-owned credentials: database, Stripe, OpenAI, SMTP, object storage, classroom/calendar providers, backups, restore, and rollback.
-8. Add browser smoke tests for core role journeys: student diagnostic → practice → teacher review; teacher classroom workflow; employer privacy-safe progress view; staff/admin operational view.
-9. Review course catalog and public pricing/offer language for launch accuracy before paid acquisition or broad outreach.
-10. Perform a final mobile density pass on dashboard-heavy views after browser/device testing, preserving the simplified five-item mobile quick navigation.
+1. Add browser-level accessibility, responsive and keyboard regression automation for desktop, tablet and mobile, including focus order, menu behavior, reduced motion, touch targets, Scenario Studio, Learning Path and Skills Passport.
+2. Build an original, non-accredited Legal English placement/diagnostic flow that recommends a level and learning path without claiming CEFR, TOLES or other formal certification unless separately validated and authorized.
+3. Add authenticated, cross-device Skills Passport persistence with granular learner consent, deletion/export controls and strict separation between learner-private work, teacher-shared work and employer-safe aggregate progress.
+4. Add a spaced-review system that recommends the learner’s next scenario or micro-drill from prior weak-skill notes and completed practice, without manipulative streak pressure or fake mastery scores.
+5. Evaluate qualified speech/pronunciation/fluency infrastructure. Add speaking feedback only when measurements can be produced and described truthfully; do not fabricate pronunciation or fluency scoring.
+6. Build a teacher workflow for assigned scenarios, learner-submitted review packets and teacher-confirmed feedback. Keep teacher-confirmed feedback visibly separate from learner self-checks and automated AI feedback.
+7. Expand the employer/team experience with privacy-safe aggregate skill coverage, role/goal alignment and engagement reporting while excluding drafts, raw AI conversations, confidential facts and private teacher notes.
+8. Expand the original/synthetic Scenario Studio by practice area, role and jurisdiction-neutral professional task, prioritizing high-value client communication, contracts, negotiation, legal writing, cross-border work, LL.M. study and AI-output review.
+9. Add standards-based HTML/head validation and production social-preview verification so malformed metadata and broken canonical/Open Graph presentation fail before deployment.
+10. Validate production integrations end to end with account-owned credentials: database, Stripe if active, OpenAI, SMTP, object storage, classroom/calendar providers, backups, restore and rollback. Report `NOT RUN` or `BLOCKED` honestly when credentials or production access are unavailable.
+11. Review current course catalog, pricing, billing/cancellation and public offer wording for commercial accuracy before paid acquisition or broad outreach. Do not infer price or live-payment state from old files.
+12. Add browser smoke tests for the core journeys: learner start/diagnostic → scenario practice → AI practice → self-check → teacher review; teacher review flow; employer-safe progress view; account/login; staff/admin paths where applicable.
+13. Fold additive v1.54.8/v1.55.0 public-experience layers into the core application only after browser equivalence tests prove no loss of public wording, navigation, accessibility, mobile behavior, feature behavior or rule protections.
+14. Add a formal rule-governance crosswalk/history so every future Roger Rule and durable builder-rule amendment has stable predecessor/successor identity, provenance, release effect and test linkage without relying on chat memory.
+15. Continue fresh current competitor research on **every material version** across Legal-English specialists, certification/assessment products, AI speaking tutors, teacher marketplaces, corporate language platforms, general language-learning apps and adjacent professional-training products. Explicitly adopt, adapt, defer or reject qualified ideas with cause; never copy protected expression or proprietary content.
+16. Continue whole-product research beyond competitors: accessibility standards, privacy/security practices, learning science, AI safety, support patterns, SEO, performance, conversion, retention and teacher/employer workflows. Implement the strongest safe improvements rather than creating cosmetic version churn.
+17. Preserve the exact v1.54.8 primary navigation and simplified five-item mobile quick navigation unless a future intentional navigation change is justified, tested against user benefit and explicitly documented under the no-drift gate.
 
-## Preservation rule
+## Permanent preservation rules
 
-Do not remove working v1.54.8 functionality or alter persistent data merely to simplify the code. Future work should remain additive or carefully migrated, with regression proof and rollback capability.
+- No product drift and no rule drift.
+- Build only from the true newest authoritative predecessor.
+- Preserve all working useful functionality unless an intentional replacement is proven equal or better.
+- No material release without a rule-currentness check, no-drift evidence, honest tests, recovery facts, fresh research and this updated Next Version Improvement List.
+- Sister projects remain read-only sources of transferable lessons unless Roger explicitly grants separate authority.
