@@ -4,7 +4,6 @@
     ['#start','Start'],
     ['#courses','Courses'],
     ['#smartteacher','SmartTeacher AI'],
-    ['#practice-studio','Practice'],
     ['#teachers','Teachers'],
     ['#employers','Employers'],
     ['#language-bridge','Language Support'],
@@ -13,10 +12,9 @@
   ];
   const desiredMobile = [
     ['#start','Start'],
-    ['#practice-studio','Practice'],
     ['#courses','Courses'],
     ['#smartteacher','AI Practice'],
-    ['#language-bridge','Language'],
+    ['#language-bridge','Languages'],
     ['#dashboards','Dashboard']
   ];
 
