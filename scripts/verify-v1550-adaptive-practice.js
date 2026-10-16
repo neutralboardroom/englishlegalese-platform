@@ -5,12 +5,14 @@ const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const index = read('index.html');
 const product = read('product-v1550.js');
+const preserve = read('product-v1550-preserve.js');
 const css = read('product-v1550.css');
 const pkg = JSON.parse(read('package.json'));
 
 const checks = [
   ['package version is 1.55.0', pkg.version === '1.55.0'],
   ['product JS is loaded', index.includes('product-v1550.js')],
+  ['navigation preservation JS is loaded after product JS', index.includes('product-v1550-preserve.js') && index.indexOf('product-v1550-preserve.js') > index.indexOf('product-v1550.js')],
   ['product CSS is loaded', index.includes('product-v1550.css')],
   ['Scenario Studio exists', product.includes('Legal Scenario Studio') && product.includes('practice-studio')],
   ['personalized four-week plan exists', product.includes('Personalized Learning Path') && product.includes('four-week practice plan')],
@@ -23,6 +25,10 @@ const checks = [
   ['legal advice boundary is explicit', product.includes('not legal advice')],
   ['six skill dimensions exist', ['precision','tone','speaking','writing','reading','aiReview'].every(k => product.includes(`'${k}'`))],
   ['practice-area breadth exists', ['Client Communication','Contracts','Legal Reading','Legal Writing','Meetings & Negotiation','Academic & Career','AI & Legal Communication'].every(x => product.includes(x))],
+  ['desktop navigation preserves Courses, Teachers, Employers, Language Support and Trust', ['#courses','#teachers','#employers','#language-bridge','#trust'].every(x => preserve.includes(`'${x}'`))],
+  ['new Practice link is additive', preserve.includes("['#practice-studio','Practice']") && preserve.includes("['#teachers','Teachers']"))],
+  ['mobile navigation preserves Language and adds Practice', preserve.includes("['#language-bridge','Language']") && preserve.includes("['#practice-studio','Practice']"))],
+  ['six-item mobile layout is supported', css.includes('repeat(6,minmax(0,1fr))')],
   ['responsive styles exist', css.includes('@media(max-width:680px)') && css.includes('@media(max-width:980px)')],
   ['reduced-motion support exists', css.includes('prefers-reduced-motion')],
   ['new check is wired into npm check', String(pkg.scripts?.check || '').includes('verify-v1550-adaptive-practice.js')]
