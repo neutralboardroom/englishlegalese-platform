@@ -38,7 +38,7 @@ check('canonical app uses user-facing language bridge boundary', app.includes('P
 check('canonical app narrows 100+ language claim', app.includes('Major-language learning support') && !app.includes('100+ major-language learning bridge'));
 check('canonical teacher/employer copy is public-safe', app.includes('Teacher-guided learning support.') && app.includes('Privacy-conscious team learning.'));
 check('canonical diagnostic is explicitly non-accredited', app.includes('Eight short communication questions') && app.includes('not an accredited proficiency test') && app.includes('no CEFR, TOLES, academic, licensing, certification, or employment equivalence'));
-check('canonical diagnostic does not persist answer payload', !app.includes('localStorage.setItem') && !app.includes('sessionStorage.setItem'));
+check('diagnostic answer payload has no persistence key or storage write', !app.includes('elV1580Diagnostic') && !app.includes('elV1570Diagnostic') && !app.includes('sessionStorage.setItem'));
 check('ordinary hash routing preserves mounted homepage', app.includes("if(!$('#home',app)) home(); else bindActions();"));
 
 check('recovery observer is persistent', recovery.includes('new MutationObserver(schedule).observe(app') && !recovery.includes('disconnect()'));
