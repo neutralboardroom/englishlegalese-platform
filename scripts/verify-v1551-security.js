@@ -9,12 +9,12 @@ const workflow = read('.github/workflows/englishlegalese-release-gate.yml');
 const securityPatchPredecessor = '1811adc2ba847ac64abe66c16e87627d599e98dd';
 const acceptedV1551 = 'a499e99439927e630bd334b4a3b9fbebdff08cd5';
 const isSecurityPatch = pkg.version === '1.55.1';
-const isQualifiedSuccessor = pkg.version === '1.56.0';
+const isQualifiedSuccessor = ['1.56.0','1.57.0'].includes(pkg.version);
 
 const checks = [];
 const check = (name, ok) => checks.push([name, Boolean(ok)]);
 
-check('package version is v1.55.1 or qualified v1.56.0 successor', isSecurityPatch || isQualifiedSuccessor);
+check('package version is v1.55.1 or a qualified v1.56/v1.57 successor', isSecurityPatch || isQualifiedSuccessor);
 check('Node runtime floor is 20+', /^>=20/.test(String(pkg.engines?.node || '')));
 check('Express is pinned to current v4 line', pkg.dependencies?.express === '4.22.3');
 check('AWS S3 client is pinned', pkg.optionalDependencies?.['@aws-sdk/client-s3'] === '3.1152.0');
@@ -46,11 +46,11 @@ try {
   } else {
     cp.execFileSync('git', ['cat-file', '-e', `${acceptedV1551}^{commit}`], { cwd: root, stdio: 'ignore' });
     const diff = cp.execFileSync('git', ['diff', '--name-only', `${acceptedV1551}...HEAD`], { cwd: root, encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean);
-    check('v1.56 successor preserves backend implementation from accepted v1.55.1', !diff.includes('server.js') && !diff.includes('src/persistence.js') && !diff.includes('src/productionServices.js'));
-    check('v1.56 successor preserves database migrations from accepted v1.55.1', !diff.some(p => p.startsWith('migrations/') || p.startsWith('db/migrations/')));
-    check('v1.56 successor keeps security workflow in place', !diff.includes('.github/workflows/englishlegalese-release-gate.yml') || workflow.includes('npm run audit:high'));
-    check('v1.56 successor keeps pinned security dependency set', pkg.dependencies?.express === '4.22.3' && pkg.optionalDependencies?.nodemailer === '10.1.1' && pkg.optionalDependencies?.pg === '8.23.1');
-    check('v1.56 successor explicitly runs its own no-drift verifier', String(pkg.scripts?.check || '').includes('verify-v1560-homepage.js'));
+    check('qualified successor preserves backend implementation from accepted v1.55.1', !diff.includes('server.js') && !diff.includes('src/persistence.js') && !diff.includes('src/productionServices.js'));
+    check('qualified successor preserves database migrations from accepted v1.55.1', !diff.some(p => p.startsWith('migrations/') || p.startsWith('db/migrations/')));
+    check('qualified successor keeps security workflow in place', !diff.includes('.github/workflows/englishlegalese-release-gate.yml') || workflow.includes('npm run audit:high'));
+    check('qualified successor keeps pinned security dependency set', pkg.dependencies?.express === '4.22.3' && pkg.optionalDependencies?.nodemailer === '10.1.1' && pkg.optionalDependencies?.pg === '8.23.1');
+    check('qualified successor explicitly runs current no-drift verifier', pkg.version === '1.57.0' ? String(pkg.scripts?.check || '').includes('verify-v1570-diagnostic-browser.js') : String(pkg.scripts?.check || '').includes('verify-v1560-homepage.js'));
   }
 } catch (err) {
   check('security predecessor/diff evidence available', false);
