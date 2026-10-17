@@ -41,7 +41,8 @@ check('whole-product improvement is durable', register.includes('Whole-product s
 check('adopt/adapt/reject-only-with-cause exists', register.includes('Adopt / adapt / reject only with cause') && transfer.includes('REJECTED_WITH_CAUSE'));
 check('transfer ledger documents no sister-project mutation', transfer.includes('No sister project was mutated'));
 check('research ledger distinguishes formal assessment from practice', research.includes('Formal certification is **not** claimed') && research.includes('will not invent accredited/proficiency scores'));
-check('research ledger includes Legal-English specialists and AI/corporate platforms', ['TOLES','TransLegal','ELSA Speak','EF Corporate Learning','Preply Business'].every(x => research.includes(x)));
+check('research ledger includes specialists, AI roleplay and corporate platforms', ['TOLES','TransLegal','Loora role-play','EF Corporate Learning','Preply Business'].every(x => research.includes(x)));
+check('research ledger records custom roleplay adaptation', research.includes('Create your own practice') && research.includes('Learner-created custom roleplay'));
 check('mutable acceptance/deployment state is evidence-derived, not hand-copied', state.source_acceptance_state === 'DERIVE_FROM_GIT_MAIN_AND_RELEASE_PR_EVIDENCE' && String(state.deployment_state).startsWith('DERIVE_FROM_EXACT_DEPLOYMENT_EVIDENCE'));
 
 let gitChecked = false;
@@ -50,7 +51,7 @@ try {
   const diff = cp.execFileSync('git', ['diff','--name-status',`${base}...HEAD`], {cwd: root, encoding:'utf8'}).trim();
   const rows = diff ? diff.split(/\r?\n/).map(line => line.split(/\t+/)) : [];
   const allowed = p => [
-    'index.html','package.json','product-v1550.js','product-v1550.css','product-v1550-preserve.js',
+    'index.html','package.json','product-v1550.js','product-v1550.css','product-v1550-preserve.js','product-v1550-research.js',
     'scripts/verify-v1550-adaptive-practice.js','scripts/verify-v1550-governance.js',
     '.github/workflows/englishlegalese-release-gate.yml','NEXT_VERSION_IMPROVEMENT_LIST.md'
   ].includes(p) || p.startsWith('governance/') || p.startsWith('docs/v1.55.0/');
