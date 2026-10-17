@@ -18,7 +18,7 @@ const research = read('governance/RESEARCH_AND_COMPETITOR_ADOPTION_LEDGER__v1.56
 const state = JSON.parse(read('governance/CURRENT_RULE_STATE__v1.56.0.json'));
 const logoRule = read('governance/OWNER_LOGO_LOCK__2026-10-17.md');
 
-check('package version is 1.56.0', pkg.version === '1.56.0');
+check('package version is 1.56.0 or qualified 1.57.0 successor', ['1.56.0','1.57.0'].includes(pkg.version));
 check('v1.56 CSS loaded after v1.55 CSS', index.indexOf('product-v1560.css') > index.indexOf('product-v1550.css'));
 check('v1.56 homepage JS loaded', index.includes('product-v1560.js'));
 check('v1.56 access guard loaded after homepage JS', index.indexOf('product-v1560-access.js') > index.indexOf('product-v1560.js'));
@@ -89,7 +89,7 @@ try {
 for (const [name, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${name}`);
 const failures = checks.filter(([,ok]) => !ok);
 if (failures.length) {
-  console.error(`v1.56.0 homepage/screenshot verification failed: ${failures.length} check(s).`);
+  console.error(`v1.56 homepage/screenshot inheritance verification failed: ${failures.length} check(s).`);
   process.exit(1);
 }
-console.log(`v1.56.0 homepage/screenshot verification passed: ${checks.length} checks.`);
+console.log(`v1.56 homepage/screenshot inheritance verification passed: ${checks.length} checks.`);
