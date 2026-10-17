@@ -1,0 +1,33 @@
+/* EnglishLegalese.com v1.57.0 — starting diagnostic */
+.v1570-diagnostic{background:#f7f9fb}
+.v1570-diagnostic-shell{max-width:980px}
+.v1570-boundary{background:#fff;border:1px solid #d8e0e8;border-left:4px solid #247d83;border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.25rem;line-height:1.55}
+.v1570-diagnostic-form{display:grid;gap:1rem}
+.v1570-question{border:1px solid #d9e1e8;border-radius:16px;background:#fff;padding:1.15rem 1.2rem;margin:0}
+.v1570-question legend{font-weight:800;line-height:1.45;padding:0 .25rem;max-width:100%}
+.v1570-question legend span{display:inline-grid;place-items:center;width:1.8rem;height:1.8rem;border-radius:50%;background:#0b1d33;color:#fff;margin-right:.65rem;font-size:.85rem}
+.v1570-options{display:grid;gap:.6rem;margin-top:.85rem}
+.v1570-options label{display:flex;gap:.7rem;align-items:flex-start;border:1px solid #e0e6ec;border-radius:12px;padding:.75rem .85rem;cursor:pointer;line-height:1.45;background:#fff}
+.v1570-options label:hover{border-color:#8ab6ba}
+.v1570-options input{margin-top:.2rem;min-width:18px;min-height:18px;accent-color:#247d83}
+.v1570-options input:focus-visible{outline:3px solid #247d83;outline-offset:3px}
+.v1570-options label:has(input:checked){border-color:#247d83;background:#f2fbfb}
+.v1570-actions,.v1570-result-actions{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-top:.4rem}
+.v1570-form-status{min-height:1.5rem;font-weight:700;color:#7a2f2f;margin:.2rem 0 0}
+.v1570-result{background:#fff;border:2px solid #247d83;border-radius:18px;padding:1.35rem 1.45rem;margin-top:1.25rem;box-shadow:0 14px 34px rgba(11,29,51,.08)}
+.v1570-result:focus{outline:3px solid #247d83;outline-offset:4px}
+.v1570-result h3{font-size:clamp(1.5rem,3vw,2rem);margin:.3rem 0 .65rem}
+.v1570-score{font-size:1.05rem;margin-top:1rem}
+.v1570-score-note{font-size:.92rem;color:#566577;line-height:1.55;max-width:760px}
+.v1570-focus{margin-top:1rem}
+.v1570-focus ul{margin:.5rem 0 0;padding-left:1.2rem}
+.v1570-focus li{margin:.3rem 0}
+@media (max-width:720px){
+  .v1570-question{padding:1rem}
+  .v1570-question legend span{width:1.65rem;height:1.65rem;margin-right:.5rem}
+  .v1570-actions,.v1570-result-actions{align-items:stretch}
+  .v1570-actions .btn,.v1570-result-actions .btn{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .v1570-diagnostic *{scroll-behavior:auto!important;transition:none!important}
+}
