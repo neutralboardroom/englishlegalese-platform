@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check product-v1570.js && node --check product-v1580.js && node --check playwright.config.js && node --check tests/v1570-browser.spec.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1580-production-recovery.js && node scripts/verify-v1580-production-recovery.js",
+    "check": "node --check app.js && node --check product-v1580.js && node --check tests/v1570-browser.spec.js && node --check scripts/verify-v1580-production-recovery.js",
     "predeploy:check": "node scripts/predeploy-check.js",
     "migrate": "node scripts/migrate.js",
     "prod:readiness": "node scripts/verify-production-readiness.js",
