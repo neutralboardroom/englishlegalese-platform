@@ -66,7 +66,7 @@ try {
     'index.html','package.json','product-v1550.js','product-v1550.css','product-v1550-preserve.js','product-v1550-research.js',
     'product-v1560.js','product-v1560.css','product-v1560-access.js',
     'scripts/verify-v1550-adaptive-practice.js','scripts/verify-v1550-governance.js','scripts/verify-v1551-security.js','scripts/verify-v1560-homepage.js',
-    '.github/workflows/englishlegalese-release-gate.yml','NEXT_VERSION_IMPROVEMENT_LIST.md'
+    '.github/workflows/englishlegalese-release-gate.yml','NEXT_VERSION_IMPROVEMENT_LIST.md','RELEASE_V1.56.0.md'
   ].includes(p) || p.startsWith('governance/') || p.startsWith('docs/v1.55.0/') || p.startsWith('docs/v1.55.1/') || p.startsWith('docs/v1.56.0/');
   check('no files deleted from v1.54.8', rows.every(parts => !String(parts[0]).startsWith('D')));
   check('all changed paths are explicitly allowed qualified successor surfaces', rows.every(parts => parts.slice(1).every(allowed)));
