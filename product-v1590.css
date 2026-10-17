@@ -30,6 +30,10 @@ textarea.input{min-height:130px}
 #practice-studio .v1550-scenario-card{min-height:0;padding:1.15rem}
 #practice-studio .v1550-scenario-card .v1550-skill-tags{margin-top:auto}
 #learning-plan,#skills-passport{padding-top:2.35rem!important;padding-bottom:2.35rem!important}
+#learning-plan .v1550-plan-builder:not([hidden]){display:block!important}
+#skills-passport .v1550-stat-row:not([hidden]){display:grid!important}
+#skills-passport .v1550-passport-grid:not([hidden]){display:grid!important}
+#skills-passport .v1550-review-loop:not([hidden]){display:grid!important}
 .site-footer{margin-top:0!important}
 @media (max-width:1120px){
   :root{--v1590-header-offset:100px}
