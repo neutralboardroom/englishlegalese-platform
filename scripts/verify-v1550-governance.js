@@ -64,7 +64,7 @@ try {
   const rows = diff ? diff.split(/\r?\n/).map(line => line.split(/\t+/)) : [];
   const allowed = p => [
     'index.html','package.json','product-v1550.js','product-v1550.css','product-v1550-preserve.js','product-v1550-research.js',
-    'product-v1560.js','product-v1560.css',
+    'product-v1560.js','product-v1560.css','product-v1560-access.js',
     'scripts/verify-v1550-adaptive-practice.js','scripts/verify-v1550-governance.js','scripts/verify-v1551-security.js','scripts/verify-v1560-homepage.js',
     '.github/workflows/englishlegalese-release-gate.yml','NEXT_VERSION_IMPROVEMENT_LIST.md'
   ].includes(p) || p.startsWith('governance/') || p.startsWith('docs/v1.55.0/') || p.startsWith('docs/v1.55.1/') || p.startsWith('docs/v1.56.0/');
