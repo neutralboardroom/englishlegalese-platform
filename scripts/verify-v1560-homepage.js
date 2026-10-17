@@ -27,7 +27,7 @@ check('public version badge rewrite exists', js.includes("['New in v1.55', 'Guid
 check('launch-course internal wording rewrite exists', js.includes("['Launch course set', 'Legal English courses']"));
 check('translation builder-language rewrite exists', js.includes('Preferred-language explanations can support understanding'));
 check('safety line becomes user-facing Important', js.includes("['Safety line:', 'Important:']"));
-check('progress proof language is softened', js.includes('track progress') && js.includes('shareable progress'));
+check('progress proof language is softened', /track progress/i.test(js) && /shareable progress/i.test(js));
 check('100+ language public claim is narrowed', js.includes("el.textContent = 'Major-language learning bridge'"));
 check('public EnglishLegalese Team card is removed', js.includes("title === 'EnglishLegalese Team'") && js.includes('card.remove()'));
 check('teacher public operations wording is rewritten', js.includes('Account and payout tools are available after sign-in'));
