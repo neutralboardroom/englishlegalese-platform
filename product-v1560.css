@@ -1,0 +1,62 @@
+/* EnglishLegalese.com v1.56.0 — screenshot-audited homepage compaction and accessibility */
+:root{--v1560-header-offset:112px}
+html{scroll-padding-top:var(--v1560-header-offset)}
+#app section[id],#app [id]{scroll-margin-top:var(--v1560-header-offset)}
+.site-header .brand{display:flex;align-items:center;min-width:116px}
+.site-header .brand img{width:108px;max-height:52px;height:auto;object-fit:contain}
+.main-nav a[aria-current="location"]{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.v1560-ready #start .grid.cols-4{grid-template-columns:repeat(3,minmax(0,1fr))}
+.v1560-ready .section-head h2{font-size:clamp(2rem,4vw,3.35rem);line-height:1.02}
+.v1560-ready .section{padding-top:clamp(3.5rem,6vw,5.5rem);padding-bottom:clamp(3.5rem,6vw,5.5rem)}
+.v1560-ready .section.compact{padding-top:3rem;padding-bottom:3rem}
+.v1560-ready .hero{padding-top:clamp(3.5rem,6vw,5.5rem);padding-bottom:clamp(3.5rem,6vw,5.5rem)}
+.v1560-ready .hero-card{align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:1rem}
+.v1560-ready .hero-card .hero-logo{margin-bottom:.5rem}
+.v1560-ready .hero-actions{gap:.7rem;align-items:center}
+.v1560-ready .hero-actions .btn:first-child{box-shadow:0 10px 24px rgba(0,0,0,.12)}
+.v1560-ready .hero-actions .btn:nth-child(n+3){background:transparent}
+.v1560-ready .input, .v1560-ready select.input{border:1px solid #b9c2cc;border-radius:10px;background:#fff;min-height:44px;padding:.68rem .78rem;font:inherit}
+.v1560-ready textarea.input{min-height:130px}
+.v1560-ready .v1550-scenario-card,.v1560-ready #courses article,.v1560-ready #courses .panel{transition:opacity .16s ease,transform .16s ease}
+.v1560-ready .v1560-collapsible{display:none}
+.v1560-ready .v1560-expanded .v1560-collapsible{display:block}
+.v1560-section-controls{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-top:1.25rem;margin-bottom:.25rem}
+.v1560-scenario-controls{margin-top:1.5rem}
+.v1560-micro-note,.v1560-level-note,.v1560-progress-intro{font-size:.9rem;line-height:1.5;color:#556375;margin-top:.75rem}
+.v1560-ready #learning-plan .v1550-plan-builder{display:none}
+.v1560-ready #learning-plan.v1560-expanded .v1550-plan-builder{display:block}
+.v1560-ready #skills-passport .v1560-progress-detail{display:none}
+.v1560-ready #skills-passport.v1560-expanded .v1560-progress-detail{display:grid}
+.v1560-empty-progress{background:#fff;border:1px solid #dfe4e8;border-radius:18px;padding:1.25rem 1.4rem;max-width:760px}
+.v1560-empty-progress h3{margin:.1rem 0 .5rem;font-size:1.35rem}
+.v1560-prompt-starters{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin-bottom:.85rem;color:#4d5968;font-size:.92rem}
+.v1560-starter{appearance:none;border:1px solid #cfd7df;background:#fff;color:#0b1d33;border-radius:999px;padding:.55rem .8rem;min-height:40px;font:600 .88rem/1.1 Inter,sans-serif;cursor:pointer}
+.v1560-starter:hover,.v1560-starter:focus-visible{border-color:#247d83;outline:2px solid #247d83;outline-offset:2px}
+.v1560-ready .v1550-custom-roleplay[hidden],.v1560-ready #practice-studio:not(.v1560-expanded) .v1550-custom-roleplay{display:none!important}
+.v1560-ready .v1550-scenario-grid{gap:1rem}
+.v1560-ready .v1550-scenario-card .v1550-skill-tags{margin-top:auto}
+.v1560-ready #practice-studio .v1550-scenario-card{min-height:0}
+.v1560-ready #courses .grid,.v1560-ready #practice-studio .v1550-scenario-grid{align-items:stretch}
+.v1560-ready #skills-passport .section-head p{max-width:620px}
+.v1560-ready #teachers .panel,.v1560-ready #employers{min-height:0}
+@media (max-width:980px){
+  :root{--v1560-header-offset:96px}
+  .v1560-ready #start .grid.cols-4{grid-template-columns:1fr 1fr}
+  .site-header .brand img{width:96px}
+}
+@media (max-width:720px){
+  :root{--v1560-header-offset:86px}
+  .v1560-ready #start .grid.cols-4{grid-template-columns:1fr}
+  .v1560-ready .section{padding-top:2.75rem;padding-bottom:2.75rem}
+  .v1560-ready .section-head h2{font-size:clamp(2rem,10vw,2.8rem)}
+  .v1560-ready .hero-actions{display:grid;grid-template-columns:1fr}
+  .v1560-ready .hero-actions .btn{width:100%;justify-content:center}
+  .site-header .brand{min-width:88px}
+  .site-header .brand img{width:84px}
+  .v1560-section-controls{align-items:stretch}
+  .v1560-section-controls .btn{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important}
+  .v1560-ready *{scroll-behavior:auto!important;transition:none!important}
+}

@@ -14,7 +14,7 @@ const css = read('product-v1550.css');
 const pkg = JSON.parse(read('package.json'));
 
 const checks = [
-  ['package version is v1.55.0 or its explicit v1.55.1 security successor', ['1.55.0','1.55.1'].includes(pkg.version)],
+  ['package version is v1.55.0, v1.55.1, or the qualified v1.56.0 successor', ['1.55.0','1.55.1','1.56.0'].includes(pkg.version)],
 
   // Equal-or-stronger successor coverage for historical v1.54.6 / v1.54.8 public UX tests.
   ['no duplicate EnglishLegalese.com.com brand defect', !index.includes('EnglishLegalese.com.com')],
@@ -35,7 +35,7 @@ const checks = [
   ['v1.54.8 reduced-motion protection remains present', publicCss.includes('prefers-reduced-motion')],
   ['v1.54.8 minimum touch-target protection remains present', publicCss.includes('min-height: 44px')],
 
-  // v1.55.0 feature coverage inherited by v1.55.1.
+  // v1.55.0 feature coverage inherited by qualified successors.
   ['product JS is loaded', index.includes('product-v1550.js')],
   ['research adaptation JS is loaded after product JS', index.includes('product-v1550-research.js') && index.indexOf('product-v1550-research.js') > index.indexOf('product-v1550.js')],
   ['navigation preservation JS is loaded after product JS', index.includes('product-v1550-preserve.js') && index.indexOf('product-v1550-preserve.js') > index.indexOf('product-v1550.js')],
@@ -67,7 +67,7 @@ const checks = [
 const failures = checks.filter(([, ok]) => !ok);
 for (const [name, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${name}`);
 if (failures.length) {
-  console.error(`v1.55.0/v1.55.1 inherited adaptive verification failed: ${failures.length} check(s).`);
+  console.error(`v1.55 inherited adaptive verification failed: ${failures.length} check(s).`);
   process.exit(1);
 }
-console.log(`v1.55.0 feature inheritance verification passed: ${checks.length} checks.`);
+console.log(`v1.55 feature inheritance verification passed: ${checks.length} checks.`);
