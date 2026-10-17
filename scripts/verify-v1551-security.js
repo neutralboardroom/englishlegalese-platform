@@ -1,0 +1,52 @@
+const fs = require('fs');
+const path = require('path');
+const cp = require('child_process');
+
+const root = path.resolve(__dirname, '..');
+const read = p => fs.readFileSync(path.join(root, p), 'utf8');
+const pkg = JSON.parse(read('package.json'));
+const workflow = read('.github/workflows/englishlegalese-release-gate.yml');
+const predecessor = '1811adc2ba847ac64abe66c16e87627d599e98dd';
+
+const checks = [];
+const check = (name, ok) => checks.push([name, Boolean(ok)]);
+
+check('package version is exactly 1.55.1', pkg.version === '1.55.1');
+check('Node runtime floor is 20+', /^>=20/.test(String(pkg.engines?.node || '')));
+check('Express is pinned to current v4 line', pkg.dependencies?.express === '4.22.3');
+check('AWS S3 client is pinned', pkg.optionalDependencies?.['@aws-sdk/client-s3'] === '3.1152.0');
+check('AWS S3 presigner is pinned to same release', pkg.optionalDependencies?.['@aws-sdk/s3-request-presigner'] === '3.1152.0');
+check('Nodemailer is upgraded to current 10.x security line', pkg.optionalDependencies?.nodemailer === '10.1.1');
+check('PostgreSQL client is pinned current', pkg.optionalDependencies?.pg === '8.23.1');
+check('high/critical npm audit command exists', pkg.scripts?.['audit:high'] === 'npm audit --audit-level=high');
+check('release workflow installs dependencies before checks', workflow.includes('npm install --ignore-scripts --no-fund'));
+check('release workflow blocks high/critical npm audit findings', workflow.includes('npm run audit:high'));
+check('v1.55.1 verifier is wired into npm check', String(pkg.scripts?.check || '').includes('verify-v1551-security.js'));
+
+try {
+  cp.execFileSync('git', ['cat-file', '-e', `${predecessor}^{commit}`], { cwd: root, stdio: 'ignore' });
+  const diff = cp.execFileSync('git', ['diff', '--name-only', `${predecessor}...HEAD`], { cwd: root, encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean);
+  const allowed = p => [
+    'package.json',
+    '.github/workflows/englishlegalese-release-gate.yml',
+    'scripts/verify-v1550-adaptive-practice.js',
+    'scripts/verify-v1550-governance.js',
+    'scripts/verify-v1551-security.js',
+    'NEXT_VERSION_IMPROVEMENT_LIST.md'
+  ].includes(p) || p.startsWith('docs/v1.55.1/');
+  check('security patch changes only explicitly allowed surfaces', diff.every(allowed));
+  check('no public UI/source files changed', !diff.some(p => ['index.html','app.js','public-v1548.js','public-v1548.css','product-v1550.js','product-v1550-research.js','product-v1550-preserve.js','product-v1550.css'].includes(p)));
+  check('backend implementation unchanged', !diff.includes('server.js') && !diff.includes('src/persistence.js') && !diff.includes('src/productionServices.js'));
+  check('migrations unchanged', !diff.some(p => p.startsWith('migrations/')));
+  check('governance authority files unchanged', !diff.some(p => p.startsWith('governance/')));
+} catch (err) {
+  check('predecessor/diff evidence available', false);
+}
+
+for (const [name, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${name}`);
+const failures = checks.filter(([, ok]) => !ok);
+if (failures.length) {
+  console.error(`v1.55.1 security verification failed: ${failures.length} check(s).`);
+  process.exit(1);
+}
+console.log(`v1.55.1 security verification passed: ${checks.length} checks.`);
