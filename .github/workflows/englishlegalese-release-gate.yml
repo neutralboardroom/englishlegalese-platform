@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install exact declared production dependency set
+      - name: Install exact declared dependency set
         run: npm install --ignore-scripts --no-fund
 
       - name: Block high and critical dependency vulnerabilities
@@ -30,3 +30,20 @@ jobs:
 
       - name: Run syntax, regression, rule and no-drift gates
         run: npm run check
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run desktop tablet mobile browser qualification
+        run: npm run e2e:browser
+
+      - name: Preserve browser qualification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: englishlegalese-browser-qualification
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14

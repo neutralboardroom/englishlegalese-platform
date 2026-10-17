@@ -14,7 +14,7 @@ const css = read('product-v1550.css');
 const pkg = JSON.parse(read('package.json'));
 
 const checks = [
-  ['package version is v1.55.0, v1.55.1, or the qualified v1.56.0 successor', ['1.55.0','1.55.1','1.56.0'].includes(pkg.version)],
+  ['package version is v1.55.0, v1.55.1, or a qualified v1.56/v1.57 successor', ['1.55.0','1.55.1','1.56.0','1.57.0'].includes(pkg.version)],
 
   // Equal-or-stronger successor coverage for historical v1.54.6 / v1.54.8 public UX tests.
   ['no duplicate EnglishLegalese.com.com brand defect', !index.includes('EnglishLegalese.com.com')],

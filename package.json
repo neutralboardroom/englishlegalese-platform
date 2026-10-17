@@ -1,20 +1,22 @@
 {
   "name": "englishlegalese-platform",
-  "version": "1.56.0",
-  "description": "EnglishLegalese.com v1.56.0 screenshot-audited homepage architecture: shortens and clarifies the public homepage through progressive disclosure, strengthens truthful public copy, improves SmartTeacher entry and progress empty states, gates operational dashboards, preserves all underlying learning functionality, and permanently locks the approved logo against asset drift.",
+  "version": "1.57.0",
+  "description": "EnglishLegalese.com v1.57.0 adds an original non-accredited Legal English starting diagnostic and real-browser desktop/tablet/mobile qualification while preserving v1.56.0 visual architecture, security controls, dashboard fail-closed behavior, and the permanently locked approved logo.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1550-adaptive-practice.js && node --check scripts/verify-v1550-governance.js && node --check scripts/verify-v1551-security.js && node --check scripts/verify-v1560-homepage.js && node scripts/verify-v1550-adaptive-practice.js && node scripts/verify-v1550-governance.js && node scripts/verify-v1551-security.js && node scripts/verify-v1560-homepage.js",
+    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check product-v1570.js && node --check playwright.config.js && node --check tests/v1570-browser.spec.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1550-adaptive-practice.js && node --check scripts/verify-v1550-governance.js && node --check scripts/verify-v1551-security.js && node --check scripts/verify-v1560-homepage.js && node --check scripts/verify-v1570-diagnostic-browser.js && node scripts/verify-v1550-adaptive-practice.js && node scripts/verify-v1550-governance.js && node scripts/verify-v1551-security.js && node scripts/verify-v1560-homepage.js && node scripts/verify-v1570-diagnostic-browser.js",
     "predeploy:check": "node scripts/predeploy-check.js",
     "migrate": "node scripts/migrate.js",
     "prod:readiness": "node scripts/verify-production-readiness.js",
     "live:verify": "node scripts/verify-live-integrations.js",
     "live:verify:strict": "node scripts/verify-live-integrations.js --strict",
     "owner:create": "node scripts/create-owner.js",
-    "ops:verify": "node scripts/verify-v1550-adaptive-practice.js && node scripts/verify-v1550-governance.js && node scripts/verify-v1551-security.js && node scripts/verify-v1560-homepage.js",
+    "ops:verify": "node scripts/verify-v1550-adaptive-practice.js && node scripts/verify-v1550-governance.js && node scripts/verify-v1551-security.js && node scripts/verify-v1560-homepage.js && node scripts/verify-v1570-diagnostic-browser.js",
     "audit:high": "npm audit --audit-level=high",
     "e2e:public": "node scripts/e2e-public-launch-smoke.js",
+    "e2e:browser": "playwright test --config=playwright.config.js",
+    "e2e:browser:headed": "playwright test --config=playwright.config.js --headed",
     "launch:readiness": "node scripts/verify-v154-public-launch-readiness.js && node scripts/verify-production-readiness.js",
     "verify:v1541": "node scripts/verify-v1541-render-bootstrap.js",
     "verify:v1542": "node scripts/verify-v1542-navigation-domain-hardening.js",
@@ -23,10 +25,14 @@
     "verify:v1550": "node scripts/verify-v1550-adaptive-practice.js && node scripts/verify-v1550-governance.js",
     "verify:v1551": "node scripts/verify-v1551-security.js",
     "verify:v1560": "node scripts/verify-v1560-homepage.js",
+    "verify:v1570": "node scripts/verify-v1570-diagnostic-browser.js",
     "check:legacy": "node --check app.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/migrate.js && node --check scripts/verify-production-readiness.js && node --check scripts/verify-live-integrations.js && node --check scripts/create-owner.js && node --check scripts/verify-v124-ai-era.js && node --check scripts/verify-v125-operating-flow.js && node scripts/verify-v126-integrated-flow.js && node --check scripts/verify-v127-simplicity-flow.js && node scripts/verify-v127-simplicity-flow.js && node --check scripts/verify-v128-benchmark-pricing.js && node scripts/verify-v128-benchmark-pricing.js && node --check scripts/verify-v129-university-integration.js && node scripts/verify-v129-university-integration.js && node --check scripts/verify-v130-smartteacher-flow.js && node scripts/verify-v130-smartteacher-flow.js && node --check scripts/verify-v131-teacher-classroom-tools.js && node scripts/verify-v131-teacher-classroom-tools.js && node --check scripts/verify-v132-chatgpt-only.js && node scripts/verify-v132-chatgpt-only.js && node --check scripts/verify-v133-global-access.js && node scripts/verify-v133-global-access.js && node --check scripts/verify-v134-calendar-interop.js && node scripts/verify-v134-calendar-interop.js && node --check scripts/verify-v135-global-first-class.js && node scripts/verify-v135-global-first-class.js && node --check scripts/verify-v136-native-language-support.js && node scripts/verify-v136-native-language-support.js && node --check scripts/verify-v137-guided-help.js && node scripts/verify-v137-guided-help.js && node --check scripts/verify-v138-ai-era-action-layer.js && node scripts/verify-v138-ai-era-action-layer.js && node --check scripts/verify-v139-seamless-learning-operations.js && node scripts/verify-v139-seamless-learning-operations.js && node --check scripts/verify-v140-workflow-proof-layer.js && node scripts/verify-v140-workflow-proof-layer.js && node scripts/verify-v141-major-language-bridge.js && node scripts/verify-v143-course-placement.js && node scripts/verify-v144-four-skills-academy.js && node scripts/verify-v145-integrated-skills-studio.js && node scripts/verify-v146-live-skills-feedback.js && node scripts/verify-v147-simplicity-command.js && node scripts/verify-v148-usability-continuity.js && node scripts/verify-v149-intuitive-ux-continuity.js && node scripts/verify-v150-language-learning-bridge.js && node scripts/verify-v151-page-language-selector.js && node scripts/verify-v152-three-layer-language.js && node scripts/verify-v153-role-clarity-continuity.js && node scripts/verify-v154-public-launch-readiness.js && node scripts/e2e-public-launch-smoke.js && node scripts/verify-v1541-render-bootstrap.js"
   },
   "dependencies": {
     "express": "4.22.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1"
   },
   "engines": {
     "node": ">=20"
