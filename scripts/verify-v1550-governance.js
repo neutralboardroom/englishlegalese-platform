@@ -11,12 +11,16 @@ const registerPath = 'governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.55.
 const statePath = 'governance/CURRENT_RULE_STATE__v1.55.0.json';
 const transferPath = 'governance/CROSS_PROJECT_RULE_TRANSFER_LEDGER__v1.55.0.md';
 const researchPath = 'governance/RESEARCH_AND_COMPETITOR_ADOPTION_LEDGER__v1.55.0.md';
+const preSealPath = 'docs/v1.55.0/PRE_SEAL_RULE_LOCK_RECEIPT.md';
+const testReceiptPath = 'docs/v1.55.0/RELEASE_TEST_RECEIPT.md';
 const workflowPath = '.github/workflows/englishlegalese-release-gate.yml';
 
 const register = read(registerPath);
 const state = JSON.parse(read(statePath));
 const transfer = read(transferPath);
 const research = read(researchPath);
+const preSeal = read(preSealPath);
+const testReceipt = read(testReceiptPath);
 const workflow = read(workflowPath);
 
 const expectedRoger = Array.from({length:17}, (_,i)=>`EL-RGR-${String(i+1).padStart(3,'0')}`);
@@ -29,6 +33,8 @@ check('canonical rule register exists', exists(registerPath));
 check('current rule state exists', exists(statePath));
 check('cross-project transfer ledger exists', exists(transferPath));
 check('competitor research ledger exists', exists(researchPath));
+check('pre-seal rule lock receipt exists and passes', exists(preSealPath) && preSeal.includes('PRE_SEAL_RULE_LOCK = PASS'));
+check('exact release test receipt exists and passes honestly', exists(testReceiptPath) && testReceipt.includes('RELEASE_TEST_GATE = PASS') && testReceipt.includes('NOT RUN'));
 check('durable PR release gate exists', exists(workflowPath) && workflow.includes('npm run check') && workflow.includes('pull_request'));
 check('product scope is EnglishLegalese only', state.product_scope === 'EnglishLegalese.com ONLY');
 check('predecessor is exact v1.54.8 commit', state.accepted_predecessor_commit === base);
