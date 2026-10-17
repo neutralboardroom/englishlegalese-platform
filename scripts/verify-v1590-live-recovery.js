@@ -27,8 +27,10 @@ const nvil = read('NEXT_VERSION_IMPROVEMENT_LIST.md');
 
 check('package is v1.59.0', pkg.version === '1.59.0');
 check('v1.59 CSS is last public stylesheet', index.indexOf('product-v1590.css?v=1.59.0') > index.indexOf('product-v1580.css?v=1.59.0'));
-check('v1.59 JS is last public script', index.indexOf('product-v1590.js?v=1.59.0') > index.indexOf('product-v1580.js?v=1.59.0'));
-check('all principal public assets use fresh v1.59 URLs', ['styles.css','app.js','public-v1548.js','product-v1550.js','product-v1560.js','product-v1570.js','product-v1580.js','product-v1590.js'].every(f => index.includes(`${f}?v=1.59.0`)));
+check('v1.59 JS is last active presentation script', index.includes('product-v1590.js?v=1.59.0') && index.lastIndexOf('<script src=') < index.indexOf('</body>') && index.indexOf('product-v1590.js?v=1.59.0') > index.indexOf('product-v1560-access.js?v=1.59.0'));
+check('active public assets use fresh v1.59 URLs', ['styles.css','app.js','public-v1548.js','product-v1550.js','product-v1550-research.js','product-v1550-preserve.js','product-v1560-access.js','product-v1590.js'].every(f => index.includes(`${f}?v=1.59.0`)));
+check('obsolete v1.56-v1.58 presentation JS is intentionally not loaded', !index.includes('src="product-v1560.js?') && !index.includes('src="product-v1570.js?') && !index.includes('src="product-v1580.js?'));
+check('retired presentation source files remain preserved in repository', ['product-v1560.js','product-v1570.js','product-v1580.js'].every(p => fs.existsSync(path.join(root,p))));
 check('HTML includes explicit cache-revalidation metadata', index.includes('Cache-Control') && index.includes('no-cache') && index.includes('max-age=0'));
 
 check('canonical diagnostic remains present', app.includes('Free Legal English starting diagnostic') && app.includes('not an accredited proficiency test'));
@@ -58,6 +60,8 @@ check('v1.59 restores user-facing copy if stale text appears', ['Legal English c
 check('v1.59 emits a live release marker', v1590.includes('v1590-live-marker') && v1590.includes('englishlegaleseLiveRelease'));
 
 check('hidden semantics cannot be overridden by predecessor display rules', css1590.includes('[hidden]{display:none!important}'));
+check('v1.59 overrides retained v1.58 planner visibility CSS when expanded', css1590.includes('#learning-plan .v1550-plan-builder:not([hidden]){display:block!important}'));
+check('v1.59 overrides retained progress visibility CSS when expanded', css1590.includes('#skills-passport .v1550-passport-grid:not([hidden]){display:grid!important}'));
 check('logo display sizing is aspect-ratio safe', css1590.includes('.site-header .brand img') && css1590.includes('height:auto!important') && css1590.includes('object-fit:contain!important'));
 check('desktop/mobile logo sizing exists', css1590.includes('width:190px!important') && css1590.includes('width:112px!important'));
 check('quiet hero button contrast is explicit', css1590.includes('.hero-actions .btn.light') && css1590.includes('color:#0b1d33!important') && css1590.includes('background:#fff!important'));
