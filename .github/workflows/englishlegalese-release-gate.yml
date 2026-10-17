@@ -22,5 +22,11 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install exact declared production dependency set
+        run: npm install --ignore-scripts --no-fund
+
+      - name: Block high and critical dependency vulnerabilities
+        run: npm run audit:high
+
       - name: Run syntax, regression, rule and no-drift gates
         run: npm run check
