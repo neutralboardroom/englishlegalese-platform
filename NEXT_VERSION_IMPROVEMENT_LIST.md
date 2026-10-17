@@ -1,4 +1,4 @@
-# EnglishLegalese.com — Next Version Improvement List after v1.55.0
+# EnglishLegalese.com — Next Version Improvement List after v1.55.1
 
 This list is active input for the next material release under `EL-RGR-016`. Each still-relevant item must be explicitly dispositioned; qualified work must not be repeatedly carried forward without cause.
 
@@ -21,11 +21,17 @@ This list is active input for the next material release under `EL-RGR-016`. Each
 15. Continue fresh current competitor research on **every material version** across Legal-English specialists, certification/assessment products, AI speaking tutors, teacher marketplaces, corporate language platforms, general language-learning apps and adjacent professional-training products. Explicitly adopt, adapt, defer or reject qualified ideas with cause; never copy protected expression or proprietary content.
 16. Continue whole-product research beyond competitors: accessibility standards, privacy/security practices, learning science, AI safety, support patterns, SEO, performance, conversion, retention and teacher/employer workflows. Implement the strongest safe improvements rather than creating cosmetic version churn.
 17. Preserve the exact v1.54.8 primary navigation and simplified five-item mobile quick navigation unless a future intentional navigation change is justified, tested against user benefit and explicitly documented under the no-drift gate.
+18. Keep the v1.55.1 dependency-security control permanent: fresh dependency install plus `npm audit --audit-level=high` must remain release-blocking for high/critical findings. Review moderate findings separately for exploitability, reachable code and reasonable remediation rather than silently ignoring them.
+19. Evaluate committing a reproducible `package-lock.json` after confirming it does not cause Render/install drift; if adopted, require lockfile/dependency-manifest consistency and controlled dependency-update receipts.
+20. Add explicit learner/account data retention, deletion and export controls before expanding authenticated cross-device persistence; document purpose and retention by data class rather than using one blanket retention period.
+21. Add security-operational controls and evidence for secrets/token redaction, least-privilege access, integration revocation, vulnerability-remediation tracking, backup encryption/restore, and safe operational logging. Only publish trust/security claims after the corresponding controls are proven.
+22. Evaluate enterprise SSO and lifecycle provisioning/SCIM for employer plans after authentication/authorization foundations are production-qualified. Require deprovisioning and least-privilege behavior; do not add enterprise identity complexity before it materially serves active customers.
 
 ## Permanent preservation rules
 
 - No product drift and no rule drift.
 - Build only from the true newest authoritative predecessor.
 - Preserve all working useful functionality unless an intentional replacement is proven equal or better.
-- No material release without a rule-currentness check, no-drift evidence, honest tests, recovery facts, fresh research and this updated Next Version Improvement List.
+- No material release without a rule-currentness check, no-drift evidence, honest tests, recovery facts, fresh research/competitor disposition and this updated Next Version Improvement List.
+- High/critical dependency findings block qualification until resolved or explicitly proven non-applicable under an equally strong owner-approved safety decision.
 - Sister projects remain read-only sources of transferable lessons unless Roger explicitly grants separate authority.
