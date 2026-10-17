@@ -65,7 +65,7 @@ check('quiet hero buttons have visible dark text', css.includes('.hero-actions .
 
 check('browser qualification has desktop tablet mobile projects', ['desktop-chromium','tablet-chromium','mobile-chromium'].every(x => pw.includes(x)));
 check('browser test rejects stale public strings', ['New in v1.55','Launch course set','EnglishLegalese Team'].every(x => tests.includes(x)));
-check('browser test proves hash-navigation stability', tests.includes('hash navigation no longer destroys corrected homepage state') && tests.includes("#teachers") && tests.includes("#language-bridge"));
+check('browser test proves hash-navigation stability through primary navigation', tests.includes('hash navigation no longer destroys corrected homepage state') && tests.includes("name: 'Primary navigation'") && tests.includes("name: 'Teachers'") && tests.includes("name: 'Language Support'"));
 check('browser test exercises diagnostic and no persistence', tests.includes('Advanced practice path') && tests.includes('elV1580Diagnostic'));
 check('browser test exercises v1.58 progressive disclosure', ['js-v1580-courses','js-v1580-scenarios','js-v1580-planner','js-v1580-progress'].every(x => tests.includes(x)));
 check('browser test exercises fail-closed admin access', tests.includes('#admin-dashboard') && tests.includes('Check launch gates'));
