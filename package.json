@@ -1,11 +1,11 @@
 {
   "name": "englishlegalese-platform",
   "version": "1.59.0",
-  "description": "EnglishLegalese.com v1.59.0 hardens live homepage recovery with fresh asset URLs, direct DOM-based progressive disclosure, restored adaptive-practice continuity, and explicit live-release markers while preserving the approved locked logo, privacy boundaries, backend, persistence, and fail-closed account access.",
+  "description": "EnglishLegalese.com v1.59.0 hardens live homepage recovery with fresh asset URLs, direct DOM-based progressive disclosure, restored adaptive-practice continuity, explicit live-release markers, and automatic production-browser acceptance while preserving the approved locked logo, privacy boundaries, backend, persistence, and fail-closed account access.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check product-v1570.js && node --check product-v1580.js && node --check product-v1590.js && node --check playwright.config.js && node --check tests/v1570-browser.spec.js && node --check tests/v1590-browser.spec.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1590-live-recovery.js && node scripts/verify-v1590-live-recovery.js",
+    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check product-v1570.js && node --check product-v1580.js && node --check product-v1590.js && node --check playwright.config.js && node --check playwright.production.config.js && node --check tests/v1570-browser.spec.js && node --check tests/v1590-browser.spec.js && node --check tests/v1590-production.spec.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1590-live-recovery.js && node scripts/verify-v1590-live-recovery.js",
     "predeploy:check": "node scripts/predeploy-check.js",
     "migrate": "node scripts/migrate.js",
     "prod:readiness": "node scripts/verify-production-readiness.js",
@@ -17,6 +17,7 @@
     "e2e:public": "node scripts/e2e-public-launch-smoke.js",
     "e2e:browser": "playwright test --config=playwright.config.js",
     "e2e:browser:headed": "playwright test --config=playwright.config.js --headed",
+    "e2e:production": "playwright test --config=playwright.production.config.js",
     "launch:readiness": "node scripts/verify-v154-public-launch-readiness.js && node scripts/verify-production-readiness.js",
     "verify:v1541": "node scripts/verify-v1541-render-bootstrap.js",
     "verify:v1542": "node scripts/verify-v1542-navigation-domain-hardening.js",
