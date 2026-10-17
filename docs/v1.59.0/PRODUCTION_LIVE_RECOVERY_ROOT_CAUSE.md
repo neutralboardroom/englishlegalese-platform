@@ -15,23 +15,37 @@ An initial connector `fetch_file` result displayed `product-v1550.js` with empty
 The public page had accumulated multiple client-side layers:
 - canonical `app.js` rendered the base homepage;
 - `product-v1550.js` persistently injected Scenario Studio, Learning Path, Skills Passport and legacy public presentation;
-- later v1.56/v1.58 scripts attempted to remove, rewrite or compact parts of that injected DOM;
-- correctness therefore depended on script ordering, observer timing, route lifecycle and the browser receiving/executing the intended release assets.
+- v1.56 and v1.58 presentation scripts attempted to remove, rewrite or compact parts of that injected DOM;
+- v1.58 itself kept a persistent MutationObserver that re-applied its own presentation state after DOM mutations;
+- correctness therefore depended on script ordering, observer timing, route lifecycle, competing state variables and the browser receiving/executing the intended release assets.
 
-Even though v1.58 source and live asset URLs contained the newer correction logic, the owner-observed production browser state did not reliably match the qualified candidate. That makes the layering itself an acceptance defect.
+This conflict was reproduced by the v1.59 release gate. Initial v1.59 tests correctly failed because predecessor display rules could override native `hidden` state. After that was hardened, a second test pass still failed because the predecessor v1.58 runtime observer immediately re-compacted scenarios/planner/progress after v1.59 controls attempted to expand them. This was direct evidence that multiple active presentation controllers were unsafe.
+
+Even though v1.58 source and live asset URLs contained newer correction logic, the owner-observed production browser state did not reliably match the qualified candidate. That makes the layering itself an acceptance defect.
 
 ## v1.59 corrective strategy
-1. Keep the useful v1.55 learning features; do not delete the 21 scenarios, custom roleplay, learning planner or progress record.
-2. Add `product-v1590.js` as a hard recovery layer that directly enforces critical public correctness in DOM state rather than relying only on CSS classes.
-3. Hide non-featured courses/scenarios, planner details and progress details with the native `hidden` state until the user intentionally expands them.
-4. Directly remove the legacy public release panel and public staff role if a predecessor layer reinjects them.
-5. Directly normalize public/internal copy and narrow unsupported language claims.
-6. Force all public CSS/JS/logo references to new `?v=1.59.0` URLs so a v1.58 asset cannot satisfy a v1.59 request.
-7. Preserve the approved logo file bytes; only responsive display sizing changes.
-8. Add release-blocking browser tests that reproduce the exact rejected-state failures across desktop, tablet and mobile.
-9. Keep backend, persistence, migrations and production-service contracts unchanged.
-10. Require two complete exact-head qualification passes before merge, then verify the actual production release separately.
+1. Keep the useful v1.55 learning engine; do not delete the 21 scenarios, custom roleplay, learning planner or progress record.
+2. Keep `product-v1550.js`, `product-v1550-research.js`, navigation preservation, and fail-closed dashboard access active.
+3. Retire v1.56, v1.57 and v1.58 **presentation JavaScript from runtime loading** in `index.html`. Their source files remain preserved in the repository for history/no-loss evidence; v1.57's diagnostic is already canonical in `app.js`.
+4. Make `product-v1590.js` the single active successor presentation controller for the corrective homepage state.
+5. Enforce critical public correctness directly in DOM state rather than relying only on predecessor CSS classes.
+6. Hide non-featured courses/scenarios, the diagnostic question body, planner details and progress details with native `hidden` state until intentionally expanded.
+7. Add `[hidden]{display:none!important}` plus explicit successor overrides for retained predecessor CSS selectors that would otherwise keep planner/progress content hidden after expansion.
+8. Directly remove the legacy public release panel and public staff role if any predecessor injection recreates them.
+9. Directly normalize public/internal copy and narrow unsupported language claims.
+10. Force all active public assets to new `?v=1.59.0` URLs so a v1.58 asset cannot satisfy a v1.59 request.
+11. Preserve approved logo bytes and alter only responsive display sizing.
+12. Run release-blocking desktop/tablet/mobile browser tests for the exact rejected-state failures.
+13. After merge, automatically wait for Render to publish the exact v1.59 runtime and then run a **separate production Playwright acceptance suite** directly against `englishlegalese.com` and `www.englishlegalese.com`, saving production screenshots/traces.
+14. Keep backend, persistence, migrations and production-service contracts unchanged.
+15. Require two complete exact-head qualification passes before merge. Production acceptance remains separate and mandatory afterward.
+
+## Qualification evidence during repair
+- Early v1.59 gates failed rather than being bypassed. They exposed predecessor visibility conflicts and mobile-length issues.
+- A later gate exposed active v1.58 runtime interference with v1.59 expansion controls.
+- After retiring the conflicting predecessor presentation scripts, predeploy release gate `39060167781` succeeded on candidate head `932eb8b5f5d88928a03b5be44a97545dc07bbad7`, with 0 dependency vulnerabilities and all 27 predeploy desktop/tablet/mobile browser tests passing.
+- This successful candidate run is functional evidence only; final seal documentation changes the branch head, so two new exact-final-head qualification passes are still required before merge.
 
 ## State discipline
 Before deployment: `BUILT` and `QUALIFIED` may become YES; `DEPLOYED` and `LIVE_CORRECT` remain NO.
-After deployment: Render live status can establish `DEPLOYED`; only production-browser/content evidence that the rejected state is absent can establish `LIVE_CORRECT`.
+After deployment: Render live status can establish `DEPLOYED`; only the postdeploy production-browser/content evidence showing the rejected state is absent can establish `LIVE_CORRECT`.
