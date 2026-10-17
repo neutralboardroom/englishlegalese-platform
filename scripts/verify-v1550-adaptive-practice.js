@@ -8,6 +8,7 @@ const app = read('app.js');
 const publicJs = read('public-v1548.js');
 const publicCss = read('public-v1548.css');
 const product = read('product-v1550.js');
+const research = read('product-v1550-research.js');
 const preserve = read('product-v1550-preserve.js');
 const css = read('product-v1550.css');
 const pkg = JSON.parse(read('package.json'));
@@ -36,6 +37,7 @@ const checks = [
 
   // v1.55.0 feature coverage.
   ['product JS is loaded', index.includes('product-v1550.js')],
+  ['research adaptation JS is loaded after product JS', index.includes('product-v1550-research.js') && index.indexOf('product-v1550-research.js') > index.indexOf('product-v1550.js')],
   ['navigation preservation JS is loaded after product JS', index.includes('product-v1550-preserve.js') && index.indexOf('product-v1550-preserve.js') > index.indexOf('product-v1550.js')],
   ['product CSS is loaded', index.includes('product-v1550.css')],
   ['Scenario Studio exists', product.includes('Legal Scenario Studio') && product.includes('practice-studio')],
@@ -49,6 +51,11 @@ const checks = [
   ['legal advice boundary is explicit', product.includes('not legal advice')],
   ['six skill dimensions exist', ['precision','tone','speaking','writing','reading','aiReview'].every(k => product.includes(`'${k}'`))],
   ['practice-area breadth exists', ['Client Communication','Contracts','Legal Reading','Legal Writing','Meetings & Negotiation','Academic & Career','AI & Legal Communication'].every(x => product.includes(x))],
+  ['custom learner-created roleplay exists', research.includes('Create your own practice') && research.includes('CUSTOM LEGAL ENGLISH LANGUAGE PRACTICE')],
+  ['custom roleplay requires privacy-safe framing', research.includes('Do not include client names') && research.includes('no confidential client facts')],
+  ['custom roleplay preserves legal-advice boundary', research.includes('not legal advice') && research.includes('Do not invent legal facts or decide legal meaning')],
+  ['custom roleplay asks for one prioritized takeaway', research.includes('one prioritized takeaway')],
+  ['custom roleplay does not persist the learner situation', !research.includes('localStorage') && !research.includes('sessionStorage')],
   ['desktop navigation is exact predecessor set', ["['#start','Start']","['#courses','Courses']","['#smartteacher','SmartTeacher AI']","['#teachers','Teachers']","['#employers','Employers']","['#language-bridge','Language Support']","['#trust','Trust']","['#dashboards','Login / Dashboard','nav-cta']"].every(x => preserve.includes(x)) && !preserve.includes("['#practice-studio','Practice']"))],
   ['mobile quick navigation is exact predecessor five-item set', ["['#start','Start']","['#courses','Courses']","['#smartteacher','AI Practice']","['#language-bridge','Languages']","['#dashboards','Dashboard']"].every(x => preserve.includes(x))],
   ['new Practice feature remains discoverable outside locked primary nav', index.includes('href="#practice-studio">Scenario Practice</a>') && product.includes('Practice a legal scenario')],
