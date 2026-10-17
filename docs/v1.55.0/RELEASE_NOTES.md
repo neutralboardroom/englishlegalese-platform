@@ -1,7 +1,7 @@
 # EnglishLegalese.com v1.55.0 — Release Notes
 
 **Release:** 1.55.0  
-**Date:** 2026-10-16  
+**Date:** 2026-10-17  
 **Exact predecessor:** v1.54.8 / `5f6c8ddef400d758541686fcd9132c28f11259e7`  
 **Release type:** Material feature + governance release  
 **Deployment state:** NOT DEPLOYED by this release work
@@ -14,6 +14,7 @@
 - Three practice levels: Foundation, Professional, Advanced.
 - Six skill dimensions: legal precision, professional tone, speaking/interaction, writing/structure, document reading and AI-output review judgment.
 - Explicit privacy/legal boundary: synthetic language practice; do not enter confidential client facts; not legal advice.
+- Added learner-created **Create your own practice** roleplay using generic/synthetic facts only; the entered scenario is not persisted by the new feature and is routed to SmartTeacher with confidentiality and legal-advice guardrails.
 
 ### Personalized Learning Path
 - Four-week practice plan generated from learner goal, practice level, weekly practice time and priority skills.
@@ -30,9 +31,10 @@
 ### SmartTeacher AI integration
 - Scenario context can be loaded into the existing SmartTeacher AI practice surface.
 - Prompt explicitly keeps the activity in language education and asks for focused, high-value language feedback rather than legal advice.
+- Custom roleplays end with one prioritized takeaway to guide the next practice session.
 
 ### Competitor-informed product development
-Fresh 2026-10-16 research reviewed Legal-English specialists, assessment/certification products, AI speaking tutors, teacher marketplaces and corporate language-training platforms. Qualified patterns were adopted/adapted into v1.55.0; pronunciation scoring, formal proficiency scoring and private-client-document practice were not fabricated or forced into the product without adequate infrastructure/evidence.
+Fresh research through **2026-10-17** reviewed Legal-English specialists, assessment/certification products, AI speaking tutors, teacher marketplaces and corporate language-training platforms. Qualified patterns were adopted/adapted into v1.55.0, including custom roleplay and prioritized feedback; pronunciation scoring, formal proficiency scoring and private-client-document practice were not fabricated or forced into the product without adequate infrastructure/evidence.
 
 ### Durable governance + no-drift system
 v1.55.0 establishes:
