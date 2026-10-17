@@ -64,11 +64,11 @@ try {
   const rows = diff ? diff.split(/\r?\n/).map(line => line.split(/\t+/)) : [];
   const allowed = p => [
     'index.html','package.json','product-v1550.js','product-v1550.css','product-v1550-preserve.js','product-v1550-research.js',
-    'scripts/verify-v1550-adaptive-practice.js','scripts/verify-v1550-governance.js',
+    'scripts/verify-v1550-adaptive-practice.js','scripts/verify-v1550-governance.js','scripts/verify-v1551-security.js',
     '.github/workflows/englishlegalese-release-gate.yml','NEXT_VERSION_IMPROVEMENT_LIST.md'
-  ].includes(p) || p.startsWith('governance/') || p.startsWith('docs/v1.55.0/');
+  ].includes(p) || p.startsWith('governance/') || p.startsWith('docs/v1.55.0/') || p.startsWith('docs/v1.55.1/');
   check('no files deleted from v1.54.8', rows.every(parts => !String(parts[0]).startsWith('D')));
-  check('all changed paths are explicitly allowed v1.55.0 surfaces', rows.every(parts => parts.slice(1).every(allowed)));
+  check('all changed paths are explicitly allowed v1.55 successor surfaces', rows.every(parts => parts.slice(1).every(allowed)));
   const changedPaths = rows.flatMap(parts => parts.slice(1));
   check('backend server unchanged', !changedPaths.includes('server.js'));
   check('persistence unchanged', !changedPaths.includes('src/persistence.js'));
@@ -82,7 +82,7 @@ try {
 for (const [name, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${name}`);
 const failures = checks.filter(([,ok])=>!ok);
 if (failures.length) {
-  console.error(`v1.55.0 governance/no-drift verification failed: ${failures.length} check(s). gitChecked=${gitChecked}`);
+  console.error(`v1.55 governance/no-drift verification failed: ${failures.length} check(s). gitChecked=${gitChecked}`);
   process.exit(1);
 }
-console.log(`v1.55.0 governance/no-drift verification passed: ${checks.length} checks.`);
+console.log(`v1.55 governance/no-drift verification passed: ${checks.length} checks.`);
