@@ -32,7 +32,7 @@ html{scroll-padding-top:var(--v1560-header-offset)}
 .v1560-prompt-starters{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin-bottom:.85rem;color:#4d5968;font-size:.92rem}
 .v1560-starter{appearance:none;border:1px solid #cfd7df;background:#fff;color:#0b1d33;border-radius:999px;padding:.55rem .8rem;min-height:40px;font:600 .88rem/1.1 Inter,sans-serif;cursor:pointer}
 .v1560-starter:hover,.v1560-starter:focus-visible{border-color:#247d83;outline:2px solid #247d83;outline-offset:2px}
-.v1560-ready .v1550-custom-roleplay[hidden]{display:none!important}
+.v1560-ready .v1550-custom-roleplay[hidden],.v1560-ready #practice-studio:not(.v1560-expanded) .v1550-custom-roleplay{display:none!important}
 .v1560-ready .v1550-scenario-grid{gap:1rem}
 .v1560-ready .v1550-scenario-card .v1550-skill-tags{margin-top:auto}
 .v1560-ready #practice-studio .v1550-scenario-card{min-height:0}
