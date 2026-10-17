@@ -1,8 +1,9 @@
 # EnglishLegalese.com — Canonical Roger Rule + Durable Builder Rule Register
 
-**Register:** EL-RULES-1.0.0  
+**Register:** EL-RULES-1.0.1  
 **Product scope:** EnglishLegalese.com ONLY  
 **Established:** 2026-10-16  
+**Updated:** 2026-10-17  
 **Status:** ACTIVE · NO-LOSS · NO-DRIFT · FAIL-CLOSED · CROSS-VERSION
 
 This is the canonical active rule authority for EnglishLegalese. Summaries, prompts, release notes, continuation notes, memories and READMEs may point here but may not replace this complete corpus.
@@ -68,6 +69,11 @@ At the beginning of each material build, locate the predecessor's `NEXT_VERSION_
 
 ## EL-RGR-017 — Two-point currentness/race check
 Check product/rule currentness before material work and immediately before final seal. If a newer qualified EnglishLegalese release or owner rule appears, reconcile it; do not overwrite it with a stale successor.
+
+## EL-RGR-018 — Standing qualified automatic deployment authorization
+**Owner source/date:** Roger Gillman, direct instruction on 2026-10-17: “You can deploy it automatically now after each new version you build.”
+
+Roger authorizes the EnglishLegalese builder to deploy each newly completed EnglishLegalese version automatically after the version has fully completed all required qualification gates. A separate per-version owner approval is no longer required. This authorization does **not** permit deployment of a failed, unqualified, stale, conflicting, unsafe or gate-blocked build. Before deployment, satisfy the active exact-predecessor/currentness, rule-currentness, no product drift, no rule drift, regression/testing, privacy/security, deployment-readiness and rollback/recovery requirements. Record exact version, source commit, deployment target, deploy ID/result and live-verification result. Do not claim `DEPLOYED` or `LIVE_CORRECT` without exact evidence. If deployment fails or live verification reveals a material regression, fail closed and use the known rollback/recovery path. This standing authorization remains active until Roger explicitly changes or revokes it. Full provenance is preserved in `governance/OWNER_STANDING_DEPLOYMENT_AUTHORIZATION__2026-10-17.md`.
 
 ---
 
