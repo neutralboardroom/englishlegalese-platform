@@ -34,7 +34,7 @@ check('product scope is EnglishLegalese only', state.product_scope === 'EnglishL
 check('predecessor is exact v1.54.8 commit', state.accepted_predecessor_commit === base);
 check('17 Roger Rules declared', state.roger_rule_count === 17 && expectedRoger.every(id => state.roger_rule_ids.includes(id) && register.includes(`## ${id}`)));
 check('10 durable builder rules declared', state.durable_builder_rule_count === 10 && expectedDurable.every(id => state.durable_builder_rule_ids.includes(id) && register.includes(`## ${id}`)));
-check('zero-rule-drift language is explicit', register.includes('Absolute Roger Rule permanence / zero rule drift') && register.includes('may not be omitted') && register.includes('may not be weakened'));
+check('zero-rule-drift language is explicit', register.includes('Absolute Roger Rule permanence / zero rule drift') && /may not be omitted[^\n]*weakened/i.test(register));
 check('universal no-drift gate is explicit', register.includes('Universal product no-drift / no-regression') && register.includes('RELEASE BLOCKER'));
 check('competitor research is durable every material version', register.includes('Fresh research + competitor intelligence every material version') && register.includes('competitors of **all sizes and types**'));
 check('whole-product improvement is durable', register.includes('Whole-product self-improvement every material version'));
