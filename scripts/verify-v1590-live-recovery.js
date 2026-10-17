@@ -47,14 +47,17 @@ check('dashboard access remains fail-closed', access.includes('protectedHashes')
 check('v1.59 persistent recovery observer exists', v1590.includes('new MutationObserver(schedule).observe(app') && !v1590.includes('disconnect()'));
 check('v1.59 removes legacy release panel', v1590.includes("qs('#adaptive-learning')?.remove()"));
 check('v1.59 removes legacy public staff role if reinjected', v1590.includes('EnglishLegalese Team') && v1590.includes('card.remove()'));
-check('v1.59 directly limits courses', v1590.includes('card.hidden = i >= 3 && !expanded'));
-check('v1.59 directly limits scenarios', v1590.includes('card.hidden = i >= 6 && !scenariosExpanded'));
-check('v1.59 directly hides scenario filters until expanded', v1590.includes('filters.hidden = !scenariosExpanded'));
-check('v1.59 directly compacts learning-plan builder', v1590.includes('builder.hidden = !plannerExpanded'));
-check('v1.59 directly compacts progress details', v1590.includes('el.hidden = !progressExpanded'));
+check('v1.59 directly limits courses', v1590.includes('card.hidden=i>=3&&!expanded'));
+check('v1.59 directly limits scenarios', v1590.includes('card.hidden=i>=6&&!scenariosExpanded'));
+check('v1.59 directly hides scenario filters until expanded', v1590.includes('filters.hidden=!scenariosExpanded'));
+check('v1.59 directly compacts diagnostic on general homepage', v1590.includes('shell.hidden=!diagnosticExpanded') && v1590.includes('Start the 8-question diagnostic'));
+check('v1.59 directly compacts learning-plan builder', v1590.includes('builder.hidden=!plannerExpanded'));
+check('v1.59 directly compacts progress details', v1590.includes('el.hidden=!progressExpanded'));
+check('v1.59 strips predecessor visibility classes before direct control', v1590.includes("card.classList.remove('v1560-collapsible','v1580-scenario-more')") && v1590.includes("el.classList.remove('v1560-progress-detail','v1580-progress-detail')"));
 check('v1.59 restores user-facing copy if stale text appears', ['Legal English courses','Important:','Legal Skills Progress','Major-language learning support'].every(x => v1590.includes(x)));
 check('v1.59 emits a live release marker', v1590.includes('v1590-live-marker') && v1590.includes('englishlegaleseLiveRelease'));
 
+check('hidden semantics cannot be overridden by predecessor display rules', css1590.includes('[hidden]{display:none!important}'));
 check('logo display sizing is aspect-ratio safe', css1590.includes('.site-header .brand img') && css1590.includes('height:auto!important') && css1590.includes('object-fit:contain!important'));
 check('desktop/mobile logo sizing exists', css1590.includes('width:190px!important') && css1590.includes('width:112px!important'));
 check('quiet hero button contrast is explicit', css1590.includes('.hero-actions .btn.light') && css1590.includes('color:#0b1d33!important') && css1590.includes('background:#fff!important'));
