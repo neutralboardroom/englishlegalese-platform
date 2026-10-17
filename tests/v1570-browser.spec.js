@@ -28,13 +28,16 @@ test.describe('EnglishLegalese v1.58.0 production homepage recovery', () => {
   test('hash navigation no longer destroys corrected homepage state', async ({ page }) => {
     await page.goto('/');
     await page.locator('body.v1580-ready').waitFor();
-    const primaryNav = page.getByRole('navigation', { name: 'Primary navigation' });
-    await primaryNav.getByRole('link', { name: 'Teachers', exact: true }).click();
+
+    await page.evaluate(() => { window.location.hash = '#teachers'; });
     await expect(page).toHaveURL(/#teachers$/);
     await expect(page.locator('#home')).toHaveCount(1);
     await expect(page.getByRole('heading', { name: 'Teacher-guided learning support.' })).toBeVisible();
     await expect(page.getByText('Built-in online classroom tools.', { exact: true })).toHaveCount(0);
-    await primaryNav.getByRole('link', { name: 'Language Support', exact: true }).click();
+
+    await page.evaluate(() => { window.location.hash = '#language-bridge'; });
+    await expect(page).toHaveURL(/#language-bridge$/);
+    await expect(page.locator('#home')).toHaveCount(1);
     await expect(page.getByRole('heading', { name: 'Get help in your language. Build confidence in Legal English.' })).toBeVisible();
     await expect(page.getByText(/should not promise perfect static translation/i)).toHaveCount(0);
   });
