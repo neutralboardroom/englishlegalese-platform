@@ -140,3 +140,52 @@ test('public recovery observer becomes idle instead of constantly rewriting text
  }));
  expect(changes).toBeLessThan(8);
 });
+
+
+test('next learning version provides a real safe prompt-preparation workflow',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('#start h2')).toHaveText('Start with what you need.');
+  await expect(page.getByText('Operational staff tools stay behind account access.')).toHaveCount(0);
+  await page.evaluate(()=>{location.hash='#smartteacher';});
+  await expect(page.locator('#smartteacher')).toBeVisible();
+  const topic='Fictional client update about a delayed contract review';
+  await page.locator('#el-practice-topic').fill(topic);
+  await page.getByRole('button',{name:'Prepare conversation practice'}).click();
+  await expect(page.locator('.js-ai-output')).toContainText('CONVERSATION PRACTICE');
+  await expect(page.locator('.js-ai-output')).toContainText(topic);
+  await expect(page.locator('.js-ai-output')).toContainText('not legal advice');
+  await expect(page.locator('.js-copy-practice')).toBeVisible();
+  await page.getByRole('button',{name:'Prepare writing review'}).click();
+  await expect(page.locator('.js-ai-output')).toContainText('WRITING REVIEW');
+  await expect(page.locator('.js-ai-output')).toContainText('Preserve the intended legal meaning');
+  await expect(page.locator('#smartteacher p').first()).toContainText('does not send text to an AI service');
+  await expect(page.locator('#smartteacher .js-ai-input')).toHaveAttribute('maxlength','1500');
+});
+
+test('mobile disclosure menu handles Escape, link activation and outside touch',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.goto('/');await waitForRecovery(page);
+  const toggle=page.locator('#navToggle'),nav=page.locator('#mainNav');
+  await expect(toggle).toHaveAttribute('aria-expanded','false');
+  await toggle.click();await expect(toggle).toHaveAttribute('aria-expanded','true');
+  await expect(nav).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(toggle).toHaveAttribute('aria-expanded','false');
+  await expect(toggle).toBeFocused();
+  await toggle.click();
+  await nav.locator('a[href="#courses"]').click();
+  await expect(toggle).toHaveAttribute('aria-expanded','false');
+  await expect(page.locator('#courses')).toBeVisible();
+  await expect(nav.locator('a[href="#courses"]')).toHaveAttribute('aria-current','location');
+  await toggle.click();await page.locator('#courses h2').click({force:true});
+  await expect(toggle).toHaveAttribute('aria-expanded','false');
+});
+
+test('revised metadata stays aligned with the public learning experience',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href','https://englishlegalese.com/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.62.0');
+});
