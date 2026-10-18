@@ -68,7 +68,7 @@ check('quiet hero button contrast is explicit', css1590.includes('.hero-actions 
 check('sticky-header offsets and reduced motion remain', css1590.includes('scroll-padding-top') && css1590.includes('scroll-margin-top') && css1590.includes('prefers-reduced-motion'));
 
 check('browser test rejects exact owner-observed stale strings', ['EnglishLegalese Team','Open staff view','NEW IN V1.55','LAUNCH COURSE SET','Safety line:','track payout status'].every(x => browser.includes(x)));
-check('browser test verifies six featured scenarios then all 21', browser.includes("toBe(6)") && browser.includes("toBe(21)"));
+check('browser test verifies six featured scenarios then all 21', (browser.includes('toBe(6)') || browser.includes('toHaveCount(6)')) && (browser.includes('toBe(21)') || browser.includes('toHaveCount(21)')));
 check('browser test verifies three featured courses', browser.includes("#courses article:visible") && browser.includes('toBe(3)'));
 check('browser test verifies planner/progress collapsed by default', browser.includes("#learning-plan .v1550-plan-builder") && browser.includes("#skills-passport .v1550-passport-grid") && browser.includes('toBeHidden()'));
 check('browser test verifies live marker and version', browser.includes('v1590-live-marker') && browser.includes('1.60.0'));
