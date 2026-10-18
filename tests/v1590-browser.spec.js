@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.60.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.60.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.61.0');
 }
 
-test.describe('EnglishLegalese v1.60.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.61.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -108,3 +108,22 @@ test.describe('EnglishLegalese v1.60.0 hard live recovery', () => {
 });
 
 test('focused learning destinations are accessible and link back home',async({page})=>{await page.goto('/');await waitForRecovery(page);for(const [hash,id] of [['#courses','courses'],['#language-bridge','language-bridge'],['#teachers','teachers'],['#employers','teachers'],['#practice-studio','practice-studio'],['#learning-plan','learning-plan'],['#skills-passport','skills-passport'],['#trust','trust']]){await page.evaluate(h=>location.hash=h,hash);await expect(page.locator('#elFocusToolbar')).toBeVisible();await expect(page.locator('#'+id)).toBeVisible();await expect(page.locator('#home')).toBeHidden();expect(await page.locator('#app > section:visible').count()).toBe(1);}await page.locator('#elFocusToolbar a[href="#home"]').click();await expect(page.locator('#home')).toBeVisible();await expect(page.locator('#elFocusToolbar')).toBeHidden();});
+
+test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
+  await page.goto('/');await page.locator('body.v1590-ready').waitFor();
+  const brand=page.locator('.site-header .brand');
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.61\.0/);
+  const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
+  expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
+  expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
+  expect(im.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?160:200);
+  expect(await logo.evaluate(el=>getComputedStyle(el).objectFit)).toBe('contain');
+  await expect(page.locator('.hero-logo')).toHaveCount(0);
+  await expect(page.getByRole('heading',{name:'Clear English for legal work.'})).toBeVisible();
+  await expect(page.getByText('Please respond to the earlier email.')).toBeVisible();
+  expect(await page.locator('.hero-actions .btn').count()).toBe(2);
+  await expect(page.locator('.hero-secondary a[href="#smartteacher"]')).toBeVisible();
+  await expect(page.locator('.hero-secondary a[href="#practice-studio"]')).toBeVisible();
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);expect(overflow).toBeLessThanOrEqual(1);
+  await page.screenshot({path:testInfo.outputPath('v1610-visual-homepage.png'),fullPage:true,animations:'disabled'});
+});
