@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.60.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.61.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -68,7 +68,17 @@
   function pageShell(content){ app.innerHTML = content; bindActions(); app.focus({preventScroll:true}); }
 
   function hero(){
-    return `<section class="hero" id="home"><div class="container hero-grid"><div><div class="eyebrow">Legal English training for the AI era</div><h1>Legal English training for the AI era.</h1><p class="lead">AI can translate words. EnglishLegalese helps professionals understand, explain, write, negotiate, read, speak, listen, and review AI output more carefully in real legal and business English.</p><div class="hero-actions"><a class="btn gold" href="#diagnostic">Start your free diagnostic</a><a class="btn teal" href="#smartteacher">Try SmartTeacher AI</a><a class="btn light" href="#courses">Explore courses</a><a class="btn light" href="#practice-studio">Practice a legal scenario</a></div><div class="trust-row"><div class="trust-item">Teacher-guided learning</div><div class="trust-item">ChatGPT-powered SmartTeacher AI</div><div class="trust-item">Major-language learning support</div><div class="trust-item">Learning support, not legal advice</div></div></div><div class="hero-card"><img class="hero-logo" src="assets/englishlegalese-logo.png" alt="EnglishLegalese.com"><h3>Use preferred-language explanations when you need help — while you build real Legal English skills.</h3><p class="muted">Language support can help with instructions and learning activities, then bring you back to Legal English practice. It is not certified translation or court interpretation.</p>${languageSelect()}</div></div></section>`;
+    return `<section class="hero" id="home"><div class="container hero-grid">
+    <div class="hero-copy"><div class="eyebrow">Legal English made practical</div><h1>Clear English for legal work.</h1><p class="lead">Build confidence in legal writing, reading and professional conversations through realistic scenarios, SmartTeacher AI practice and teacher-guided learning.</p>
+    <div class="hero-actions"><a class="btn teal" href="#diagnostic">Start your free diagnostic</a><a class="btn light" href="#courses">Explore courses</a></div>
+    <div class="hero-secondary"><a href="#smartteacher">Try SmartTeacher AI <span aria-hidden="true">→</span></a><a href="#practice-studio">Practice a legal scenario <span aria-hidden="true">→</span></a></div>
+    <div class="trust-row"><span class="trust-item">Practical language skills</span><span class="trust-item">Teacher guidance where available</span><span class="trust-item">Education, not legal advice</span></div></div>
+    <aside class="hero-card" aria-label="Legal English example and language support">
+      <div class="hero-example-kicker">See the difference</div><h2 class="hero-example-title">Professional English, made clearer.</h2>
+      <div class="hero-example"><div class="hero-example-label">Instead of</div><p>Pursuant to the aforementioned correspondence, we hereby request your response.</p></div>
+      <div class="hero-example improved"><div class="hero-example-label">Try</div><p>Please respond to the earlier email.</p></div>
+      <div class="hero-language">LANGUAGE_WIDGET<p>Choose an explanation language for learning support. Legal English remains the goal.</p></div>
+    </aside></div></section>`.replace('LANGUAGE_WIDGET',languageSelect());
   }
   function startSection(){
     return `<section class="section compact" id="start"><div class="container section-head"><div><div class="eyebrow">Start here</div><h2>One clear path for every learner.</h2></div><p>Choose the next step that fits your goal. Operational staff tools stay behind account access.</p></div><div class="container grid cols-3">${card('Student','Take the starting diagnostic, choose your preferred explanation language, practice with SmartTeacher AI, explore scenarios, and build a learning path.','Take the starting diagnostic','#diagnostic')}${card('Teacher','Explore teacher-guided learning support, lesson review, roleplay, homework, and feedback. Operational teacher tools require the appropriate signed-in role.','Explore teacher support','#teachers')}${card('Employer','Explore privacy-conscious team training and appropriate aggregate learning-progress signals while private learner work stays private by default.','Explore employer training','#employers')}</div></section>`;
