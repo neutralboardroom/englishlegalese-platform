@@ -10,6 +10,15 @@ const { ProductionServices, authMiddleware, requireRoles, configured, ROLE_PERMI
 const persistentStore = new PersistentStore();
 const productionServices = new ProductionServices(persistentStore);
 
+// Revalidate the HTML shell on every revisit; versioned assets already use release-unique URLs.
+// Never apply public caching rules to private or API responses.
+app.use((req,res,next)=>{
+  if(req.path==='/' || req.path==='/index.html'){
+    res.setHeader('Cache-Control','no-cache, max-age=0, must-revalidate');
+    res.setHeader('X-EnglishLegalese-Release',pkg.version);
+  }
+  next();
+});
 app.use(express.static(__dirname));
 
 app.get('/health', (req, res) => {

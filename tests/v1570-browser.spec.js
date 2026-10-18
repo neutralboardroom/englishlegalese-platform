@@ -1,18 +1,18 @@
 const { test, expect } = require('@playwright/test');
 
-test.describe('EnglishLegalese v1.59.0 live homepage recovery inheritance', () => {
+test.describe('EnglishLegalese v1.60.0 live homepage recovery inheritance', () => {
   test('homepage loads corrected canonical experience and locked logo at usable size', async ({ page }, testInfo) => {
     await page.goto('/');
     await page.locator('body.v1590-ready').waitFor();
 
-    await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.59.0');
-    await expect(page.locator('.site-header .brand img')).toHaveAttribute('src', /assets\/englishlegalese-logo\.png\?v=1\.59\.0/);
+    await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.60.0');
+    await expect(page.locator('.site-header .brand img')).toHaveAttribute('src', /assets\/englishlegalese-logo\.png\?v=1\.60\.0/);
     const logoBox = await page.locator('.site-header .brand img').boundingBox();
     expect(logoBox).not.toBeNull();
     expect(logoBox.width).toBeGreaterThanOrEqual(testInfo.project.name === 'mobile-chromium' ? 100 : 140);
 
     await expect(page.getByRole('heading', { name: 'Legal English training for the AI era.' })).toBeVisible();
-    await expect(page.locator('#diagnostic')).toBeVisible();
+    await expect(page.locator('#diagnostic')).toBeHidden();
     await expect(page.locator('.hero-actions a').first()).toHaveAttribute('href', '#diagnostic');
     await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
     await expect(page.getByText('New in v1.55', { exact: true })).toHaveCount(0);
@@ -90,13 +90,16 @@ test.describe('EnglishLegalese v1.59.0 live homepage recovery inheritance', () =
 
     const scenarioButton = page.locator('.js-v1590-scenarios');
     await expect(scenarioButton).toHaveAttribute('aria-expanded', 'false');
+    await page.evaluate(()=>location.hash='#practice-studio');
     expect(await page.locator('#practice-studio .v1550-scenario-card:visible').count()).toBe(6);
     await scenarioButton.click();
     await expect(scenarioButton).toHaveAttribute('aria-expanded', 'true');
     expect(await page.locator('#practice-studio .v1550-scenario-card:visible').count()).toBeGreaterThan(6);
 
+    await page.evaluate(()=>location.hash='#learning-plan');
     await expect(page.locator('.js-v1590-planner')).toBeVisible();
     await expect(page.locator('#learning-plan .v1550-plan-builder')).toBeHidden();
+    await page.evaluate(()=>location.hash='#skills-passport');
     await expect(page.locator('.js-v1590-progress')).toBeVisible();
     await expect(page.locator('#skills-passport .v1550-passport-grid')).toBeHidden();
   });

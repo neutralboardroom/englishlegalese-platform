@@ -64,3 +64,30 @@ textarea.input{min-height:130px}
   .v1590-empty-progress{padding:1rem}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*{scroll-behavior:auto!important;transition:none!important}}
+
+/* v1.60.0 — intentional homepage-to-focused-destination layout, and more balanced headings.
+   This layer only styles presentation; section visibility belongs to canonical app.js. */
+.hero h1{font-size:clamp(2.45rem,4.4vw,3.85rem)!important;line-height:1.04!important;letter-spacing:-.025em}
+.section-head h2{font-size:clamp(1.7rem,2.5vw,2.55rem)!important;line-height:1.13!important;letter-spacing:-.012em}
+.section h2:not(.section-head h2){font-size:clamp(1.65rem,2.4vw,2.4rem);line-height:1.16}
+.section h3,.card h3,.panel h3{font-size:clamp(1.08rem,1.35vw,1.3rem);line-height:1.3}
+.section-head>p{max-width:39rem;line-height:1.6}
+.hero .lead{font-size:clamp(1.07rem,1.3vw,1.22rem);line-height:1.65}
+.el-focus-toolbar{background:#f4f8fa;border-bottom:1px solid #dde7ec}
+.el-focus-toolbar[hidden]{display:none!important}
+.el-focus-toolbar-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:.8rem;padding-bottom:.8rem}
+.el-back-link{color:#0b4861;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.el-back-link:focus-visible{outline:3px solid #247d83;outline-offset:3px}
+.el-focus-name{color:#52667a;font-size:.9rem;text-align:right;max-width:65%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-el-homepage-view="home"] #app>.section{padding-top:2.45rem!important;padding-bottom:2.45rem!important}
+body[data-el-homepage-view="home"] #courses .v1580-section-controls{margin-top:1.3rem}
+body[data-el-homepage-view="focus"] #app>.section{min-height:50vh}
+body[data-el-homepage-view="focus"] #app>.section .section-head{margin-bottom:1.65rem!important}
+@media(max-width:620px){
+ .hero h1{font-size:clamp(2.08rem,9vw,2.8rem)!important;line-height:1.08!important}
+ .section-head h2{font-size:clamp(1.52rem,6vw,1.9rem)!important;line-height:1.19!important}
+ .section h3,.card h3,.panel h3{font-size:1.13rem;line-height:1.32}
+ .el-focus-name{font-size:.77rem;max-width:49%}
+ .el-focus-toolbar-inner{gap:.65rem}
+ body[data-el-homepage-view="home"] #app>.section{padding-top:2rem!important;padding-bottom:2rem!important}
+}

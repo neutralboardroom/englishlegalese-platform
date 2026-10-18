@@ -1,3 +1,38 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.60.0
+
+v1.60.0 priority: owner-observed homepage failure; heading typography, responsive layout, routing, cache/version, safe rollback. Source: v1.59.0 exact accepted predecessor `bdcf7bc38cc6d1d123d8975be4bf3754a0316c80`.
+
+## Full inherited 20-item disposition matrix
+
+1. **Inherited item 1:** DONE_THIS_RELEASE — explicit owner-approved image baseline still pending, so no false golden assertion; automated page-size constraints included, visual owner signoff remains BLOCKED.
+2. **Inherited item 2:** IN_PROGRESS — removed redundant observers and old promo injection; remaining useful v1.59 controller intentionally preserved pending equivalence.
+3. **Inherited item 3:** DONE_THIS_RELEASE — postdeploy apex/www acceptance suite extended to focused navigation, homepage height, cache/version evidence.
+4. **Inherited item 4:** DONE_THIS_RELEASE — verifiable release meta and X-EnglishLegalese-Release response header.
+5. **Inherited item 5:** DONE_THIS_RELEASE — HTML no-cache revalidation plus version-unique JS/CSS URLs.
+6. **Inherited item 6:** IN_PROGRESS — HTML head meta release check added; dedicated validation and previews deferred.
+7. **Inherited item 7:** BLOCKED — external credentials/service integrations not available or safe to activate in this homepage patch.
+8. **Inherited item 8:** DEFER_WITH_REASON — cross-device state depends on production-auth/privacy readiness.
+9. **Inherited item 9:** DEFER_WITH_REASON — full retention/export backend changes require separate verified data model and authorization.
+10. **Inherited item 10:** DEFER_WITH_REASON — teacher review workflow depends on authenticated role and privacy readiness.
+11. **Inherited item 11:** DEFER_WITH_REASON — spaced review depends on stable learner-controlled progress storage.
+12. **Inherited item 12:** DEFER_WITH_REASON — do not claim speech scoring without independent validation.
+13. **Inherited item 13:** DEFER_WITH_REASON — qualified employer access and consent required.
+14. **Inherited item 14:** DEFER_WITH_REASON — commercial pricing/payment decision and market verification required.
+15. **Inherited item 15:** DONE_THIS_RELEASE — focused courses/scenarios/planner/progress/teachers/employers/language/trust routes with accessible return home.
+16. **Inherited item 16:** DEFER_WITH_REASON — lockfile/npm-ci change requires clean-cache Render parity.
+17. **Inherited item 17:** DEFER_WITH_REASON — no secrets or external auth mutated; operational expansion needs separate privileged review.
+18. **Inherited item 18:** DEFER_WITH_REASON — Render service health-path edit needs separate service-config authority; /health retained and verified.
+19. **Inherited item 19:** IN_PROGRESS — removed legacy promo/internal text and duplication; copy reductions constrained by privacy/legal boundaries.
+20. **Inherited item 20:** IN_PROGRESS — fresh homepage research ledger completed; full competitor expansion remains recurring.
+
+## Active next release priorities
+1. Finish consolidation to one canonical public renderer after equivalent-behavior proof.
+2. Obtain Roger's approval of the desktop/tablet/mobile screenshots before establishing golden visual baselines.
+3. Audit focused views at mobile/tablet after live rollout; repair any observed regression.
+4. Further expand current comparative research and build safe, account-ready teacher/learner improvements without changing unqualified integrations.
+5. Complete explicitly deferred inherited work only after its corresponding credential, owner choice, safe migration or independent qualification is available.
+
+## Full predecessor list retained verbatim below — no omission
 # EnglishLegalese.com — Next Version Improvement List after v1.59.0
 
 This list is active input for the next material release under EL-RGR-016. v1.59.0 is the hard live-homepage recovery successor to the owner-rejected v1.58 production state. It directly enforces critical public correctness, uses fresh v1.59 asset URLs, progressively discloses long learning surfaces with native DOM state, preserves all useful learning features, and adds browser regressions for the exact stale/long state Roger observed.
@@ -37,3 +72,4 @@ This list is active input for the next material release under EL-RGR-016. v1.59.
 - High/critical dependency findings block qualification.
 - Sister projects remain read-only sources of transferable lessons unless Roger explicitly authorizes otherwise.
 - The approved EnglishLegalese logo remains permanently locked under EL-RGR-019; only aspect-ratio-safe responsive display sizing may change without explicit Roger unlock.
+
