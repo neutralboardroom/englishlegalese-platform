@@ -71,7 +71,7 @@
       qs('.section-head',section)?.after(controls);
     }
     const btn=qs('.js-v1590-diagnostic',controls);
-    if(btn&&!btn.dataset.bound){btn.dataset.bound='1';btn.addEventListener('click',()=>{diagnosticExpanded=!diagnosticExpanded;enforceDiagnostic();if(diagnosticExpanded)qs('.v1580-diagnostic-form',section)?.scrollIntoView({behavior:'smooth',block:'start'});});}
+    // Stable delegated capture-phase handler owns diagnostic activation, including WebKit repaint cases.
     if(btn){btn.setAttribute('aria-expanded',String(diagnosticExpanded));btn.textContent=diagnosticExpanded?'Hide diagnostic questions':'Start the 8-question diagnostic';}
   }
 
@@ -115,7 +115,7 @@
   function ensurePlannerControls(section){
     let controls=qs('.v1590-planner-controls',section);
     if(!controls){controls=document.createElement('div');controls.className='container v1590-section-controls v1590-planner-controls';controls.innerHTML='<button class="btn gold js-v1590-planner" type="button" aria-expanded="false">Build my four-week plan</button>';qs('.section-head',section)?.after(controls);}
-    const btn=qs('.js-v1590-planner',controls);if(btn&&!btn.dataset.bound){btn.dataset.bound='1';btn.addEventListener('click',()=>{plannerExpanded=!plannerExpanded;enforcePlanner();});}
+    const btn=qs('.js-v1590-planner',controls);// Stable delegated capture-phase handler owns planner activation, including WebKit repaint cases.
     if(btn){btn.setAttribute('aria-expanded',String(plannerExpanded));btn.textContent=plannerExpanded?'Hide plan builder':'Build my four-week plan';}
   }
 
@@ -128,7 +128,7 @@
   function ensureProgressControls(section,completed){
     let controls=qs('.v1590-progress-controls',section);
     if(!controls){controls=document.createElement('div');controls.className='container v1590-progress-controls';controls.innerHTML=completed?'<p class="v1590-note">Your practice record is learner-controlled and is not an accredited credential.</p><button class="btn light js-v1590-progress" type="button" aria-expanded="false">View detailed progress</button>':'<div class="v1590-empty-progress"><h3>Your progress starts with your first practice.</h3><p>Complete the starting diagnostic or a scenario to begin a private learning record. No sample achievements are added for you.</p><a class="btn gold" href="#diagnostic">Take the starting diagnostic</a> <a class="btn light" href="#practice-studio">Practice a scenario</a></div><button class="btn light js-v1590-progress" type="button" aria-expanded="false">View empty progress details</button>';qs('.section-head',section)?.after(controls);}
-    const btn=qs('.js-v1590-progress',controls);if(btn&&!btn.dataset.bound){btn.dataset.bound='1';btn.addEventListener('click',()=>{progressExpanded=!progressExpanded;enforceProgress();});}
+    const btn=qs('.js-v1590-progress',controls);// Stable delegated capture-phase handler owns progress activation, including WebKit repaint cases.
     if(btn){btn.setAttribute('aria-expanded',String(progressExpanded));btn.textContent=progressExpanded?'Hide detailed progress':'View detailed progress';}
   }
 
@@ -177,6 +177,28 @@
         scenariosExpanded=true;enforceScenarios();
         const section=qs('#practice-studio'),custom=section&&qs('.v1550-custom-roleplay',section);
         if(custom){custom.hidden=false;custom.scrollIntoView({behavior:'smooth',block:'start'});}
+        return;
+      }
+      const diagnostic=target?.closest('.js-v1590-diagnostic');
+      if(diagnostic){
+        event.preventDefault();
+        diagnosticExpanded=diagnostic.getAttribute('aria-expanded')!=='true';
+        enforceDiagnostic();
+        if(diagnosticExpanded)qs('#diagnostic .v1580-diagnostic-form')?.scrollIntoView({behavior:'smooth',block:'start'});
+        return;
+      }
+      const planner=target?.closest('.js-v1590-planner');
+      if(planner){
+        event.preventDefault();
+        plannerExpanded=planner.getAttribute('aria-expanded')!=='true';
+        enforcePlanner();
+        return;
+      }
+      const progress=target?.closest('.js-v1590-progress');
+      if(progress){
+        event.preventDefault();
+        progressExpanded=progress.getAttribute('aria-expanded')!=='true';
+        enforceProgress();
       }
     },true);
     const app=qs('#app');if(app)new MutationObserver(schedule).observe(app,{childList:true,subtree:true});window.addEventListener('hashchange',()=>{if(location.hash==='#diagnostic')diagnosticExpanded=true;setTimeout(schedule,10);});window.addEventListener('pageshow',schedule);schedule();setTimeout(schedule,100);setTimeout(schedule,500);setTimeout(schedule,1500);}
