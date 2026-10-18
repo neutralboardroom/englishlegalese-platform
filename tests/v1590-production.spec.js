@@ -87,3 +87,20 @@ test('production header shows approved large logo with restrained first screen',
  expect(await page.locator('.hero-actions .btn').count()).toBe(2);
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);expect(overflow).toBeLessThanOrEqual(1);
 });
+
+
+test('production mobile menu and learning-prompt preparation work on the real site',async({page})=>{
+  await assertProductionRelease(page);
+  await page.setViewportSize({width:390,height:844});
+  const toggle=page.locator('#navToggle');
+  await toggle.click();await expect(toggle).toHaveAttribute('aria-expanded','true');
+  await page.keyboard.press('Escape');await expect(toggle).toHaveAttribute('aria-expanded','false');
+  await page.evaluate(()=>location.hash='#smartteacher');
+  await expect(page.locator('#smartteacher')).toBeVisible();
+  await page.locator('#el-practice-topic').fill('Fictional contract update');
+  await page.getByRole('button',{name:'Prepare writing review'}).click();
+  await expect(page.locator('.js-ai-output')).toContainText('WRITING REVIEW');
+  await expect(page.locator('.js-ai-output')).toContainText('Fictional contract update');
+  await expect(page.locator('.js-copy-practice')).toBeVisible();
+  await expect(page.locator('#smartteacher')).toContainText('does not send text to an AI service');
+});
