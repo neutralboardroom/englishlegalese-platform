@@ -1,0 +1,98 @@
+/* EnglishLegalese v1.61.0 visual owner recovery.
+   Approved logo bytes stay LOCKED. Header frames the source's large transparent margins
+   so the actual icon and wordmark are visible; no derivative image is created. */
+:root{--v1590-header-offset:138px}
+body{background:#fff;color:#163047}
+.site-header{background:rgba(255,255,255,.98)!important;border-bottom:1px solid #e4e9ec!important;box-shadow:0 3px 14px rgba(17,50,65,.045)}
+.site-header .nav-wrap{min-height:132px!important;padding:7px 0!important;gap:1.4rem!important}
+.site-header .brand{position:relative!important;display:block!important;width:230px!important;min-width:230px!important;flex:0 0 230px!important;height:118px!important;overflow:hidden!important;border:0!important}
+.site-header .brand img{position:absolute!important;top:-45px!important;left:0!important;width:230px!important;min-width:230px!important;height:230px!important;max-height:none!important;object-fit:contain!important}
+.site-header .brand:focus-visible{outline:3px solid #1e6b73;outline-offset:3px}
+.main-nav{gap:1rem!important;font-size:.81rem!important;font-weight:650!important}
+.main-nav a{padding:10px 2px!important}
+.main-nav .nav-cta{border-radius:9px!important;background:#1b6872!important;color:#fff!important;box-shadow:none!important;padding:11px 15px!important}
+.main-nav a:focus-visible,.hero-secondary a:focus-visible{outline:3px solid #22838b;outline-offset:3px}
+.hero{background:linear-gradient(115deg,#fcfdfd 0%,#f7faf9 60%,#eef5f4 100%)!important;padding:3.1rem 0 3.5rem!important;border-bottom:1px solid #e0e8e7!important}
+.hero-grid{grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr)!important;gap:clamp(2rem,5vw,5rem)!important;align-items:center!important}
+.hero-copy{max-width:635px}
+.hero .eyebrow{font-size:.74rem!important;letter-spacing:.085em!important;color:#17646e!important;margin-bottom:1.2rem!important}
+.hero .eyebrow:before{width:22px}
+.hero h1{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:clamp(3.55rem,5.3vw,4.9rem)!important;line-height:.99!important;letter-spacing:-.03em!important;max-width:650px;margin:0 0 1.3rem!important;color:#102d46!important}
+.hero .lead{font-size:clamp(1.05rem,1.45vw,1.2rem)!important;line-height:1.72!important;color:#465c69!important;max-width:570px!important;margin:0!important}
+.hero-actions{display:flex!important;flex-wrap:wrap!important;gap:.75rem!important;margin:2rem 0 1.15rem!important}
+.hero-actions .btn{border-radius:9px!important;box-shadow:none!important;min-height:48px!important;padding:12px 18px!important;font-weight:720!important;font-size:.91rem!important;width:auto!important}
+.hero-actions .btn.teal{background:#176a74!important;color:#fff!important}
+.hero-actions .btn.light{background:#fff!important;border:1px solid #c4d1d3!important;color:#153b49!important}
+.hero-secondary{display:flex;flex-wrap:wrap;gap:.6rem 1.6rem;margin:0 0 1.9rem}
+.hero-secondary a{font-size:.89rem;font-weight:650;color:#146674;text-decoration:underline;text-underline-offset:4px}
+.hero-secondary span{margin-left:.15rem}
+.trust-row{display:flex!important;flex-wrap:wrap!important;gap:.5rem 1.35rem!important;margin:0!important}
+.trust-item{border:0!important;border-radius:0!important;padding:0 0 0 1.05rem!important;background:transparent!important;position:relative;color:#576d78!important;font-size:.78rem!important;font-weight:600!important;line-height:1.55!important}
+.trust-item:before{content:'✓';position:absolute;left:0;top:0;color:#187778;font-weight:800}
+.hero-card{background:#fff!important;border:1px solid #e1e8e8!important;border-radius:16px!important;box-shadow:0 20px 50px rgba(18,65,74,.075)!important;display:block!important;align-self:center!important;padding:clamp(1.3rem,3vw,2.3rem)!important}
+.hero-example-kicker{font-size:.72rem;color:#176a74;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.55rem}
+.hero-card .hero-example-title{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:clamp(1.9rem,2.5vw,2.6rem)!important;line-height:1.08!important;font-weight:600!important;margin:0 0 1.45rem!important;color:#13364d!important}
+.hero-example{border:1px solid #e5ebec;background:#f8fafb;border-radius:9px;padding:1rem 1.15rem;margin:.75rem 0}
+.hero-example p{margin:.4rem 0 0;color:#455b67;font-size:.94rem;line-height:1.6}
+.hero-example-label{color:#6a7c86;font-size:.71rem;font-weight:800;text-transform:uppercase;letter-spacing:.075em}
+.hero-example.improved{background:#edf7f4;border-color:#cce6dd}
+.hero-example.improved p{color:#19443b;font-weight:650}
+.hero-example.improved .hero-example-label{color:#176f5d}
+.hero-language{margin-top:1.25rem;padding-top:1rem;border-top:1px solid #e4eded}
+.hero-language .language-select-label{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.83rem;font-weight:650;color:#344b59}
+.hero-language .language-select-label select{width:auto;max-width:100%;min-width:128px;border-radius:8px}
+.hero-language p{margin:.7rem 0 0;color:#687b86;line-height:1.55;font-size:.81rem}
+body[data-el-homepage-view="home"] #app>.section{padding-top:2.5rem!important;padding-bottom:2.7rem!important}
+.section-head h2{font-size:clamp(1.9rem,2.9vw,2.65rem)!important;line-height:1.14!important;font-weight:600!important;letter-spacing:-.012em}
+.section-head .eyebrow{font-size:.7rem!important;letter-spacing:.08em!important}
+.section-head>p{color:#556976;font-size:.9rem;line-height:1.6}
+#start,#smartteacher,#trust{background:#fff!important}
+#courses,#teachers{background:#f7faf9!important}
+#start .card,#courses .panel,#teachers .panel,#trust .card{border:1px solid #e1e7e7!important;box-shadow:none!important;border-radius:12px!important;background:#fff!important;padding:1.3rem!important}
+#start .card h3,#courses .panel h3,#teachers .panel h3,#trust .card h3{color:#153a4c;font-weight:750}
+#start .card p,#courses .panel p,#teachers .panel p,#trust .card p{font-size:.9rem!important;line-height:1.65!important;color:#526674!important}
+#start .card a.btn,#teachers .panel a.btn{border-radius:9px!important;box-shadow:none!important;font-weight:700!important;font-size:.83rem!important}
+#smartteacher>.container.panel{box-shadow:none!important;border:1px solid #e3e9e9!important;border-radius:12px!important}
+.site-footer{border-top:3px solid #1b777d!important}
+@media(max-width:1190px){
+ .site-header .nav-wrap{min-height:118px!important}
+ .site-header .brand{width:206px!important;min-width:206px!important;flex-basis:206px!important;height:108px!important}
+ .site-header .brand img{width:206px!important;min-width:206px!important;height:206px!important;top:-40px!important}
+ .main-nav{gap:.75rem!important;font-size:.76rem!important}
+}
+@media(max-width:980px){
+ :root{--v1590-header-offset:116px}
+ .site-header .nav-wrap{min-height:112px!important}
+ .main-nav{top:100%!important;max-height:calc(100vh - 118px)!important}
+ .hero-grid{grid-template-columns:1fr!important;gap:1.65rem!important}
+ .hero-copy{max-width:750px}
+ .hero h1{max-width:760px}
+ .hero-card{max-width:750px;width:100%!important}
+}
+@media(max-width:620px){
+ :root{--v1590-header-offset:110px}
+ .site-header .nav-wrap{min-height:106px!important;padding:5px 0!important}
+ .site-header .brand{width:188px!important;min-width:188px!important;flex-basis:188px!important;height:98px!important}
+ .site-header .brand img{width:188px!important;min-width:188px!important;height:188px!important;top:-36px!important}
+ .nav-toggle{border-radius:9px!important;padding:10px 14px!important;font-size:.94rem!important}
+ .hero{padding:2.2rem 0 2.55rem!important}
+ .hero-grid{gap:1.6rem!important}
+ .hero h1{font-size:clamp(2.45rem,10vw,3.1rem)!important;line-height:1.02!important;letter-spacing:-.028em!important}
+ .hero .lead{font-size:1rem!important;line-height:1.65!important}
+ .hero-actions{display:grid!important;grid-template-columns:1fr!important;gap:.7rem!important;margin:1.55rem 0 .95rem!important}
+ .hero-actions .btn{width:100%!important}
+ .hero-secondary{gap:.65rem 1rem;margin-bottom:1.4rem}
+ .hero-secondary a{font-size:.85rem}
+ .trust-row{gap:.4rem 1rem!important}
+ .trust-item{font-size:.76rem!important}
+ .hero-card{padding:1.2rem!important}
+ .hero-card .hero-example-title{font-size:1.9rem!important}
+ .hero-example{padding:.85rem 1rem}
+ .section-head h2{font-size:clamp(1.65rem,6.1vw,2rem)!important;line-height:1.18!important}
+ body[data-el-homepage-view="home"] #app>.section{padding-top:2rem!important;padding-bottom:2.1rem!important}
+}
+@media(max-width:360px){
+ .site-header .brand{width:166px!important;min-width:166px!important;flex-basis:166px!important;height:88px!important}
+ .site-header .brand img{width:166px!important;min-width:166px!important;height:166px!important;top:-32px!important}
+ .site-header .nav-wrap{min-height:98px!important}
+}
