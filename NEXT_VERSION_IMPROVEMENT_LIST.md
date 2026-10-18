@@ -4,7 +4,7 @@ v1.60.0 priority: owner-observed homepage failure; heading typography, responsiv
 
 ## Full inherited 20-item disposition matrix
 
-1. **Inherited item 1:** DONE_THIS_RELEASE — explicit owner-approved image baseline still pending, so no false golden assertion; automated page-size constraints included, visual owner signoff remains BLOCKED.
+1. **Inherited item 1:** BLOCKED_BY_OWNER_APPROVAL — automated page-height/screenshot checks pass, but owner-approved golden image baseline remains pending; no goldens auto-approved.
 2. **Inherited item 2:** IN_PROGRESS — removed redundant observers and old promo injection; remaining useful v1.59 controller intentionally preserved pending equivalence.
 3. **Inherited item 3:** DONE_THIS_RELEASE — postdeploy apex/www acceptance suite extended to focused navigation, homepage height, cache/version evidence.
 4. **Inherited item 4:** DONE_THIS_RELEASE — verifiable release meta and X-EnglishLegalese-Release response header.

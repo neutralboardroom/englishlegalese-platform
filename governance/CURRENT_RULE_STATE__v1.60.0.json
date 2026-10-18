@@ -47,8 +47,13 @@
     "display_resize_only": true
   },
   "standing_deployment_authorization": "governance/OWNER_STANDING_DEPLOYMENT_AUTHORIZATION__2026-10-17.md",
-  "source_acceptance_state": "PENDING_EXACT_HEAD_DOUBLE_QUALIFICATION",
-  "deployment_state": "NOT_DEPLOYED_WHILE_BRANCH_IS_UNMERGED",
+  "source_acceptance_state": "QUALIFIED_TWICE_ON_EXACT_CANDIDATE_SHA_1afafea936d7ceb7b9eef0cf067b6401c978888e",
+  "deployment_state": "RENDER_LIVE_PRODUCT_MERGE_SHA_1a510adeadaac2be2b25b36ea201d31d6624a4fb; AUTOMATED_APEX_AND_WWW_ACCEPTANCE_PASSED_12_OF_12; OWNER_VISUAL_APPROVAL_SEPARATE",
   "release_intent": "Finish the owner-requested homepage corrections, responsive heading fonts, focused learning destinations, reduced duplicate presentation observers, release marker and HTML revalidation, preserving everything functional.",
-  "updated": "2026-10-18"
+  "updated": "2026-10-18",
+  "deployment_receipt": "governance/PRODUCTION_ACCEPTANCE_RECEIPT__v1.60.0.md",
+  "product_merge_sha": "1a510adeadaac2be2b25b36ea201d31d6624a4fb",
+  "production_deploy_id": "dep-dba6k4hsrm7s73a4v3pg",
+  "production_test_run_id": 39104928119,
+  "qualification_run_id": 39104748844
 }
