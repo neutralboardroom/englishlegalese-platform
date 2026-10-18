@@ -70,11 +70,13 @@ test.describe('EnglishLegalese v1.61.1 hard live recovery', () => {
 
     await page.evaluate(()=>location.hash='#learning-plan');
     await page.locator('.js-v1590-planner').click();
+    await expect(page.locator('.js-v1590-planner')).toHaveAttribute('aria-expanded','true');
     await expect(page.locator('#learning-plan .v1550-plan-builder')).toBeVisible();
 
     await page.evaluate(()=>location.hash='#skills-passport');
     await expect(page.locator('.v1590-empty-progress')).toBeVisible();
     await page.locator('.js-v1590-progress').click();
+    await expect(page.locator('.js-v1590-progress')).toHaveAttribute('aria-expanded','true');
     await expect(page.locator('#skills-passport .v1550-passport-grid')).toBeVisible();
   });
 
