@@ -129,3 +129,14 @@ test('approved logo is prominent and unchanged; hero hierarchy is intentionally 
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);expect(overflow).toBeLessThanOrEqual(1);
   await page.screenshot({path:testInfo.outputPath('v1610-visual-homepage.png'),fullPage:true,animations:'disabled'});
 });
+
+// Regression for the formerly self-triggering recovery observer: stable markup must settle.
+test('public recovery observer becomes idle instead of constantly rewriting text nodes',async({page})=>{
+ await page.goto('/');await waitForRecovery(page);await page.waitForTimeout(1650);
+ const changes=await page.evaluate(()=>new Promise(resolve=>{
+  let count=0;const root=document.querySelector('#app');const obs=new MutationObserver(events=>{count+=events.filter(e=>e.type==='childList').length;});
+  obs.observe(root,{subtree:true,childList:true});
+  setTimeout(()=>{obs.disconnect();resolve(count);},500);
+ }));
+ expect(changes).toBeLessThan(8);
+});
