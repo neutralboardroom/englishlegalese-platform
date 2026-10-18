@@ -145,14 +145,14 @@
     $$('.js-ai-demo').forEach(btn=>{ if(btn.dataset.bound) return; btn.dataset.bound='1'; btn.addEventListener('click',()=>{const input=$('.js-ai-input'),out=$('.js-ai-output'); const topic=input?.value.trim()||'Legal English practice'; if(out) out.textContent=`Practice prompt ready for: ${topic} Keep facts synthetic or de-identified, focus on communication quality, and verify high-stakes legal meaning with an appropriate qualified source or person.`;}); });
     $$('.js-save-lesson').forEach(btn=>{ if(btn.dataset.bound) return; btn.dataset.bound='1'; btn.addEventListener('click',()=>toast('Learning note saved locally in demo mode.')); });
     $$('.js-teacher-review').forEach(btn=>{ if(btn.dataset.bound) return; btn.dataset.bound='1'; btn.addEventListener('click',()=>toast('Teacher review requires the appropriate account and teacher workflow when enabled.')); });
-    const courseBtn=$('.js-v1580-courses'); if(courseBtn&&!courseBtn.dataset.bound){courseBtn.dataset.bound='1';courseBtn.addEventListener('click',()=>{const expanded=courseBtn.getAttribute('aria-expanded')==='true';courseBtn.setAttribute('aria-expanded',String(!expanded));document.body.classList.toggle('v1580-courses-expanded',!expanded);courseBtn.textContent=expanded?`View all ${courses.length} courses`:'Show featured courses only';});}
+    const courseBtn=$('.js-v1580-courses'); if(courseBtn&&!courseBtn.dataset.bound){courseBtn.dataset.bound='1';courseBtn.addEventListener('click',()=>{const expanded=courseBtn.getAttribute('aria-expanded')==='true';courseBtn.setAttribute('aria-expanded',String(!expanded));document.body.classList.toggle('v1580-courses-expanded',!expanded);courseBtn.textContent=expanded?`View all ${courses.length} courses`:'Show featured courses only';const showAll=!expanded;$('#courses article').filter(card=>$('h3',card)).forEach((card,i)=>{card.hidden=i>=3&&!showAll;});});}
     const navToggle=$('#navToggle'),nav=$('#mainNav');
     if(navToggle&&nav&&!navToggle.dataset.bound){navToggle.dataset.bound='1';navToggle.addEventListener('click',()=>{nav.classList.toggle('open');navToggle.setAttribute('aria-expanded',nav.classList.contains('open')?'true':'false');});}
     bindDiagnostic();
   }
   function scrollToTarget(id, attempt=0){
     const target=document.getElementById(id);
-    if(target){ requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'})); return; }
+    if(target){ requestAnimationFrame(()=>target.scrollIntoView({behavior:'instant',block:'start'})); return; }
     if(attempt<20) setTimeout(()=>scrollToTarget(id,attempt+1),50);
   }
   const homepageSectionIds = new Set(['home','start','courses','smartteacher','teachers','trust']);
