@@ -25,8 +25,8 @@ jobs:
         run: npm install --ignore-scripts --no-fund
       - name: Block high and critical dependency vulnerabilities
         run: npm run audit:high
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Install Playwright Chromium and WebKit for actual desktop/mobile/tablet projects
+        run: npx playwright install --with-deps chromium webkit
       - name: Wait for Render exact v1.59.0 production rollout
         shell: bash
         run: |
