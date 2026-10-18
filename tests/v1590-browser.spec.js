@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.61.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.1');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.61.1');
 }
 
-test.describe('EnglishLegalese v1.61.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.61.1 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -70,11 +70,13 @@ test.describe('EnglishLegalese v1.61.0 hard live recovery', () => {
 
     await page.evaluate(()=>location.hash='#learning-plan');
     await page.locator('.js-v1590-planner').click();
+    await expect(page.locator('.js-v1590-planner')).toHaveAttribute('aria-expanded','true');
     await expect(page.locator('#learning-plan .v1550-plan-builder')).toBeVisible();
 
     await page.evaluate(()=>location.hash='#skills-passport');
     await expect(page.locator('.v1590-empty-progress')).toBeVisible();
     await page.locator('.js-v1590-progress').click();
+    await expect(page.locator('.js-v1590-progress')).toHaveAttribute('aria-expanded','true');
     await expect(page.locator('#skills-passport .v1550-passport-grid')).toBeVisible();
   });
 
@@ -112,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.61\.0/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.61\.1/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -126,4 +128,15 @@ test('approved logo is prominent and unchanged; hero hierarchy is intentionally 
   await expect(page.locator('.hero-secondary a[href="#practice-studio"]')).toBeVisible();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);expect(overflow).toBeLessThanOrEqual(1);
   await page.screenshot({path:testInfo.outputPath('v1610-visual-homepage.png'),fullPage:true,animations:'disabled'});
+});
+
+// Regression for the formerly self-triggering recovery observer: stable markup must settle.
+test('public recovery observer becomes idle instead of constantly rewriting text nodes',async({page})=>{
+ await page.goto('/');await waitForRecovery(page);await page.waitForTimeout(1650);
+ const changes=await page.evaluate(()=>new Promise(resolve=>{
+  let count=0;const root=document.querySelector('#app');const obs=new MutationObserver(events=>{count+=events.filter(e=>e.type==='childList').length;});
+  obs.observe(root,{subtree:true,childList:true});
+  setTimeout(()=>{obs.disconnect();resolve(count);},500);
+ }));
+ expect(changes).toBeLessThan(8);
 });

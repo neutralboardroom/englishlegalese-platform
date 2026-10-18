@@ -1,4 +1,4 @@
-name: EnglishLegalese v1.61.0 Production Acceptance
+name: EnglishLegalese v1.61.1 Production Acceptance
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   production-acceptance:
-    if: contains(github.event.head_commit.message, 'v1.61.0')
+    if: contains(github.event.head_commit.message, 'v1.61.1')
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
@@ -27,21 +27,21 @@ jobs:
         run: npm run audit:high
       - name: Install Playwright Chromium and WebKit for actual desktop/mobile/tablet projects
         run: npx playwright install --with-deps chromium webkit
-      - name: Wait for Render exact v1.61.0 production rollout
+      - name: Wait for Render exact v1.61.1 production rollout
         shell: bash
         run: |
           set -euo pipefail
           for attempt in $(seq 1 36); do
             health="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://englishlegalese.com/health?acceptance=${GITHUB_SHA}&attempt=${attempt}" || true)"
-            asset="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://englishlegalese.com/product-v1590.js?v=1.61.0&acceptance=${GITHUB_SHA}&attempt=${attempt}" || true)"
-            if grep -q '1.61.0-navigation-domain-hardening' <<<"$health" && grep -q "const VERSION='1.61.0'" <<<"$asset"; then
-              echo "Exact v1.61.0 runtime and public recovery asset are live."
+            asset="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://englishlegalese.com/product-v1590.js?v=1.61.1&acceptance=${GITHUB_SHA}&attempt=${attempt}" || true)"
+            if grep -q '1.61.1-navigation-domain-hardening' <<<"$health" && grep -q "const VERSION='1.61.1'" <<<"$asset"; then
+              echo "Exact v1.61.1 runtime and public recovery asset are live."
               exit 0
             fi
             echo "Production still unconfirmed from fresh-cache-check ${attempt}/36."
             sleep 10
           done
-          echo "Production did not converge to v1.61.0 within six minutes."
+          echo "Production did not converge to v1.61.1 within six minutes."
           exit 1
       - name: Run real production desktop tablet mobile acceptance
         env:
