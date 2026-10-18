@@ -84,6 +84,9 @@ check('HTML has v1.60 release marker',index.includes('name="englishlegalese-rele
 check('HTML response explicitly revalidates without modifying private routes',read('server.js').includes("req.path==='/' || req.path==='/index.html'")&&read('server.js').includes("'no-cache, max-age=0, must-revalidate'"));
 check('responsive homepage heading typography improved',css1590.includes('.hero h1{font-size:clamp(2.45rem')&&css1590.includes('.section-head h2{font-size:clamp(1.7rem'));
 check('learning engine preserves route ownership',v1550.includes('englishLegaleseApplyView'));
+check('duplicate legacy public observers are not active',!read('product-v1550.js').includes('new MutationObserver')&&!read('public-v1548.js').includes('new MutationObserver')&&v1590.includes('new MutationObserver'));
+check('obsolete v1.55 promo panel is no longer injected',!read('product-v1550.js').includes("start.insertAdjacentHTML('afterend',intro())"));
+check('duplicate scenario hero call to action removed',!read('product-v1550.js').includes("qs('.hero-actions')?.insertAdjacentHTML"));
 check('high/critical audit command remains exact', pkg.scripts?.['audit:high'] === 'npm audit --audit-level=high');
 check('v1.59 verifier is wired into npm check', String(pkg.scripts?.check || '').includes('verify-v1600-homepage.js'));
 

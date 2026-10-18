@@ -119,12 +119,8 @@
     markCurrentNavigation();
   }
 
-  const app = qs('#app');
-  if (app) {
-    const observer = new MutationObserver(() => applyPublicHardening());
-    observer.observe(app, { childList: true, subtree: true });
-  }
-
+  // Canonical app route and the hash listener below now own lifecycle changes.
+  // An independent legacy MutationObserver was redundant and could race a focused view.
   window.addEventListener('hashchange', () => {
     applyPublicHardening();
     markCurrentNavigation();
