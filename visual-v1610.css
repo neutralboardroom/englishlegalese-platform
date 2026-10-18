@@ -96,3 +96,6 @@ body[data-el-homepage-view="home"] #app>.section{padding-top:2.5rem!important;pa
  .site-header .brand img{width:166px!important;min-width:166px!important;height:166px!important;top:-32px!important}
  .site-header .nav-wrap{min-height:98px!important}
 }
+
+/* Prevent competing delayed hash-scroll animations from displacing controls during keyboard, touch or pointer activation. */
+html{scroll-behavior:auto!important}
