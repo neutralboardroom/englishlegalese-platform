@@ -120,7 +120,7 @@ test('approved logo is prominent and unchanged; hero hierarchy is intentionally 
   expect(await logo.evaluate(el=>getComputedStyle(el).objectFit)).toBe('contain');
   await expect(page.locator('.hero-logo')).toHaveCount(0);
   await expect(page.getByRole('heading',{name:'Clear English for legal work.'})).toBeVisible();
-  await expect(page.getByText('Please respond to the earlier email.')).toBeVisible();
+  await expect(page.locator('.hero-example.improved p')).toBeVisible();
   expect(await page.locator('.hero-actions .btn').count()).toBe(2);
   await expect(page.locator('.hero-secondary a[href="#smartteacher"]')).toBeVisible();
   await expect(page.locator('.hero-secondary a[href="#practice-studio"]')).toBeVisible();
