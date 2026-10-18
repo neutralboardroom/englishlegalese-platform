@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.61.1 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.62.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -81,7 +81,7 @@
     </aside></div></section>`.replace('LANGUAGE_WIDGET',languageSelect());
   }
   function startSection(){
-    return `<section class="section compact" id="start"><div class="container section-head"><div><div class="eyebrow">Start here</div><h2>One clear path for every learner.</h2></div><p>Choose the next step that fits your goal. Operational staff tools stay behind account access.</p></div><div class="container grid cols-3">${card('Student','Take the starting diagnostic, choose your preferred explanation language, practice with SmartTeacher AI, explore scenarios, and build a learning path.','Take the starting diagnostic','#diagnostic')}${card('Teacher','Explore teacher-guided learning support, lesson review, roleplay, homework, and feedback. Operational teacher tools require the appropriate signed-in role.','Explore teacher support','#teachers')}${card('Employer','Explore privacy-conscious team training and appropriate aggregate learning-progress signals while private learner work stays private by default.','Explore employer training','#employers')}</div></section>`;
+    return `<section class="section compact" id="start"><div class="container section-head"><div><div class="eyebrow">Choose your path</div><h2>Start with what you need.</h2></div><p>Whether you are learning, teaching, or training a team, choose the path that fits your goal.</p></div><div class="container grid cols-3 v1620-paths">${card('Student','Build confidence with a free starting diagnostic, realistic legal conversations, writing practice, and courses.','Take the starting diagnostic','#diagnostic')}${card('Teacher','Explore lesson support, realistic legal scenarios, and opportunities for teacher-guided feedback.','Explore teacher support','#teachers')}${card('Employer','Explore practical Legal English training with privacy-conscious learning progress for teams.','Explore employer training','#employers')}</div></section>`;
   }
   function diagnosticSection(){
     const q = QUESTIONS.map((item,i)=>`<fieldset class="v1580-question" data-question="${i}"><legend><span>${i+1}</span>${escapeHtml(item[1])}</legend><div class="v1580-options">${item[2].map((opt,j)=>`<label><input type="radio" name="v1580-q${i}" value="${j}"><span>${escapeHtml(opt)}</span></label>`).join('')}</div></fieldset>`).join('');
@@ -98,7 +98,7 @@
   }
   function smartTeacher(){
     const starters = ['Client update','Contract clause','Meeting clarification','AI draft review'];
-    return `<section class="section" id="smartteacher"><div class="container section-head"><div><div class="eyebrow">SmartTeacher AI</div><h2>Practice with AI. Improve with teacher guidance. Track progress clearly.</h2></div><p>SmartTeacher AI is ChatGPT/OpenAI-powered language practice and learning support. It is not legal advice, certified translation, court interpretation, or an accredited assessment.</p></div><div class="container panel"><div class="v1580-prompt-starters"><span>Try a guided starter:</span>${starters.map((s,i)=>`<button class="v1580-starter" type="button" data-starter="${i}">${s}</button>`).join('')}</div><textarea class="input big-input js-ai-input" placeholder="What would you like to practice today? Use synthetic or de-identified facts."></textarea><div class="tag-row"><button class="btn gold js-ai-demo">Practice a conversation</button><button class="btn light js-save-lesson">Improve writing</button><button class="btn light js-teacher-review">Ask for teacher review</button></div><div class="ai-demo-output clean-note js-ai-output">Choose a guided starter or describe a Legal English communication task. Speaking practice here is text-guided unless a live voice feature is explicitly available.</div><p class="v1580-micro-note">Teacher review requires an appropriate teacher/account workflow when enabled. AI feedback, learner self-checks, and teacher-confirmed feedback remain distinct.</p></div></section>`;
+    return `<section class="section" id="smartteacher"><div class="container section-head"><div><div class="eyebrow">SmartTeacher AI practice</div><h2>Practice with AI. Improve with teacher guidance. Track progress clearly.</h2></div><p>Prepare a realistic Legal English practice or writing-review prompt. This on-page prompt builder does not send text to an AI service or generate live AI feedback. Use synthetic or de-identified details.</p></div><div class="container panel v1620-practice-panel"><div class="v1580-prompt-starters"><span>Try a guided starter:</span>${starters.map((s,i)=>`<button class="v1580-starter" type="button" data-starter="${i}">${s}</button>`).join('')}</div><label class="v1620-input-label" for="el-practice-topic">Your practice topic or draft</label><textarea id="el-practice-topic" class="input big-input js-ai-input" maxlength="1500" placeholder="e.g., Practise a concise client update, using invented facts only."></textarea><div class="tag-row v1620-practice-actions"><button class="btn gold js-ai-demo" type="button">Prepare conversation practice</button><button class="btn light js-save-lesson" type="button">Prepare writing review</button><button class="btn light js-teacher-review" type="button">Teacher review options</button></div><div class="ai-demo-output clean-note js-ai-output v1620-practice-result" role="status" aria-live="polite" tabindex="-1">Choose a starter or describe your task. The prepared prompt stays in this browser until you copy it. No AI response is generated here.</div><button class="btn light js-copy-practice" type="button" hidden>Copy prepared prompt</button><p class="v1580-micro-note">Use this prompt with a connected AI tool or qualified teacher. Always verify legal meaning; this is language practice, not legal advice or an accredited assessment.</p></div></section>`;
   }
   function teachersEmployers(){
     return `<section class="section alt" id="teachers"><div class="container grid cols-2"><article class="panel"><div class="eyebrow">Teachers</div><h2>Teacher-guided learning support.</h2><p>Teachers can review learner practice, prepare lessons, guide roleplays, assign homework, and give feedback while private teacher notes remain appropriately separated.</p><a class="btn teal" href="#teacher-dashboard">Teacher account access</a><p class="v1580-micro-note">Operational teacher tools require the appropriate signed-in role.</p></article><article class="panel" id="employers"><div class="eyebrow">Employers</div><h2>Privacy-conscious team learning.</h2><p>Organizations can use consent-based, aggregate attendance and learning-progress signals. Private drafts, raw AI practice, uploads, recordings, native-language explanations, test answers, and teacher-private notes remain excluded by default.</p><a class="btn teal" href="#employer-dashboard">Employer account access</a><p class="v1580-micro-note">Nothing from a learner's private work is shared automatically.</p></article></div></section>`;
@@ -142,12 +142,52 @@
       'Give me a synthetic AI-generated legal-business email with a few communication problems to identify and improve.'
     ];
     $$('.v1580-starter').forEach(btn=>{ if(btn.dataset.bound) return; btn.dataset.bound='1'; btn.addEventListener('click',()=>{const input=$('.js-ai-input'); if(input){input.value=prompts[Number(btn.dataset.starter)]||''; input.focus();}}); });
-    $$('.js-ai-demo').forEach(btn=>{ if(btn.dataset.bound) return; btn.dataset.bound='1'; btn.addEventListener('click',()=>{const input=$('.js-ai-input'),out=$('.js-ai-output'); const topic=input?.value.trim()||'Legal English practice'; if(out) out.textContent=`Practice prompt ready for: ${topic} Keep facts synthetic or de-identified, focus on communication quality, and verify high-stakes legal meaning with an appropriate qualified source or person.`;}); });
-    $$('.js-save-lesson').forEach(btn=>{ if(btn.dataset.bound) return; btn.dataset.bound='1'; btn.addEventListener('click',()=>toast('Learning note saved locally in demo mode.')); });
+    const practiceInput=$('.js-ai-input'), practiceOutput=$('.js-ai-output'), copyPractice=$('.js-copy-practice');
+    let preparedPrompt='';
+    function preparePractice(mode){
+      const topic=(practiceInput?.value||'').trim().slice(0,1500);
+      const task=topic||'a professional Legal English communication situation with fictional names and facts';
+      const instructions=mode==='writing'
+        ? 'Review and improve the following writing for plain English, structure, professional tone, and clarity. Preserve the intended legal meaning, identify phrases needing qualified human verification, and explain your suggested edits.'
+        : 'Act as a patient Legal English conversation partner. Present one short fictional situation, ask one question at a time, wait for my response, then explain clarity and tone improvements. Do not invent legal advice.';
+      preparedPrompt='LEGAL ENGLISH '+(mode==='writing'?'WRITING REVIEW':'CONVERSATION PRACTICE')+'\n\n'+instructions+'\n\nMy topic or sample text:\n'+task+'\n\nUse synthetic or de-identified facts. This is learning practice only, not legal advice, translation certification, or a proficiency score.';
+      if(practiceOutput){practiceOutput.textContent=preparedPrompt;practiceOutput.focus({preventScroll:true});}
+      if(copyPractice)copyPractice.hidden=false;
+    }
+    $$('.js-ai-demo').forEach(btn=>{if(btn.dataset.bound)return;btn.dataset.bound='1';btn.addEventListener('click',()=>preparePractice('conversation'));});
+    $$('.js-save-lesson').forEach(btn=>{if(btn.dataset.bound)return;btn.dataset.bound='1';btn.addEventListener('click',()=>preparePractice('writing'));});
+    if(copyPractice&&!copyPractice.dataset.bound){copyPractice.dataset.bound='1';copyPractice.addEventListener('click',async()=>{
+      if(!preparedPrompt){toast('Prepare a practice prompt first.');return;}
+      try{await navigator.clipboard.writeText(preparedPrompt);toast('Prompt copied. Paste it into a connected learning tool or share it with your teacher.');}
+      catch{practiceOutput?.focus();toast('Select and copy the prepared prompt from the text area above.');}
+    });}
     $$('.js-teacher-review').forEach(btn=>{ if(btn.dataset.bound) return; btn.dataset.bound='1'; btn.addEventListener('click',()=>toast('Teacher review requires the appropriate account and teacher workflow when enabled.')); });
     const courseBtn=$('.js-v1580-courses'); if(courseBtn&&!courseBtn.dataset.bound){courseBtn.dataset.bound='1';courseBtn.addEventListener('click',()=>{const expanded=courseBtn.getAttribute('aria-expanded')==='true';courseBtn.setAttribute('aria-expanded',String(!expanded));document.body.classList.toggle('v1580-courses-expanded',!expanded);courseBtn.textContent=expanded?`View all ${courses.length} courses`:'Show featured courses only';const showAll=!expanded;$('#courses article').filter(card=>$('h3',card)).forEach((card,i)=>{card.hidden=i>=3&&!showAll;});});}
     const navToggle=$('#navToggle'),nav=$('#mainNav');
-    if(navToggle&&nav&&!navToggle.dataset.bound){navToggle.dataset.bound='1';navToggle.addEventListener('click',()=>{nav.classList.toggle('open');navToggle.setAttribute('aria-expanded',nav.classList.contains('open')?'true':'false');});}
+    if(navToggle&&nav&&!navToggle.dataset.bound){
+      navToggle.dataset.bound='1';
+      const closeMenu=(restoreFocus=false)=>{
+        nav.classList.remove('open');
+        navToggle.setAttribute('aria-expanded','false');
+        navToggle.setAttribute('aria-label','Open primary navigation');
+        if(restoreFocus)navToggle.focus();
+      };
+      navToggle.addEventListener('click',()=>{
+        const open=navToggle.getAttribute('aria-expanded')!=='true';
+        nav.classList.toggle('open',open);
+        navToggle.setAttribute('aria-expanded',String(open));
+        navToggle.setAttribute('aria-label',open?'Close primary navigation':'Open primary navigation');
+      });
+      nav.addEventListener('click',e=>{if(e.target.closest('a[href^="#"]'))closeMenu();});
+      document.addEventListener('keydown',e=>{
+        if(e.key==='Escape'&&navToggle.getAttribute('aria-expanded')==='true'){e.preventDefault();closeMenu(true);}
+      });
+      document.addEventListener('pointerdown',e=>{
+        if(navToggle.getAttribute('aria-expanded')==='true'&&!nav.contains(e.target)&&!navToggle.contains(e.target))closeMenu();
+      });
+      window.addEventListener('hashchange',()=>closeMenu());
+    }
+
     bindDiagnostic();
   }
   function scrollToTarget(id, attempt=0){
@@ -174,6 +214,11 @@
     if(focusBarName&&!isHome){
       focusBarName.textContent=focusSection.querySelector('.section-head h2, h2, h1')?.textContent?.trim()||'Explore Legal English';
     }
+    document.querySelectorAll('#mainNav a[href^="#"]').forEach(link=>{
+      const target=link.getAttribute('href')?.slice(1);
+      if(target===canonical){link.setAttribute('aria-current','location');}
+      else link.removeAttribute('aria-current');
+    });
   }
   // Called once by the learning engine after it injects the protected scenario, plan,
   // and progress sections. No competing mutation observers or DOM replacement.
