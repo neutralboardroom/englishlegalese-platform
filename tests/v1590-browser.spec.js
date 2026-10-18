@@ -177,7 +177,7 @@ test('mobile disclosure menu handles Escape, link activation and outside touch',
   await expect(toggle).toHaveAttribute('aria-expanded','false');
   await expect(page.locator('#courses')).toBeVisible();
   await expect(nav.locator('a[href="#courses"]')).toHaveAttribute('aria-current','location');
-  await toggle.click();await page.locator('#courses h2').click({force:true});
+  await toggle.click();await page.mouse.click(5,10);
   await expect(toggle).toHaveAttribute('aria-expanded','false');
 });
 
