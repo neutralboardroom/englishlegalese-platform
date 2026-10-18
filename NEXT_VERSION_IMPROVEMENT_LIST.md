@@ -1,3 +1,22 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.61.0 (candidate)
+
+This release fixes the owner-observed visually inadequate v1.60.0 homepage. Candidate status; do not mark owner aesthetic approval as complete.
+
+## Material visual improvements in this version
+- Header logo: approved Git blob preserved byte-for-byte; avoid shrinking the 1024-square artwork to a tiny 58–78px image box, frame its transparent borders using display-only CSS, provide about 230px visible header wordmark frame desktop and 188px mobile. Visual approval pending.
+- Hero: remove duplicate enlarged brand logo, repetitive language claims and four competing pill CTA buttons; preserve all four pathways by using two primary buttons and two legible inline links.
+- Add static educational plain-English rewrite example derived from the existing original diagnostic, not fictitious teacher/voice/accreditation service.
+- Refine desktop/mobile heading scale and whitespace, readable nav and premium restrained card/button treatments. Preserve intact eight-question diagnostic, 21 scenarios, teacher/employer/privacy boundaries, full course catalog, local progress and account guards.
+- New mobile/tablet/desktop visual and production tests assert brand bounds, no overflow and scenario availability; owner aesthetic approval and full release qualification remain separate.
+
+## Upcoming priorities
+1. Owner visual sign-off on both desktop and mobile screenshot: mandatory before recording any approved golden design.
+2. Further reduce original presentation stack only after equivalent-feature tests and frozen baseline.
+3. Improve real SmartTeacher workflow with authenticated/authorized ChatGPT integration rather than suggesting static demo is connected; only if real credentials and privacy gate permit.
+4. Validate mobile nav with real handsets and accessibility feedback; maintain 21 scenarios and diagnostic.
+5. Preserve all unresolved original v1.60 inherited 20-item statuses below.
+
+## Full preceding improvement list retained verbatim below
 # EnglishLegalese.com — Next Version Improvement List after v1.60.0
 
 v1.60.0 priority: owner-observed homepage failure; heading typography, responsive layout, routing, cache/version, safe rollback. Source: v1.59.0 exact accepted predecessor `bdcf7bc38cc6d1d123d8975be4bf3754a0316c80`.
