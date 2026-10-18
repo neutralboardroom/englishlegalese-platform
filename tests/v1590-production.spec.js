@@ -3,11 +3,11 @@ const { test, expect } = require('@playwright/test');
 async function assertProductionRelease(page) {
   await page.goto('/', { waitUntil: 'networkidle' });
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.59.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.59.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.60.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.60.0');
 }
 
-test.describe('EnglishLegalese v1.59.0 production acceptance', () => {
+test.describe('EnglishLegalese v1.60.0 production acceptance', () => {
   test('apex production renders corrected owner-visible homepage', async ({ page }, testInfo) => {
     await assertProductionRelease(page);
 
@@ -24,11 +24,11 @@ test.describe('EnglishLegalese v1.59.0 production acceptance', () => {
     ];
     for (const phrase of forbidden) await expect(page.getByText(phrase, { exact: false })).toHaveCount(0);
 
-    await expect(page.locator('#diagnostic')).toBeVisible();
+    await expect(page.locator('#diagnostic')).toBeHidden();
     await expect(page.locator('#diagnostic .v1580-diagnostic-shell')).toBeHidden();
     expect(await page.locator('#courses article:visible').count()).toBe(3);
     expect(await page.locator('#practice-studio .v1550-scenario-card').count()).toBe(21);
-    expect(await page.locator('#practice-studio .v1550-scenario-card:visible').count()).toBe(6);
+    expect(await page.locator('#practice-studio .v1550-scenario-card:visible').count()).toBe(0);
     await expect(page.locator('#learning-plan .v1550-plan-builder')).toBeHidden();
     await expect(page.locator('#skills-passport .v1550-passport-grid')).toBeHidden();
 
@@ -42,6 +42,11 @@ test.describe('EnglishLegalese v1.59.0 production acceptance', () => {
     expect(colors.color).not.toBe('rgb(255, 255, 255)');
     expect(colors.color).not.toBe(colors.background);
 
+    const h=await page.evaluate(()=>document.documentElement.scrollHeight);
+    expect(h).toBeLessThan(testInfo.project.name==='production-mobile'?9500:7000);
+    const htmlResponse=await page.request.get('/');
+    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.60.0');
+    expect(htmlResponse.headers()['cache-control']).toContain('no-cache');
     await page.screenshot({ path: testInfo.outputPath('production-homepage-v1590.png'), fullPage: true, animations: 'disabled' });
     await testInfo.attach('production-homepage-v1590', { path: testInfo.outputPath('production-homepage-v1590.png'), contentType: 'image/png' });
   });
@@ -51,7 +56,7 @@ test.describe('EnglishLegalese v1.59.0 production acceptance', () => {
     for (const hash of ['#teachers','#courses','#language-bridge','#smartteacher','#trust','#practice-studio','#learning-plan','#skills-passport','#home']) {
       await page.evaluate(h => { window.location.hash = h; }, hash);
       await page.waitForTimeout(120);
-      await expect(page.locator('#v1590-live-marker')).toHaveText('1.59.0');
+      await expect(page.locator('#v1590-live-marker')).toHaveText('1.60.0');
       await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
       await expect(page.getByText('New in v1.55', { exact: true })).toHaveCount(0);
       await expect(page.locator('#diagnostic')).toHaveCount(1);
@@ -61,8 +66,10 @@ test.describe('EnglishLegalese v1.59.0 production acceptance', () => {
   test('www production endpoint serves same current release', async ({ page }) => {
     await page.goto('https://www.englishlegalese.com/', { waitUntil: 'networkidle' });
     await page.locator('body.v1590-ready').waitFor();
-    await expect(page.locator('#v1590-live-marker')).toHaveText('1.59.0');
+    await expect(page.locator('#v1590-live-marker')).toHaveText('1.60.0');
     await expect(page.getByRole('heading', { name: 'Legal English training for the AI era.' })).toBeVisible();
     await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
   });
 });
+
+test('production focused practice retains all 21 scenarios and diagnostic',async({page})=>{await assertProductionRelease(page);await page.evaluate(()=>location.hash='#practice-studio');await expect(page.locator('#elFocusToolbar')).toBeVisible();await expect(page.locator('#practice-studio .v1550-scenario-card:visible')).toHaveCount(6);await page.locator('.js-v1590-scenarios').click();await expect(page.locator('#practice-studio .v1550-scenario-card:visible')).toHaveCount(21);await page.evaluate(()=>location.hash='#diagnostic');await expect(page.locator('#diagnostic .v1580-diagnostic-form')).toBeVisible();await page.locator('#elFocusToolbar a').click();await expect(page.locator('#home')).toBeVisible();});
