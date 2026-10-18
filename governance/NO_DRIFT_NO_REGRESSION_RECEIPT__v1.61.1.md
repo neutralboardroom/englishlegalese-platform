@@ -1,2 +1,4 @@
 # v1.61.1 intended no-drift
 Single behavior change: stable delegated scenario/custom action listener in existing product-v1590.js. Add Playwright WebKit premerge and versioned asset identifiers, static gates. Visual-v1610.css, approved logo image, backend, data, storage, 21 scenarios and original diagnostics remain unchanged. Until 4-project browser tests and prod acceptance pass, this is only a candidate declaration.
+
+Additional targeted corrections after real browser trace review: app.js applies course visibility synchronously and uses instant SPA section scroll; product-v1550.js removes the delayed smooth-scroll callback; product-v1590.js retains protected recovery but no longer adds an independent delayed course handler, and its diagnostic/custom-action follow-up scrolling is instant; visual-v1610.css adds only an `html` scroll-behavior override. These changes preserve artwork, page layout, content, and all underlying learning data.
