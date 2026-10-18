@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.61.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.61.1 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';

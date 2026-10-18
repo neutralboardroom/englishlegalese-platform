@@ -3,11 +3,11 @@ const { test, expect } = require('@playwright/test');
 async function assertProductionRelease(page) {
   await page.goto('/', { waitUntil: 'networkidle' });
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.61.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.1');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.61.1');
 }
 
-test.describe('EnglishLegalese v1.61.0 production acceptance', () => {
+test.describe('EnglishLegalese v1.61.1 production acceptance', () => {
   test('apex production renders corrected owner-visible homepage', async ({ page }, testInfo) => {
     await assertProductionRelease(page);
 
@@ -45,7 +45,7 @@ test.describe('EnglishLegalese v1.61.0 production acceptance', () => {
     const h=await page.evaluate(()=>document.documentElement.scrollHeight);
     expect(h).toBeLessThan(testInfo.project.name==='production-mobile'?9500:7000);
     const htmlResponse=await page.request.get('/');
-    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.61.0');
+    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.61.1');
     expect(htmlResponse.headers()['cache-control']).toContain('no-cache');
     await page.screenshot({ path: testInfo.outputPath('production-homepage-v1590.png'), fullPage: true, animations: 'disabled' });
     await testInfo.attach('production-homepage-v1590', { path: testInfo.outputPath('production-homepage-v1590.png'), contentType: 'image/png' });
@@ -56,7 +56,7 @@ test.describe('EnglishLegalese v1.61.0 production acceptance', () => {
     for (const hash of ['#teachers','#courses','#language-bridge','#smartteacher','#trust','#practice-studio','#learning-plan','#skills-passport','#home']) {
       await page.evaluate(h => { window.location.hash = h; }, hash);
       await page.waitForTimeout(120);
-      await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.0');
+      await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.1');
       await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
       await expect(page.getByText('New in v1.55', { exact: true })).toHaveCount(0);
       await expect(page.locator('#diagnostic')).toHaveCount(1);
@@ -66,13 +66,13 @@ test.describe('EnglishLegalese v1.61.0 production acceptance', () => {
   test('www production endpoint serves same current release', async ({ page }) => {
     await page.goto('https://www.englishlegalese.com/', { waitUntil: 'networkidle' });
     await page.locator('body.v1590-ready').waitFor();
-    await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.0');
+    await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.1');
     await expect(page.getByRole('heading', { name: 'Clear English for legal work.' })).toBeVisible();
     await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
   });
 });
 
-test('production focused practice retains all 21 scenarios and diagnostic',async({page})=>{await assertProductionRelease(page);await page.evaluate(()=>location.hash='#practice-studio');await expect(page.locator('#elFocusToolbar')).toBeVisible();await expect(page.locator('#practice-studio .v1550-scenario-card:visible')).toHaveCount(6);await page.locator('.js-v1590-scenarios').click();await expect(page.locator('#practice-studio .v1550-scenario-card:visible')).toHaveCount(21);await page.evaluate(()=>location.hash='#diagnostic');await expect(page.locator('#diagnostic .v1580-diagnostic-form')).toBeVisible();await page.locator('#elFocusToolbar a').click();await expect(page.locator('#home')).toBeVisible();});
+test('production focused practice retains all 21 scenarios and diagnostic',async({page})=>{await assertProductionRelease(page);await page.evaluate(()=>location.hash='#practice-studio');await expect(page.locator('#elFocusToolbar')).toBeVisible();await expect(page.locator('#practice-studio .v1550-scenario-card:visible')).toHaveCount(6);await page.locator('.js-v1590-scenarios').click();await expect(page.locator('.js-v1590-scenarios')).toHaveAttribute('aria-expanded','true');await expect(page.locator('#practice-studio .v1550-scenario-card:visible')).toHaveCount(21);await page.evaluate(()=>location.hash='#diagnostic');await expect(page.locator('#diagnostic .v1580-diagnostic-form')).toBeVisible();await page.locator('#elFocusToolbar a').click();await expect(page.locator('#home')).toBeVisible();});
 
 test('production header shows approved large logo with restrained first screen',async({page},testInfo)=>{
  await assertProductionRelease(page);

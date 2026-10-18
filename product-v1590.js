@@ -2,7 +2,7 @@
    Critical public correctness is enforced directly in the DOM, independent of predecessor presentation classes. */
 (() => {
   'use strict';
-  const VERSION='1.61.0';
+  const VERSION='1.61.1';
   const qs=(s,r=document)=>r.querySelector(s);
   const qsa=(s,r=document)=>Array.from(r.querySelectorAll(s));
   let applying=false, scheduled=false;
@@ -96,9 +96,10 @@
     let controls=qs('.v1590-scenario-controls',section);
     if(!controls){controls=document.createElement('div');controls.className='v1590-section-controls v1590-scenario-controls';controls.innerHTML=`<button class="btn teal js-v1590-scenarios" type="button" aria-expanded="false">Explore all ${total} scenarios</button><button class="btn light js-v1590-custom" type="button">Create your own roleplay</button>`;qs('.v1550-scenario-grid',section)?.after(controls);}
     const more=qs('.js-v1590-scenarios',controls);
-    if(more&&!more.dataset.bound){more.dataset.bound='1';more.addEventListener('click',()=>{scenariosExpanded=!scenariosExpanded;enforceScenarios();});}
+    // The scenario switch is bound once on document (capture) below.
+    // Stable delegation handles Safari/WebKit where a DOM observer can replace this button mid-click.
     const customBtn=qs('.js-v1590-custom',controls);
-    if(customBtn&&!customBtn.dataset.bound){customBtn.dataset.bound='1';customBtn.addEventListener('click',()=>{scenariosExpanded=true;enforceScenarios();const custom=qs('.v1550-custom-roleplay',section);if(custom){custom.hidden=false;custom.scrollIntoView({behavior:'smooth',block:'start'});}});}
+    // Custom roleplay uses the same stable delegated click pathway.
     if(more){more.setAttribute('aria-expanded',String(scenariosExpanded));more.textContent=scenariosExpanded?'Show featured scenarios only':`Explore all ${total} scenarios`;}
   }
 
@@ -158,6 +159,26 @@
     try{replacePublicText(app);removeInternalUI();correctLanguageAndSmartTeacher();correctTeacherEmployer();enforceDiagnostic();enforceCourses();enforceScenarios();enforcePlanner();enforceProgress();markRelease();}finally{applying=false;}
   }
   function schedule(){if(scheduled)return;scheduled=true;setTimeout(()=>{scheduled=false;apply();},0);}
-  function start(){const app=qs('#app');if(app)new MutationObserver(schedule).observe(app,{childList:true,subtree:true});window.addEventListener('hashchange',()=>{if(location.hash==='#diagnostic')diagnosticExpanded=true;setTimeout(schedule,10);});window.addEventListener('pageshow',schedule);schedule();setTimeout(schedule,100);setTimeout(schedule,500);setTimeout(schedule,1500);}
+  function start(){
+    // Capture the activation before any legacy repaint/observer can detach the clicked node.
+    // Attach once per page, never per regenerated button.
+    document.addEventListener('click',event=>{
+      const target=event.target instanceof Element ? event.target : event.target?.parentElement;
+      const more=target?.closest('.js-v1590-scenarios');
+      if(more){
+        event.preventDefault();
+        scenariosExpanded=more.getAttribute('aria-expanded')!=='true';
+        enforceScenarios();
+        return;
+      }
+      const own=target?.closest('.js-v1590-custom');
+      if(own){
+        event.preventDefault();
+        scenariosExpanded=true;enforceScenarios();
+        const section=qs('#practice-studio'),custom=section&&qs('.v1550-custom-roleplay',section);
+        if(custom){custom.hidden=false;custom.scrollIntoView({behavior:'smooth',block:'start'});}
+      }
+    },true);
+    const app=qs('#app');if(app)new MutationObserver(schedule).observe(app,{childList:true,subtree:true});window.addEventListener('hashchange',()=>{if(location.hash==='#diagnostic')diagnosticExpanded=true;setTimeout(schedule,10);});window.addEventListener('pageshow',schedule);schedule();setTimeout(schedule,100);setTimeout(schedule,500);setTimeout(schedule,1500);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
