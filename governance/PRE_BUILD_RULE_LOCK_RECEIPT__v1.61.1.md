@@ -1,0 +1,2 @@
+# v1.61.1 prebuild lock
+Main SHA be56b49b17af2ad6379de04368b42f076b27b53a; logo blob b5f20ef046d75d6f108bc93243c7c14acf3c4eb1; unchanged canonical 19 owner and 10 durable rules in governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md Git blob bd1d33a43180291f3a8ddedcd6884f6ff3d7c666. No data, service credentials, assets or other products modified. Pre-seal independent currentness and exact-head two-pass evidence PENDING.

@@ -1,0 +1,2 @@
+# v1.61.1 intended no-drift
+Single behavior change: stable delegated scenario/custom action listener in existing product-v1590.js. Add Playwright WebKit premerge and versioned asset identifiers, static gates. Visual-v1610.css, approved logo image, backend, data, storage, 21 scenarios and original diagnostics remain unchanged. Until 4-project browser tests and prod acceptance pass, this is only a candidate declaration.

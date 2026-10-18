@@ -1,0 +1,2 @@
+# EnglishLegalese v1.61.1 — Safari scenario expansion functional recovery
+Candidate, not yet deployed. Material bugfix after v1.61.0 production test 39111328196 identified WebKit iPad scenario expansion did not reliably reveal all 21 original cards. Fixes stable event binding and adds independent premerge Safari project. Original v1.61.0 visual improvements, approved logo, privacy, courses, diagnostic, teachers and employers all preserved. Requires double release gate and real apex/www browser acceptance. See rollback receipt.

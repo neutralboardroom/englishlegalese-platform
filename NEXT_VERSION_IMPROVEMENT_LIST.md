@@ -1,3 +1,18 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.61.1 (candidate)
+The live v1.61.0 desktop/mobile logo improvement is retained. v1.61.1 exists specifically because independent production Safari/WebKit iPad acceptance found a real scenario-expand failure. This is a functional fix, not a gratuitous version bump.
+
+## Work in this material release
+- Central click delegation protects the scenario expand/custom roleplay actions from replacement/races in the source recovery MutationObserver.
+- Premerge Playwright browser matrix now includes an independent tablet WebKit project, alongside prior desktop/tablet/mobile Chromium projects.
+- Production acceptance still demands all original 21 scenarios to expand, exact aria-expanded semantics, and all original diagnostic and role/privacy boundaries.
+- Source logo blob permanently locked, no new artwork or styling change. Current verified v1.60.0 rollback deploy retained.
+
+## Next priorities
+1. Two full exact-head gate passes including WebKit plus independent apex/www desktop/tablet/mobile acceptance; owner aesthetic sign-off still separate.
+2. Reduce historical recovery observer/patch stack only after equivalent public functionality on WebKit and Chromium.
+3. Keep all credential-dependent / privacy-sensitive deferred items from preceding lists.
+
+## Full preceding improvement list preserved
 # EnglishLegalese.com — Next Version Improvement List after v1.61.0 (candidate)
 
 This release fixes the owner-observed visually inadequate v1.60.0 homepage. Candidate status; do not mark owner aesthetic approval as complete.
