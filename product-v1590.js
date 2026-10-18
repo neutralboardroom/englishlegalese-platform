@@ -2,7 +2,7 @@
    Critical public correctness is enforced directly in the DOM, independent of predecessor presentation classes. */
 (() => {
   'use strict';
-  const VERSION='1.61.1';
+  const VERSION='1.62.0';
   const qs=(s,r=document)=>r.querySelector(s);
   const qsa=(s,r=document)=>Array.from(r.querySelectorAll(s));
   // Only modify the DOM when values actually change. Unconditional textContent/innerHTML
@@ -40,11 +40,11 @@
       const title=qs('h3',card)?.textContent.trim();
       if(title==='EnglishLegalese Team')card.remove();
       if(title==='Teacher'){
-        const p=qs('p',card);if(p)setText(p,'Explore teacher-guided practice, lesson review, roleplay, homework, and feedback. Operational tools require the appropriate signed-in role.');
+        const p=qs('p',card);if(p)setText(p,'Explore lesson support, realistic legal scenarios, and opportunities for teacher-guided feedback.');
         const a=qs('a',card);if(a){setText(a,'Explore teacher support');a.href='#teachers';}
       }
       if(title==='Employer'){
-        const p=qs('p',card);if(p)setText(p,'Explore privacy-conscious team training and appropriate aggregate learning-progress signals while private learner work stays private by default.');
+        const p=qs('p',card);if(p)setText(p,'Explore practical Legal English training with privacy-conscious learning progress for teams.');
         const a=qs('a',card);if(a){setText(a,'Explore employer training');a.href='#employers';}
       }
     });

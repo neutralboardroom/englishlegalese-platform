@@ -3,11 +3,11 @@ const { test, expect } = require('@playwright/test');
 async function assertProductionRelease(page) {
   await page.goto('/', { waitUntil: 'networkidle' });
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.1');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.61.1');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.62.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.62.0');
 }
 
-test.describe('EnglishLegalese v1.61.1 production acceptance', () => {
+test.describe('EnglishLegalese v1.62.0 production acceptance', () => {
   test('apex production renders corrected owner-visible homepage', async ({ page }, testInfo) => {
     await assertProductionRelease(page);
 
@@ -45,7 +45,7 @@ test.describe('EnglishLegalese v1.61.1 production acceptance', () => {
     const h=await page.evaluate(()=>document.documentElement.scrollHeight);
     expect(h).toBeLessThan(testInfo.project.name==='production-mobile'?9500:7000);
     const htmlResponse=await page.request.get('/');
-    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.61.1');
+    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.62.0');
     expect(htmlResponse.headers()['cache-control']).toContain('no-cache');
     await page.screenshot({ path: testInfo.outputPath('production-homepage-v1590.png'), fullPage: true, animations: 'disabled' });
     await testInfo.attach('production-homepage-v1590', { path: testInfo.outputPath('production-homepage-v1590.png'), contentType: 'image/png' });
@@ -56,7 +56,7 @@ test.describe('EnglishLegalese v1.61.1 production acceptance', () => {
     for (const hash of ['#teachers','#courses','#language-bridge','#smartteacher','#trust','#practice-studio','#learning-plan','#skills-passport','#home']) {
       await page.evaluate(h => { window.location.hash = h; }, hash);
       await page.waitForTimeout(120);
-      await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.1');
+      await expect(page.locator('#v1590-live-marker')).toHaveText('1.62.0');
       await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
       await expect(page.getByText('New in v1.55', { exact: true })).toHaveCount(0);
       await expect(page.locator('#diagnostic')).toHaveCount(1);
@@ -66,7 +66,7 @@ test.describe('EnglishLegalese v1.61.1 production acceptance', () => {
   test('www production endpoint serves same current release', async ({ page }) => {
     await page.goto('https://www.englishlegalese.com/', { waitUntil: 'networkidle' });
     await page.locator('body.v1590-ready').waitFor();
-    await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.1');
+    await expect(page.locator('#v1590-live-marker')).toHaveText('1.62.0');
     await expect(page.getByRole('heading', { name: 'Clear English for legal work.' })).toBeVisible();
     await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
   });
@@ -86,4 +86,21 @@ test('production header shows approved large logo with restrained first screen',
  await expect(page.locator('.hero-logo')).toHaveCount(0);
  expect(await page.locator('.hero-actions .btn').count()).toBe(2);
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);expect(overflow).toBeLessThanOrEqual(1);
+});
+
+
+test('production mobile menu and learning-prompt preparation work on the real site',async({page})=>{
+  await assertProductionRelease(page);
+  await page.setViewportSize({width:390,height:844});
+  const toggle=page.locator('#navToggle');
+  await toggle.click();await expect(toggle).toHaveAttribute('aria-expanded','true');
+  await page.keyboard.press('Escape');await expect(toggle).toHaveAttribute('aria-expanded','false');
+  await page.evaluate(()=>location.hash='#smartteacher');
+  await expect(page.locator('#smartteacher')).toBeVisible();
+  await page.locator('#el-practice-topic').fill('Fictional contract update');
+  await page.getByRole('button',{name:'Prepare writing review'}).click();
+  await expect(page.locator('.js-ai-output')).toContainText('WRITING REVIEW');
+  await expect(page.locator('.js-ai-output')).toContainText('Fictional contract update');
+  await expect(page.locator('.js-copy-practice')).toBeVisible();
+  await expect(page.locator('#smartteacher')).toContainText('does not send text to an AI service');
 });

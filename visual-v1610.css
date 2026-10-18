@@ -99,3 +99,17 @@ body[data-el-homepage-view="home"] #app>.section{padding-top:2.5rem!important;pa
 
 /* Prevent competing delayed hash-scroll animations from displacing controls during keyboard, touch or pointer activation. */
 html{scroll-behavior:auto!important}
+
+/* v1.62.0 — use the existing design system; preserve approved logo bytes and dimensions. */
+.v1620-paths>.card,.v1620-paths>article{display:flex;flex-direction:column;gap:.55rem}
+.v1620-paths .btn,.v1620-paths a.btn{margin-top:auto;align-self:flex-start}
+.v1620-input-label{display:block;font-size:.9rem;font-weight:750;color:#183849;margin:1rem 0 .5rem}
+.v1620-practice-panel{max-width:1000px}
+.v1620-practice-actions{gap:.6rem;flex-wrap:wrap}
+.v1620-practice-result{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65;max-width:100%;border-radius:10px;margin-top:1.2rem}
+.v1620-practice-result:focus-visible{outline:3px solid #18727b;outline-offset:3px}
+.js-copy-practice:not([hidden]){display:inline-flex;margin-top:.65rem}
+.main-nav a[aria-current="location"]{color:#0b6570!important;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.nav-toggle[aria-expanded="true"]{border-color:#186a74!important;background:#eaf5f3!important}
+.nav-toggle:focus-visible,.mobile-sticky-start a:focus-visible,.main-nav a:focus-visible{outline:3px solid #167382!important;outline-offset:4px}
+@media(max-width:620px){.v1620-practice-actions{display:grid;grid-template-columns:1fr}.v1620-practice-actions .btn{width:100%;min-height:46px}.v1620-paths .btn,.v1620-paths a.btn{align-self:stretch;text-align:center}}

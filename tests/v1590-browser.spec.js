@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.61.1');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.61.1');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.62.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.62.0');
 }
 
-test.describe('EnglishLegalese v1.61.1 hard live recovery', () => {
+test.describe('EnglishLegalese v1.62.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -114,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.61\.1/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.62\.0/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -139,4 +139,53 @@ test('public recovery observer becomes idle instead of constantly rewriting text
   setTimeout(()=>{obs.disconnect();resolve(count);},500);
  }));
  expect(changes).toBeLessThan(8);
+});
+
+
+test('next learning version provides a real safe prompt-preparation workflow',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('#start h2')).toHaveText('Start with what you need.');
+  await expect(page.getByText('Operational staff tools stay behind account access.')).toHaveCount(0);
+  await page.evaluate(()=>{location.hash='#smartteacher';});
+  await expect(page.locator('#smartteacher')).toBeVisible();
+  const topic='Fictional client update about a delayed contract review';
+  await page.locator('#el-practice-topic').fill(topic);
+  await page.getByRole('button',{name:'Prepare conversation practice'}).click();
+  await expect(page.locator('.js-ai-output')).toContainText('CONVERSATION PRACTICE');
+  await expect(page.locator('.js-ai-output')).toContainText(topic);
+  await expect(page.locator('.js-ai-output')).toContainText('not legal advice');
+  await expect(page.locator('.js-copy-practice')).toBeVisible();
+  await page.getByRole('button',{name:'Prepare writing review'}).click();
+  await expect(page.locator('.js-ai-output')).toContainText('WRITING REVIEW');
+  await expect(page.locator('.js-ai-output')).toContainText('Preserve the intended legal meaning');
+  await expect(page.locator('#smartteacher p').first()).toContainText('does not send text to an AI service');
+  await expect(page.locator('#smartteacher .js-ai-input')).toHaveAttribute('maxlength','1500');
+});
+
+test('mobile disclosure menu handles Escape, link activation and outside touch',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.goto('/');await waitForRecovery(page);
+  const toggle=page.locator('#navToggle'),nav=page.locator('#mainNav');
+  await expect(toggle).toHaveAttribute('aria-expanded','false');
+  await toggle.click();await expect(toggle).toHaveAttribute('aria-expanded','true');
+  await expect(nav).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(toggle).toHaveAttribute('aria-expanded','false');
+  await expect(toggle).toBeFocused();
+  await toggle.click();
+  await nav.locator('a[href="#courses"]').click();
+  await expect(toggle).toHaveAttribute('aria-expanded','false');
+  await expect(page.locator('#courses')).toBeVisible();
+  await expect(nav.locator('a[href="#courses"]')).toHaveAttribute('aria-current','location');
+  await toggle.click();await page.mouse.click(5,10);
+  await expect(toggle).toHaveAttribute('aria-expanded','false');
+});
+
+test('revised metadata stays aligned with the public learning experience',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href','https://englishlegalese.com/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.62.0');
 });

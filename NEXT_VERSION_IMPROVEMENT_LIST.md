@@ -1,3 +1,22 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.62.0 (source candidate)
+
+## Material improvements targeted in v1.62.0
+- Replace internal-sounding role choice copy with simple student, teacher and employer learning pathways.
+- Fix a defective course expand handler that treated one Element as a list; ensure 9 original courses remain accessible.
+- Turn inert SmartTeacher prompt buttons into an actual in-browser conversation or writing-review **prompt preparation** workflow with explicit AI/non-AI truthfulness, protected input limits, copy action and clear privacy reminder. Do not imply a connected AI inference service or save private practice text.
+- Improve responsive menu disclosure, Escape handling, click-away and link-close behavior, accessible aria labels, and current-section highlight.
+- Correct release-specific SEO head/title/social descriptions; validate canonical and existing OG image locally.
+- Preserve large locked approved logo, 21 scenarios, 8-question non-accredited diagnostic, role-sensitive protection, learner progress, privacy boundaries, and no server/database changes.
+
+## Next high-value work
+1. Eliminate old public presentation layers only when screenshot + behavior equivalence is verified across Chromium and WebKit; owner goldens not yet approved.
+2. Qualified live authenticated AI/classroom integration only after correct production credentials/privacy gates. Do not claim this exists because prompt preparation is usable.
+3. Improve privacy disclosures and complete user export/deletion/retention controls as storage becomes production-ready.
+4. Finish form/head validation and real-device accessibility evaluation.
+5. Re-evaluate academic/professional Legal English competitive positioning and pricing with verified evidence.
+6. Maintain twice-qualified exact-head release, apex/www real-browser checks, and previous deployment rollback.
+
+## Full previous list (preserved, no loss)
 # EnglishLegalese.com — Next Version Improvement List after v1.61.1 (candidate)
 The live v1.61.0 desktop/mobile logo improvement is retained. v1.61.1 exists specifically because independent production Safari/WebKit iPad acceptance found a real scenario-expand failure. This is a functional fix, not a gratuitous version bump.
 
