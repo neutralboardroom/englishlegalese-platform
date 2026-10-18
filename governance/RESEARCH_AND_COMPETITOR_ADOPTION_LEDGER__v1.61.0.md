@@ -7,3 +7,5 @@
 - **REJECT:** modifying locked original logo bytes, fake accreditation or student outcomes, bloated decorative hero, unrelated pricing changes.
 - **DEFER_WITH_REASON:** password-gated account experience and live ChatGPT/service upgrades need separate credential and privacy authorization.
 Research is grounded in current site screenshot defects; not a claim of private competitor content or newly bought Firecrawl services.
+
+- Render official rollback guide — https://render.com/docs/rollbacks — **ADOPT:** previous v1.60.0 deploy ID, disable automatic deployment after emergency rollback, and independently verify the actual live apex and www. Do not assume documentation changes make rollback unnecessary.
