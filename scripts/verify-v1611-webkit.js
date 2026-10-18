@@ -101,6 +101,8 @@ check('CI includes WebKit browser install',read('.github/workflows/englishlegale
 check('scenario controls use stable single delegated event listener',v1590.includes("document.addEventListener('click',event=>")&&v1590.includes('},true)')&&!v1590.includes("more.addEventListener('click'"));
 check('scenario controls report expanded state for production acceptance',read('tests/v1590-production.spec.js').includes("toHaveAttribute('aria-expanded','true')"));
 check('diagnostic, planner, progress and scenarios all use stable delegated click routing', ['.js-v1590-diagnostic','.js-v1590-planner','.js-v1590-progress','.js-v1590-scenarios'].every(x=>v1590.includes("target?.closest('"+x+"')")) && !v1590.includes("btn.addEventListener('click',()=>{progressExpanded") && !v1590.includes("btn.addEventListener('click',()=>{plannerExpanded") && !v1590.includes("btn.addEventListener('click',()=>{diagnosticExpanded"));
+check('hash route does not animate controls underneath the pointer',read('app.js').includes("scrollIntoView({behavior:'instant',block:'start'})") && read('product-v1550.js').includes("scrollIntoView({behavior:'instant',block:'start'})") && css1610.includes('html{scroll-behavior:auto!important}'));
+check('course expansion updates visible cards within the same click',read('app.js').includes("card.hidden=i>=3&&!showAll;")&&!v1590.includes('setTimeout(enforceCourses,0)'));
 check('high/critical audit command remains exact', pkg.scripts?.['audit:high'] === 'npm audit --audit-level=high');
 check('v1.59 verifier is wired into npm check', String(pkg.scripts?.check || '').includes('verify-v1611-webkit.js'));
 
