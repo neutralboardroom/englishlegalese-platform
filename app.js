@@ -162,7 +162,7 @@
       catch{practiceOutput?.focus();toast('Select and copy the prepared prompt from the text area above.');}
     });}
     $$('.js-teacher-review').forEach(btn=>{ if(btn.dataset.bound) return; btn.dataset.bound='1'; btn.addEventListener('click',()=>toast('Teacher review requires the appropriate account and teacher workflow when enabled.')); });
-    const courseBtn=$('.js-v1580-courses'); if(courseBtn&&!courseBtn.dataset.bound){courseBtn.dataset.bound='1';courseBtn.addEventListener('click',()=>{const expanded=courseBtn.getAttribute('aria-expanded')==='true';courseBtn.setAttribute('aria-expanded',String(!expanded));document.body.classList.toggle('v1580-courses-expanded',!expanded);courseBtn.textContent=expanded?`View all ${courses.length} courses`:'Show featured courses only';const showAll=!expanded;$('#courses article').filter(card=>$('h3',card)).forEach((card,i)=>{card.hidden=i>=3&&!showAll;});});}
+    const courseBtn=$('.js-v1580-courses'); if(courseBtn&&!courseBtn.dataset.bound){courseBtn.dataset.bound='1';courseBtn.addEventListener('click',()=>{const expanded=courseBtn.getAttribute('aria-expanded')==='true';courseBtn.setAttribute('aria-expanded',String(!expanded));document.body.classList.toggle('v1580-courses-expanded',!expanded);courseBtn.textContent=expanded?`View all ${courses.length} courses`:'Show featured courses only';const showAll=!expanded;$$('#courses article').filter(card=>$('h3',card)).forEach((card,i)=>{card.hidden=i>=3&&!showAll;});});}
     const navToggle=$('#navToggle'),nav=$('#mainNav');
     if(navToggle&&nav&&!navToggle.dataset.bound){
       navToggle.dataset.bound='1';
