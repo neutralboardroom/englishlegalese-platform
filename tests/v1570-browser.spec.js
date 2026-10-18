@@ -6,7 +6,7 @@ test.describe('EnglishLegalese v1.60.0 live homepage recovery inheritance', () =
     await page.locator('body.v1590-ready').waitFor();
 
     await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.60.0');
-    await expect(page.locator('.site-header .brand img')).toHaveAttribute('src', /assets\/englishlegalese-logo\.png\?v=1\.59\.0/);
+    await expect(page.locator('.site-header .brand img')).toHaveAttribute('src', /assets\/englishlegalese-logo\.png\?v=1\.60\.0/);
     const logoBox = await page.locator('.site-header .brand img').boundingBox();
     expect(logoBox).not.toBeNull();
     expect(logoBox.width).toBeGreaterThanOrEqual(testInfo.project.name === 'mobile-chromium' ? 100 : 140);
