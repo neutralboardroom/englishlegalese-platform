@@ -89,7 +89,7 @@
     let expanded=document.body.classList.contains('v1580-courses-expanded');
     const btn=qs('.js-v1580-courses',section);if(btn)expanded=btn.getAttribute('aria-expanded')==='true';
     cards.forEach((card,i)=>{card.classList.remove('v1560-collapsible','v1580-course-more');card.hidden=i>=3&&!expanded;});
-    if(btn&&!btn.dataset.v1590Bound){btn.dataset.v1590Bound='1';btn.addEventListener('click',()=>setTimeout(enforceCourses,0));}
+    // app.js owns course click and immediately updates article visibility; this controller honors its aria-expanded state.
   }
 
   function ensureScenarioControls(section,total){
@@ -176,7 +176,7 @@
         event.preventDefault();
         scenariosExpanded=true;enforceScenarios();
         const section=qs('#practice-studio'),custom=section&&qs('.v1550-custom-roleplay',section);
-        if(custom){custom.hidden=false;custom.scrollIntoView({behavior:'smooth',block:'start'});}
+        if(custom){custom.hidden=false;custom.scrollIntoView({behavior:'instant',block:'start'});}
         return;
       }
       const diagnostic=target?.closest('.js-v1590-diagnostic');
@@ -184,7 +184,7 @@
         event.preventDefault();
         diagnosticExpanded=diagnostic.getAttribute('aria-expanded')!=='true';
         enforceDiagnostic();
-        if(diagnosticExpanded)qs('#diagnostic .v1580-diagnostic-form')?.scrollIntoView({behavior:'smooth',block:'start'});
+        if(diagnosticExpanded)qs('#diagnostic .v1580-diagnostic-form')?.scrollIntoView({behavior:'instant',block:'start'});
         return;
       }
       const planner=target?.closest('.js-v1590-planner');
