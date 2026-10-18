@@ -2,7 +2,7 @@
 The live v1.61.0 desktop/mobile logo improvement is retained. v1.61.1 exists specifically because independent production Safari/WebKit iPad acceptance found a real scenario-expand failure. This is a functional fix, not a gratuitous version bump.
 
 ## Work in this material release
-- Central click delegation protects scenario, diagnostic, learning-plan and progress actions from replacement/races in the source recovery MutationObserver. Synchronous course-card disclosure and instant hash route scrolling remove tablet click-target movement during delayed smooth animations.
+- Central click delegation protects scenario, diagnostic, learning-plan and progress actions from replacement/races in the source recovery MutationObserver. Synchronous course-card disclosure and instant hash route scrolling remove tablet click-target movement during delayed smooth animations. Critical recovery observer self-loop is fixed with idempotent text/HTML writes; idle DOM quiescence is now release-tested.
 - Premerge Playwright browser matrix now includes an independent tablet WebKit project, alongside prior desktop/tablet/mobile Chromium projects.
 - Production acceptance still demands all original 21 scenarios to expand, exact aria-expanded semantics, and all original diagnostic and role/privacy boundaries.
 - Source logo blob permanently locked, no new artwork or styling change. Current verified v1.60.0 rollback deploy retained.
