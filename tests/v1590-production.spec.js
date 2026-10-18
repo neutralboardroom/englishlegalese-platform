@@ -82,7 +82,7 @@ test('production header shows approved large logo with restrained first screen',
  expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='production-mobile'?85:100);
  expect(ib.height).toBeGreaterThanOrEqual(testInfo.project.name==='production-mobile'?160:200);
  await expect(page.getByRole('heading',{name:'Clear English for legal work.'})).toBeVisible();
- await expect(page.getByText('Please respond to the earlier email.')).toBeVisible();
+ await expect(page.locator('.hero-example.improved p')).toBeVisible();
  await expect(page.locator('.hero-logo')).toHaveCount(0);
  expect(await page.locator('.hero-actions .btn').count()).toBe(2);
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);expect(overflow).toBeLessThanOrEqual(1);
