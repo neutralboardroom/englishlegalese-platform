@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.58.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.60.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -44,7 +44,7 @@
     'firm-intake':'employer-dashboard','teacher-apply':'teacher-dashboard','ai-translation-safety':'smartteacher',
     'scheduling':'teachers','resources':'trust','global-access-classrooms':'language-bridge','calendar-reminders':'teachers',
     'skills-studio':'skills','speaking-listening-reading-writing':'skills','reading-lab':'courses','writing-workshop':'courses',
-    '100-language-learning-bridge':'language-bridge'
+    '100-language-learning-bridge':'language-bridge', 'adaptive-learning':'practice-studio'
   };
   const protectedHashes = new Set(['student-dashboard','teacher-dashboard','employer-dashboard','admin-dashboard','dashboards']);
 
@@ -145,12 +145,36 @@
     if(target){ requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'})); return; }
     if(attempt<20) setTimeout(()=>scrollToTarget(id,attempt+1),50);
   }
+  const homepageSectionIds = new Set(['home','start','courses','smartteacher','teachers','trust']);
+  const focusBar = document.getElementById('elFocusToolbar');
+  const focusBarName = document.getElementById('elFocusName');
+  function applyRouteView(){
+    if(!$('#home',app)){if(focusBar)focusBar.hidden=true;return;}
+    const hash=(location.hash||'#home').slice(1);
+    const canonical=legacyAnchorMap[hash]||hash;
+    const target=document.getElementById(canonical);
+    const section=target?.closest('section');
+    const focusSection=section && section.parentElement===app ? section : null;
+    const isHome=!canonical||canonical==='home'||!focusSection;
+    app.querySelectorAll(':scope > section').forEach(el=>{
+      el.hidden=isHome?!homepageSectionIds.has(el.id):el!==focusSection;
+    });
+    document.body.dataset.elHomepageView=isHome?'home':'focus';
+    if(focusBar)focusBar.hidden=isHome;
+    if(focusBarName&&!isHome){
+      focusBarName.textContent=focusSection.querySelector('.section-head h2, h2, h1')?.textContent?.trim()||'Explore Legal English';
+    }
+  }
+  // Called once by the learning engine after it injects the protected scenario, plan,
+  // and progress sections. No competing mutation observers or DOM replacement.
+  window.englishLegaleseApplyView=applyRouteView;
   function route(){
     const raw=(window.location.hash||'#home').replace('#','');
     const canonical=legacyAnchorMap[raw]||raw;
-    if(protectedHashes.has(canonical)) return pageShell(dashboardPanel(canonical==='dashboards'?'admin':canonical.replace('-dashboard','')));
-    if(canonical==='classrooms') return pageShell(`${skillsStudio()}${dashboardPanel('teacher')}`);
+    if(protectedHashes.has(canonical)){pageShell(dashboardPanel(canonical==='dashboards'?'admin':canonical.replace('-dashboard',''))); applyRouteView(); return;}
+    if(canonical==='classrooms'){pageShell(`${skillsStudio()}${dashboardPanel('teacher')}`);applyRouteView();return;}
     if(!$('#home',app)) home(); else bindActions();
+    applyRouteView();
     scrollToTarget(canonical||'home');
   }
   window.addEventListener('hashchange',route);

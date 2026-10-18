@@ -2,7 +2,7 @@
    Critical public correctness is enforced directly in the DOM, independent of predecessor presentation classes. */
 (() => {
   'use strict';
-  const VERSION='1.59.0';
+  const VERSION='1.60.0';
   const qs=(s,r=document)=>r.querySelector(s);
   const qsa=(s,r=document)=>Array.from(r.querySelectorAll(s));
   let applying=false, scheduled=false;
