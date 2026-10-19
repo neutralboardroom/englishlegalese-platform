@@ -299,24 +299,24 @@
     }
   ];
   function clauseReadingLab(){
-    return \`<section class="section v1660-reading-lab" id="clause-reading-lab" aria-labelledby="v1660-title">
+    return `<section class="section v1660-reading-lab" id="clause-reading-lab" aria-labelledby="v1660-title">
       <div class="container section-head"><div><div class="eyebrow">Free clause reading lab</div><h2 id="v1660-title">Read the small words that change the meaning.</h2></div><p>Practise spotting timing triggers, obligations, options and exceptions in three short fictional clauses. Compare your answer with a clear explanation; no account or live AI is required.</p></div>
       <div class="container v1660-shell">
-        <p class="v1660-progress" role="status" aria-live="polite" aria-atomic="true">Reviewed 0 of \${CLAUSE_READING_CASES.length} fictional clauses</p>
-        \${CLAUSE_READING_CASES.map((item,i)=>\`<article class="panel v1660-case" data-reading-case="\${i}">
-          <div class="v1660-kicker">Clause \${i+1} of \${CLAUSE_READING_CASES.length} · \${escapeHtml(item.title)}</div>
-          <h3>Read this fictional clause</h3><blockquote class="v1660-clause">\${escapeHtml(item.clause)}</blockquote>
-          <fieldset class="v1660-choices"><legend>\${escapeHtml(item.question)}</legend>
-          \${item.options.map((option,j)=>\`<label><input type="radio" name="v1660-answer-\${i}" value="\${j}"><span>\${escapeHtml(option)}</span></label>\`).join('')}</fieldset>
+        <p class="v1660-progress" role="status" aria-live="polite" aria-atomic="true">Reviewed 0 of ${CLAUSE_READING_CASES.length} fictional clauses</p>
+        ${CLAUSE_READING_CASES.map((item,i)=>`<article class="panel v1660-case" data-reading-case="${i}">
+          <div class="v1660-kicker">Clause ${i+1} of ${CLAUSE_READING_CASES.length} · ${escapeHtml(item.title)}</div>
+          <h3>Read this fictional clause</h3><blockquote class="v1660-clause">${escapeHtml(item.clause)}</blockquote>
+          <fieldset class="v1660-choices"><legend>${escapeHtml(item.question)}</legend>
+          ${item.options.map((option,j)=>`<label><input type="radio" name="v1660-answer-${i}" value="${j}"><span>${escapeHtml(option)}</span></label>`).join('')}</fieldset>
           <div class="v1660-actions"><button class="btn teal" type="button" data-reading-action="compare">Compare my reading</button><button class="btn light" type="button" data-reading-action="clear">Clear this clause</button></div>
           <p class="v1660-status" role="status" aria-live="polite"></p>
-          <div class="v1660-feedback" hidden><h4>What the wording tells us</h4><p class="v1660-response"></p><p>\${escapeHtml(item.explanation)}</p><h4>Self-check the language</h4><ul>\${item.checks.map(check=>\`<li>\${escapeHtml(check)}</li>\`).join('')}</ul><p>Illustrative language guidance, not legal advice, legal interpretation for a real agreement, or accredited scoring.</p></div>
-        </article>\`).join('')}
+          <div class="v1660-feedback" hidden><h4>What the wording tells us</h4><p class="v1660-response"></p><p>${escapeHtml(item.explanation)}</p><h4>Self-check the language</h4><ul>${item.checks.map(check=>`<li>${escapeHtml(check)}</li>`).join('')}</ul><p>Illustrative language guidance, not legal advice, legal interpretation for a real agreement, or accredited scoring.</p></div>
+        </article>`).join('')}
         <p class="v1660-privacy">All clauses are fictional. Choices stay only in this page and are not sent or saved. Refresh or clear to restart. Never rely on these excerpts to determine actual rights or deadlines.</p>
         <button class="btn light v1660-clear-all" type="button" data-reading-action="reset-all">Clear all reading exercises</button>
         <p><a href="#quick-practice">Continue with a fictional writing exercise →</a></p>
       </div>
-    </section>\`;
+    </section>`;
   }
   function bindClauseReadingLab(){
     const section=$('#clause-reading-lab');if(!section||section.dataset.bound==='1')return;
