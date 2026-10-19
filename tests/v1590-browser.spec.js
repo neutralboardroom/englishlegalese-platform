@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.71.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.71.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.72.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.72.0');
 }
 
-test.describe('EnglishLegalese v1.71.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.72.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -114,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.71\.0/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.72\.0/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -187,7 +187,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.71.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.72.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
@@ -711,4 +711,75 @@ test('vocabulary guide is linked from prior case reading without changing approv
   await expect(page.locator('#clause-reading-lab')).toBeVisible();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test('revision studio demonstrates actual must versus may changes and checklists',async({page})=>{
+  await page.goto('/#revision-studio');await waitForRecovery(page);
+  const s=page.locator('#revision-studio');
+  await expect(s).toBeVisible();await expect(s.locator('#v1720-case option')).toHaveCount(6);
+  await expect(s.locator('#v1720-before')).toHaveValue('The reviewer must approve the draft before circulation.');
+  await expect(s.locator('.v1720-result')).toBeHidden();
+  await s.getByRole('button',{name:'Compare wording'}).click();
+  await expect(s.locator('.v1720-removed')).toContainText('must');
+  await expect(s.locator('.v1720-added')).toContainText('may');
+  await expect(s.locator('.v1720-checkbox')).toHaveCount(4);
+  await s.locator('.v1720-checkbox').first().check();
+  await expect(s.locator('.v1720-count')).toContainText('1 of 4');
+  await s.locator('#v1720-case').selectOption('1');
+  await expect(s.locator('.v1720-result')).toBeHidden();
+  await expect(s.locator('#v1720-after')).toHaveValue('The fictional report has been approved by the manager.');
+  await s.getByRole('button',{name:'Compare wording'}).click();
+  await expect(s.locator('.v1720-guidance')).toContainText('pending review');
+  await s.locator('#v1720-after').fill('The report is still pending.');
+  await expect(s.locator('.v1720-result')).toBeHidden();
+  await s.getByRole('button',{name:'Reset this example'}).click();
+  await expect(s.locator('#v1720-after')).toHaveValue('The fictional report has been approved by the manager.');
+});
+test('revision studio validates empty custom writing, resets and does not save drafts',async({page})=>{
+  await page.goto('/#revision-studio');await waitForRecovery(page);
+  const s=page.locator('#revision-studio');
+  await s.locator('#v1720-case').selectOption('custom');
+  await s.getByRole('button',{name:'Compare wording'}).click();
+  await expect(s.locator('.v1720-status')).toContainText('original wording');
+  await expect(s.locator('#v1720-before')).toBeFocused();
+  await s.locator('#v1720-before').fill('Please send the fictional draft after approval.');
+  await s.getByRole('button',{name:'Compare wording'}).click();
+  await expect(s.locator('.v1720-status')).toContainText('revised wording');
+  await s.locator('#v1720-after').fill('Please send the fictional draft before approval.');
+  await s.getByRole('button',{name:'Compare wording'}).click();
+  await expect(s.locator('.v1720-removed')).toContainText('after');
+  await expect(s.locator('.v1720-added')).toContainText('before');
+  await s.getByRole('button',{name:'Clear both texts'}).click();
+  await expect(s.locator('#v1720-before')).toHaveValue('');
+  await expect(s.locator('#v1720-after')).toHaveValue('');
+  await expect(s.locator('.v1720-result')).toBeHidden();
+  await page.reload();await waitForRecovery(page);
+  await expect(page.locator('#v1720-before')).toHaveValue('The reviewer must approve the draft before circulation.');
+  const keys=await page.evaluate(()=>Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter(x=>/v1720|revisionstudio/i.test(x)));
+  expect(keys).toEqual([]);
+});
+test('revision studio is focused, preserves homepage and connects other learning tools',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('#revision-studio')).toBeHidden();
+  await expect(page.locator('footer a[href="#revision-studio"]')).toHaveCount(1);
+  await page.evaluate(()=>location.hash='#email-clarity-lab');
+  await page.locator('#email-clarity-lab a[href="#revision-studio"]').click();
+  await expect(page.locator('#revision-studio')).toBeVisible();
+  await expect(page.locator('#elFocusToolbar')).toBeVisible();
+  await page.locator('#revision-studio a[href="#legal-vocabulary-guide"]').click();
+  await expect(page.locator('#legal-vocabulary-guide')).toBeVisible();
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+});
+test('revision studio optional clipboard notes show checked prompts and no AI scoring',async({page})=>{
+  await page.addInitScript(()=>{window.__copied='';Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async t=>{window.__copied=t;}}});});
+  await page.goto('/#revision-studio');await waitForRecovery(page);
+  const s=page.locator('#revision-studio');
+  await s.getByRole('button',{name:'Compare wording'}).click();
+  await s.locator('.v1720-checkbox').first().check();
+  await s.getByRole('button',{name:'Copy my fictional review notes'}).click();
+  await expect(s.locator('.v1720-copy-status')).toContainText('copied');
+  const copied=await page.evaluate(()=>window.__copied);
+  expect(copied).toContain('Original:');expect(copied).toContain('Revised:');expect(copied).toContain('[x]');
+  await expect(s).toContainText('not uploaded, sent to AI or saved');
 });

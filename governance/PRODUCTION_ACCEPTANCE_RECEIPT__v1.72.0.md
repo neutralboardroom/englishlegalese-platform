@@ -1,0 +1,1 @@
+Candidate NOT DEPLOYED at authorship. Verify exact merged main SHA equals new Render LIVE deploy, original logo preserved, real apex/www desktop/tablet/mobile browser acceptance and screenshots. Previous verified production v1.71.0 GitHub SHA 64732dec871a4f59d31f93a23fde9e7ec85ab3a9 deploy dep-dbb63v942hec7387mdbg, run 39303207666 45/45. Rollback retained.

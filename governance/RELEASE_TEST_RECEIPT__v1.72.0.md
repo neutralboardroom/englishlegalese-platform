@@ -1,0 +1,1 @@
+Candidate; gates NOT RUN at authorship. Two independent full exact-final-head source/security/Chromium/WebKit gates required; GitHub Actions run provides exact head/time/pass totals; postmerge public apex/www 3-device real browser acceptance provides separate run/screenshots. Never assert production success from candidate documents.

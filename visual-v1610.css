@@ -306,3 +306,24 @@ html{scroll-behavior:auto!important}
 .v1710-privacy{font-size:.92rem;color:#506173;line-height:1.6}
 @media(max-width:780px){.v1710-controls{grid-template-columns:1fr 1fr}.v1710-controls button{grid-column:1/-1}}
 @media(max-width:610px){.v1710-controls,.v1710-grid{grid-template-columns:1fr}.v1710-controls button{grid-column:auto}.v1710-term{padding:1rem}}
+
+/* v1.72.0 — scoped private lexical revision studio, keeping approved brand unchanged. */
+.v1720-shell{max-width:1010px}.v1720-shell>label,.v1720-editors label{display:block;font-weight:700;margin:.6rem 0;line-height:1.5}
+.v1720-shell select,.v1720-editors textarea{box-sizing:border-box;width:100%;min-width:0;padding:.8rem;border:1px solid #a9bac6;border-radius:10px;background:#fff;color:#10283a;font:inherit}
+.v1720-shell select{max-width:650px}
+.v1720-editors,.v1720-diff{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.v1720-editors textarea{min-height:130px;max-width:100%}
+.v1720-actions{display:flex;flex-wrap:wrap;gap:.7rem;margin:1rem 0}
+.v1720-status,.v1720-count{font-weight:700;color:#193b50;line-height:1.6}
+.v1720-result{border:1px solid #d5e4e8;background:#f6fbfb;padding:1.25rem;border-radius:14px;margin:1rem 0}
+.v1720-diff>div{background:#fff;border:1px solid #dae6ea;padding:1rem;border-radius:10px;min-width:0}
+.v1720-old,.v1720-new{overflow-wrap:anywhere;line-height:1.8}
+.v1720-key,.v1720-summary,.v1720-privacy,.v1720-guidance,.v1720-result p{line-height:1.6}
+.v1720-removed,.v1720-key del{color:#6d2020;background:#ffe8e7;padding:.06rem .18rem}
+.v1720-added,.v1720-key ins{color:#16542c;background:#dff5e7;padding:.06rem .18rem;text-decoration:none}
+.v1720-checklist{border:0;padding:0;min-width:0}.v1720-checklist legend{font-weight:750;margin-bottom:.55rem}
+.v1720-checkline{display:flex;gap:.7rem;align-items:flex-start;padding:.55rem 0;line-height:1.55;cursor:pointer}
+.v1720-checkline input{accent-color:#247d83;margin-top:.34rem}
+.v1720-privacy{font-size:.92rem;color:#526476}
+.v1720-shell textarea:focus-visible,.v1720-shell select:focus-visible,.v1720-shell button:focus-visible,.v1720-checkline input:focus-visible{outline:3px solid #247d83;outline-offset:3px}
+@media(max-width:670px){.v1720-editors,.v1720-diff{grid-template-columns:1fr}.v1720-result{padding:.9rem}.v1720-actions{display:grid;grid-template-columns:1fr}.v1720-actions button{width:100%}}

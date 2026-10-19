@@ -3,11 +3,11 @@ const { test, expect } = require('@playwright/test');
 async function assertProductionRelease(page) {
   await page.goto('/', { waitUntil: 'networkidle' });
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.71.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.71.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.72.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.72.0');
 }
 
-test.describe('EnglishLegalese v1.71.0 production acceptance', () => {
+test.describe('EnglishLegalese v1.72.0 production acceptance', () => {
   test('apex production renders corrected owner-visible homepage', async ({ page }, testInfo) => {
     await assertProductionRelease(page);
 
@@ -45,7 +45,7 @@ test.describe('EnglishLegalese v1.71.0 production acceptance', () => {
     const h=await page.evaluate(()=>document.documentElement.scrollHeight);
     expect(h).toBeLessThan(testInfo.project.name==='production-mobile'?9500:7000);
     const htmlResponse=await page.request.get('/');
-    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.71.0');
+    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.72.0');
     expect(htmlResponse.headers()['cache-control']).toContain('no-cache');
     await page.screenshot({ path: testInfo.outputPath('production-homepage-v1590.png'), fullPage: true, animations: 'disabled' });
     await testInfo.attach('production-homepage-v1590', { path: testInfo.outputPath('production-homepage-v1590.png'), contentType: 'image/png' });
@@ -56,7 +56,7 @@ test.describe('EnglishLegalese v1.71.0 production acceptance', () => {
     for (const hash of ['#teachers','#courses','#language-bridge','#smartteacher','#trust','#practice-studio','#learning-plan','#skills-passport','#home']) {
       await page.evaluate(h => { window.location.hash = h; }, hash);
       await page.waitForTimeout(120);
-      await expect(page.locator('#v1590-live-marker')).toHaveText('1.71.0');
+      await expect(page.locator('#v1590-live-marker')).toHaveText('1.72.0');
       await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
       await expect(page.getByText('New in v1.55', { exact: true })).toHaveCount(0);
       await expect(page.locator('#diagnostic')).toHaveCount(1);
@@ -66,7 +66,7 @@ test.describe('EnglishLegalese v1.71.0 production acceptance', () => {
   test('www production endpoint serves same current release', async ({ page }) => {
     await page.goto('https://www.englishlegalese.com/', { waitUntil: 'networkidle' });
     await page.locator('body.v1590-ready').waitFor();
-    await expect(page.locator('#v1590-live-marker')).toHaveText('1.71.0');
+    await expect(page.locator('#v1590-live-marker')).toHaveText('1.72.0');
     await expect(page.getByRole('heading', { name: 'Clear English for legal work.' })).toBeVisible();
     await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
   });
@@ -279,4 +279,25 @@ test('live vocabulary guide searches educational words safely across topics and 
   await expect(guide.locator('.v1710-term:visible')).toHaveCount(5);
   await expect(guide.locator('.v1710-term:visible').first()).toContainText('Allege');
   await expect(guide).toContainText('Searching does not upload, send or save what you type');
+});
+
+test('live revision studio compares material words and clears editable confidential-free drafts',async({page})=>{
+  await assertProductionRelease(page);
+  await expect(page.locator('#revision-studio')).toBeHidden();
+  await page.evaluate(()=>location.hash='#revision-studio');
+  const s=page.locator('#revision-studio');
+  await expect(s).toBeVisible();await expect(s.locator('#v1720-case option')).toHaveCount(6);
+  await s.getByRole('button',{name:'Compare wording'}).click();
+  await expect(s.locator('.v1720-removed')).toContainText('must');
+  await expect(s.locator('.v1720-added')).toContainText('may');
+  await s.locator('.v1720-checkbox').first().check();
+  await expect(s.locator('.v1720-count')).toContainText('1 of 4');
+  await s.locator('#v1720-case').selectOption('custom');
+  await s.locator('#v1720-before').fill('An invented request after approval.');
+  await s.locator('#v1720-after').fill('An invented request before approval.');
+  await s.getByRole('button',{name:'Compare wording'}).click();
+  await expect(s.locator('.v1720-added')).toContainText('before');
+  await s.getByRole('button',{name:'Clear both texts'}).click();
+  await expect(s.locator('#v1720-before')).toHaveValue('');
+  await expect(s.locator('.v1720-result')).toBeHidden();
 });

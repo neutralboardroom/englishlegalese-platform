@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.71.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.72.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -575,7 +575,7 @@
         </article>`).join('')}
         <p class="v1680-privacy">These are fictional emails. Answers and draft text remain in this page session and are not transmitted or saved. Refresh or clear to discard them. No real client information, live AI service, legal advice or accredited score.</p>
         <button class="btn light v1680-reset-all" data-email-action="reset-all" type="button">Clear all email exercises</button>
-        <p><a href="#meeting-followup-lab">Return to the fictional meeting follow-up lab →</a></p><p><a href="#guided-practice-path">Choose a free guided practice path →</a></p>
+        <p><a href="#meeting-followup-lab">Return to the fictional meeting follow-up lab →</a></p><p><a href="#guided-practice-path">Choose a free guided practice path →</a></p><p><a href="#revision-studio">Compare professional wording changes →</a></p>
       </div>
     </section>`;
   }
@@ -838,7 +838,7 @@
       '<p class="v1710-kicker">'+escapeHtml(v.group)+'</p><h3>'+escapeHtml(v.word)+'</h3><p><strong>Plain English:</strong> '+escapeHtml(v.meaning)+'</p>'+
       '<p><strong>Fictional example:</strong> '+escapeHtml(v.example)+'</p><p class="v1710-caution"><strong>Check the context:</strong> '+escapeHtml(v.caution)+'</p></article>').join('')+'</div>'+
       '<p class="v1710-privacy">These are simplified educational explanations, not a legal dictionary, actual legal authorities or advice. Exact meaning may depend on jurisdiction and context. Searching does not upload, send or save what you type.</p>'+
-      '<p><a href="#case-brief-lab">Practise fictional case-brief reading →</a> · <a href="#clause-reading-lab">Practise fictional clauses →</a></p></div></section>';
+      '<p><a href="#case-brief-lab">Practise fictional case-brief reading →</a> · <a href="#clause-reading-lab">Practise fictional clauses →</a> · <a href="#revision-studio">Compare important wording changes →</a></p></div></section>';
   }
   function bindVocabularyGuide(){
     const root=$('#legal-vocabulary-guide');if(!root||root.dataset.bound==='1')return;
@@ -868,6 +868,96 @@
     update();
   }
 
+
+  // Educational only. Differences are not legal equivalence or AI output.
+  const REVISION_CASES=[
+    ['Requirement versus permission','The reviewer must approve the draft before circulation.','The reviewer may approve the draft before circulation.','Must and may usually express different force; check the actual obligation.'],
+    ['Pending versus approved','Manager approval of the fictional report is pending.','The fictional report has been approved by the manager.','A pending review must not be presented as completed approval.'],
+    ['Deadline and trigger','Send the draft within three business days after approval.','Send the draft as soon as possible.','The revision removes both a triggering event and a specific period.'],
+    ['Allegation versus finding','The fictional applicant alleges that the notice arrived late.','The notice definitely arrived late and the sender was responsible.','Disputed allegations and unsupported responsibility are not established facts.'],
+    ['Confidential information','Use invented, de-identified facts for this training exercise.','Paste all real client names and confidential case details into the exercise.','Never put actual client information in unapproved training or AI tools.']
+  ];
+  const REVISION_CHECKS=[
+    'Check whether a requirement became optional or vice versa.',
+    'Check the dates, time periods, triggers and exceptions.',
+    'Separate disputed or pending matters from verified facts.',
+    'Protect confidentiality and ask a qualified human to check legal meaning.'
+  ];
+  function revisionStudio(){
+    return '<section class="section v1720-studio" id="revision-studio" aria-labelledby="v1720-title"><div class="container section-head"><div><div class="eyebrow">Free professional revision studio</div><h2 id="v1720-title">Spot wording changes before they change your message.</h2></div><p>Compare five fictional professional revisions or your own invented examples. See removed and added words; then use a four-point meaning and confidentiality checklist. This is not automatic legal review, an AI service or a verified writing score.</p></div>'+
+      '<div class="container v1720-shell"><label for="v1720-case">Choose a fictional comparison</label><select id="v1720-case" class="v1720-case">'+
+      REVISION_CASES.map((x,i)=>'<option value="'+i+'">'+escapeHtml(x[0])+'</option>').join('')+'<option value="custom">My own invented wording</option></select>'+
+      '<div class="v1720-editors"><div><label for="v1720-before">Original wording</label><textarea id="v1720-before" maxlength="850" rows="5" autocomplete="off" spellcheck="true"></textarea></div>'+
+      '<div><label for="v1720-after">Revised wording</label><textarea id="v1720-after" maxlength="850" rows="5" autocomplete="off" spellcheck="true"></textarea></div></div>'+
+      '<div class="v1720-actions"><button class="btn teal v1720-compare" type="button">Compare wording</button><button class="btn light v1720-reset" type="button">Reset this example</button><button class="btn light v1720-clear" type="button">Clear both texts</button></div>'+
+      '<p class="v1720-status" role="status" aria-live="polite">Choose an example and compare its two versions.</p>'+
+      '<section class="v1720-result" hidden><h3 class="v1720-heading" tabindex="-1">Words that changed</h3>'+
+      '<p class="v1720-key"><del>Removed words</del> <ins>Added words</ins></p>'+
+      '<div class="v1720-diff"><div><h4>Original wording</h4><p class="v1720-old"></p></div><div><h4>Revised wording</h4><p class="v1720-new"></p></div></div>'+
+      '<p class="v1720-summary"></p><h4>Meaning and confidentiality review</h4><p class="v1720-guidance"></p>'+
+      '<fieldset class="v1720-checklist"><legend>What have you considered?</legend><div class="v1720-checkitems"></div></fieldset>'+
+      '<p class="v1720-count" role="status" aria-live="polite">Considered 0 of 4 prompts</p>'+
+      '<p>Your checkmarks are personal reminders only. A highlighted difference does not establish legal equivalence or automatically evaluate the writing.</p>'+
+      '<button class="btn light v1720-copy" type="button">Copy my fictional review notes</button><p class="v1720-copy-status" role="status" aria-live="polite"></p></section>'+
+      '<p class="v1720-privacy">Use invented information only. No real client, employer or confidential material. Your words remain in this page; they are not uploaded, sent to AI or saved. Copy is optional and places the text in your device clipboard. Refresh or clear to discard it.</p>'+
+      '<p><a href="#legal-vocabulary-guide">Look up vocabulary →</a> · <a href="#email-clarity-lab">Practise email clarity →</a> · <a href="#clause-reading-lab">Read fictional clauses →</a></p></div></section>';
+  }
+  function bindRevisionStudio(){
+    const root=$('#revision-studio');if(!root||root.dataset.bound==='1')return;root.dataset.bound='1';
+    const choice=root.querySelector('.v1720-case'),before=root.querySelector('#v1720-before'),after=root.querySelector('#v1720-after');
+    const result=root.querySelector('.v1720-result'),status=root.querySelector('.v1720-status'),items=root.querySelector('.v1720-checkitems');
+    const count=root.querySelector('.v1720-count'),copyStatus=root.querySelector('.v1720-copy-status');
+    function invalidate(){result.hidden=true;items.replaceChildren();copyStatus.textContent='';count.textContent='Considered 0 of 4 prompts';}
+    function reset(){
+      const item=REVISION_CASES[Number(choice.value)];
+      before.value=item?item[1]:'';after.value=item?item[2]:'';
+      invalidate();status.textContent='Review the two fictional versions, then compare.';
+    }
+    function highlight(element,tokens,retained,tag){
+      const fragment=document.createDocumentFragment();
+      tokens.forEach((word,i)=>{
+        if(i)fragment.appendChild(document.createTextNode(' '));
+        if(retained.has(i))fragment.appendChild(document.createTextNode(word));
+        else{const mark=document.createElement(tag);mark.className=tag==='del'?'v1720-removed':'v1720-added';mark.textContent=word;fragment.appendChild(mark);}
+      });element.replaceChildren(fragment);
+    }
+    function compare(){
+      if(!before.value.trim()){status.textContent='Enter invented original wording first.';before.focus();return;}
+      if(!after.value.trim()){status.textContent='Enter invented revised wording first.';after.focus();return;}
+      const left=before.value.trim().split(/\s+/),right=after.value.trim().split(/\s+/),n=left.length,m=right.length;
+      const d=Array.from({length:n+1},()=>new Uint16Array(m+1));
+      for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)d[i][j]=left[i]===right[j]?d[i+1][j+1]+1:Math.max(d[i+1][j],d[i][j+1]);
+      const keptL=new Set(),keptR=new Set();let i=0,j=0;
+      while(i<n&&j<m){if(left[i]===right[j]){keptL.add(i);keptR.add(j);i++;j++;}else if(d[i+1][j]>=d[i][j+1])i++;else j++;}
+      highlight(root.querySelector('.v1720-old'),left,keptL,'del');highlight(root.querySelector('.v1720-new'),right,keptR,'ins');
+      root.querySelector('.v1720-summary').textContent=(n-keptL.size)+' removed, '+(m-keptR.size)+' added word(s). Differences alone do not determine legal meaning.';
+      const item=REVISION_CASES[Number(choice.value)];
+      root.querySelector('.v1720-guidance').textContent=item?item[3]:'For this invented example, examine changes to actors, duties, status, dates, assumptions and confidentiality.';
+      items.replaceChildren();
+      REVISION_CHECKS.forEach(prompt=>{
+        const label=document.createElement('label');label.className='v1720-checkline';
+        const input=document.createElement('input');input.type='checkbox';input.className='v1720-checkbox';
+        const span=document.createElement('span');span.textContent=prompt;
+        label.append(input,span);items.appendChild(label);
+      });
+      count.textContent='Considered 0 of 4 prompts';result.hidden=false;copyStatus.textContent='';
+      status.textContent='Comparison ready. Use the review prompts below.';root.querySelector('.v1720-heading').focus({preventScroll:true});
+    }
+    choice.addEventListener('change',reset);
+    [before,after].forEach(x=>x.addEventListener('input',()=>{invalidate();status.textContent='Text changed. Compare again for current highlights.';}));
+    root.querySelector('.v1720-compare').addEventListener('click',compare);
+    root.querySelector('.v1720-reset').addEventListener('click',()=>{reset();before.focus({preventScroll:true});});
+    root.querySelector('.v1720-clear').addEventListener('click',()=>{choice.value='custom';reset();status.textContent='Both texts cleared. Add fictional wording only.';before.focus({preventScroll:true});});
+    items.addEventListener('change',()=>{count.textContent='Considered '+items.querySelectorAll('input:checked').length+' of 4 prompts';});
+    root.querySelector('.v1720-copy').addEventListener('click',async()=>{
+      if(result.hidden)return;
+      const notes=['Fictional wording comparison','Original: '+before.value,'Revised: '+after.value,'Review guidance: '+root.querySelector('.v1720-guidance').textContent,...REVISION_CHECKS.map((x,i)=>(items.querySelectorAll('input')[i]?.checked?'[x] ':'[ ] ')+x),'Educational self-review; not legal approval or verified equivalence.'].join('\n');
+      try{if(!navigator.clipboard?.writeText)throw Error('unsupported');await navigator.clipboard.writeText(notes);copyStatus.textContent='Review notes copied at your request.';}
+      catch{copyStatus.textContent='Clipboard access is unavailable. You can select and copy your text manually.';}
+    });
+    reset();
+  }
+
   function teachersEmployers(){
     return `<section class="section alt" id="teachers"><div class="container grid cols-2"><article class="panel"><div class="eyebrow">Teachers</div><h2>Teacher-guided learning support.</h2><p>Teachers can review learner practice, prepare lessons, guide roleplays, assign homework, and give feedback while private teacher notes remain appropriately separated.</p><a class="btn teal" href="#teacher-dashboard">Teacher account access</a><p class="v1580-micro-note">Operational teacher tools require the appropriate signed-in role.</p></article><article class="panel" id="employers"><div class="eyebrow">Employers</div><h2>Privacy-conscious team learning.</h2><p>Organizations can use consent-based, aggregate attendance and learning-progress signals. Private drafts, raw AI practice, uploads, recordings, native-language explanations, test answers, and teacher-private notes remain excluded by default.</p><a class="btn teal" href="#employer-dashboard">Employer account access</a><p class="v1580-micro-note">Nothing from a learner's private work is shared automatically.</p></article></div></section>`;
   }
@@ -881,7 +971,7 @@
     const title = {student:'Student dashboard',teacher:'Teacher dashboard',employer:'Employer dashboard',admin:'Owner / staff dashboard'}[role] || 'Dashboard';
     return `<section class="section" id="${role}-dashboard"><div class="container"><article class="panel"><div class="eyebrow">${escapeHtml(title)}</div><h2>Account access required.</h2><p>Operational dashboards require production authentication and the appropriate role. Public learning tools remain available from the homepage.</p><a class="btn gold" href="#start">Return to learning options</a></article></div></section>`;
   }
-  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${emailClarityLab()}${guidedPracticePath()}${caseBriefLab()}${vocabularyGuide()}${teachersEmployers()}${learningExperience()}${trust()}`); }
+  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${emailClarityLab()}${guidedPracticePath()}${caseBriefLab()}${vocabularyGuide()}${revisionStudio()}${teachersEmployers()}${learningExperience()}${trust()}`); }
 
   let openQuickPracticeStep=null;
   function bindDiagnostic(){
@@ -1094,6 +1184,7 @@
     bindGuidedPracticePath();
     bindCaseBriefLab();
     bindVocabularyGuide();
+    bindRevisionStudio();
   }
   function scrollToTarget(id, attempt=0){
     const target=document.getElementById(id);
