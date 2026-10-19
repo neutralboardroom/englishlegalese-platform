@@ -55,18 +55,20 @@ function verifyPassword(password, stored) {
 }
 
 function signToken(payload) {
-  const secret = process.env.SESSION_SECRET || process.env.JWT_SECRET || 'dev-only-change-me';
+  const secret = process.env.SESSION_SECRET || process.env.JWT_SECRET;
+  if(!secret||secret.length<32)throw new Error('Secure session secret is required.');
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
   const body = Buffer.from(JSON.stringify({ ...payload, iat: Math.floor(Date.now()/1000), exp: Math.floor(Date.now()/1000) + (Number(process.env.SESSION_TTL_SECONDS || 60*60*24*7)) })).toString('base64url');
   const sig = crypto.createHmac('sha256', secret).update(`${header}.${body}`).digest('base64url');
   return `${header}.${body}.${sig}`;
 }
 function verifyToken(token) {
-  const secret = process.env.SESSION_SECRET || process.env.JWT_SECRET || 'dev-only-change-me';
+  const secret = process.env.SESSION_SECRET || process.env.JWT_SECRET;
+  if(!secret||secret.length<32)return null;
   const parts = String(token || '').split('.');
   if (parts.length !== 3) return null;
   const expected = crypto.createHmac('sha256', secret).update(`${parts[0]}.${parts[1]}`).digest('base64url');
-  if (!crypto.timingSafeEqual(Buffer.from(parts[2]), Buffer.from(expected))) return null;
+  if(parts[2].length!==expected.length||!crypto.timingSafeEqual(Buffer.from(parts[2]),Buffer.from(expected)))return null;
   const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8'));
   if (payload.exp && payload.exp < Math.floor(Date.now()/1000)) return null;
   return payload;
@@ -117,7 +119,9 @@ class ProductionServices {
 
   async registerUser({ email, password, full_name, role = 'student', organization_name = null }, req = null) {
     email = String(email || '').trim().toLowerCase();
-    role = ROLES.includes(role) ? role : 'student';
+    // Public signup cannot claim teacher, employer, staff, admin or owner permissions.
+    if (role !== 'student') throw new Error('Public registration is limited to student accounts. Professional access requires separate approval.');
+    role = 'student';
     if (!email || !password || !full_name) throw new Error('Email, password, and full name are required.');
     const user = { id: id('EL-USER'), email, full_name: safeString(full_name, 160), role, status: 'active', organization_name, created_at: nowIso(), updated_at: nowIso() };
     const credential = { id: id('EL-CRED'), user_id: user.id, password_hash: passwordHash(password), created_at: nowIso(), updated_at: nowIso() };
@@ -326,12 +330,15 @@ class ProductionServices {
   }
 
   async smartTeacher({ mode = 'student_tutor', prompt = '', context = {} }, user = null, req = null) {
+    if(typeof prompt !== 'string'||!prompt.trim()||prompt.length>5000)throw new Error('Fictional practice prompt must be 1–5000 characters.');
+    if(context===null||typeof context!=='object'||Array.isArray(context)||Buffer.byteLength(JSON.stringify(context),'utf8')>3000)throw new Error('Fictional practice context must be 3000 bytes or less.');
     const system = `You are SmartTeacher AI for EnglishLegalese, powered by ChatGPT/OpenAI only in this build. Provide Legal English language education only. Do not provide legal advice, legal strategy, representation, certified translation, court interpretation, or document review for legal accuracy. Be practical, clear, and role-specific for mode: ${mode}. Reinforce the AI-era message: AI can translate words, but professionals still need judgment, context, confidentiality awareness, professional tone, speaking confidence, writing skill, document fluency, and safe AI-output review.`;
     let output;
     if (configured().openai) {
-      const response = await fetch('https://api.openai.com/v1/responses', { method: 'POST', headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ model: process.env.SMARTTEACHER_MODEL || process.env.OPENAI_MODEL || 'gpt-5.5-mini', input: [{ role: 'system', content: system }, { role: 'user', content: JSON.stringify({ prompt, context }) }] }) });
+      const model=process.env.SMARTTEACHER_MODEL==='gpt-4.1-nano'?'gpt-4.1-nano':'gpt-4.1-mini';
+      const response=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:`Bearer ${process.env.OPENAI_API_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({model,store:false,max_output_tokens:600,input:[{role:'system',content:system},{role:'user',content:JSON.stringify({prompt,context})}]}),signal:AbortSignal.timeout(20000)});
       const json = await response.json();
-      if (!response.ok) throw new Error(json?.error?.message || 'SmartTeacher AI request failed.');
+      if (!response.ok) throw new Error('AI provider temporarily unavailable.');
       output = json.output_text || (json.output || []).flatMap(o => o.content || []).map(c => c.text || '').join('\n') || 'SmartTeacher AI response received.';
     } else {
       output = smartTeacherFallback(mode, prompt);

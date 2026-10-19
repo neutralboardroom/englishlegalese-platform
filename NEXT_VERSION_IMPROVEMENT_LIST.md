@@ -1,3 +1,24 @@
+# EnglishLegalese — Next Version Improvement List after v1.73.0
+
+## Security, actual learning access and monetization readiness
+- Three **real AI tutoring replies** for each free, verified learner account, with a persistent lifetime usage ledger and email ownership check. No resets on login, browser refresh, server restart or redeployment. Existing Render site is local JSON only, so free signup/trial remains disabled until a dedicated PostgreSQL instance, session secret and SMTP are connected, migrated, verified, and SMARTTEACHER_TRIAL_ENABLED is explicitly set to true.
+- Fix insecure unauthenticated role self-registration; only student accounts, with stronger session secret and static access controls, registration/login rate limiting.
+- 2,500-character standard trial questions with visible countdown, 5,000 extended writing exercises reserved for verified paid access. Free trial maximum 500 output tokens for a useful explanation and a fictional example, with additional per-IP/day/site caps. Site trial capacity is 18/day, 120/month and 1 concurrent while validating unit economics.
+- The original live OpenAI integration remains, with approved economical models, store:false and timeout; paid SmartTeacher is denied until a verified Stripe purchase and durable quota/entitlement system exist. Existing public checkout request is fail-closed pending tomorrow's Stripe setup.
+- Local file selection for PDF/Office/images with honest extension/10MB-size notice; no file bytes uploaded, no paid review until secure processing and verified payment. No unsupported claim of 'all file types'.
+- Draft AI prices require owner approval: Starter $12/100 messages, Plus $19/250, Pro $29/500 monthly; human tutoring/class packages to be priced separately after teacher economics and owner approval.
+- Complete original homepage, approved logo, all 9 courses/21 scenarios, 8-question diagnostic, all prior learning labs, 19 Roger and 10 durable rules, original Next Version Improvement List and v1.72.0 rollback preserved. Two independent full source+Chromium desktop/tablet/mobile+WebKit iPad browser gates followed by independent real apex/www production acceptance required.
+- Explicit constraint: In-memory network limits are an additional layer, not a guaranteed dollar cap; separate OpenAI provider-side budget and daily monitoring still needed. No live public free trial until durable database, SMTP and verified secret are in place.
+
+## Next Version Improvement List
+1. **Owner infrastructure setup**: create a dedicated EnglishLegalese PostgreSQL (never reuse unrelated projects' database), configure SMTP, strong session key and run additive migration 009/010, verify status/three-use persistence across restart then explicitly activate the live demo.
+2. **Stripe setup tomorrow**: create owner-approved AI and human-led lesson prices, validated signed webhook fulfillment, durable entitlements/usage quotas, refund/expiry and cancellation reconciliation; test before enabling paid AI.
+3. Review legacy elevated roles created before registration safety enforcement with qualified owner approval and no destructive updates.
+4. Optional file processing after antivirus, format-specific safe parsing, page/file ceilings, quarantine, consent, upload security, deletion policies and paid authorization.
+5. Human mobile/screen-reader/language audit and measured UX performance improvements; all original protected brand and course content remain.
+
+## Entire inherited predecessor list (verbatim)
+## Entire inherited prior improvement list (verbatim)
 # EnglishLegalese — Next Version Improvement List after v1.72.0 (owner universal maximum-material command applied)
 ## Cohesive material outcomes
 - Five substantive fictional before-and-after professional Legal English scenarios: obligation, approval, deadline, allegation, and confidentiality.

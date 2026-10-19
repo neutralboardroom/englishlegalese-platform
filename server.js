@@ -7,6 +7,9 @@ const PORT = process.env.PORT || 3000;
 const VERSION = `${pkg.version}-navigation-domain-hardening`;
 const { PersistentStore, REQUIRED_TABLES } = require('./src/persistence');
 const { ProductionServices, authMiddleware, requireRoles, configured, ROLE_PERMISSIONS } = require('./src/productionServices');
+const {createAiSafetyGate,createAuthAbuseGuard,createTrialRateGate}=require('./src/aiSafetyGate');
+const {FreeTrialLedger,configured:trialPrereqs}=require('./src/freeTrialLedger');
+const {AI_PLAN_DRAFTS,paidEntitlementVerified}=require('./src/aiCommercePolicy');
 const persistentStore = new PersistentStore();
 const productionServices = new ProductionServices(persistentStore);
 
@@ -18,6 +21,14 @@ app.use((req,res,next)=>{
     res.setHeader('X-EnglishLegalese-Release',pkg.version);
   }
   next();
+});
+// Prevent public downloads of server code, credentials, databases, governance and build scripts.
+app.use((req,res,next)=>{
+ const urlPath=req.path||'';
+ if(/^\/(?:src|data|db|scripts|governance|docs|\.git|\.github|node_modules)(?:\/|$)/i.test(urlPath)||
+   /^\/(?:server\.js|package(?:-lock)?\.json|\.env(?:\..*)?|render\.yaml|\.npmrc)$/i.test(urlPath))
+   return res.status(404).type('text/plain').send('Not found');
+ next();
 });
 app.use(express.static(__dirname));
 
@@ -525,7 +536,21 @@ app.get('/api/v119/production-readiness', async (req, res) => {
   });
 });
 
-app.post('/api/v119/auth/register', async (req, res) => {
+const authAbuse=createAuthAbuseGuard();
+const aiGuard=createAiSafetyGate();
+const trialGuard=createTrialRateGate();
+const ledger=new FreeTrialLedger({store:persistentStore,sendMail:async mail=>{
+ const result=await productionServices.sendEmail(mail);
+ if(result.status!=='sent')throw new Error('Verification email not sent');
+}});
+function readyForAccounts(){
+ const c=trialPrereqs({store:persistentStore});
+ return c.database&&c.secure_session&&c.email_sender;
+}
+app.post('/api/v119/auth/register',authAbuse.registration,async(req,res,next)=>{
+ if(!await ledger.ready())return res.status(503).json({ok:false,error:'Account registration requires verified email and durable storage.'});
+ next();
+},async (req, res) => {
   try {
     const result = await productionServices.registerUser(req.body || {}, req);
     res.status(201).json({ ok: true, version: VERSION, ...result });
@@ -534,7 +559,10 @@ app.post('/api/v119/auth/register', async (req, res) => {
   }
 });
 
-app.post('/api/v119/auth/login', async (req, res) => {
+app.post('/api/v119/auth/login',authAbuse.login,async(req,res,next)=>{
+ if(!readyForAccounts())return res.status(503).json({ok:false,error:'Account login is unavailable until durable storage is connected.'});
+ next();
+},async (req, res) => {
   try {
     const result = await productionServices.loginUser(req.body || {}, req);
     res.json({ ok: true, version: VERSION, ...result });
@@ -547,6 +575,8 @@ app.get('/api/v119/auth/me', authMiddleware(productionServices), async (req, res
   res.json({ ok: true, version: VERSION, user: req.user, permissions: ROLE_PERMISSIONS[req.user.role] || [] });
 });
 
+app.post('/api/v119/payments/create-checkout',(req,res)=>res.status(503).json({ok:false,error:'Secure checkout is not available until Stripe is configured and tested.'}));
+/* PREVIOUS UNVERIFIED CHECKOUT DISABLED PENDING STRIPE IMPLEMENTATION
 app.post('/api/v119/payments/create-checkout', async (req, res) => {
   try {
     const result = await productionServices.createPaymentCheckout(req.body || {}, req);
@@ -556,6 +586,7 @@ app.post('/api/v119/payments/create-checkout', async (req, res) => {
   }
 });
 
+*/
 app.post('/api/v119/uploads/presign', authMiddleware(productionServices), async (req, res) => {
   try {
     const result = await productionServices.createPresignedUpload({ ...(req.body || {}), owner_user_id: req.user.id }, req);
@@ -592,15 +623,56 @@ app.post('/api/v119/reports/pdf', authMiddleware(productionServices), requireRol
   }
 });
 
-app.post('/api/v119/smartteacher', authMiddleware(productionServices), async (req, res) => {
+app.post('/api/v119/smartteacher',authMiddleware(productionServices),async(req,res,next)=>{
+ if(!await paidEntitlementVerified({user:req.user,store:persistentStore,env:process.env}))return res.status(402).json({ok:false,error_code:'PAYMENT_REQUIRED',error:'Paid AI tutoring requires a verified purchase. Checkout is being configured.'});
+ next();
+},aiGuard.middleware,async (req, res) => {
   try {
     const result = await productionServices.smartTeacher(req.body || {}, req.user, req);
     res.json({ ok: true, version: VERSION, interaction: result });
   } catch (error) {
-    res.status(400).json({ ok: false, version: VERSION, error: error.message });
-  }
+    res.status(503).json({ok:false,version:VERSION,error:'Paid AI tutoring temporarily unavailable.'});
+  }finally{req.aiSafetyReservation?.release();}
 });
-
+app.get('/api/v173/trial/capabilities',async(req,res)=>{
+ const p=trialPrereqs({store:persistentStore});const ready=await ledger.ready();
+ res.json({ok:true,version:VERSION,trial_available:ready,free_replies:3,max_free_chars:2500,extended_paid_chars:5000,requires_free_verified_account:true,persistent_account_storage:p.database,email_verification_sender:p.email_sender,secure_session:p.secure_session,paid_checkout_available:false});
+});
+app.post('/api/v173/trial/register',authAbuse.registration,async(req,res)=>{
+ if(!await ledger.ready())return res.status(503).json({ok:false,error_code:'TRIAL_NOT_READY',error:'Account-based free trial is awaiting durable storage and email verification.'});
+ if(req.body?.role&&req.body.role!=='student')return res.status(403).json({ok:false,error:'Public accounts can only be students.'});
+ try{const account=await productionServices.registerUser({...req.body,role:'student'},req);await ledger.sendVerification(account.user);
+ return res.status(201).json({ok:true,message:'Check your email for confirmation before using your three free AI replies.'});
+ }catch{return res.status(400).json({ok:false,error:'Registration could not be completed. Check your details or contact support.'});}
+});
+app.post('/api/v173/trial/verify',authAbuse.registration,async(req,res)=>{
+ try{const verified=await ledger.verify(req.body?.token);return res.status(verified?200:400).json({ok:verified,verified});}
+ catch{return res.status(503).json({ok:false,error:'Email verification service unavailable.'});}
+});
+app.get('/api/v173/trial/status',authMiddleware(productionServices),async(req,res)=>{
+ try{return res.json({ok:true,...await ledger.status(req.user.id)});}
+ catch{return res.status(503).json({ok:false,error:'Trial balance unavailable.'});}
+});
+app.post('/api/v173/trial/answer',authMiddleware(productionServices),trialGuard.middleware,async(req,res)=>{
+ let reservation;
+ try{
+  if(!await ledger.ready())return res.status(503).json({ok:false,error_code:'TRIAL_NOT_READY',error:'Trial database or email verification is not ready.'});
+  reservation=await ledger.reserve(req.user.id,req.ip||'unknown',req.body.prompt.trim().length,req.body.topic||'professional_communication');
+  if(!reservation.allowed)return res.status(reservation.verified===false?403:402).json({ok:false,error_code:'TRIAL_EXHAUSTED_OR_UNVERIFIED',remaining:0,error:'Please verify your email or purchase a lesson when checkout is available.'});
+  const system='You are EnglishLegalese SmartTeacher. Teach Legal English in practical, concise language; include one entirely fictional example. Never provide actual legal advice, legal strategies, court filing recommendations, or claims of legal validity. Never request confidential information.';
+  const model=process.env.SMARTTEACHER_MODEL==='gpt-4.1-nano'?'gpt-4.1-nano':'gpt-4.1-mini';
+  const output=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({model,store:false,max_output_tokens:500,input:[{role:'system',content:system},{role:'user',content:req.body.prompt.trim()}]}),signal:AbortSignal.timeout(20000)});
+  const reply=await output.json();if(!output.ok)throw new Error('Provider unavailable');
+  const answer=String(reply.output_text||(reply.output||[]).flatMap(v=>v.content||[]).map(v=>v.text||'').join('\n')).slice(0,3600);
+  if(!answer.trim())throw new Error('Empty response');
+  return res.json({ok:true,answer,remaining:reservation.remaining,trial_limit:3});
+ }catch{
+  if(reservation?.allowed)await ledger.refundFailedRequest(req.user.id,reservation.id).catch(()=>{});
+  return res.status(503).json({ok:false,error:'SmartTeacher could not respond. Your allowance will be restored where possible.'});
+ }finally{req.trialReservation?.release();}
+});
+app.get('/api/v173/ai-pricing-draft',(req,res)=>res.json({ok:true,offers:AI_PLAN_DRAFTS,proposal_only:true,checkout_enabled:false}));
+app.get('/api/v173/ai-usage-policy',(req,res)=>res.json({ok:true,paid:aiGuard.status(),free_trial:trialGuard.status(),note:'Hard provider spend limits and persistent quota required before trial opens.'}));
 app.get('/api/v119/security/roles', (req, res) => {
   res.json({ ok: true, version: VERSION, roles: ROLE_PERMISSIONS, note: 'Role permissions are enforced on production routes and should be mirrored in the UI.' });
 });

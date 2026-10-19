@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.72.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.72.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.73.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.73.0');
 }
 
-test.describe('EnglishLegalese v1.72.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.73.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -114,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.72\.0/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.73\.0/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -187,7 +187,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.72.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.73.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
@@ -782,4 +782,39 @@ test('revision studio optional clipboard notes show checked prompts and no AI sc
   const copied=await page.evaluate(()=>window.__copied);
   expect(copied).toContain('Original:');expect(copied).toContain('Revised:');expect(copied).toContain('[x]');
   await expect(s).toContainText('not uploaded, sent to AI or saved');
+});
+
+test('v1.73 free account trial honestly shows disabled status before durable verification',async({page,request})=>{
+  await page.goto('/#smartteacher-free-trial');await waitForRecovery(page);
+  const t=page.locator('#smartteacher-free-trial');await expect(t).toBeVisible();
+  await expect(t).toContainText('Three free, real AI tutoring replies');
+  await expect(t.locator('.v1730-readiness')).toContainText('secure account storage and email verification');
+  await expect(t.locator('.v1730-register button')).toBeDisabled();
+  await expect(t.locator('.v1730-login button')).toBeDisabled();
+  await expect(t.locator('.v1730-count')).toContainText('2,500');
+  const c=await request.get('/api/v173/trial/capabilities');
+  expect(c.status()).toBe(200);const data=await c.json();
+  expect(data.trial_available).toBe(false);expect(data.free_replies).toBe(3);
+  expect(data.max_free_chars).toBe(2500);
+});
+test('v1.73 free account registration, paid checkout and anonymous AI fail closed',async({request})=>{
+  const a=await request.post('/api/v173/trial/register',{data:{full_name:'Fake',email:'trial@example.invalid',password:'randompass001',role:'student'}});
+  expect(a.status()).toBe(503);
+  const b=await request.post('/api/v119/auth/register',{data:{full_name:'Fake',email:'admin@example.invalid',password:'randompass002',role:'owner'}});
+  expect(b.status()).toBe(503);
+  const p=await request.post('/api/v119/payments/create-checkout',{data:{amount_cents:1200}});
+  expect(p.status()).toBe(503);
+  const x=await request.post('/api/v173/trial/answer',{data:{prompt:'Fictional hello.'}});expect(x.status()).toBe(401);
+  const y=await request.post('/api/v119/smartteacher',{data:{prompt:'Fictional hello.'}});expect(y.status()).toBe(401);
+});
+test('v1.73 local file selection never uploads and free trial is a focused route',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('#smartteacher-free-trial')).toBeHidden();
+  await expect(page.locator('footer a[href="#smartteacher-free-trial"]')).toHaveCount(1);
+  await page.locator('a[href="#smartteacher-free-trial"]').first().click();
+  const t=page.locator('#smartteacher-free-trial');await expect(t).toBeVisible();
+  await t.locator('#v1730-upload').setInputFiles({name:'practice.txt',mimeType:'text/plain',buffer:Buffer.from('Only fictional words.')});
+  await expect(t.locator('.v1730-file-status')).toContainText('no upload occurred');
+  const test=await page.evaluate(()=>Object.keys(localStorage).filter(k=>/trial|ai-access-token/.test(k)));
+  expect(test).toEqual([]);
 });
