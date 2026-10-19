@@ -1,3 +1,21 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.68.0 (candidate)
+
+## Material improvement in v1.68.0
+- Add a free **Professional Email Clarity Lab** using three entirely fictional workplace emails: (1) replace vague/urgent requests with a specific document and question while not inventing a deadline, (2) distinguish draft completion from approval, and (3) describe an unconfirmed delay without unsupported fault claims.
+- Three-choice comprehension and editing decisions with varied correct answer positions, explanatory model and practical checklist, optional bounded 700-character learner-rewrite textarea. No scoring, fake AI editing, instructor review, real email sending or real-world legal conclusions.
+- Native keyboard-operable labels/fieldsets and status notices, focus on missing answer, stale answer review invalidation on change, per-case/whole-lab reset that erases drafts; page-session only and no browser storage, backend calls or OpenAI secret.
+- Focused footer destination and link from existing Meeting Follow-up Lab. No added content to protected homepage view or modified approved logo.
+- Preserve predecessor nine courses, 21 scenarios, eight diagnostic answers and explanations, three writing tasks, three AI draft cases, three clause reading cases, three meeting exercises and original authentication/privacy/role protections.
+- Twice-pass exact-final-commit full source/no-drift/security browser qualification incl Chromium desktop/tablet/mobile and WebKit iPad; currentness of GitHub main and Render predecessor; deploy matching merge SHA and independent real apex/www multi-device production acceptance; retain v1.67.0 immediate prior rollback.
+
+## Next priority improvements
+1. Actual human-assisted keyboard, screen-reader, language-switch and mobile usability reviews, with fixes based on observed problems; do not assert conformance without a valid independent audit.
+2. Measurable authentic Legal English writing outcomes, reviewed educator feedback when qualified, and safe/consented audio instruction when feasible; never misrepresent text-only tasks as listening tests.
+3. Carefully reduce accumulated CSS/client render complexity only after visual parity and preserved accessibility/behavior prove no loss; no appearance changes for their own sake.
+4. Live AI, accounts/saved learner work, permissions, teacher evaluation, paid services and employer reporting remain gated on credential, safety, privacy, data retention/export/deletion, security and explicit authorization.
+5. Preserve exact protected logo, all 19 Roger rules +10 durable builder rules, documented inherited improvement history, two independent release gates, real production test and prior rollback.
+
+## Entire inherited prior improvement list (unchanged)
 # EnglishLegalese.com — Next Version Improvement List after v1.67.0 (candidate)
 
 ## Material improvements in v1.67.0

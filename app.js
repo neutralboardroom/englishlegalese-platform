@@ -442,7 +442,7 @@
         </article>`).join('')}
         <p class="v1670-privacy">All conversations are fictional. This page does not save or transmit your answers or drafts. Refreshing or clearing removes them. Professional communication practice only, not legal advice or confirmation of a real obligation.</p>
         <button class="btn light v1670-reset-all" data-meeting-action="reset-all" type="button">Clear all meeting exercises</button>
-        <p><a href="#quick-practice">Continue with the writing workout →</a></p>
+        <p><a href="#quick-practice">Continue with the writing workout →</a></p><p><a href="#email-clarity-lab">Practise clear fictional workplace emails →</a></p>
       </div>
     </section>`;
   }
@@ -506,6 +506,139 @@
     update();
   }
 
+
+  // Fictional professional email practice: human learner self-review, never legal advice or AI scoring.
+  const EMAIL_CLARITY_CASES=[
+    {
+      title:'Make an action request specific',
+      context:'A fictional colleague needs the latest draft agenda but the sender has not supplied any deadline.',
+      original:'Hi. Send that thing ASAP. Thanks.',
+      question:'Which rewrite makes the request clear without inventing a deadline?',
+      options:[
+        'Send the latest draft agenda by 3 pm today, as already agreed.',
+        'Could you please send the latest draft agenda and confirm when you expect to have it ready?',
+        'I need it immediately. You already missed the deadline.'
+      ],
+      strong:1,
+      explanation:'A clear request identifies the document and asks about timing instead of manufacturing an agreed date. “ASAP” and “that thing” force the recipient to guess.',
+      model:'Hello, could you please send me the latest draft agenda? Please let me know when you expect it to be ready. Thank you.',
+      checks:['Name the specific document or task.','Do not invent an agreed deadline.','Ask one polite, answerable question.']
+    },
+    {
+      title:'Distinguish draft from approval',
+      context:'A fictional draft has been prepared but has not yet received the manager’s required approval.',
+      original:'The report is final and approved. I will send it to everyone.',
+      question:'Which correction accurately reflects the current status?',
+      options:[
+        'The draft report is ready for the manager’s review. I will share it externally only after approval.',
+        'The report is approved because I completed the draft.',
+        'Everyone can rely on the report before the review is complete.'
+      ],
+      strong:0,
+      explanation:'Draft completion is not the same as approval. State what is complete, what is pending and the condition before wider distribution.',
+      model:'The draft report is ready for review. Manager approval is still pending, so I will not circulate it externally until that approval is confirmed.',
+      checks:['Separate completed drafting from pending approval.','Keep the approval condition explicit.','Avoid claiming a final status before it is verified.']
+    },
+    {
+      title:'Use careful neutral language',
+      context:'A fictional client has asked why an update is delayed. The team is still confirming the source of the delay.',
+      original:'The other team definitely caused the delay. They were careless.',
+      question:'Which reply stays accurate and professional?',
+      options:[
+        'The other team is responsible, regardless of what the records show.',
+        'No further update is needed because the cause is obvious.',
+        'We are checking the cause of the delay and will share a confirmed update when the information is available.'
+      ],
+      strong:2,
+      explanation:'When causes are unconfirmed, replace allegations and certainty with a truthful status and next step. Do not make legal, factual or fault findings without evidence.',
+      model:'Thank you for your patience. We are checking the reasons for the delay and will provide a further update once the relevant information has been confirmed.',
+      checks:['Separate established facts from assumptions.','Avoid blame, promises and certainty unsupported by evidence.','Offer a realistic next communication step.']
+    }
+  ];
+  function emailClarityLab(){
+    return `<section class="section v1680-email-lab" id="email-clarity-lab" aria-labelledby="v1680-title">
+      <div class="container section-head"><div><div class="eyebrow">Free professional email clarity lab</div><h2 id="v1680-title">Write emails that are clear, accurate and respectful.</h2></div><p>Review three fictional professional email situations. Choose the strongest revision, write an optional sentence of your own and compare with a practical model. This is educational self-review, not a legal or teacher-approved assessment.</p></div>
+      <div class="container v1680-shell">
+        <p class="v1680-progress" role="status" aria-live="polite" aria-atomic="true">Reviewed 0 of ${EMAIL_CLARITY_CASES.length} email exercises</p>
+        ${EMAIL_CLARITY_CASES.map((item,i)=>`<article class="panel v1680-case" data-email-case="${i}">
+          <div class="v1680-kicker">Email ${i+1} of ${EMAIL_CLARITY_CASES.length} · ${escapeHtml(item.title)}</div>
+          <h3>Fictional situation</h3><p>${escapeHtml(item.context)}</p>
+          <h4>Original email wording to improve</h4><blockquote class="v1680-original">${escapeHtml(item.original)}</blockquote>
+          <fieldset class="v1680-choices"><legend>${escapeHtml(item.question)}</legend>
+            ${item.options.map((option,j)=>`<label><input type="radio" name="v1680-answer-${i}" value="${j}"><span>${escapeHtml(option)}</span></label>`).join('')}
+          </fieldset>
+          <label class="v1680-writing-label" for="v1680-draft-${i}">Optional: write your own improved email sentence</label>
+          <textarea class="v1680-draft" id="v1680-draft-${i}" maxlength="700" rows="3" autocomplete="off" placeholder="Use only fictional details; do not paste real client, employer or personal information."></textarea>
+          <div class="v1680-actions"><button class="btn teal" data-email-action="compare" type="button">Review this email</button><button class="btn light" data-email-action="clear" type="button">Clear this email</button></div>
+          <p class="v1680-status" role="status" aria-live="polite"></p>
+          <div class="v1680-feedback" hidden><h4>Why this matters</h4><p class="v1680-response"></p><p>${escapeHtml(item.explanation)}</p><h4>Example revision</h4><p class="v1680-model">${escapeHtml(item.model)}</p><h4>Check your own sentence</h4><ul>${item.checks.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul><p>This example is for comparison only; your draft is not automatically graded, sent or reviewed by a teacher.</p></div>
+        </article>`).join('')}
+        <p class="v1680-privacy">These are fictional emails. Answers and draft text remain in this page session and are not transmitted or saved. Refresh or clear to discard them. No real client information, live AI service, legal advice or accredited score.</p>
+        <button class="btn light v1680-reset-all" data-email-action="reset-all" type="button">Clear all email exercises</button>
+        <p><a href="#meeting-followup-lab">Return to the fictional meeting follow-up lab →</a></p>
+      </div>
+    </section>`;
+  }
+  function bindEmailClarityLab(){
+    const section=$('#email-clarity-lab');if(!section||section.dataset.bound==='1')return;
+    section.dataset.bound='1';
+    const cards=Array.from(section.querySelectorAll('.v1680-case'));
+    const progress=section.querySelector('.v1680-progress');
+    const reviewed=new Set();
+    function update(){progress.textContent='Reviewed '+reviewed.size+' of '+cards.length+' email exercises';}
+    function clearOne(card,index){
+      card.querySelectorAll('input[type="radio"]').forEach(x=>{x.checked=false;});
+      card.querySelector('.v1680-draft').value='';
+      card.querySelector('.v1680-feedback').hidden=true;
+      card.querySelector('.v1680-response').textContent='';
+      card.querySelector('.v1680-status').textContent='';
+      reviewed.delete(index);update();
+    }
+    section.addEventListener('click',event=>{
+      const target=event.target instanceof Element?event.target:event.target?.parentElement;
+      const button=target?.closest('button[data-email-action]');
+      if(!button||!section.contains(button))return;
+      if(button.dataset.emailAction==='reset-all'){
+        cards.forEach((card,index)=>clearOne(card,index));
+        progress.textContent='All email exercises cleared. Reviewed 0 of '+cards.length+' email exercises';
+        cards[0]?.querySelector('input[type="radio"]')?.focus({preventScroll:true});
+        return;
+      }
+      const card=button.closest('.v1680-case');if(!card)return;
+      const index=Number(card.dataset.emailCase);
+      if(!Number.isInteger(index)||!EMAIL_CLARITY_CASES[index])return;
+      if(button.dataset.emailAction==='clear'){clearOne(card,index);return;}
+      if(button.dataset.emailAction!=='compare')return;
+      const selected=card.querySelector('input[type="radio"]:checked');
+      const status=card.querySelector('.v1680-status');
+      const feedback=card.querySelector('.v1680-feedback');
+      if(!selected){
+        feedback.hidden=true;
+        status.textContent='Choose a rewrite first, then review the explanation.';
+        card.querySelector('input[type="radio"]')?.focus();
+        return;
+      }
+      card.querySelector('.v1680-response').textContent=Number(selected.value)===EMAIL_CLARITY_CASES[index].strong?
+        'Your selection preserves the key facts and improves clarity in this fictional example.':
+        'Another option better preserves accuracy and clarity in this fictional example.';
+      feedback.hidden=false;
+      status.textContent='Explanation, example and writing checklist are available below.';
+      reviewed.add(index);update();
+    });
+    section.addEventListener('change',event=>{
+      const input=event.target;
+      if(!(input instanceof HTMLInputElement)||input.type!=='radio')return;
+      const card=input.closest('.v1680-case');if(!card)return;
+      const index=Number(card.dataset.emailCase);
+      if(reviewed.has(index)){
+        reviewed.delete(index);update();
+        card.querySelector('.v1680-feedback').hidden=true;
+        card.querySelector('.v1680-status').textContent='You changed your choice. Review again to update the guidance.';
+      }
+    });
+    update();
+  }
+
   function teachersEmployers(){
     return `<section class="section alt" id="teachers"><div class="container grid cols-2"><article class="panel"><div class="eyebrow">Teachers</div><h2>Teacher-guided learning support.</h2><p>Teachers can review learner practice, prepare lessons, guide roleplays, assign homework, and give feedback while private teacher notes remain appropriately separated.</p><a class="btn teal" href="#teacher-dashboard">Teacher account access</a><p class="v1580-micro-note">Operational teacher tools require the appropriate signed-in role.</p></article><article class="panel" id="employers"><div class="eyebrow">Employers</div><h2>Privacy-conscious team learning.</h2><p>Organizations can use consent-based, aggregate attendance and learning-progress signals. Private drafts, raw AI practice, uploads, recordings, native-language explanations, test answers, and teacher-private notes remain excluded by default.</p><a class="btn teal" href="#employer-dashboard">Employer account access</a><p class="v1580-micro-note">Nothing from a learner's private work is shared automatically.</p></article></div></section>`;
   }
@@ -519,7 +652,7 @@
     const title = {student:'Student dashboard',teacher:'Teacher dashboard',employer:'Employer dashboard',admin:'Owner / staff dashboard'}[role] || 'Dashboard';
     return `<section class="section" id="${role}-dashboard"><div class="container"><article class="panel"><div class="eyebrow">${escapeHtml(title)}</div><h2>Account access required.</h2><p>Operational dashboards require production authentication and the appropriate role. Public learning tools remain available from the homepage.</p><a class="btn gold" href="#start">Return to learning options</a></article></div></section>`;
   }
-  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${teachersEmployers()}${learningExperience()}${trust()}`); }
+  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${emailClarityLab()}${teachersEmployers()}${learningExperience()}${trust()}`); }
 
   let openQuickPracticeStep=null;
   function bindDiagnostic(){
@@ -728,6 +861,7 @@
     bindAiReviewLab();
     bindClauseReadingLab();
     bindMeetingFollowupLab();
+    bindEmailClarityLab();
   }
   function scrollToTarget(id, attempt=0){
     const target=document.getElementById(id);

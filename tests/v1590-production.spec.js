@@ -3,11 +3,11 @@ const { test, expect } = require('@playwright/test');
 async function assertProductionRelease(page) {
   await page.goto('/', { waitUntil: 'networkidle' });
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.67.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.67.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.68.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.68.0');
 }
 
-test.describe('EnglishLegalese v1.67.0 production acceptance', () => {
+test.describe('EnglishLegalese v1.68.0 production acceptance', () => {
   test('apex production renders corrected owner-visible homepage', async ({ page }, testInfo) => {
     await assertProductionRelease(page);
 
@@ -45,7 +45,7 @@ test.describe('EnglishLegalese v1.67.0 production acceptance', () => {
     const h=await page.evaluate(()=>document.documentElement.scrollHeight);
     expect(h).toBeLessThan(testInfo.project.name==='production-mobile'?9500:7000);
     const htmlResponse=await page.request.get('/');
-    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.67.0');
+    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.68.0');
     expect(htmlResponse.headers()['cache-control']).toContain('no-cache');
     await page.screenshot({ path: testInfo.outputPath('production-homepage-v1590.png'), fullPage: true, animations: 'disabled' });
     await testInfo.attach('production-homepage-v1590', { path: testInfo.outputPath('production-homepage-v1590.png'), contentType: 'image/png' });
@@ -56,7 +56,7 @@ test.describe('EnglishLegalese v1.67.0 production acceptance', () => {
     for (const hash of ['#teachers','#courses','#language-bridge','#smartteacher','#trust','#practice-studio','#learning-plan','#skills-passport','#home']) {
       await page.evaluate(h => { window.location.hash = h; }, hash);
       await page.waitForTimeout(120);
-      await expect(page.locator('#v1590-live-marker')).toHaveText('1.67.0');
+      await expect(page.locator('#v1590-live-marker')).toHaveText('1.68.0');
       await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
       await expect(page.getByText('New in v1.55', { exact: true })).toHaveCount(0);
       await expect(page.locator('#diagnostic')).toHaveCount(1);
@@ -66,7 +66,7 @@ test.describe('EnglishLegalese v1.67.0 production acceptance', () => {
   test('www production endpoint serves same current release', async ({ page }) => {
     await page.goto('https://www.englishlegalese.com/', { waitUntil: 'networkidle' });
     await page.locator('body.v1590-ready').waitFor();
-    await expect(page.locator('#v1590-live-marker')).toHaveText('1.67.0');
+    await expect(page.locator('#v1590-live-marker')).toHaveText('1.68.0');
     await expect(page.getByRole('heading', { name: 'Clear English for legal work.' })).toBeVisible();
     await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
   });
@@ -198,4 +198,25 @@ test('production meeting follow-up lab preserves next steps and clears private d
   await expect(lab.locator('.v1670-progress')).toContainText('Reviewed 0 of 3');
   await expect(lab.locator('input[type="radio"]:checked')).toHaveCount(0);
   await expect(lab).toContainText('not save or transmit');
+});
+
+
+test('live production fictional email clarity practice reviews accurately and removes drafts',async({page})=>{
+  await assertProductionRelease(page);
+  await expect(page.locator('#email-clarity-lab')).toBeHidden();
+  await page.evaluate(()=>location.hash='#email-clarity-lab');
+  const lab=page.locator('#email-clarity-lab');
+  await expect(lab).toBeVisible();
+  await expect(lab.locator('.v1680-case')).toHaveCount(3);
+  const first=lab.locator('.v1680-case').first();
+  await first.locator('input[value="1"]').check();
+  await first.locator('.v1680-draft').fill('Please clarify the timeline for our fictional document.');
+  await first.getByRole('button',{name:'Review this email'}).click();
+  await expect(first.locator('.v1680-feedback')).toContainText('“ASAP”');
+  await expect(lab.locator('.v1680-progress')).toContainText('Reviewed 1 of 3');
+  await lab.getByRole('button',{name:'Clear all email exercises'}).click();
+  await expect(first.locator('.v1680-draft')).toHaveValue('');
+  await expect(lab.locator('.v1680-progress')).toContainText('Reviewed 0 of 3');
+  await expect(lab.locator('input[type="radio"]:checked')).toHaveCount(0);
+  await expect(lab).toContainText('not transmitted or saved');
 });

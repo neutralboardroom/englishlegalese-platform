@@ -1,18 +1,18 @@
 {
   "name": "englishlegalese-platform",
-  "version": "1.67.0",
-  "description": "EnglishLegalese v1.67.0: free, fictional text-based meeting follow-up lab with action owners, timing clarification, approval dependencies, optional learner draft, example and private reset; original learning content preserved.",
+  "version": "1.68.0",
+  "description": "EnglishLegalese v1.68.0: free fictional Professional Email Clarity Lab teaching precise requests, approval-status accuracy and neutral updates with private self-review, while preserving the existing platform.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check product-v1570.js && node --check product-v1580.js && node --check product-v1590.js && node --check playwright.config.js && node --check playwright.production.config.js && node --check tests/v1570-browser.spec.js && node --check tests/v1590-browser.spec.js && node --check tests/v1590-production.spec.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1590-live-recovery.js && node --check scripts/verify-v1600-homepage.js && node --check scripts/verify-v1611-webkit.js && node --check scripts/verify-v1620-experience.js && node --check scripts/verify-v1630-workout.js && node --check scripts/verify-v1640-diagnostic.js && node --check scripts/verify-v1650-ai-review.js && node --check scripts/verify-v1670-meeting-followup.js && node scripts/verify-v1670-meeting-followup.js",
+    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check product-v1570.js && node --check product-v1580.js && node --check product-v1590.js && node --check playwright.config.js && node --check playwright.production.config.js && node --check tests/v1570-browser.spec.js && node --check tests/v1590-browser.spec.js && node --check tests/v1590-production.spec.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1590-live-recovery.js && node --check scripts/verify-v1600-homepage.js && node --check scripts/verify-v1611-webkit.js && node --check scripts/verify-v1620-experience.js && node --check scripts/verify-v1630-workout.js && node --check scripts/verify-v1640-diagnostic.js && node --check scripts/verify-v1650-ai-review.js && node --check scripts/verify-v1680-email-clarity.js && node scripts/verify-v1680-email-clarity.js",
     "predeploy:check": "node scripts/predeploy-check.js",
     "migrate": "node scripts/migrate.js",
     "prod:readiness": "node scripts/verify-production-readiness.js",
     "live:verify": "node scripts/verify-live-integrations.js",
     "live:verify:strict": "node scripts/verify-live-integrations.js --strict",
     "owner:create": "node scripts/create-owner.js",
-    "ops:verify": "node scripts/verify-v1670-meeting-followup.js",
+    "ops:verify": "node scripts/verify-v1680-email-clarity.js",
     "audit:high": "npm audit --audit-level=high",
     "e2e:public": "node scripts/e2e-public-launch-smoke.js",
     "e2e:browser": "playwright test --config=playwright.config.js",
@@ -38,7 +38,8 @@
     "verify:v1640": "node scripts/verify-v1640-diagnostic.js",
     "verify:v1650": "node scripts/verify-v1650-ai-review.js",
     "verify:v1660": "node scripts/verify-v1660-clause-reading.js",
-    "verify:v1670": "node scripts/verify-v1670-meeting-followup.js"
+    "verify:v1670": "node scripts/verify-v1670-meeting-followup.js",
+    "verify:v1680": "node scripts/verify-v1680-email-clarity.js"
   },
   "dependencies": {
     "express": "4.22.3"
