@@ -77,4 +77,4 @@ const {AI_PLAN_DRAFTS,paidEntitlementVerified}=require('../src/aiCommercePolicy'
   finally{global.fetch=original;}
   assert.equal(requests,1);
   console.log('PASS v1.73 mock-only account/role/3-use trial/verified email/atomic quota/refund/mock OpenAI/abuse/paid fail closed; 0 billable API calls.');
-})().catch(e=>{console.error('FAIL v1.73 local security regression: '+e.message);process.exitCode=1;}).finally(()=>fs.rmSync(dir,{recursive:true,force:true}));
+})().catch(e=>{console.error('FAIL v1.73 local security regression: '+(e?.stack||e?.message));process.exitCode=1;}).finally(()=>fs.rmSync(dir,{recursive:true,force:true}));
