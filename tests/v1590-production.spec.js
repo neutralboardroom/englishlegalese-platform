@@ -139,3 +139,22 @@ test('real production diagnostic explains all eight answers and opens the matchi
   await expect(page.locator('#quick-practice')).toBeVisible();
   await expect(page.locator('.v1630-progress')).toHaveText('Exercise 3 of 3');
 });
+
+test('live production AI draft review lab teaches 3 fictional cases without storing user content',async({page})=>{
+  await assertProductionRelease(page);
+  await expect(page.locator('#ai-review-lab')).toBeHidden();
+  await page.evaluate(()=>location.hash='#ai-review-lab');
+  const lab=page.locator('#ai-review-lab');
+  await expect(lab).toBeVisible();
+  await expect(lab.locator('.v1650-case')).toHaveCount(3);
+  const first=lab.locator('.v1650-case').first();
+  await first.locator('input[value="0"]').check();
+  await first.locator('.v1650-rewrite').fill('Use fictional details and verify the source.');
+  await first.getByRole('button',{name:'Compare my choice'}).click();
+  await expect(first.locator('.v1650-guidance')).toBeVisible();
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 1 of 3');
+  await lab.getByRole('button',{name:'Clear all three exercises'}).click();
+  await expect(first.locator('.v1650-rewrite')).toHaveValue('');
+  await expect(first.locator('.v1650-guidance')).toBeHidden();
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 0 of 3');
+});
