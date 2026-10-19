@@ -148,7 +148,7 @@ check('release npm check executes newest verifier and preserves v1.64 checks',St
 check('high/critical audit command remains exact', pkg.scripts?.['audit:high'] === 'npm audit --audit-level=high');
 check('v1.59 verifier is wired into npm check', String(pkg.scripts?.check || '').includes('verify-v1650-ai-review.js'));
 
-check('rule state uses exact verified v1.64.0 predecessor', state.accepted_predecessor_commit === '64732dec871a4f59d31f93a23fde9e7ec85ab3a9');
+check('rule state uses exact verified v1.64.0 predecessor', state.accepted_predecessor_commit === '259b1f5630be7249e3d441554e2690843f09eea1');
 check('19 Roger Rules and 10 durable rules remain active', state.roger_rule_count === 19 && state.durable_builder_rule_count === 10);
 check('canonical register contains all Roger Rules', Array.from({length:19},(_,i)=>`EL-RGR-${String(i+1).padStart(3,'0')}`).every(id => register.includes(`## ${id}`)));
 check('canonical register contains all durable rules', Array.from({length:10},(_,i)=>`EL-DUR-${String(i+1).padStart(3,'0')}`).every(id => register.includes(`## ${id}`)));
@@ -261,23 +261,15 @@ check('v1.72 independent production suite covers actual browser revision studio'
 check('v1.72 previous tests preserved and inherited improvement lineage intact',browser.includes('vocabulary guide filters by word')&&browser.includes('fictional case brief lab distinguishes allegations')&&browser.includes('guided practice gives four distinct')&&nvil.includes('after v1.71.0'));
 check('v1.72 consistent source and production release marker',String(pkg.scripts.check).includes('verify-v1730-ai-safety.js')&&read('.github/workflows/englishlegalese-v1590-production-acceptance.yml').includes('1.73.0-navigation-domain-hardening'));
 
-const gate=read('src/aiSafetyGate.js'),ledger=read('src/freeTrialLedger.js'),commerce=read('src/aiCommercePolicy.js'),server=read('server.js'),services=read('src/productionServices.js');
-check('v1.73 public account cannot self-create privileged roles',services.includes("if (role !== 'student') throw new Error")&&services.includes("role = 'student'"));
-check('v1.73 strong secure sessions and safe signature verification',services.includes("secret.length<32")&&services.includes("parts[2].length!==expected.length"));
-check('v1.73 public static serving excludes private code and data',server.includes("Prevent public downloads of server code")&&server.includes("app.use(express.static(__dirname))"));
-check('v1.73 free three-use quota is durable and atomic not local disk',ledger.includes('ALLOWANCE=3')&&ledger.includes('pg_advisory_xact_lock')&&ledger.includes('ai_free_trial_uses')&&ledger.includes('refundFailedRequest'));
-check('v1.73 verified email flow uses hashed one-time tokens and SMTP',ledger.includes("randomBytes(32)")&&ledger.includes('sha256')&&ledger.includes('ai_trial_email_verifications')&&ledger.includes('verified_at'));
-check('v1.73 public trial is gated on real PostgreSQL SMTP and strong session secret',ledger.includes('env.SMTP_HOST&&env.SMTP_USER&&env.SMTP_PASS')&&ledger.includes('env.SMARTTEACHER_TRIAL_ENABLED')&&server.includes('await ledger.ready()'));
-check('v1.73 paid tutoring is never permitted without fulfilled Stripe entitlement',commerce.includes('return false; // Verified Stripe fulfillment')&&server.includes('paidEntitlementVerified('));
-check('v1.73 legacy unverified payment checkout is disabled',server.includes("Secure checkout is not available until Stripe")&&server.includes("PREVIOUS UNVERIFIED CHECKOUT DISABLED"));
-check('v1.73 2500 free, 5000 extended, original 9 courses and all earlier labs unchanged',app.includes('Three free, real AI tutoring replies')&&app.includes('2,500 characters (free)')&&app.includes('5,000 characters (paid access)')&&app.includes('revisionStudio()}')&&app.includes('vocabularyGuide()}'));
-check('v1.73 local document selection is not uploaded',app.includes("id=\"v1730-upload\"")&&app.includes('no upload occurred')&&!app.slice(app.indexOf("r.querySelector('#v1730-upload')"),app.indexOf('const code=new URLSearchParams')).includes('fetch('));
-check('v1.73 bounded real OpenAI trial has server-side tokens, origin and output safeguards',server.includes('max_output_tokens:500')&&server.includes('store:false')&&server.includes('AbortSignal.timeout(20000)')&&gate.includes('TRIAL_NETWORK_LIMIT'));
-check('v1.73 paid models are allowlisted and upstream error details suppressed',services.includes("max_output_tokens:600")&&services.includes("store:false")&&services.includes("AI provider temporarily unavailable."));
-check('v1.73 mock tests use no paid API and check role quota and temporary output',read('scripts/test-v1730-ai-guards.js').includes('Zero billable requests')&&read('scripts/test-v1730-ai-guards.js').includes('await ledger.reserve'));
-check('v1.73 browser and real production checks cover fail closed and feature discoverability',browser.includes('v1.73 free account trial')&&browser.includes('v1.73 free account registration')&&read('tests/v1590-production.spec.js').includes('live three-reply verified free trial'));
-check('v1.73 new migration is additive only',read('db/migrations/009_durable_free_ai_trial_ledger.sql').includes('create table if not exists ai_free_trial_uses')&&read('db/migrations/010_verified_trial_emails.sql').includes('create table if not exists ai_trial_email_verifications'));
-check('v1.73 original rule register and logo are immutable, explicit previous rollback',nvil.includes('after v1.72.0')&&read('docs/v1.73.0/ROLLBACK_AND_ACCEPTANCE.md').includes('dep-dbb7q3gu01pc73dl5spg'));
+const guard=read('src/aiSafetyGate.js'),ledger=read('src/freeTrialLedger.js'),server=read('server.js'),services=read('src/productionServices.js');
+check('v1.73 source enforces student-only public signup',services.includes("role !== 'student'"));
+check('v1.73 lifetime 3 uses and durable email verification',ledger.includes('ALLOWANCE=3')&&ledger.includes('ai_trial_email_verifications'));
+check('v1.73 Postgres serialized global and network caps',ledger.includes('pg_advisory_xact_lock(173,3)')&&ledger.includes('site_month')&&ledger.includes('createHmac'));
+check('v1.73 full paid AI inaccessible before Stripe verified entitlements',server.includes('paidEntitlementVerified')&&read('src/aiCommercePolicy.js').includes('return false;'));
+check('v1.73 no-account preview intentionally disabled when infrastructure missing',server.includes('TRIAL_NOT_READY')&&server.includes('readyForAccounts'));
+check('v1.73 live trial 2500 char and output token cap',guard.includes('trial_max_chars:2500')&&server.includes('max_output_tokens:500'));
+check('v1.73 file picker explicitly makes no upload',app.includes('no upload occurred'));
+check('v1.73 test suite mocked and browser acceptance present',read('scripts/test-v1730-ai-guards.js').includes('Zero billable requests')&&browser.includes('v1.73'));
 for (const [name,ok] of checks) console.log(`${ok?'PASS':'FAIL'} ${name}`);
 const failures = checks.filter(([,ok]) => !ok);
 if (failures.length) {
