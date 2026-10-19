@@ -1,6 +1,6 @@
 # EnglishLegalese v1.64.0 — direct educational research ledger, 2026-10-19
 
-Research emphasis: Plain Language in professional Legal English communication and responsible educational assessment.
+Research emphasis: GSA Plain Language guidance in professional Legal English communication and responsible educational assessment.
 
 1. **ADOPT** W3C WAI Forms instructions and errors, https://www.w3.org/WAI/tutorials/forms/notifications/ — after incomplete submission, identify missing questions and place focus on the first unanswered radio control; keep errors textual and associated with form status. This is not a substitute for independent assistive-tech testing.
 2. **ADOPT** W3C WAI disclosure principles, https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/ — progressive disclosure to show eight educational explanations, implemented using native HTML `details` and `summary`; avoid inventing ARIA semantics.
