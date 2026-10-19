@@ -3,11 +3,11 @@ const { test, expect } = require('@playwright/test');
 async function assertProductionRelease(page) {
   await page.goto('/', { waitUntil: 'networkidle' });
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.72.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.72.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.73.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.73.0');
 }
 
-test.describe('EnglishLegalese v1.72.0 production acceptance', () => {
+test.describe('EnglishLegalese v1.73.0 production acceptance', () => {
   test('apex production renders corrected owner-visible homepage', async ({ page }, testInfo) => {
     await assertProductionRelease(page);
 
@@ -45,7 +45,7 @@ test.describe('EnglishLegalese v1.72.0 production acceptance', () => {
     const h=await page.evaluate(()=>document.documentElement.scrollHeight);
     expect(h).toBeLessThan(testInfo.project.name==='production-mobile'?9500:7000);
     const htmlResponse=await page.request.get('/');
-    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.72.0');
+    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.73.0');
     expect(htmlResponse.headers()['cache-control']).toContain('no-cache');
     await page.screenshot({ path: testInfo.outputPath('production-homepage-v1590.png'), fullPage: true, animations: 'disabled' });
     await testInfo.attach('production-homepage-v1590', { path: testInfo.outputPath('production-homepage-v1590.png'), contentType: 'image/png' });
@@ -56,7 +56,7 @@ test.describe('EnglishLegalese v1.72.0 production acceptance', () => {
     for (const hash of ['#teachers','#courses','#language-bridge','#smartteacher','#trust','#practice-studio','#learning-plan','#skills-passport','#home']) {
       await page.evaluate(h => { window.location.hash = h; }, hash);
       await page.waitForTimeout(120);
-      await expect(page.locator('#v1590-live-marker')).toHaveText('1.72.0');
+      await expect(page.locator('#v1590-live-marker')).toHaveText('1.73.0');
       await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
       await expect(page.getByText('New in v1.55', { exact: true })).toHaveCount(0);
       await expect(page.locator('#diagnostic')).toHaveCount(1);
@@ -66,7 +66,7 @@ test.describe('EnglishLegalese v1.72.0 production acceptance', () => {
   test('www production endpoint serves same current release', async ({ page }) => {
     await page.goto('https://www.englishlegalese.com/', { waitUntil: 'networkidle' });
     await page.locator('body.v1590-ready').waitFor();
-    await expect(page.locator('#v1590-live-marker')).toHaveText('1.72.0');
+    await expect(page.locator('#v1590-live-marker')).toHaveText('1.73.0');
     await expect(page.getByRole('heading', { name: 'Clear English for legal work.' })).toBeVisible();
     await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
   });
@@ -300,4 +300,19 @@ test('live revision studio compares material words and clears editable confident
   await s.getByRole('button',{name:'Clear both texts'}).click();
   await expect(s.locator('#v1720-before')).toHaveValue('');
   await expect(s.locator('.v1720-result')).toBeHidden();
+});
+
+test('live three-reply verified free trial is securely closed until database and mail ready',async({page,request})=>{
+  await assertProductionRelease(page);
+  await page.evaluate(()=>location.hash='#smartteacher-free-trial');
+  const t=page.locator('#smartteacher-free-trial');await expect(t).toBeVisible();
+  await expect(t.locator('.v1730-readiness')).toContainText('secure account storage');
+  await expect(t.locator('.v1730-register button')).toBeDisabled();
+  const status=await request.get('https://englishlegalese.com/api/v173/trial/capabilities');
+  expect(status.status()).toBe(200);const info=await status.json();
+  expect(info.trial_available).toBe(false);expect(info.free_replies).toBe(3);
+  const blocked=await request.post('https://englishlegalese.com/api/v119/payments/create-checkout',{data:{amount_cents:1200}});
+  expect(blocked.status()).toBe(503);
+  const security=await request.get('https://englishlegalese.com/src/productionServices.js');
+  expect(security.status()).toBe(404);
 });
