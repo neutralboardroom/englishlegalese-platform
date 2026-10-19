@@ -55,18 +55,20 @@ function verifyPassword(password, stored) {
 }
 
 function signToken(payload) {
-  const secret = process.env.SESSION_SECRET || process.env.JWT_SECRET || 'dev-only-change-me';
+  const secret = process.env.SESSION_SECRET || process.env.JWT_SECRET;
+  if(!secret||secret.length<32)throw new Error('Secure session secret is required.');
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
   const body = Buffer.from(JSON.stringify({ ...payload, iat: Math.floor(Date.now()/1000), exp: Math.floor(Date.now()/1000) + (Number(process.env.SESSION_TTL_SECONDS || 60*60*24*7)) })).toString('base64url');
   const sig = crypto.createHmac('sha256', secret).update(`${header}.${body}`).digest('base64url');
   return `${header}.${body}.${sig}`;
 }
 function verifyToken(token) {
-  const secret = process.env.SESSION_SECRET || process.env.JWT_SECRET || 'dev-only-change-me';
+  const secret = process.env.SESSION_SECRET || process.env.JWT_SECRET;
+  if(!secret||secret.length<32)return null;
   const parts = String(token || '').split('.');
   if (parts.length !== 3) return null;
   const expected = crypto.createHmac('sha256', secret).update(`${parts[0]}.${parts[1]}`).digest('base64url');
-  if (!crypto.timingSafeEqual(Buffer.from(parts[2]), Buffer.from(expected))) return null;
+  if(parts[2].length!==expected.length||!crypto.timingSafeEqual(Buffer.from(parts[2]),Buffer.from(expected)))return null;
   const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8'));
   if (payload.exp && payload.exp < Math.floor(Date.now()/1000)) return null;
   return payload;

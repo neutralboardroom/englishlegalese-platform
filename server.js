@@ -22,6 +22,14 @@ app.use((req,res,next)=>{
   }
   next();
 });
+// Prevent public downloads of server code, credentials, databases, governance and build scripts.
+app.use((req,res,next)=>{
+ const urlPath=req.path||'';
+ if(/^\/(?:src|data|db|scripts|governance|docs|\.git|\.github|node_modules)(?:\/|$)/i.test(urlPath)||
+   /^\/(?:server\.js|package(?:-lock)?\.json|\.env(?:\..*)?|render\.yaml|\.npmrc)$/i.test(urlPath))
+   return res.status(404).type('text/plain').send('Not found');
+ next();
+});
 app.use(express.static(__dirname));
 
 app.get('/health', (req, res) => {
@@ -540,7 +548,7 @@ function readyForAccounts(){
  return c.database&&c.secure_session&&c.email_sender;
 }
 app.post('/api/v119/auth/register',authAbuse.registration,async(req,res,next)=>{
- if(!readyForAccounts())return res.status(503).json({ok:false,error:'Account registration requires durable storage and secure authentication.'});
+ if(!await ledger.ready())return res.status(503).json({ok:false,error:'Account registration requires verified email and durable storage.'});
  next();
 },async (req, res) => {
   try {
