@@ -67,47 +67,28 @@ function createAuthAbuseGuard(opts={}){
   return {registration:limiter('registration',8,3600000),login:limiter('login',16,900000)};
 }
 
-function createFreePreviewGate(opts={}){
-  // Public demo is a REAL short OpenAI request, independent of paid account/role flows.
-  // Bounded per-instance budgets reset on restart: not a hard distributed dollar ceiling.
-  const now=opts.now||(()=>Date.now()),env=opts.env||process.env;
-  let day='',month='',daily=0,monthly=0,inFlight=0;
-  const networks=new Map();
-  const DAILY_SITE=30,MONTHLY_SITE=180,DAILY_NETWORK=2,PARALLEL_PREVIEW=2,MAX_CHARS=2500,MAX_TOKENS=250;
-  const allowed=['email','contracts','professional_communication','responsible_ai'];
-  function refresh(t){
-    const d=new Date(t).toISOString().slice(0,10),m=d.slice(0,7);
-    if(d!==day){day=d;daily=0;networks.clear();}
-    if(m!==month){month=m;monthly=0;}
-  }
-  function status(){return {live:!!env.OPENAI_API_KEY&&env.SMARTTEACHER_FREE_PREVIEW_ENABLED!=='false',
-    preview_daily_site_limit:DAILY_SITE,preview_monthly_site_limit:MONTHLY_SITE,
-    preview_daily_network_limit:DAILY_NETWORK,preview_max_chars:MAX_CHARS,
-    preview_max_output_tokens:MAX_TOKENS,preview_concurrency:PARALLEL_PREVIEW,
-    scope:'single instance, reset after redeploy; not a hard cost ceiling'};}
-  function reserve(req){
-    const reject=(status,code,message)=>({ok:false,status,code,message});
-    if(!env.OPENAI_API_KEY||env.SMARTTEACHER_FREE_PREVIEW_ENABLED==='false')return reject(503,'PREVIEW_UNAVAILABLE','The free live AI preview is temporarily unavailable.');
-    const body=req.body||{},prompt=body.prompt,topic=body.topic||'professional_communication';
-    if(typeof prompt!=='string'||!prompt.trim()||prompt.length>MAX_CHARS)return reject(400,'PREVIEW_INPUT_INVALID','Enter 1 to 2500 characters of invented practice text.');
-    if(typeof topic!=='string'||!allowed.includes(topic))return reject(400,'PREVIEW_TOPIC_INVALID','Choose a supported learning topic.');
-    if(body.files||body.attachments||body.images||body.documents)return reject(400,'PREVIEW_FILES_DISABLED','File review requires verified paid access and secure document processing.');
-    const t=now();refresh(t);
-    const network=String(req.ip||req.socket?.remoteAddress||'unknown').slice(0,120);
-    if(inFlight>=PARALLEL_PREVIEW)return reject(429,'PREVIEW_BUSY','The free preview is busy. Please try again later.');
-    if(monthly>=MONTHLY_SITE)return reject(429,'PREVIEW_MONTHLY_LIMIT','This month’s free live demonstrations have been used.');
-    if(daily>=DAILY_SITE)return reject(429,'PREVIEW_DAILY_SITE_LIMIT','Today’s free live demonstrations have been used.');
-    if((networks.get(network)||0)>=DAILY_NETWORK)return reject(429,'PREVIEW_NETWORK_LIMIT','You have used today’s free live demonstrations on this connection.');
-    daily++;monthly++;networks.set(network,(networks.get(network)||0)+1);inFlight++;
-    let released=false;
-    return {ok:true,prompt:prompt.trim(),topic,release(){if(!released){released=true;inFlight=Math.max(0,inFlight-1);}}};
-  }
-  function middleware(req,res,next){
-    const reservation=reserve(req);
-    if(!reservation.ok)return res.status(reservation.status).json({ok:false,error_code:reservation.code,error:reservation.message});
-    req.freePreviewReservation=reservation;next();
-  }
-  return {reserve,middleware,status};
+function createTrialRateGate(opts={}){
+ const env=opts.env||process.env,now=opts.now||(()=>Date.now());
+ const limits={per_ip_day:3,daily_site:18,monthly_site:120,parallel:1};
+ const ipUse=new Map();let day='',month='',daily=0,monthly=0,inFlight=0;
+ function status(){return {enabled:env.SMARTTEACHER_TRIAL_ENABLED==='true'&&!!env.OPENAI_API_KEY,requires_verified_account:true,free_messages:3,trial_max_chars:2500,paid_extended_max_chars:5000,max_output_tokens:500,...limits,scope:'extra per-instance safeguards; not a hard provider spending cap'};}
+ function reserve(req){
+  const fail=(status,code,message)=>({ok:false,status,code,message});
+  if(!status().enabled)return fail(503,'TRIAL_DISABLED','Free live AI trial is not available yet.');
+  if(!req.user?.id||req.user.status!=='active'||req.user.role!=='student')return fail(403,'STUDENT_ACCOUNT_REQUIRED','Sign in to a verified student account.');
+  if(typeof req.body?.prompt!=='string'||!req.body.prompt.trim()||req.body.prompt.length>2500)return fail(400,'TRIAL_INPUT_TOO_LONG','Enter 1–2,500 characters of fictional text.');
+  if(Object.keys(req.body||{}).some(k=>!['prompt','topic'].includes(k)))return fail(400,'TRIAL_TEXT_ONLY','Files and extra fields are not allowed during the free trial.');
+  if(req.body.topic&&!['email','contracts','professional_communication','responsible_ai'].includes(req.body.topic))return fail(400,'TRIAL_TOPIC_INVALID','Please select a supported topic.');
+  const t=now(),dt=new Date(t).toISOString().slice(0,10),mt=dt.slice(0,7),ip=String(req.ip||req.socket?.remoteAddress||'unknown').slice(0,120);
+  if(dt!==day){day=dt;daily=0;ipUse.clear();}
+  if(mt!==month){month=mt;monthly=0;}
+  if(inFlight>=limits.parallel)return fail(429,'TRIAL_BUSY','Free tutoring is busy. Try again.');
+  if(daily>=limits.daily_site||monthly>=limits.monthly_site)return fail(429,'TRIAL_SITE_LIMIT','Free tutoring capacity is currently exhausted.');
+  if((ipUse.get(ip)||0)>=limits.per_ip_day)return fail(429,'TRIAL_NETWORK_LIMIT','This network has reached today’s free AI limit.');
+  daily++;monthly++;ipUse.set(ip,(ipUse.get(ip)||0)+1);inFlight++;
+  let released=false;return {ok:true,release(){if(!released){released=true;inFlight=Math.max(0,inFlight-1);}}};
+ }
+ function middleware(req,res,next){const r=reserve(req);if(!r.ok)return res.status(r.status).json({ok:false,error_code:r.code,error:r.message});req.trialReservation=r;next();}
+ return {reserve,middleware,status};
 }
-
-module.exports={createAiSafetyGate,createAuthAbuseGuard,createFreePreviewGate,MAX_OUTPUT_TOKENS,MAX_PROMPT_CHARS,MAX_CONTEXT_BYTES};
+module.exports={createAiSafetyGate,createAuthAbuseGuard,createTrialRateGate,MAX_OUTPUT_TOKENS,MAX_PROMPT_CHARS,MAX_CONTEXT_BYTES};
