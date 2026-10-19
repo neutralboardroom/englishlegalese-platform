@@ -1,4 +1,4 @@
-# EnglishLegalese v1.72.0 Next Version Improvement List — owner universal maximum-material command applied
+# EnglishLegalese — Next Version Improvement List after v1.72.0 (owner universal maximum-material command applied)
 ## Cohesive material outcomes
 - Five substantive fictional before-and-after professional Legal English scenarios: obligation, approval, deadline, allegation, and confidentiality.
 - Editable two-text comparison with real bounded word-level differences, semantics-safe DOM nodes instead of injecting learner HTML, learning cautions, a four-point native-checkbox review workflow, correct stale-feedback reset, complete input clear/reset, and user-initiated clipboard notes.
