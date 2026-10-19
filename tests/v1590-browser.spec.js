@@ -312,7 +312,7 @@ test('AI draft review lab teaches all three fictional risk cases without externa
   await expect(page.locator('#home')).toBeHidden();
   await expect(lab.locator('.v1650-case')).toHaveCount(3);
   await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 0 of 3');
-  await expect(lab).toContainText('not live AI');
+  await expect(lab).toContainText('No live AI service');
   await expect(lab).toContainText('Fictional AI draft to review');
 
   const first=lab.locator('.v1650-case').nth(0);
