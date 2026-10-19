@@ -1,3 +1,22 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.65.0 (candidate)
+
+## Material improvements for v1.65.0
+- Introduce a free standalone **AI Draft Review Lab** using three completely fictional, educational AI-output risk cases: (1) invented deadline, (2) unsupported legal conclusion, (3) confidential information proposed for an unapproved AI tool.
+- Each case lets learners select the most important review action, see substantive plain-English feedback, optionally practise a safer rewrite, and clear that individual practice response. A visible reviewed/total count tracks *this page session only*, not an accredited score.
+- Clear-all resets three choices and temporary drafts; no server call, account, payment, live model/API use, durable storage or claiming human teacher verification.
+- New focused lab is discoverable from SmartTeacher and footer without adding bulk to the approved homepage; the previous 8-question diagnostic sends AI-output-review needs to a directly useful activity.
+- Explicitly distinguish **fictional offline AI-output review practice** from live OpenAI integration, which cannot be claimed configured simply because the source supports OpenAI.
+- Add desktop/tablet/mobile Chromium and iPad Safari browser regression plus independent actual public apex/www production smoke. Preserve original 9 courses, 21 scenario IDs, 8-question diagnostic with itemized feedback, 3 private writing exercises, student/teacher/employer access boundaries, logo, and no loss governance.
+
+## Next high-value improvements (not claimed as delivered)
+1. Qualified live SmartTeacher AI integration requires server-side OpenAI key presence, working account/billing/model call, privacy safeguards, rate/cost controls, credential security and owner approval. Public prompt builder remains honest and usable offline.
+2. Real-human keyboard, screen-reader and multilingual walkthrough; remediate observed issues with source-level tests and role authorization preserved.
+3. Deepen authentic professional/academic reading and speaking activities with fictional content; if claiming competency scores, obtain independent validation.
+4. Consider gradual clean-up of old presentation layers only with full WebKit/Chromium parity and owner-approved screenshots.
+5. Account/user progress: production auth, consent, export/deletion, retention and qualified databases/backups remain gated by evidence, not frontend demo.
+6. Preserve twice-qualified exact-head release, independent apex/www browser acceptance and immediately previous Render rollback.
+
+## Inherited full prior improvement list (unaltered and complete)
 # EnglishLegalese.com — Next Version Improvement List after v1.64.0 (candidate)
 
 ## Improvements built in v1.64.0
