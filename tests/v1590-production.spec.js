@@ -3,11 +3,11 @@ const { test, expect } = require('@playwright/test');
 async function assertProductionRelease(page) {
   await page.goto('/', { waitUntil: 'networkidle' });
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.70.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.70.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.71.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.71.0');
 }
 
-test.describe('EnglishLegalese v1.70.0 production acceptance', () => {
+test.describe('EnglishLegalese v1.71.0 production acceptance', () => {
   test('apex production renders corrected owner-visible homepage', async ({ page }, testInfo) => {
     await assertProductionRelease(page);
 
@@ -45,7 +45,7 @@ test.describe('EnglishLegalese v1.70.0 production acceptance', () => {
     const h=await page.evaluate(()=>document.documentElement.scrollHeight);
     expect(h).toBeLessThan(testInfo.project.name==='production-mobile'?9500:7000);
     const htmlResponse=await page.request.get('/');
-    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.70.0');
+    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.71.0');
     expect(htmlResponse.headers()['cache-control']).toContain('no-cache');
     await page.screenshot({ path: testInfo.outputPath('production-homepage-v1590.png'), fullPage: true, animations: 'disabled' });
     await testInfo.attach('production-homepage-v1590', { path: testInfo.outputPath('production-homepage-v1590.png'), contentType: 'image/png' });
@@ -56,7 +56,7 @@ test.describe('EnglishLegalese v1.70.0 production acceptance', () => {
     for (const hash of ['#teachers','#courses','#language-bridge','#smartteacher','#trust','#practice-studio','#learning-plan','#skills-passport','#home']) {
       await page.evaluate(h => { window.location.hash = h; }, hash);
       await page.waitForTimeout(120);
-      await expect(page.locator('#v1590-live-marker')).toHaveText('1.70.0');
+      await expect(page.locator('#v1590-live-marker')).toHaveText('1.71.0');
       await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
       await expect(page.getByText('New in v1.55', { exact: true })).toHaveCount(0);
       await expect(page.locator('#diagnostic')).toHaveCount(1);
@@ -66,7 +66,7 @@ test.describe('EnglishLegalese v1.70.0 production acceptance', () => {
   test('www production endpoint serves same current release', async ({ page }) => {
     await page.goto('https://www.englishlegalese.com/', { waitUntil: 'networkidle' });
     await page.locator('body.v1590-ready').waitFor();
-    await expect(page.locator('#v1590-live-marker')).toHaveText('1.70.0');
+    await expect(page.locator('#v1590-live-marker')).toHaveText('1.71.0');
     await expect(page.getByRole('heading', { name: 'Clear English for legal work.' })).toBeVisible();
     await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
   });
@@ -260,4 +260,23 @@ test('live production fictional case-brief practice explains status and clears p
   await expect(lab.locator('.v1700-progress')).toContainText('Reviewed 0 of 3');
   await expect(lab.locator('input[type="radio"]:checked')).toHaveCount(0);
   await expect(lab).toContainText('are not sent or saved');
+});
+
+test('live vocabulary guide searches educational words safely across topics and clears filters',async({page})=>{
+  await assertProductionRelease(page);
+  await expect(page.locator('#legal-vocabulary-guide')).toBeHidden();
+  await page.evaluate(()=>location.hash='#legal-vocabulary-guide');
+  const guide=page.locator('#legal-vocabulary-guide');
+  await expect(guide).toBeVisible();
+  await expect(guide.locator('.v1710-term:visible')).toHaveCount(18);
+  const search=guide.getByRole('searchbox',{name:'Search a word or example'});
+  await search.fill('zz-no-matches-xx');
+  await expect(guide.locator('.v1710-term:visible')).toHaveCount(0);
+  await expect(guide.locator('.v1710-empty')).toBeVisible();
+  await guide.getByRole('button',{name:'Clear vocabulary filters'}).click();
+  await expect(guide.locator('.v1710-term:visible')).toHaveCount(18);
+  await guide.getByLabel('Choose a learning topic').selectOption('1');
+  await expect(guide.locator('.v1710-term:visible')).toHaveCount(5);
+  await expect(guide.locator('.v1710-term:visible').first()).toContainText('Allege');
+  await expect(guide).toContainText('Searching does not upload, send or save what you type');
 });

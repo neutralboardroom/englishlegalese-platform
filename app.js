@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.70.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.71.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -744,7 +744,7 @@
         '<p>Your optional sentence is not automatically evaluated, sent to a teacher or converted into a legal conclusion.</p></div></article>').join('')+
       '<p class="v1700-privacy">Every case, party, and procedure above is invented. Do not quote these examples as authorities. Answers and draft text stay on this page only and are not sent or saved. Reload or clear to remove them. Education only.</p>'+
       '<button class="btn light v1700-reset-all" type="button" data-brief-action="reset-all">Clear all case-brief exercises</button>'+
-      '<p><a href="#clause-reading-lab">Return to fictional clause reading →</a> · <a href="#guided-practice-path">Choose a guided learning path →</a></p></div></section>';
+      '<p><a href="#clause-reading-lab">Return to fictional clause reading →</a> · <a href="#guided-practice-path">Choose a guided learning path →</a> · <a href="#legal-vocabulary-guide">Look up Legal English vocabulary →</a></p></div></section>';
   }
   function bindCaseBriefLab(){
     const root=$('#case-brief-lab');if(!root||root.dataset.bound==='1')return;
@@ -802,6 +802,72 @@
     update();
   }
 
+
+  // This glossary explains English usage in invented scenarios, not legal rules or advice.
+  const VOCABULARY_ITEMS=[
+    {word:'Allege',group:'Case reading',meaning:'Say that something happened without establishing that it is true.',example:'Fictional: Rowan alleges that the draft was sent late; the other person disagrees.',caution:'An allegation is not a finding or proof.'},
+    {word:'Finding',group:'Case reading',meaning:'A conclusion about a fact made by the person or body deciding an issue.',example:'Fictional: The training panel made a finding about when the email arrived.',caution:'Identify who made the finding and what was actually decided.'},
+    {word:'Holding',group:'Case reading',meaning:'In a case brief, a court’s decision about a legal issue, expressed in the relevant context.',example:'Fictional study task: State the imagined decision separately from the background story.',caution:'Real holdings must be checked against authentic decisions and applicable law.'},
+    {word:'Issue',group:'Case reading',meaning:'A question or point that needs to be considered or decided.',example:'Fictional: The issue is whether the internal form was submitted on time.',caution:'The issue is the question, not automatically the answer.'},
+    {word:'Reasoning',group:'Case reading',meaning:'The explanation of why a person or body reached a decision.',example:'Fictional: The panel explained that the required form was missing.',caution:'Distinguish stated reasons from your own assumptions.'},
+    {word:'Must',group:'Contract reading',meaning:'A word commonly used to express a requirement in clear instructions or drafting.',example:'Fictional clause: The supplier must notify the customer after discovering an interruption.',caution:'Confirm actual obligations and legal effect in the full document and jurisdiction.'},
+    {word:'May',group:'Contract reading',meaning:'A word often used to express permission or possibility rather than a strict requirement.',example:'Fictional clause: The learner may request a further practice session.',caution:'Context can change the intended meaning; do not read may as must.'},
+    {word:'Unless',group:'Contract reading',meaning:'Introduces an exception or condition under which the main statement does not apply.',example:'Fictional: Send the draft on Friday unless the reviewer requests a change.',caution:'Read the full exception, including who can invoke it and when.'},
+    {word:'Within',group:'Contract reading',meaning:'Before the stated time period ends, measured from a particular starting event.',example:'Fictional: Respond within three business days after receiving the request.',caution:'Keep both the triggering event and the time period; time calculations can vary by context.'},
+    {word:'Notify',group:'Contract reading',meaning:'Inform someone about an event or decision.',example:'Fictional: Notify the team when the updated agenda is ready.',caution:'A real notice requirement may specify form, recipient and delivery method.'},
+    {word:'Draft',group:'Professional writing',meaning:'A version of a document that may still need review, revision or approval.',example:'Fictional: The draft report is ready for manager review.',caution:'A completed draft does not automatically mean approved or final.'},
+    {word:'Pending',group:'Professional writing',meaning:'Not yet decided, completed or confirmed.',example:'Fictional: Approval is pending, so the update has not been circulated.',caution:'Do not describe a pending decision as an approval.'},
+    {word:'Clarify',group:'Professional writing',meaning:'Make something easier to understand or ask for information that removes uncertainty.',example:'Fictional: Could you clarify which date you need the revised memo?',caution:'Do not invent missing instructions or deadlines.'},
+    {word:'Confirm',group:'Professional writing',meaning:'Check and state that information is correct or an action is agreed.',example:'Fictional: Please confirm the correct recipient before sending the notice.',caution:'Do not say confirmed unless the necessary check took place.'},
+    {word:'Approval',group:'Professional writing',meaning:'Permission or acceptance given by the appropriate person or body.',example:'Fictional: The manager’s approval is needed before external circulation.',caution:'Review, drafting and approval are different actions.'},
+    {word:'Verify',group:'AI and review',meaning:'Check information against an appropriate source or other reliable evidence.',example:'Fictional: Verify the date in the actual agreement before using it in an update.',caution:'Fluent AI wording alone is not verification.'},
+    {word:'Confidential',group:'AI and review',meaning:'Information intended to be protected from unauthorized disclosure.',example:'Fictional: Replace real client identifiers with invented details in a practice prompt.',caution:'Do not enter real protected data into unapproved teaching or AI tools.'},
+    {word:'Unverified',group:'AI and review',meaning:'Not yet checked or confirmed by an appropriate source.',example:'Fictional: The draft includes an unverified claim about a response deadline.',caution:'Label uncertain claims accurately; request qualified review when necessary.'}
+  ];
+  const VOCABULARY_GROUPS=['All topics','Case reading','Contract reading','Professional writing','AI and review'];
+  function vocabularyGuide(){
+    return '<section class="section v1710-vocab" id="legal-vocabulary-guide" aria-labelledby="v1710-title">'+
+      '<div class="container section-head"><div><div class="eyebrow">Free Legal English vocabulary guide</div><h2 id="v1710-title">Look up a word. Understand how it is used.</h2></div><p>Search 18 carefully explained Legal English words and expressions across four learning topics. Each includes a fictional example and a reason to check the context before using it in real legal work.</p></div>'+
+      '<div class="container v1710-shell"><div class="v1710-controls">'+
+      '<div><label for="v1710-search">Search a word or example</label><input class="v1710-search" id="v1710-search" type="search" autocomplete="off" placeholder="For example: pending, approval, notice"></div>'+
+      '<div><label for="v1710-topic">Choose a learning topic</label><select class="v1710-topic" id="v1710-topic">'+VOCABULARY_GROUPS.map((g,i)=>'<option value="'+i+'">'+escapeHtml(g)+'</option>').join('')+'</select></div>'+
+      '<button class="btn light v1710-reset" type="button">Clear vocabulary filters</button></div>'+
+      '<p class="v1710-status" role="status" aria-live="polite" aria-atomic="true">Showing 18 of 18 vocabulary entries</p>'+
+      '<p class="v1710-empty" hidden>No matching words. Try a different term or clear the filters.</p>'+
+      '<div class="v1710-grid">'+VOCABULARY_ITEMS.map((v,i)=>'<article class="panel v1710-term" data-vocab-index="'+i+'">'+
+      '<p class="v1710-kicker">'+escapeHtml(v.group)+'</p><h3>'+escapeHtml(v.word)+'</h3><p><strong>Plain English:</strong> '+escapeHtml(v.meaning)+'</p>'+
+      '<p><strong>Fictional example:</strong> '+escapeHtml(v.example)+'</p><p class="v1710-caution"><strong>Check the context:</strong> '+escapeHtml(v.caution)+'</p></article>').join('')+'</div>'+
+      '<p class="v1710-privacy">These are simplified educational explanations, not a legal dictionary, actual legal authorities or advice. Exact meaning may depend on jurisdiction and context. Searching does not upload, send or save what you type.</p>'+
+      '<p><a href="#case-brief-lab">Practise fictional case-brief reading →</a> · <a href="#clause-reading-lab">Practise fictional clauses →</a></p></div></section>';
+  }
+  function bindVocabularyGuide(){
+    const root=$('#legal-vocabulary-guide');if(!root||root.dataset.bound==='1')return;
+    root.dataset.bound='1';
+    const search=root.querySelector('.v1710-search'),topic=root.querySelector('.v1710-topic');
+    const cards=Array.from(root.querySelectorAll('.v1710-term'));
+    const status=root.querySelector('.v1710-status'),empty=root.querySelector('.v1710-empty');
+    function update(){
+      const needle=search.value.trim().toLocaleLowerCase();
+      const active=VOCABULARY_GROUPS[Number(topic.value)]||'All topics';
+      let shown=0;
+      cards.forEach((card,i)=>{
+        const item=VOCABULARY_ITEMS[i];
+        const haystack=[item.word,item.group,item.meaning,item.example,item.caution].join(' ').toLocaleLowerCase();
+        const match=(active==='All topics'||item.group===active)&&(!needle||haystack.includes(needle));
+        card.hidden=!match;if(match)shown++;
+      });
+      status.textContent='Showing '+shown+' of '+VOCABULARY_ITEMS.length+' vocabulary entries';
+      empty.hidden=shown!==0;
+    }
+    search.addEventListener('input',update);
+    topic.addEventListener('change',update);
+    root.querySelector('.v1710-reset').addEventListener('click',()=>{
+      search.value='';topic.value='0';update();
+      search.focus({preventScroll:true});
+    });
+    update();
+  }
+
   function teachersEmployers(){
     return `<section class="section alt" id="teachers"><div class="container grid cols-2"><article class="panel"><div class="eyebrow">Teachers</div><h2>Teacher-guided learning support.</h2><p>Teachers can review learner practice, prepare lessons, guide roleplays, assign homework, and give feedback while private teacher notes remain appropriately separated.</p><a class="btn teal" href="#teacher-dashboard">Teacher account access</a><p class="v1580-micro-note">Operational teacher tools require the appropriate signed-in role.</p></article><article class="panel" id="employers"><div class="eyebrow">Employers</div><h2>Privacy-conscious team learning.</h2><p>Organizations can use consent-based, aggregate attendance and learning-progress signals. Private drafts, raw AI practice, uploads, recordings, native-language explanations, test answers, and teacher-private notes remain excluded by default.</p><a class="btn teal" href="#employer-dashboard">Employer account access</a><p class="v1580-micro-note">Nothing from a learner's private work is shared automatically.</p></article></div></section>`;
   }
@@ -815,7 +881,7 @@
     const title = {student:'Student dashboard',teacher:'Teacher dashboard',employer:'Employer dashboard',admin:'Owner / staff dashboard'}[role] || 'Dashboard';
     return `<section class="section" id="${role}-dashboard"><div class="container"><article class="panel"><div class="eyebrow">${escapeHtml(title)}</div><h2>Account access required.</h2><p>Operational dashboards require production authentication and the appropriate role. Public learning tools remain available from the homepage.</p><a class="btn gold" href="#start">Return to learning options</a></article></div></section>`;
   }
-  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${emailClarityLab()}${guidedPracticePath()}${caseBriefLab()}${teachersEmployers()}${learningExperience()}${trust()}`); }
+  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${emailClarityLab()}${guidedPracticePath()}${caseBriefLab()}${vocabularyGuide()}${teachersEmployers()}${learningExperience()}${trust()}`); }
 
   let openQuickPracticeStep=null;
   function bindDiagnostic(){
@@ -1027,6 +1093,7 @@
     bindEmailClarityLab();
     bindGuidedPracticePath();
     bindCaseBriefLab();
+    bindVocabularyGuide();
   }
   function scrollToTarget(id, attempt=0){
     const target=document.getElementById(id);

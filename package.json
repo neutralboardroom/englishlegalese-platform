@@ -1,18 +1,18 @@
 {
   "name": "englishlegalese-platform",
-  "version": "1.70.0",
-  "description": "EnglishLegalese v1.70.0: free fictional Case Brief Reading Lab for allegations, procedural status, outcomes and reasoning; existing learning features and protected design retained.",
+  "version": "1.71.0",
+  "description": "EnglishLegalese v1.71.0: searchable 18-entry educational Legal English Vocabulary Guide covering case reading, contracts, professional writing and safe AI review.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check product-v1570.js && node --check product-v1580.js && node --check product-v1590.js && node --check playwright.config.js && node --check playwright.production.config.js && node --check tests/v1570-browser.spec.js && node --check tests/v1590-browser.spec.js && node --check tests/v1590-production.spec.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1590-live-recovery.js && node --check scripts/verify-v1600-homepage.js && node --check scripts/verify-v1611-webkit.js && node --check scripts/verify-v1620-experience.js && node --check scripts/verify-v1630-workout.js && node --check scripts/verify-v1640-diagnostic.js && node --check scripts/verify-v1650-ai-review.js && node --check scripts/verify-v1700-case-brief.js && node scripts/verify-v1700-case-brief.js",
+    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check product-v1570.js && node --check product-v1580.js && node --check product-v1590.js && node --check playwright.config.js && node --check playwright.production.config.js && node --check tests/v1570-browser.spec.js && node --check tests/v1590-browser.spec.js && node --check tests/v1590-production.spec.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1590-live-recovery.js && node --check scripts/verify-v1600-homepage.js && node --check scripts/verify-v1611-webkit.js && node --check scripts/verify-v1620-experience.js && node --check scripts/verify-v1630-workout.js && node --check scripts/verify-v1640-diagnostic.js && node --check scripts/verify-v1650-ai-review.js && node --check scripts/verify-v1710-vocabulary.js && node scripts/verify-v1710-vocabulary.js",
     "predeploy:check": "node scripts/predeploy-check.js",
     "migrate": "node scripts/migrate.js",
     "prod:readiness": "node scripts/verify-production-readiness.js",
     "live:verify": "node scripts/verify-live-integrations.js",
     "live:verify:strict": "node scripts/verify-live-integrations.js --strict",
     "owner:create": "node scripts/create-owner.js",
-    "ops:verify": "node scripts/verify-v1700-case-brief.js",
+    "ops:verify": "node scripts/verify-v1710-vocabulary.js",
     "audit:high": "npm audit --audit-level=high",
     "e2e:public": "node scripts/e2e-public-launch-smoke.js",
     "e2e:browser": "playwright test --config=playwright.config.js",
@@ -41,7 +41,8 @@
     "verify:v1670": "node scripts/verify-v1670-meeting-followup.js",
     "verify:v1680": "node scripts/verify-v1680-email-clarity.js",
     "verify:v1690": "node scripts/verify-v1690-guided-practice.js",
-    "verify:v1700": "node scripts/verify-v1700-case-brief.js"
+    "verify:v1700": "node scripts/verify-v1700-case-brief.js",
+    "verify:v1710": "node scripts/verify-v1710-vocabulary.js"
   },
   "dependencies": {
     "express": "4.22.3"

@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.70.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.70.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.71.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.71.0');
 }
 
-test.describe('EnglishLegalese v1.70.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.71.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -114,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.70\.0/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.71\.0/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -187,7 +187,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.70.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.71.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
@@ -663,6 +663,52 @@ test('new case brief reading route does not alter approved homepage and is linke
   await expect(page.locator('.v1700-case')).toHaveCount(3);
   await page.locator('#case-brief-lab a[href="#guided-practice-path"]').click();
   await expect(page.locator('#guided-practice-path')).toBeVisible();
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test('vocabulary guide filters by word, topic, context and displays no results accurately',async({page})=>{
+  await page.goto('/#legal-vocabulary-guide');await waitForRecovery(page);
+  const guide=page.locator('#legal-vocabulary-guide');
+  await expect(guide).toBeVisible();
+  await expect(guide.locator('.v1710-term:visible')).toHaveCount(18);
+  await expect(guide.locator('.v1710-status')).toContainText('Showing 18 of 18');
+  await expect(guide.locator('.v1710-term').first()).toContainText('Allege');
+  const search=guide.getByRole('searchbox',{name:'Search a word or example'});
+  await search.fill('unverified');
+  await expect(guide.locator('.v1710-term:visible')).toHaveCount(2);
+  await expect(guide.locator('.v1710-status')).toContainText('Showing 2 of 18');
+  await search.fill('');
+  await guide.getByLabel('Choose a learning topic').selectOption('2');
+  await expect(guide.locator('.v1710-term:visible')).toHaveCount(5);
+  await expect(guide.locator('.v1710-term:visible').first()).toContainText('Must');
+  await search.fill('unless');
+  await expect(guide.locator('.v1710-term:visible')).toHaveCount(1);
+  await expect(guide.locator('.v1710-term:visible').first()).toContainText('Unless');
+  await search.fill('zz-no-matches-xx');
+  await expect(guide.locator('.v1710-term:visible')).toHaveCount(0);
+  await expect(guide.locator('.v1710-empty')).toBeVisible();
+  await expect(guide.locator('.v1710-status')).toContainText('Showing 0 of 18');
+  await guide.getByRole('button',{name:'Clear vocabulary filters'}).click();
+  await expect(search).toHaveValue('');
+  await expect(search).toBeFocused();
+  await expect(guide.getByLabel('Choose a learning topic')).toHaveValue('0');
+  await expect(guide.locator('.v1710-term:visible')).toHaveCount(18);
+  await expect(guide.locator('.v1710-empty')).toBeHidden();
+  const keys=await page.evaluate(()=>Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter(k=>/v1710|vocabularyguide/i.test(k)));
+  expect(keys).toEqual([]);
+});
+test('vocabulary guide is linked from prior case reading without changing approved homepage',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('#legal-vocabulary-guide')).toBeHidden();
+  await expect(page.locator('footer a[href="#legal-vocabulary-guide"]')).toHaveCount(1);
+  await page.evaluate(()=>location.hash='#case-brief-lab');
+  await page.locator('#case-brief-lab a[href="#legal-vocabulary-guide"]').click();
+  await expect(page.locator('#legal-vocabulary-guide')).toBeVisible();
+  await expect(page.locator('.v1710-term:visible')).toHaveCount(18);
+  await expect(page.locator('#elFocusToolbar')).toBeVisible();
+  await page.locator('#legal-vocabulary-guide a[href="#clause-reading-lab"]').click();
+  await expect(page.locator('#clause-reading-lab')).toBeVisible();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
