@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.62.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.62.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.63.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.63.0');
 }
 
-test.describe('EnglishLegalese v1.62.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.63.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -114,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.62\.0/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.63\.0/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -187,5 +187,5 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.62.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.63.0');
 });

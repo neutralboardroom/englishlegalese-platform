@@ -113,3 +113,29 @@ html{scroll-behavior:auto!important}
 .nav-toggle[aria-expanded="true"]{border-color:#186a74!important;background:#eaf5f3!important}
 .nav-toggle:focus-visible,.mobile-sticky-start a:focus-visible,.main-nav a:focus-visible{outline:3px solid #167382!important;outline-offset:4px}
 @media(max-width:620px){.v1620-practice-actions{display:grid;grid-template-columns:1fr}.v1620-practice-actions .btn{width:100%;min-height:46px}.v1620-paths .btn,.v1620-paths a.btn{align-self:stretch;text-align:center}}
+
+/* v1.63.0 — guided private plain-English writing, extending the approved visual system. */
+.v1630-hero-link{display:inline-block;margin:.25rem 0 1rem;font-size:.88rem;font-weight:750;color:#176a74;text-decoration:underline;text-underline-offset:4px}
+.v1630-workout-shell{max-width:860px}
+.v1630-progress{display:inline-block;font-weight:800;letter-spacing:.025em;color:#176a74;font-size:.87rem;margin-bottom:1rem}
+.v1630-step.panel{border:1px solid #dce8e5;border-radius:13px;background:#fff;padding:clamp(1.2rem,3.5vw,2rem);box-shadow:none}
+.v1630-step-kicker{font-size:.78rem;line-height:1.55;color:#47717b;font-weight:650;margin-bottom:.45rem}
+.v1630-step h3{font-family:'Cormorant Garamond',Georgia,serif;color:#153a4c;font-size:clamp(1.8rem,3.1vw,2.5rem);margin:0 0 1rem;line-height:1.1}
+.v1630-step h3:focus-visible{outline:3px solid #187783;outline-offset:5px;border-radius:4px}
+.v1630-situation{background:#f2f8f7;border-left:3px solid #1c727a;border-radius:0 7px 7px 0;padding:.95rem 1.1rem;line-height:1.7;color:#2d515e}
+.v1630-writing-label{display:block;margin:1.35rem 0 .6rem;font-size:1rem;font-weight:750;color:#203c48}
+.v1630-answer{display:block;min-height:118px;width:100%;max-width:100%;padding:.95rem 1.05rem;font:inherit;font-size:1rem;line-height:1.65;color:#173444;background:#fff;border:1px solid #aabec3;border-radius:9px;resize:vertical}
+.v1630-answer:focus-visible,.v1630-reveal:focus-visible,.v1630-step-controls button:focus-visible,.v1630-hero-link:focus-visible,.v1630-next-link:focus-visible{outline:3px solid #197481;outline-offset:3px}
+.v1630-reveal{margin-top:1.1rem;white-space:normal;text-align:center;min-height:46px}
+.v1630-model{margin-top:1.15rem;background:#f1f8f5;border:1px solid #d2e8dd;padding:1.2rem;border-radius:10px;line-height:1.65;color:#244e47}
+.v1630-model h4{margin:0 0 .5rem;color:#1a534c;font-size:.98rem}
+.v1630-model-copy{font-size:1.05rem;font-weight:650;margin:0 0 1.25rem}
+.v1630-model li{margin-bottom:.35rem}
+.v1630-review-note,.v1630-privacy{font-size:.84rem;line-height:1.65;color:#60737d}
+.v1630-step-controls{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem;margin-top:1.15rem}
+.v1630-step-controls .btn{min-height:45px;white-space:normal}
+.v1630-step-controls button:disabled{opacity:.45;cursor:not-allowed}
+.v1630-clear{margin-left:auto;background:transparent;color:#176c73;border:0;text-decoration:underline;text-underline-offset:3px;font-size:.87rem;font-weight:700;cursor:pointer;padding:.6rem}
+.v1630-end-note{font-weight:650;color:#205d4f}
+.v1630-next-link{display:inline-block;margin:1rem 0;color:#176a74;font-weight:750;text-underline-offset:4px}
+@media(max-width:620px){.v1630-step-controls{display:grid;grid-template-columns:1fr 1fr}.v1630-step-controls .btn{min-width:0}.v1630-clear{grid-column:1/-1;margin:0;text-align:center}.v1630-answer{font-size:16px}}

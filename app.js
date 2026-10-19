@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.62.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.63.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -17,6 +17,44 @@
     ['AI Translation & Output Review Lab','All levels','Confidentiality awareness, over-literal translation risk, false confidence, tone, and human-review triggers.'],
     ['LL.M. / Law School Readiness','Professional / Advanced','Case reading, discussion, professor emails, presentations, exams, and study-group language.'],
     ['Employer Team Training','Teams','Privacy-conscious team learning, attendance, completion, and appropriate aggregate progress signals.']
+  ];
+  const quickPracticeItems = [
+    {
+      "title": "Clear client update",
+      "focus": "Write a polite, concise update without inventing a deadline.",
+      "situation": "Fictional situation: You reviewed a draft, but a supporting attachment is missing. You cannot proceed until it arrives.",
+      "task": "Write one or two sentences telling the recipient what you need and why.",
+      "example": "Thank you for sending the draft. Could you please send the missing attachment so we can continue our review?",
+      "why": [
+        "Use a courteous request rather than blaming the recipient.",
+        "Name the missing attachment rather than saying “it.”",
+        "Explain the next step without creating an unconfirmed deadline."
+      ]
+    },
+    {
+      "title": "Clarify a meeting request",
+      "focus": "Ask a useful follow-up question when instructions are unclear.",
+      "situation": "Fictional situation: A colleague asks you to “send the summary soon.” No deadline or audience has been specified.",
+      "task": "Write a short response confirming exactly what you need to know.",
+      "example": "Of course. Who should receive the summary, and what deadline would work for you?",
+      "why": [
+        "Do not assume what “soon” means.",
+        "Ask for the audience and deadline directly.",
+        "Use a professional, collaborative tone."
+      ]
+    },
+    {
+      "title": "Explain a fictional clause",
+      "focus": "Make contractual wording easier to read while preserving its important details.",
+      "situation": "Fictional training sentence: “The supplier must notify the customer within five business days after discovering a service interruption.”",
+      "task": "Rewrite the sentence in plain English. Keep the actor, obligation, recipient, and five-business-day timing unchanged.",
+      "example": "If the supplier discovers a service interruption, it must notify the customer within five business days.",
+      "why": [
+        "Identify who must act and who receives the notice.",
+        "Keep “must” and the exact five-business-day time period.",
+        "Do not change the clause’s legal meaning; qualified review is necessary before using real legal text."
+      ]
+    }
   ];
   const QUESTIONS = [
     ['Professional tone','Which client-update sentence is clearest and most professional?',['We need your answer ASAP or this could become a problem.','Please send the requested information by Thursday so we can prepare the next step.','You failed to send what we asked for.'],1],
@@ -76,7 +114,7 @@
     <aside class="hero-card" aria-label="Legal English example and language support">
       <div class="hero-example-kicker">See the difference</div><h2 class="hero-example-title">Professional English, made clearer.</h2>
       <div class="hero-example"><div class="hero-example-label">Instead of</div><p>Pursuant to the aforementioned correspondence, we hereby request your response.</p></div>
-      <div class="hero-example improved"><div class="hero-example-label">Try</div><p>Please respond to the earlier email.</p></div>
+      <div class="hero-example improved"><div class="hero-example-label">Try</div><p>Please respond to the earlier email.</p></div><a class="v1630-hero-link" href="#quick-practice">Try a free three-step writing exercise →</a>
       <div class="hero-language">LANGUAGE_WIDGET<p>Choose an explanation language for learning support. Legal English remains the goal.</p></div>
     </aside></div></section>`.replace('LANGUAGE_WIDGET',languageSelect());
   }
@@ -96,6 +134,28 @@
   function coursesSection(){
     return `<section class="section alt" id="courses"><div class="container section-head"><div><div class="eyebrow">Legal English courses</div><h2>Practical courses for real professional communication.</h2></div><p>Start with a focused path, then explore the full course set when you need it.</p></div><div class="container grid cols-3 v1580-course-grid">${courses.map((c,i)=>`<article class="panel v1580-course-card ${i>=3?'v1580-course-more':''}"><div class="kicker">${escapeHtml(c[1])}</div><h3>${escapeHtml(c[0])}</h3><p>${escapeHtml(c[2])}</p></article>`).join('')}</div><div class="container v1580-section-controls"><button class="btn light js-v1580-courses" type="button" aria-expanded="false">View all ${courses.length} courses</button></div></section>`;
   }
+  function quickPractice(){
+    return `<section class="section v1630-practice-section" id="quick-practice" aria-labelledby="v1630-title">
+      <div class="container section-head"><div><div class="eyebrow">Free writing workout</div><h2 id="v1630-title">Practise clearer Legal English in three steps.</h2></div><p>Rewrite three fictional professional messages. Then compare your draft with a model example and a short review checklist. No account, clock, score, or submission.</p></div>
+      <div class="container v1630-workout-shell">
+        <div class="v1630-progress" role="status" aria-live="polite" aria-atomic="true">Exercise 1 of ${quickPracticeItems.length}</div>
+        ${quickPracticeItems.map((item,i)=>`<article class="v1630-step panel" data-practice-step="${i}" ${i?'hidden':''}>
+          <div class="v1630-step-kicker">${escapeHtml(item.focus)}</div>
+          <h3 id="v1630-step-title-${i}" tabindex="-1">${escapeHtml(item.title)}</h3>
+          <p class="v1630-situation">${escapeHtml(item.situation)}</p>
+          <label for="v1630-answer-${i}" class="v1630-writing-label">${escapeHtml(item.task)}</label>
+          <textarea id="v1630-answer-${i}" class="v1630-answer" maxlength="800" rows="4" autocomplete="off" spellcheck="true" placeholder="Write your own English here (fictional facts only)."></textarea>
+          <button class="btn light v1630-reveal" type="button" data-practice-action="example" aria-expanded="false" aria-controls="v1630-model-${i}">Show model example and checklist</button>
+          <div class="v1630-model" id="v1630-model-${i}" hidden><h4>One possible version</h4><p class="v1630-model-copy">${escapeHtml(item.example)}</p><h4>Review your own writing</h4><ul>${item.why.map(point=>`<li>${escapeHtml(point)}</li>`).join('')}</ul><p class="v1630-review-note">This is a learning example, not an automatic assessment or verified legal drafting advice. There may be other suitable rewrites.</p></div>
+        </article>`).join('')}
+        <div class="v1630-step-controls"><button class="btn light" type="button" data-practice-action="prev" disabled>Previous</button><button class="btn teal" type="button" data-practice-action="next">Next exercise</button><button class="v1630-clear" type="button" data-practice-action="reset">Clear drafts and restart</button></div>
+        <p class="v1630-privacy">Your drafts stay in this page only. They are not submitted, scored, stored, or shared. Refreshing or restarting clears them. Never enter real client information.</p>
+        <p class="v1630-end-note" role="status" aria-live="polite"></p>
+        <a class="v1630-next-link" href="#practice-studio">Explore all 21 Legal English scenarios →</a>
+      </div>
+    </section>`;
+  }
+
   function smartTeacher(){
     const starters = ['Client update','Contract clause','Meeting clarification','AI draft review'];
     return `<section class="section" id="smartteacher"><div class="container section-head"><div><div class="eyebrow">SmartTeacher AI practice</div><h2>Practice with AI. Improve with teacher guidance. Track progress clearly.</h2></div><p>Prepare a realistic Legal English practice or writing-review prompt. This on-page prompt builder does not send text to an AI service or generate live AI feedback. Use synthetic or de-identified details.</p></div><div class="container panel v1620-practice-panel"><div class="v1580-prompt-starters"><span>Try a guided starter:</span>${starters.map((s,i)=>`<button class="v1580-starter" type="button" data-starter="${i}">${s}</button>`).join('')}</div><label class="v1620-input-label" for="el-practice-topic">Your practice topic or draft</label><textarea id="el-practice-topic" class="input big-input js-ai-input" maxlength="1500" placeholder="e.g., Practise a concise client update, using invented facts only."></textarea><div class="tag-row v1620-practice-actions"><button class="btn gold js-ai-demo" type="button">Prepare conversation practice</button><button class="btn light js-save-lesson" type="button">Prepare writing review</button><button class="btn light js-teacher-review" type="button">Teacher review options</button></div><div class="ai-demo-output clean-note js-ai-output v1620-practice-result" role="status" aria-live="polite" tabindex="-1">Choose a starter or describe your task. The prepared prompt stays in this browser until you copy it. No AI response is generated here.</div><button class="btn light js-copy-practice" type="button" hidden>Copy prepared prompt</button><p class="v1580-micro-note">Use this prompt with a connected AI tool or qualified teacher. Always verify legal meaning; this is language practice, not legal advice or an accredited assessment.</p></div></section>`;
@@ -113,7 +173,7 @@
     const title = {student:'Student dashboard',teacher:'Teacher dashboard',employer:'Employer dashboard',admin:'Owner / staff dashboard'}[role] || 'Dashboard';
     return `<section class="section" id="${role}-dashboard"><div class="container"><article class="panel"><div class="eyebrow">${escapeHtml(title)}</div><h2>Account access required.</h2><p>Operational dashboards require production authentication and the appropriate role. Public learning tools remain available from the homepage.</p><a class="btn gold" href="#start">Return to learning options</a></article></div></section>`;
   }
-  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${smartTeacher()}${teachersEmployers()}${learningExperience()}${trust()}`); }
+  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${teachersEmployers()}${learningExperience()}${trust()}`); }
 
   function bindDiagnostic(){
     const form = $('.v1580-diagnostic-form'); if(!form || form.dataset.bound==='1') return;
@@ -133,6 +193,50 @@
     });
     $('.js-v1580-reset',form)?.addEventListener('click',()=>{ form.reset(); status.textContent=''; result.hidden=true; result.innerHTML=''; });
   }
+  function bindQuickPractice(){
+    const section=$('#quick-practice');
+    if(!section||section.dataset.bound==='1')return;
+    section.dataset.bound='1';
+    const steps=$('.v1630-step',section);
+    const progress=$('.v1630-progress',section);
+    const prev=$('[data-practice-action="prev"]',section);
+    const next=$('[data-practice-action="next"]',section);
+    const endNote=$('.v1630-end-note',section);
+    let index=0;
+    function showStep(nextIndex,moveFocus=true){
+      index=Math.max(0,Math.min(steps.length-1,nextIndex));
+      steps.forEach((step,i)=>{step.hidden=i!==index;});
+      progress.textContent=`Exercise ${index+1} of ${steps.length}`;
+      prev.disabled=index===0;
+      next.disabled=index===steps.length-1;
+      next.textContent=index===steps.length-1?'Last exercise':'Next exercise';
+      endNote.textContent=index===steps.length-1?'You have reached the final exercise. Compare your work with the model examples, or revisit any earlier step.':'';
+      if(moveFocus)steps[index].querySelector('h3')?.focus({preventScroll:true});
+    }
+    section.addEventListener('click',event=>{
+      const btn=event.target.closest('button[data-practice-action]');
+      if(!btn||!section.contains(btn))return;
+      const action=btn.dataset.practiceAction;
+      if(action==='prev')showStep(index-1);
+      else if(action==='next')showStep(index+1);
+      else if(action==='example'){
+        const model=steps[index].querySelector('.v1630-model');
+        if(!model)return;
+        const expanded=btn.getAttribute('aria-expanded')==='true';
+        model.hidden=expanded;
+        btn.setAttribute('aria-expanded',String(!expanded));
+        btn.textContent=expanded?'Show model example and checklist':'Hide model example and checklist';
+      }else if(action==='reset'){
+        $('.v1630-answer',section).forEach(field=>{field.value='';});
+        $('.v1630-model',section).forEach(model=>{model.hidden=true;});
+        $('.v1630-reveal',section).forEach(button=>{button.setAttribute('aria-expanded','false');button.textContent='Show model example and checklist';});
+        showStep(0);
+        endNote.textContent='All three drafts were cleared from this page.';
+      }
+    });
+    showStep(0,false);
+  }
+
   function bindActions(){
     $$('.js-language-select').forEach(sel=>{ if(sel.dataset.bound) return; sel.dataset.bound='1'; sel.addEventListener('change',()=>{setPreferredLanguage(sel.value);toast(`Preferred explanation language saved: ${sel.value}`);}); });
     const prompts=[
@@ -189,6 +293,7 @@
     }
 
     bindDiagnostic();
+    bindQuickPractice();
   }
   function scrollToTarget(id, attempt=0){
     const target=document.getElementById(id);
