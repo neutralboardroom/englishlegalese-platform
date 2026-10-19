@@ -9,3 +9,5 @@ Owner reusable maximum-material command V1 read from Library.
 - REJECT_WITH_CAUSE any legal-equivalence claim from lexical difference alone, any confidential case uploads, copied legal source content or raw client data.
 - Defer human screenreader testing, live legal authority, actual AI/teacher verification, login, payments and saved progress until qualified evidence/consent.
 Product audit prioritized a genuine gap across isolated exercise cards: no before/after learner-controlled comparison with visible modifications and privacy/meaning checklist. A single cohesive end-to-end new surface resolves it while preserving the original app.
+
+- GSA Plain Language guidance https://www.plainlanguage.gov/guidelines/ — ADOPT plain, specific words without losing actor, scope, approval status or timing; distinguish lexical clarity from actual legal force. Apply its accessible communication approach to fictional revision training only, not real case instructions.
