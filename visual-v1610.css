@@ -139,3 +139,19 @@ html{scroll-behavior:auto!important}
 .v1630-end-note{font-weight:650;color:#205d4f}
 .v1630-next-link{display:inline-block;margin:1rem 0;color:#176a74;font-weight:750;text-underline-offset:4px}
 @media(max-width:620px){.v1630-step-controls{display:grid;grid-template-columns:1fr 1fr}.v1630-step-controls .btn{min-width:0}.v1630-clear{grid-column:1/-1;margin:0;text-align:center}.v1630-answer{font-size:16px}}
+
+/* v1.64.0 — small, accessible diagnostic learning debrief, no homepage or logo restyle. */
+.v1640-action-plan{background:#f0f8f5;border:1px solid #cce6dd;border-radius:12px;padding:1.1rem 1.25rem;margin:1.4rem 0;color:#224c43}
+.v1640-action-plan h4{font-size:1.06rem;margin:0 0 .45rem;color:#16574c}
+.v1640-action-plan p{font-size:.93rem;line-height:1.65;margin:.3rem 0 1rem}
+.v1640-action-plan .btn{display:inline-flex;border-radius:9px}
+.v1640-action-plan .v1640-small-note{font-size:.81rem;color:#527168;margin:.8rem 0 0}
+.v1640-review{border:1px solid #d7e5e6;background:#fff;border-radius:10px;margin:1.2rem 0;padding:1rem 1.15rem}
+.v1640-review summary{cursor:pointer;font-size:1rem;font-weight:750;color:#1d6370;padding:.2rem 0}
+.v1640-review summary:focus-visible,.v1640-next-action:focus-visible{outline:3px solid #176f79;outline-offset:4px}
+.v1640-review>p{font-size:.9rem;color:#536c74;line-height:1.65}
+.v1640-review ol{padding-left:1.4rem;margin:1rem 0}
+.v1640-review-item{padding:.95rem .2rem;border-bottom:1px solid #e8eeef;line-height:1.55}
+.v1640-review-item:last-child{border-bottom:0}
+.v1640-review-item p{font-size:.9rem;line-height:1.55;margin:.35rem 0;color:#3e5862}
+@media(max-width:620px){.v1640-action-plan{padding:1rem}.v1640-review{padding:.85rem}.v1640-action-plan .btn{width:100%;justify-content:center;text-align:center;white-space:normal}}

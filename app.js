@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.63.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.64.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -66,6 +66,29 @@
     ['AI-output review','An AI draft sounds fluent but states a legal conclusion you have not verified. What should you do?',['Treat fluent wording as proof that the conclusion is correct.','Verify the legal meaning with an appropriate qualified source/person before relying on it.','Send it immediately because AI generated it.'],1],
     ['Confidentiality awareness','What is the safest practice when using an AI language exercise?',['Use synthetic or de-identified facts unless confidential information is specifically authorized and protected.','Paste full client names and confidential facts so the exercise feels realistic.','Assume every AI tool is automatically approved for confidential material.'],0]
   ];
+  const QUIZ_FEEDBACK = [
+    'A polite, specific request with a clear next step is more useful than blame or pressure.',
+    'When “soon” is unclear, ask which deliverable is needed and when.',
+    '“Shall” has often been used to express an obligation in legal drafting; always check the actual clause and applicable context. Plain-English drafts may use “must” for obligations.',
+    'Short, direct wording tells the reader what action to take without unnecessary formal language.',
+    'A courteous interruption helps you clarify meaning without disrupting a professional conversation.',
+    'A helpful subject line identifies the document or task and gives a specific requested date.',
+    'Fluent AI-generated text is not evidence that its legal conclusion is correct. Check the meaning with an appropriately qualified source or person.',
+    'Fictional or properly de-identified facts reduce unnecessary confidentiality risks. Real sensitive material requires specific authorization and safeguards.'
+  ];
+  function nextDiagnosticPractice(missed){
+    if(missed.includes('Confidentiality awareness'))
+      return {href:'#trust',label:'Review safe practice boundaries',why:'Start by reviewing confidentiality and responsible learning-tool use.'};
+    if(missed.includes('AI-output review'))
+      return {href:'#smartteacher',label:'Explore careful AI-draft practice',why:'Practise identifying language concerns without trusting unverified AI legal conclusions.'};
+    if(missed.some(x=>x==='Legal reading'||x==='Plain English'))
+      return {href:'#quick-practice',step:2,label:'Try the fictional clause rewrite',why:'Focus on expressing obligations and time limits in clear English without changing meaning.'};
+    if(missed.some(x=>x==='Clarity'||x==='Meetings'))
+      return {href:'#quick-practice',step:1,label:'Try the meeting clarification',why:'Focus on polite, specific questions when a request is unclear.'};
+    if(missed.some(x=>x==='Professional tone'||x==='Legal-business writing'))
+      return {href:'#quick-practice',step:0,label:'Try the client update exercise',why:'Focus on writing a short, courteous professional request.'};
+    return {href:'#quick-practice',step:2,label:'Try a more nuanced clause rewrite',why:'You matched all eight practice prompts; try the fictional clause task and compare your wording with the example.'};
+  }
   const legacyAnchorMap = {
     'v154-public-launch-readiness':'trust','v153-role-clarity-continuity':'start','v150-language-learning-bridge':'language-bridge',
     'v146-live-skills-feedback':'skills','v143-course-placement':'courses','v131-teacher-classroom-tools':'teachers',
@@ -175,25 +198,60 @@
   }
   function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${teachersEmployers()}${learningExperience()}${trust()}`); }
 
+  let openQuickPracticeStep=null;
   function bindDiagnostic(){
     const form = $('.v1580-diagnostic-form'); if(!form || form.dataset.bound==='1') return;
     form.dataset.bound='1';
     const result=$('.v1580-result'), status=$('.v1580-form-status');
     form.addEventListener('submit', e=>{
       e.preventDefault();
-      const answers=QUESTIONS.map((q,i)=>{const x=$(`input[name="v1580-q${i}"]:checked`,form);return x?Number(x.value):null;});
-      const missing=answers.filter(v=>v===null).length;
-      if(missing){ status.textContent=`Please answer all ${QUESTIONS.length} questions. ${missing} ${missing===1?'question remains':'questions remain'}.`; return; }
-      let score=0; const missed=[]; QUESTIONS.forEach((q,i)=>{ if(answers[i]===q[3]) score+=1; else missed.push(q[0]); });
+      const answers=QUESTIONS.map((q,i)=>{const x=$('input[name="v1580-q'+i+'"]:checked',form);return x?Number(x.value):null;});
+      const missing=answers.map((value,i)=>value===null?i:-1).filter(i=>i>=0);
+      if(missing.length){
+        status.textContent='Please answer all '+QUESTIONS.length+' questions. '+missing.length+(missing.length===1?' question remains':' questions remain')+'. Start with question '+(missing[0]+1)+'.';
+        result.hidden=true;
+        result.textContent='';
+        form.querySelector('input[name="v1580-q'+missing[0]+'"]')?.focus();
+        return;
+      }
+      let score=0;const missed=[];
+      QUESTIONS.forEach((q,i)=>{if(answers[i]===q[3])score+=1;else missed.push(q[0]);});
       const path=score<=3?'Foundation':score<=6?'Professional':'Advanced';
       const focus=missed.length?missed.slice(0,3):['Nuance and concise drafting','Complex scenario practice','AI-output verification'];
-      status.textContent=''; result.hidden=false;
-      result.innerHTML=`<div class="eyebrow">Your practice recommendation</div><h3>${path} practice path</h3><p><strong>${score} of ${QUESTIONS.length}</strong> communication-practice items matched the strongest option.</p><p>This is only a learning-start signal. It is not a validated proficiency score and has no CEFR, TOLES, academic, licensing, certification, or employment equivalence.</p><strong>Focus first</strong><ul>${focus.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul><div class="v1580-actions"><a class="btn teal" href="#practice-studio">Practice a scenario</a><a class="btn light" href="#smartteacher">Practice with SmartTeacher AI</a></div>`;
-      result.focus({preventScroll:true}); result.scrollIntoView({behavior:'smooth',block:'center'});
+      const action=nextDiagnosticPractice(missed);
+      const deepLink=Number.isInteger(action.step)?' class="js-v1640-recommended-practice" data-practice-step="'+action.step+'"':'';
+      const review=QUESTIONS.map((q,i)=>{
+        const matched=answers[i]===q[3];
+        return '<li class="v1640-review-item"><strong>Question '+(i+1)+': '+escapeHtml(q[0])+'</strong><p>'+ (matched?'Your choice matches the practice answer.':'A different answer is stronger for this practice question.')+'</p><p><strong>Your answer:</strong> '+escapeHtml(q[2][answers[i]])+'</p><p><strong>Stronger option:</strong> '+escapeHtml(q[2][q[3]])+'</p><p>'+escapeHtml(QUIZ_FEEDBACK[i])+'</p></li>';
+      }).join('');
+      status.textContent='';
+      result.hidden=false;
+      result.innerHTML='<div class="eyebrow">Your practice recommendation</div>'+
+        '<h3>'+path+' practice path</h3>'+
+        '<p><strong>'+score+' of '+QUESTIONS.length+'</strong> communication-practice items matched the strongest option.</p>'+
+        '<p>This is only a learning-start signal. It is not a validated proficiency score and has no CEFR, TOLES, academic, licensing, certification, or employment equivalence.</p>'+
+        '<strong>Focus first</strong><ul>'+focus.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ul>'+
+        '<div class="v1640-action-plan"><h4>A useful next step</h4><p>'+escapeHtml(action.why)+'</p>'+
+          '<a href="'+action.href+'"'+deepLink+' class="btn teal v1640-next-action">'+escapeHtml(action.label)+'</a>'+
+          '<p class="v1640-small-note">A suggested learning activity based on a few practice questions, not a validated skill diagnosis.</p></div>'+
+        '<details class="v1640-review"><summary>Review all 8 questions and explanations</summary>'+
+          '<p>Review your selected answer against a stronger communication option. These are educational examples, not authoritative legal interpretations.</p>'+
+          '<ol>'+review+'</ol></details>'+
+        '<div class="v1580-actions"><a class="btn light" href="#practice-studio">Explore 21 scenarios</a>'+
+          '<a class="btn light" href="#smartteacher">Prepare a practice prompt</a></div>';
+      result.focus({preventScroll:true});result.scrollIntoView({behavior:'instant',block:'center'});
     });
-    $('.js-v1580-reset',form)?.addEventListener('click',()=>{ form.reset(); status.textContent=''; result.hidden=true; result.innerHTML=''; });
+    form.addEventListener('click',event=>{
+      const link=event.target.closest('.js-v1640-recommended-practice');
+      if(!link||!result.contains(link)||!openQuickPracticeStep)return;
+      const index=Number(link.dataset.practiceStep);
+      if(Number.isInteger(index)&&index>=0&&index<quickPracticeItems.length)openQuickPracticeStep(index);
+    });
+    $('.js-v1580-reset',form)?.addEventListener('click',()=>{
+      form.reset();status.textContent='';result.hidden=true;result.textContent='';
+    });
   }
-  function bindQuickPractice(){
+    function bindQuickPractice(){
     const section=$('#quick-practice');
     if(!section||section.dataset.bound==='1')return;
     section.dataset.bound='1';
@@ -235,6 +293,7 @@
       }
     });
     showStep(0,false);
+    openQuickPracticeStep=(exercise)=>showStep(exercise,false);
   }
 
   function bindActions(){
