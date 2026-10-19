@@ -142,7 +142,7 @@ check('19 Roger Rules and 10 durable rules remain active', state.roger_rule_coun
 check('canonical register contains all Roger Rules', Array.from({length:19},(_,i)=>`EL-RGR-${String(i+1).padStart(3,'0')}`).every(id => register.includes(`## ${id}`)));
 check('canonical register contains all durable rules', Array.from({length:10},(_,i)=>`EL-DUR-${String(i+1).padStart(3,'0')}`).every(id => register.includes(`## ${id}`)));
 check('standing auto-deploy and logo-lock rules remain active', register.includes('EL-RGR-018 — Standing qualified automatic deployment authorization') && register.includes('EL-RGR-019 — Permanent approved-logo no-drift lock'));
-check('fresh research covers WebKit bug evidence, delivery and accepted risks', ['W3C','GSA','Plain Language','ADOPT','ADAPT','DEFER_WITH_REASON','REJECT_WITH_CAUSE'].every(x=>research.includes(x)));
+check('fresh research covers accessibility, plain-language teaching and accepted integration risks', ['W3C','GSA','Plain Language','ADOPT','ADAPT','DEFER_WITH_REASON','REJECT_WITH_CAUSE'].every(x=>research.includes(x)));
 check('root-cause receipt corrects misleading empty-file diagnosis', rootCause.includes('misleading') && rootCause.includes('MUST NOT preserve the false claim'));
 check('next-version list updated after v1.59', nvil.includes('after v1.64.0') && nvil.includes('Production browser acceptance automation'));
 
