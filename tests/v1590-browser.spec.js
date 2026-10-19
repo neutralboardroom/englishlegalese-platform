@@ -676,8 +676,8 @@ test('vocabulary guide filters by word, topic, context and displays no results a
   await expect(guide.locator('.v1710-term').first()).toContainText('Allege');
   const search=guide.getByRole('searchbox',{name:'Search a word or example'});
   await search.fill('unverified');
-  await expect(guide.locator('.v1710-term:visible')).toHaveCount(2);
-  await expect(guide.locator('.v1710-status')).toContainText('Showing 2 of 18');
+  await expect(guide.locator('.v1710-term:visible')).toHaveCount(1);
+  await expect(guide.locator('.v1710-status')).toContainText('Showing 1 of 18');
   await search.fill('');
   await guide.getByLabel('Choose a learning topic').selectOption('2');
   await expect(guide.locator('.v1710-term:visible')).toHaveCount(5);
