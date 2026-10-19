@@ -1,3 +1,20 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.63.0 (candidate, pending gates)
+
+## This material release
+- Deliver an actually interactive 3-exercise Legal English clarity workshop with fictional client update, meeting clarification and fictional clause explanation; accessible text entry, example disclosure, plain-English self-review checklist, Previous/Next, clear-and-restart. No fake speech scoring, AI-grade, accreditation, persistence or backend submissions.
+- Add one subtle entry point from the preapproved hero's educational example and a footer navigation link; do not lengthen the home view or change approved logo, header frame or primary nav. Dedicated `#quick-practice` view retains full home/back route compatibility.
+- Clearly distinguish model examples from correctness certification or qualified legal review; maintain user control of drafts, which are not saved across refreshes.
+- Extend 4-browser local plus independent apex/www real-production smoke and preserve all known privacy/role access guards.
+
+## Next most impactful after v1.63.0
+1. Consolidate the still-retained historical public renderer layers only with independent Chromium/WebKit behavior and screenshot parity evidence; current observer self-loop fix must not regress.
+2. Establish owner-approved visual goldens when owner confirms desired design (automated tests do not imply aesthetic approval).
+3. Evaluate real accessible device keyboard/VoiceOver feedback and improve accessible language change/error state.
+4. Professional/academic legal-English exercise depth, spaced review and actual AI integration must remain separate qualification/consent decisions; no unsupported AI grading.
+5. Cross-device progress, learner export/deletion and teacher/account workflows still require qualified auth, retention and privacy controls.
+6. Maintain 2 exact-head full gates, post-deploy apex/www acceptance and known-good rollback. No source/data/vendor changes without evidence.
+
+## Full predecessor improvement list preserved without omission
 # EnglishLegalese.com — Next Version Improvement List after v1.62.0 (source candidate)
 
 ## Material improvements targeted in v1.62.0
