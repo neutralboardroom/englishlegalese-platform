@@ -122,3 +122,20 @@ test('live site private writing workout opens and completes three learning steps
   await expect(page.locator('#v1630-answer-0')).toHaveValue('');
   await expect(page.locator('#quick-practice .v1630-step:visible')).toHaveCount(1);
 });
+
+test('real production diagnostic explains all eight answers and opens the matching private writing lesson',async({page})=>{
+  await assertProductionRelease(page);
+  await page.evaluate(()=>location.hash='#diagnostic');
+  await expect(page.locator('.v1580-diagnostic-form')).toBeVisible();
+  const answers=[1,1,0,1,1,2,1,0];
+  for(let i=0;i<8;i++)await page.locator('input[name="v1580-q'+i+'"][value="'+answers[i]+'"]').check();
+  await page.getByRole('button',{name:'Get my practice recommendation'}).click();
+  await expect(page.locator('.v1580-result')).toContainText('7 of 8');
+  await expect(page.locator('.v1640-review-item')).toHaveCount(8);
+  await page.locator('.v1640-review summary').click();
+  await expect(page.locator('.v1640-review')).toHaveAttribute('open','');
+  await expect(page.locator('.v1640-review-item').nth(2)).toContainText('Stronger option');
+  await page.locator('.v1640-next-action').click();
+  await expect(page.locator('#quick-practice')).toBeVisible();
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 3 of 3');
+});
