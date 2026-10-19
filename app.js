@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.66.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.67.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -314,7 +314,7 @@
         </article>`).join('')}
         <p class="v1660-privacy">All clauses are fictional. Choices stay only in this page and are not sent or saved. Refresh or clear to restart. Never rely on these excerpts to determine actual rights or deadlines.</p>
         <button class="btn light v1660-clear-all" type="button" data-reading-action="reset-all">Clear all reading exercises</button>
-        <p><a href="#quick-practice">Continue with a fictional writing exercise →</a></p>
+        <p><a href="#quick-practice">Continue with a fictional writing exercise →</a></p><p><a href="#meeting-followup-lab">Practice a clear fictional meeting follow-up →</a></p>
       </div>
     </section>`;
   }
@@ -377,6 +377,135 @@
     update();
   }
 
+
+  // Self-contained fictional text-transcript practice, not audio, legal advice or AI grading.
+  const MEETING_FOLLOWUP_CASES = [
+    {
+      title:'Turn “soon” into a clear request',
+      transcript:[
+        'Mina: We need the fictional draft memo ready soon.',
+        'Alex: I can prepare a revised version, but I do not know which day you need it.',
+        'Mina: Please flag anything you need clarified before sending.'
+      ],
+      question:'What should Alex clarify before promising a delivery date?',
+      options:['Assume “soon” means tomorrow','Ask which date and time the revised memo is needed','Send the memo without checking the instructions'],
+      strong:1,
+      explanation:'“Soon” does not identify a usable deadline. Ask for a specific date, time and relevant time zone if needed. Do not invent a deadline or imply that the meeting set one.',
+      model:'Thanks, Mina. Could you confirm the date and time you need the revised memo, and whether there are any sections you want prioritised?',
+      checks:['Make the missing deadline explicit rather than assuming it.','Name the deliverable accurately.','Ask a courteous, answerable question.']
+    },
+    {
+      title:'Keep the approval condition',
+      transcript:[
+        'Sam: Please prepare the fictional client update this afternoon.',
+        'Noor: I will check the wording and confirm the final version.',
+        'Sam: Do not send it externally until Noor confirms approval.'
+      ],
+      question:'Which follow-up preserves the instruction?',
+      options:['Tell the client it has already been sent','Draft the update, then wait for Noor’s approval before sending','Ignore Noor because the update is urgent'],
+      strong:1,
+      explanation:'Preparing an update and sending it are different steps. The approval condition applies before an external send. A clear recap records both the draft task and the approval dependency.',
+      model:'I will prepare the client update this afternoon and hold it for Noor’s approval before any external distribution.',
+      checks:['Separate preparation from external delivery.','State the required reviewer by name.','Do not claim approval or completion before it happens.']
+    },
+    {
+      title:'Record the correct task owner',
+      transcript:[
+        'Elena: I will draft the fictional contract-language summary.',
+        'Dario: I can check the terms for plain-English clarity.',
+        'Elena: After Dario reviews it, I will circulate the final summary.'
+      ],
+      question:'Who is responsible for circulating the final summary?',
+      options:['Dario, because he reviews the terms','Elena, after Dario’s review','Everyone who attended the meeting'],
+      strong:1,
+      explanation:'Elena owns the draft and circulation; Dario provides the language review. Recording the owner and the review dependency avoids a mistaken handoff.',
+      model:'Elena will draft the summary, Dario will review the language for clarity, and Elena will circulate the final version after that review.',
+      checks:['Name the owner of each distinct action.','Keep the order of drafting, review and circulation.','Never imply that a review has happened when it has not.']
+    }
+  ];
+  function meetingFollowupLab(){
+    return `<section class="section v1670-meeting-lab" id="meeting-followup-lab" aria-labelledby="v1670-title">
+      <div class="container section-head"><div><div class="eyebrow">Free meeting follow-up lab</div><h2 id="v1670-title">Turn unclear meetings into useful next steps.</h2></div><p>Read three short fictional meeting transcripts. Identify the best next step, then practise a clear written follow-up. This is text-based reading and writing, not audio comprehension, live AI or a graded assessment.</p></div>
+      <div class="container v1670-shell">
+        <p class="v1670-progress" role="status" aria-live="polite" aria-atomic="true">Reviewed 0 of ${MEETING_FOLLOWUP_CASES.length} meeting exercises</p>
+        ${MEETING_FOLLOWUP_CASES.map((item,i)=>`<article class="panel v1670-case" data-meeting-case="${i}">
+          <div class="v1670-kicker">Meeting ${i+1} of ${MEETING_FOLLOWUP_CASES.length} · ${escapeHtml(item.title)}</div>
+          <h3>Fictional meeting excerpt</h3><div class="v1670-transcript">${item.transcript.map(line=>`<p>${escapeHtml(line)}</p>`).join('')}</div>
+          <fieldset class="v1670-choices"><legend>${escapeHtml(item.question)}</legend>
+            ${item.options.map((opt,j)=>`<label><input type="radio" name="v1670-answer-${i}" value="${j}"><span>${escapeHtml(opt)}</span></label>`).join('')}
+          </fieldset>
+          <label class="v1670-writing-label" for="v1670-followup-${i}">Optional: draft one clear follow-up sentence</label>
+          <textarea class="v1670-followup" id="v1670-followup-${i}" maxlength="700" rows="3" autocomplete="off" placeholder="Write only about this fictional meeting; no real client information."></textarea>
+          <div class="v1670-actions"><button class="btn teal" data-meeting-action="compare" type="button">Compare my follow-up</button><button class="btn light" data-meeting-action="clear" type="button">Clear this meeting</button></div>
+          <p class="v1670-status" role="status" aria-live="polite"></p>
+          <div class="v1670-feedback" hidden><h4>What matters in the discussion</h4><p class="v1670-response"></p><p>${escapeHtml(item.explanation)}</p><h4>One possible follow-up sentence</h4><p class="v1670-model">${escapeHtml(item.model)}</p><h4>Self-check your sentence</h4><ul>${item.checks.map(check=>`<li>${escapeHtml(check)}</li>`).join('')}</ul><p>Compare your own wording with the example; it is not automatically graded, submitted or reviewed by an instructor.</p></div>
+        </article>`).join('')}
+        <p class="v1670-privacy">All conversations are fictional. This page does not save or transmit your answers or drafts. Refreshing or clearing removes them. Professional communication practice only, not legal advice or confirmation of a real obligation.</p>
+        <button class="btn light v1670-reset-all" data-meeting-action="reset-all" type="button">Clear all meeting exercises</button>
+        <p><a href="#quick-practice">Continue with the writing workout →</a></p>
+      </div>
+    </section>`;
+  }
+  function bindMeetingFollowupLab(){
+    const section=$('#meeting-followup-lab');if(!section||section.dataset.bound==='1')return;
+    section.dataset.bound='1';
+    const cards=Array.from(section.querySelectorAll('.v1670-case'));
+    const progress=section.querySelector('.v1670-progress');
+    const reviewed=new Set();
+    function update(){progress.textContent='Reviewed '+reviewed.size+' of '+cards.length+' meeting exercises';}
+    function clearCase(card,index){
+      card.querySelectorAll('input[type="radio"]').forEach(input=>{input.checked=false;});
+      card.querySelector('.v1670-followup').value='';
+      card.querySelector('.v1670-feedback').hidden=true;
+      card.querySelector('.v1670-response').textContent='';
+      card.querySelector('.v1670-status').textContent='';
+      reviewed.delete(index);update();
+    }
+    section.addEventListener('click',event=>{
+      const target=event.target instanceof Element?event.target:event.target?.parentElement;
+      const button=target?.closest('button[data-meeting-action]');
+      if(!button||!section.contains(button))return;
+      if(button.dataset.meetingAction==='reset-all'){
+        cards.forEach((card,index)=>clearCase(card,index));
+        progress.textContent='All three meetings cleared. Reviewed 0 of '+cards.length+' meeting exercises';
+        cards[0]?.querySelector('input[type="radio"]')?.focus({preventScroll:true});
+        return;
+      }
+      const card=button.closest('.v1670-case');if(!card)return;
+      const index=Number(card.dataset.meetingCase);
+      if(!Number.isInteger(index)||!MEETING_FOLLOWUP_CASES[index])return;
+      if(button.dataset.meetingAction==='clear'){clearCase(card,index);return;}
+      if(button.dataset.meetingAction!=='compare')return;
+      const selected=card.querySelector('input[type="radio"]:checked');
+      const status=card.querySelector('.v1670-status');
+      const feedback=card.querySelector('.v1670-feedback');
+      if(!selected){
+        feedback.hidden=true;
+        status.textContent='Choose the best next step first, then compare the explanation.';
+        card.querySelector('input[type="radio"]')?.focus();
+        return;
+      }
+      card.querySelector('.v1670-response').textContent=Number(selected.value)===MEETING_FOLLOWUP_CASES[index].strong?
+        'Your choice matches the recommended next step in this fictional meeting.':
+        'A different next step better reflects the fictional meeting instructions.';
+      feedback.hidden=false;
+      status.textContent='Example and self-check guidance are available below.';
+      reviewed.add(index);update();
+    });
+    section.addEventListener('change',event=>{
+      const input=event.target;
+      if(!(input instanceof HTMLInputElement)||input.type!=='radio')return;
+      const card=input.closest('.v1670-case');if(!card)return;
+      const index=Number(card.dataset.meetingCase);
+      if(reviewed.has(index)){
+        reviewed.delete(index);update();
+        card.querySelector('.v1670-feedback').hidden=true;
+        card.querySelector('.v1670-status').textContent='You changed your choice. Compare again to update the guidance.';
+      }
+    });
+    update();
+  }
+
   function teachersEmployers(){
     return `<section class="section alt" id="teachers"><div class="container grid cols-2"><article class="panel"><div class="eyebrow">Teachers</div><h2>Teacher-guided learning support.</h2><p>Teachers can review learner practice, prepare lessons, guide roleplays, assign homework, and give feedback while private teacher notes remain appropriately separated.</p><a class="btn teal" href="#teacher-dashboard">Teacher account access</a><p class="v1580-micro-note">Operational teacher tools require the appropriate signed-in role.</p></article><article class="panel" id="employers"><div class="eyebrow">Employers</div><h2>Privacy-conscious team learning.</h2><p>Organizations can use consent-based, aggregate attendance and learning-progress signals. Private drafts, raw AI practice, uploads, recordings, native-language explanations, test answers, and teacher-private notes remain excluded by default.</p><a class="btn teal" href="#employer-dashboard">Employer account access</a><p class="v1580-micro-note">Nothing from a learner's private work is shared automatically.</p></article></div></section>`;
   }
@@ -390,7 +519,7 @@
     const title = {student:'Student dashboard',teacher:'Teacher dashboard',employer:'Employer dashboard',admin:'Owner / staff dashboard'}[role] || 'Dashboard';
     return `<section class="section" id="${role}-dashboard"><div class="container"><article class="panel"><div class="eyebrow">${escapeHtml(title)}</div><h2>Account access required.</h2><p>Operational dashboards require production authentication and the appropriate role. Public learning tools remain available from the homepage.</p><a class="btn gold" href="#start">Return to learning options</a></article></div></section>`;
   }
-  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${teachersEmployers()}${learningExperience()}${trust()}`); }
+  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${teachersEmployers()}${learningExperience()}${trust()}`); }
 
   let openQuickPracticeStep=null;
   function bindDiagnostic(){
@@ -598,6 +727,7 @@
     bindQuickPractice();
     bindAiReviewLab();
     bindClauseReadingLab();
+    bindMeetingFollowupLab();
   }
   function scrollToTarget(id, attempt=0){
     const target=document.getElementById(id);

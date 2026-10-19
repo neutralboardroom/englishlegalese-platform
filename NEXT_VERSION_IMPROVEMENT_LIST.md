@@ -1,3 +1,21 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.67.0 (candidate)
+
+## Material improvements in v1.67.0
+- Free, focused **Meeting Follow-up Lab** with three fictional text-only meeting transcripts. Learners distinguish a vague timing request from a set deadline, preserve an approval dependency before external sending, and identify the owner of drafting, reviewing and circulation.
+- Each meeting includes a native accessible question with three meaningful choices, optional 700-character follow-up sentence, model example, contextual explanation and practical writing checklist. No artificial scoring, audio/speech capability claims, simulated teacher signoff or legal advice.
+- Changes to an answer hide outdated guidance until reviewed again; per-case and clear-all controls erase answers and drafts. No account, live OpenAI API, upload or session storage; refreshing clears the exercise.
+- A focused route and one footer and previous lab link keep the approved homepage brief and accessible.
+- Retain v1.66.0 Clause Reading Lab (3), v1.65.0 AI Draft Review Lab (3), three writing exercises, eight-question diagnostic and explanations, nine courses, 21 scenarios, privacy/role protections, exact original approved logo and canonical 19+10 governance rules.
+- Release requires two successful independent full exact-head source/security/Chromium/WebKit browser qualifications; GitHub main/Render currentness check; merge and exact matching Render live plus independent public apex/www multi-device browser test evidence.
+
+## Next Version Improvement List (remaining priorities)
+1. Real human keyboard, screen-reader, language switching, and small-device usability review, fix evidenced barriers only, no unvalidated WCAG conformance claim.
+2. Support authentic professional writing depth and transferable listening comprehension when usable, legal/privacy-safe audio can be reviewed and consented; do not pretend written transcript checks are listening assessment.
+3. Refactor inherited presentation stack only after behavior and owner-approved visual goldens prove no loss; no cosmetic changes for their own sake.
+4. Real AI inference/teacher evaluation, verified academic testing, authenticated progress retention/export/deletion, and commercial/organization operations remain separated by credentials, privacy, signoff and operational proof.
+5. Preserve latest previous Render rollback, immutable protected logo, all original rules, inherited list, full two-gate + real site acceptance.
+
+## Entire inherited prior improvement list (unchanged)
 # EnglishLegalese.com — Next Version Improvement List after v1.66.0 (candidate)
 
 ## Material improvement for v1.66.0

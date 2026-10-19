@@ -1,0 +1,3 @@
+# EnglishLegalese v1.67.0 — fictional Meeting Follow-up Lab
+
+New free text-transcript-based learning for clear meeting follow-ups. Three fictional scenarios teach deadline clarification, approvals before external sending and explicit task ownership. Learners choose a next step, optionally draft their own sentence, see an honest reference example and explanation, and clear drafts without accounts or persistent storage. No audio, live AI, legal advice, certified feedback or artificial learner score. Preserves the original homepage design, approved logo, prior 9 courses/21 scenarios/diagnostic/writing/AI draft/reading labs and protected backend. Rollback to v1.66.0 Render `dep-dbav0mrm8hqs73bqt8v0`. Qualification and deployment require verified separate evidence.
