@@ -144,7 +144,7 @@ check('lab is discoverable without expanding the default homepage',app.includes(
 check('diagnostic routes AI review needs to the honest offline lab',app.includes("return {href:'#ai-review-lab'")&&browser.includes('diagnostic AI uncertainty safely routes'));
 check('new lab full browser and production interaction regressions are present',browser.includes('AI draft review lab teaches all three fictional risk cases')&&browser.includes('AI draft review lab is discoverable')&&read('tests/v1590-production.spec.js').includes('live production AI draft review lab'));
 check('new lab has no direct network call or credential in its isolated function',!app.slice(app.indexOf('function bindAiReviewLab(){'),app.indexOf('function bindActions(){')).includes('fetch(')&&!app.slice(app.indexOf('function bindAiReviewLab(){'),app.indexOf('function bindActions(){')).includes('localStorage'));
-check('release npm check executes newest verifier and preserves v1.64 checks',String(pkg.scripts.check||'').includes('node scripts/verify-v1650-ai-review.js')&&String(pkg.scripts.check||'').includes('node scripts/verify-v1640-diagnostic.js'));
+check('release npm check executes newest verifier and preserves v1.64 checks',String(pkg.scripts.check||'').includes('node scripts/verify-v1650-ai-review.js')&&String(pkg.scripts.check||'').includes('node --check scripts/verify-v1640-diagnostic.js'));
 check('high/critical audit command remains exact', pkg.scripts?.['audit:high'] === 'npm audit --audit-level=high');
 check('v1.59 verifier is wired into npm check', String(pkg.scripts?.check || '').includes('verify-v1650-ai-review.js'));
 
