@@ -1,3 +1,21 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.71.0 (candidate)
+
+## Material improvement in v1.71.0
+- Add a searchable **Legal English Vocabulary Guide** as a more useful learning reference than another quiz: 18 curated words/expressions grouped into Case reading (5), Contract reading (5), Professional writing (5) and AI and review (3).
+- Each entry includes a clear non-authoritative educational explanation, explicitly invented professional example and caution against treating uncertain factual or legal statements as confirmed, approved or binding.
+- Responsive focused page with native labelled search box, topic filter, accessible live results count, no-results state and clear-all-filters with restored keyboard focus. Filtering runs only on the browser on fixed original entries; no user search data sent or stored.
+- One footer discoverability link and one contextual link from the prior Case Brief Reading Lab; no visible additional homepage section, logo/header design edits, new AI calls, audio features, accounts, uploads or certification claims.
+- Preserve existing 9 courses, 21 scenarios, eight-question diagnostic with feedback, writing workout, AI Draft Review, Clause Reading, Meeting Follow-up, Email Clarity, Guided Practice and Case Brief Reading labs, privacy/role safeguards, backend and original 19 Roger/10 durable rules.
+- Require two independent complete successful exact-final-PR-head Chromium desktop/tablet/mobile + WebKit iPad browser, source/no-drift, zero-high dependency gates. Recheck exact current main and predecessor Render live, merge, verify exact new GitHub merge SHA/Render LIVE and independent public apex/www desktop/tablet/mobile acceptance plus retained artifacts. Immediate predecessor v1.70.0 rollback.
+
+## Next Version Improvement List (priorities)
+1. Actual human screen-reader, mobile, keyboard and language switching review of current lessons and reference tools, fixing evidenced issues only; no unverified WCAG certification.
+2. Educator-reviewed authentic pedagogy, lawful public source excerpts, and optional teacher feedback once operational approval and privacy safeguards exist.
+3. Improve measured performance only where actual evidence supports change; keep approved header/logo and visual parity before any client refactoring.
+4. Real AI responses, accounts, graded outcomes, saved progress, deletion/export and commerce remain gated on credentials, privacy, security and express authority.
+5. Continue exact previous rollback, original immutable logo, complete inherited rules and improvements, two independent premerge passes and public production browser acceptance.
+
+## Entire inherited prior improvement list (unchanged)
 # EnglishLegalese.com — Next Version Improvement List after v1.70.0 (candidate)
 
 ## Material improvements in v1.70.0

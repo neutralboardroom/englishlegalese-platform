@@ -1,0 +1,1 @@
+No sister project code or private data imported; adopted only generic accessible input guidance and plain-language education principles with fiction-only examples. Original immutable logo and all 19 Roger +10 durable rules preserved.

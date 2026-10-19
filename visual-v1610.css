@@ -287,3 +287,22 @@ html{scroll-behavior:auto!important}
 .v1700-model{font-style:italic}
 .v1700-privacy{font-size:.92rem;line-height:1.6;color:#506173}
 @media(max-width:620px){.v1700-case{padding:1rem}.v1700-story{padding:.75rem .85rem}.v1700-actions{display:grid;grid-template-columns:1fr}.v1700-actions .btn{width:100%}}
+
+/* v1.71.0 focused Legal English vocabulary search. Approved logo and homepage unchanged. */
+.v1710-shell{max-width:1050px}
+.v1710-controls{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto;gap:.8rem;align-items:end}
+.v1710-controls label{display:block;font-weight:700;margin:0 0 .45rem;line-height:1.5}
+.v1710-search,.v1710-topic{box-sizing:border-box;width:100%;min-width:0;border:1px solid #a6b5c1;border-radius:10px;background:#fff;color:#10283a;font:inherit;padding:.76rem}
+.v1710-controls button{min-height:45px}
+.v1710-search:focus-visible,.v1710-topic:focus-visible,.v1710-reset:focus-visible{outline:3px solid #247d83;outline-offset:3px}
+.v1710-status{font-weight:700;color:#193b50;line-height:1.6;margin:1.1rem 0}
+.v1710-empty{padding:1rem;border:1px solid #cddde4;border-radius:10px}
+.v1710-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.v1710-term{padding:1.2rem;min-width:0}
+.v1710-term h3{margin:.2rem 0 .65rem}
+.v1710-term p{line-height:1.6}
+.v1710-kicker{color:#286772;font-weight:750;font-size:.88rem;margin:0}
+.v1710-caution{border-left:3px solid #287a82;padding-left:.75rem;background:#f5f9fa}
+.v1710-privacy{font-size:.92rem;color:#506173;line-height:1.6}
+@media(max-width:780px){.v1710-controls{grid-template-columns:1fr 1fr}.v1710-controls button{grid-column:1/-1}}
+@media(max-width:610px){.v1710-controls,.v1710-grid{grid-template-columns:1fr}.v1710-controls button{grid-column:auto}.v1710-term{padding:1rem}}
