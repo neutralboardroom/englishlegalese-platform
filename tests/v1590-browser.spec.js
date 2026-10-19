@@ -265,7 +265,7 @@ test('eight-question diagnostic explains each practice answer and routes to a re
   await expect(suggested).toHaveAttribute('href','#quick-practice');
   await expect(suggested).toHaveAttribute('data-practice-step','2');
   const details=result.locator('details.v1640-review');
-  await expect(details).toBeHidden();
+  await expect(details).not.toHaveAttribute('open','');
   await details.locator('summary').click();
   await expect(details).toHaveAttribute('open','');
   const items=details.locator('.v1640-review-item');
