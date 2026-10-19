@@ -1,3 +1,22 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.64.0 (candidate)
+
+## Improvements built in v1.64.0
+- Preserve the original eight diagnostic questions, choices and practice answers unchanged. Provide a meaningful plain-English explanation for every question after completion, with the answer selected, the stronger practice answer and the reason. An accessible native details panel allows progressive disclosure.
+- Provide one next learning activity based on the first relevant missed area: professional tone, unclear instructions/meetings, clause-reading/plain-English, AI-output review, confidentiality, or an advanced fictional exercise when eight answers match.
+- Connect recommended writing practice directly to the matching step of the existing private three-step workout, without storing answers or introducing new AI model usage, scoring claims, or accredited test claims.
+- Improve incomplete-form guidance with focus on first unanswered question, and fully clear result, review and answers on reset.
+- Preserve all previous 21 scenarios, 9 course catalog entries, 8-question non-accredited diagnostic, no-account writing, SmartTeacher prompt preparation, private roles, approved logo, all legacy operational receipts, rules and rollback.
+- Require two fully green exact-candidate browser/security gates (desktop, mobile, tablet, WebKit/iPad), then independent apex/www production acceptance with at least one real completed eight-question review.
+
+## High-priority next improvements, not silently activated
+1. Conduct independent human usability checks with keyboard, screen reader and multilingual diagnostics and improve observed barriers without new fake accessibility claims.
+2. Consider skill-specific guided exercises and non-intrusive learning prompts, maintaining the difference between illustrative feedback and validated evaluation.
+3. Consolidate historical presentation layers only with byte-preserving owner-approved design and complete functional parity.
+4. Production-qualified auth/account data export, deletion, retention and real AI instructor integrations require explicit credentials, lawful privacy setup and owner sign-off. Never imply configured because source code supports it.
+5. Commercial/academic qualifications, pricing and recognized certification cannot be inferred from 8 educational items.
+6. Preserve source and asset locks, two independent gates, live apex/www verification and the immediately previous Render rollback.
+
+## Entire previous improvement list, preserved without loss
 # EnglishLegalese.com — Next Version Improvement List after v1.63.0 (candidate, pending gates)
 
 ## This material release
