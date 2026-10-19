@@ -1,3 +1,20 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.70.0 (candidate)
+
+## Material improvements in v1.70.0
+- Introduce an advanced **Case Brief Reading Lab** with three explicitly **fictional** practice summaries; gives law-school/professional learners practical exercises in (1) allegations versus findings, (2) limited actual outcomes versus invented remedies, and (3) reasoning, results and what a decision left open.
+- Native, accessible comparison questions with three distinct correct positions, explanatory feedback and model brief sentence, checklists and optional capped 700-character learner-only response; stale feedback hides when answer changes. Entirely reversible reset and zero upload, storage, AI, grade, teacher certification or real legal conclusions.
+- One discoverability link from previous Clause Reading Lab and a single footer route; no additional content in the approved short homepage or change to locked logo.
+- Preserve 9 original courses, 21 scenarios, 8-question diagnostic and explanations, three writing exercises, AI Draft Review, Clause Reading, Meeting Follow-up, Professional Email Clarity and Guided Practice Path, original privacy/access/backend, plus the canonical 19 Roger +10 durable rules.
+- Twice independently pass complete exact-PR-head source/security and Chromium desktop/tablet/mobile + WebKit iPad browser qualification; recheck predecessor GitHub and Render, then merge. Deployment requires exact merged Render SHA and independent actual public apex/www browser acceptance. Keep v1.69.0 immediate rollback.
+
+## Next material priorities
+1. Human-assisted screen reader, mobile, language and keyboard user testing; fix demonstrated usability barriers without claiming independent conformance.
+2. Well-vetted authentic or public-domain education materials and teacher-reviewed case briefing feedback, with legal/copyright diligence before introducing real court content.
+3. Carefully simplify accumulated client UI code only when measured performance and owner-approved no-drift visual goldens justify it.
+4. Live AI, authenticated learner records, grading, teacher/evaluator workflows, commercial functions, deletion/export require verified privacy/credential/operational gates.
+5. Continue immutable logo/rules, exact previous rollback, whole inherited improvement lists, 2 full source/browser gates and real-site acceptance.
+
+## Entire inherited prior improvement list (unchanged)
 # EnglishLegalese.com — Next Version Improvement List after v1.69.0 (candidate)
 
 ## Material change

@@ -1,0 +1,3 @@
+# EnglishLegalese.com v1.70.0 — Fictional Case Brief Reading Lab
+
+Three invented case-style reading exercises teach distinctions between allegations and findings, actual narrow outcomes and unsupported remedies, and the reasoning behind a result. Each has native accessible questions, suggested learning feedback, optional ephemeral learner sentences, model examples, and complete resets. Explicit no-real-case-authority, non-advice, non-certified boundaries. Prior homepage, logo, nine courses, 21 scenarios, diagnostic, writing and prior labs and goal guidance, original 19+10 rules, privacy, auth and backend remain preserved. Two full qualifications and independent deployed public-site acceptance required. Immediate v1.69.0 rollback Render dep-dbb2s367bikc73f81r90.

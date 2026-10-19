@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.69.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.69.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.70.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.70.0');
 }
 
-test.describe('EnglishLegalese v1.69.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.70.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -114,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.69\.0/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.70\.0/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -187,7 +187,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.69.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.70.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
@@ -605,6 +605,64 @@ test('guided practice stays out of approved homepage and navigates to original e
   await page.evaluate(()=>location.hash='#guided-practice-path');
   await expect(page.locator('#guided-practice-path input[value="writing"]')).toBeChecked();
   await expect(page.locator('#elFocusToolbar')).toBeVisible();
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test('fictional case brief lab distinguishes allegations, limited outcomes and reasoning privately',async({page})=>{
+  await page.goto('/#case-brief-lab');await waitForRecovery(page);
+  const lab=page.locator('#case-brief-lab');
+  await expect(lab).toBeVisible();
+  await expect(lab.locator('.v1700-case')).toHaveCount(3);
+  await expect(lab.locator('.v1700-progress')).toContainText('Reviewed 0 of 3');
+  await expect(lab).toContainText('not real cases');
+  const first=lab.locator('.v1700-case').first();
+  await first.getByRole('button',{name:'Compare my reading'}).click();
+  await expect(first.locator('.v1700-status')).toContainText('Choose one reading');
+  await expect(first.locator('input[type="radio"]').first()).toBeFocused();
+  await first.locator('input[value="0"]').check();
+  await first.locator('.v1700-draft').fill('The claimed delay is still disputed.');
+  await first.getByRole('button',{name:'Compare my reading'}).click();
+  await expect(first.locator('.v1700-response')).toContainText('A different answer');
+  await first.locator('input[value="2"]').check();
+  await expect(first.locator('.v1700-feedback')).toBeHidden();
+  await expect(lab.locator('.v1700-progress')).toContainText('Reviewed 0 of 3');
+  await first.getByRole('button',{name:'Compare my reading'}).click();
+  await expect(first.locator('.v1700-feedback')).toContainText('A disputed allegation is not a finding');
+  await expect(first.locator('.v1700-draft')).toHaveValue('The claimed delay is still disputed.');
+  const second=lab.locator('.v1700-case').nth(1);
+  await second.locator('input[value="0"]').check();
+  await second.getByRole('button',{name:'Compare my reading'}).click();
+  await expect(second.locator('.v1700-feedback')).toContainText('precise action');
+  const third=lab.locator('.v1700-case').nth(2);
+  await third.locator('input[value="1"]').check();
+  await third.getByRole('button',{name:'Compare my reading'}).click();
+  await expect(third.locator('.v1700-feedback')).toContainText('missing required form');
+  await expect(lab.locator('.v1700-progress')).toContainText('Reviewed 3 of 3');
+  await first.getByRole('button',{name:'Clear this brief'}).click();
+  await expect(first.locator('.v1700-draft')).toHaveValue('');
+  await expect(lab.locator('.v1700-progress')).toContainText('Reviewed 2 of 3');
+  await lab.getByRole('button',{name:'Clear all case-brief exercises'}).click();
+  await expect(lab.locator('.v1700-progress')).toContainText('Reviewed 0 of 3');
+  await expect(lab.locator('input[type="radio"]:checked')).toHaveCount(0);
+  await expect(lab.locator('.v1700-feedback:visible')).toHaveCount(0);
+  await first.locator('.v1700-draft').fill('Temporary fictional draft.');
+  await page.reload();await waitForRecovery(page);
+  await expect(page.locator('.v1700-draft').first()).toHaveValue('');
+  const keys=await page.evaluate(()=>Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter(k=>/v1700|casebrieflab/i.test(k)));
+  expect(keys).toEqual([]);
+});
+test('new case brief reading route does not alter approved homepage and is linked from clause practice',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('#case-brief-lab')).toBeHidden();
+  await expect(page.locator('footer a[href="#case-brief-lab"]')).toHaveCount(1);
+  await page.evaluate(()=>location.hash='#clause-reading-lab');
+  await page.locator('#clause-reading-lab a[href="#case-brief-lab"]').click();
+  await expect(page.locator('#case-brief-lab')).toBeVisible();
+  await expect(page.locator('#elFocusToolbar')).toBeVisible();
+  await expect(page.locator('.v1700-case')).toHaveCount(3);
+  await page.locator('#case-brief-lab a[href="#guided-practice-path"]').click();
+  await expect(page.locator('#guided-practice-path')).toBeVisible();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
