@@ -104,3 +104,21 @@ test('production mobile menu and learning-prompt preparation work on the real si
   await expect(page.locator('.js-copy-practice')).toBeVisible();
   await expect(page.locator('#smartteacher')).toContainText('does not send text to an AI service');
 });
+
+test('live site private writing workout opens and completes three learning steps without storing drafts',async({page})=>{
+  await assertProductionRelease(page);
+  await expect(page.locator('#quick-practice')).toBeHidden();
+  await page.locator('.v1630-hero-link').click();
+  await expect(page.locator('#quick-practice')).toBeVisible();
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 1 of 3');
+  await page.locator('#v1630-answer-0').fill('Fictional follow-up.');
+  await page.getByRole('button',{name:'Show model example and checklist'}).click();
+  await expect(page.locator('#v1630-model-0')).toBeVisible();
+  await page.getByRole('button',{name:'Next exercise'}).click();
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 2 of 3');
+  await page.getByRole('button',{name:'Next exercise'}).click();
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 3 of 3');
+  await page.getByRole('button',{name:'Clear drafts and restart'}).click();
+  await expect(page.locator('#v1630-answer-0')).toHaveValue('');
+  await expect(page.locator('#quick-practice .v1630-step:visible')).toHaveCount(1);
+});
