@@ -1,0 +1,1 @@
+No sister-project code, users or records imported. Generic W3C native form and GSA plain-language pedagogical guidance applied to purely invented source-free case-brief exercises; protected approved logo, original 19 Roger +10 durable rules preserved.

@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.69.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.70.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -314,7 +314,7 @@
         </article>`).join('')}
         <p class="v1660-privacy">All clauses are fictional. Choices stay only in this page and are not sent or saved. Refresh or clear to restart. Never rely on these excerpts to determine actual rights or deadlines.</p>
         <button class="btn light v1660-clear-all" type="button" data-reading-action="reset-all">Clear all reading exercises</button>
-        <p><a href="#quick-practice">Continue with a fictional writing exercise →</a></p><p><a href="#meeting-followup-lab">Practice a clear fictional meeting follow-up →</a></p>
+        <p><a href="#quick-practice">Continue with a fictional writing exercise →</a></p><p><a href="#meeting-followup-lab">Practice a clear fictional meeting follow-up →</a></p><p><a href="#case-brief-lab">Practise reading a fictional case brief →</a></p>
       </div>
     </section>`;
   }
@@ -699,6 +699,109 @@
     });
   }
 
+
+  // All scenarios are expressly invented. Never cite as precedent or provide legal interpretation.
+  const CASE_BRIEF_EXERCISES=[
+    {title:'Allegation versus established fact',
+      story:'Fictional learning summary: Parker alleges that a supplier delivered a report late. The supplier disputes the claimed delivery date. A tribunal has scheduled a hearing but has not made factual findings.',
+      question:'Which sentence best preserves the procedural status?',
+      options:['The supplier was proved to have delivered late.','The hearing has already decided the supplier is liable.','Parker alleges late delivery, but the claim is disputed and no factual finding has been made.'],strong:2,
+      explanation:'A disputed allegation is not a finding. A scheduled hearing does not establish whether the alleged event occurred or who is responsible.',
+      model:'Issue to investigate: When was the report actually delivered? Parker alleges delay, the supplier disputes the date, and no findings have yet been made.',
+      checks:['Attribute disputed statements to the person making them.','Separate a scheduled hearing from an actual finding.','Avoid turning uncertain facts into an established decision.']},
+    {title:'Identify the decision, not just the dispute',
+      story:'Fictional learning summary: A college committee considered whether a notice had reached a student by the required internal policy date. It found the email was received one day late and directed the college to issue a fresh notice. The committee did not determine damages or decide any outside legal claim.',
+      question:'What outcome did the fictional committee actually direct?',
+      options:['Issue a fresh notice after finding the original notice late.','Award financial damages to the student.','Declare every college notice policy invalid.'],strong:0,
+      explanation:'A useful brief states the precise action the decision-maker took, and also what it did not decide. It must not expand a limited direction into a wider legal ruling.',
+      model:'Outcome: The committee found the notice late under the stated policy and directed a fresh notice. It made no finding on financial damages or external legal claims.',
+      checks:['State the narrow outcome before adding interpretation.','Name the relevant internal policy context.','Do not invent a remedy or broader legal effect.']},
+    {title:'Distinguish reasoning from the result',
+      story:'Fictional learning summary: A training panel rejected a request to extend a course deadline. Its stated reason was that the required supporting form had not been submitted. The panel expressly left open whether a complete future request could be considered under the course rules.',
+      question:'Which brief separates the reason, result, and remaining possibility?',
+      options:['The request failed because the panel has banned all extensions permanently.','The panel declined this request because the required form was missing; it did not rule out a complete future request.','The panel accepted the extension once a request was submitted.'],strong:1,
+      explanation:'The result was rejection of this request; the stated reason was the missing required form. The panel did not permanently bar every future request. Preserve the limits of a fictional decision.',
+      model:'Reason: The required supporting form was absent. Result: This extension request was declined. The panel left open consideration of a complete future request under the course rules.',
+      checks:['Identify the reason separately from the result.','Keep the precise scope and qualifications.','Do not substitute a possible future decision for the actual outcome.']}
+  ];
+  function caseBriefLab(){
+    return '<section class="section v1700-case-lab" id="case-brief-lab" aria-labelledby="v1700-title">'+
+      '<div class="container section-head"><div><div class="eyebrow">Free fictional case-brief reading lab</div><h2 id="v1700-title">Read what was claimed, decided and left open.</h2></div><p>Three short invented case-style summaries teach careful Legal English reading for study and professional communication. They are not real cases, legal precedent, legal advice or verified academic assessments.</p></div>'+
+      '<div class="container v1700-shell"><p class="v1700-progress" role="status" aria-live="polite" aria-atomic="true">Reviewed 0 of 3 fictional briefs</p>'+
+      CASE_BRIEF_EXERCISES.map((x,i)=>'<article class="panel v1700-case" data-brief-index="'+i+'">'+
+        '<p class="v1700-kicker">Brief '+(i+1)+' of 3 · '+escapeHtml(x.title)+'</p><h3>Invented training summary</h3>'+
+        '<blockquote class="v1700-story">'+escapeHtml(x.story)+'</blockquote>'+
+        '<fieldset class="v1700-choices"><legend>'+escapeHtml(x.question)+'</legend>'+
+          x.options.map((answer,j)=>'<label><input type="radio" name="v1700-choice-'+i+'" value="'+j+'"><span>'+escapeHtml(answer)+'</span></label>').join('')+
+        '</fieldset><label class="v1700-draft-label" for="v1700-draft-'+i+'">Optional: write one accurate case-brief sentence</label>'+
+        '<textarea class="v1700-draft" id="v1700-draft-'+i+'" rows="3" maxlength="700" autocomplete="off" placeholder="Write about this fictional exercise only. Never paste real case files or client information."></textarea>'+
+        '<div class="v1700-actions"><button class="btn teal" type="button" data-brief-action="compare">Compare my reading</button>'+
+        '<button class="btn light" type="button" data-brief-action="clear">Clear this brief</button></div>'+
+        '<p class="v1700-status" role="status" aria-live="polite"></p>'+
+        '<div class="v1700-feedback" hidden><h4>Reading guidance</h4><p class="v1700-response"></p><p>'+escapeHtml(x.explanation)+'</p>'+
+        '<h4>One possible brief sentence</h4><p class="v1700-model">'+escapeHtml(x.model)+'</p>'+
+        '<h4>Self-check your wording</h4><ul>'+x.checks.map(point=>'<li>'+escapeHtml(point)+'</li>').join('')+'</ul>'+
+        '<p>Your optional sentence is not automatically evaluated, sent to a teacher or converted into a legal conclusion.</p></div></article>').join('')+
+      '<p class="v1700-privacy">Every case, party, and procedure above is invented. Do not quote these examples as authorities. Answers and draft text stay on this page only and are not sent or saved. Reload or clear to remove them. Education only.</p>'+
+      '<button class="btn light v1700-reset-all" type="button" data-brief-action="reset-all">Clear all case-brief exercises</button>'+
+      '<p><a href="#clause-reading-lab">Return to fictional clause reading →</a> · <a href="#guided-practice-path">Choose a guided learning path →</a></p></div></section>';
+  }
+  function bindCaseBriefLab(){
+    const root=$('#case-brief-lab');if(!root||root.dataset.bound==='1')return;
+    root.dataset.bound='1';
+    const cards=Array.from(root.querySelectorAll('.v1700-case'));
+    const count=root.querySelector('.v1700-progress');
+    const reviewed=new Set();
+    function update(){count.textContent='Reviewed '+reviewed.size+' of '+cards.length+' fictional briefs';}
+    function clear(card,i){
+      card.querySelectorAll('input[type="radio"]').forEach(input=>{input.checked=false;});
+      card.querySelector('.v1700-draft').value='';
+      card.querySelector('.v1700-feedback').hidden=true;
+      card.querySelector('.v1700-response').textContent='';
+      card.querySelector('.v1700-status').textContent='';
+      reviewed.delete(i);update();
+    }
+    root.addEventListener('click',event=>{
+      const target=event.target instanceof Element?event.target:event.target?.parentElement;
+      const button=target?.closest('button[data-brief-action]');if(!button||!root.contains(button))return;
+      if(button.dataset.briefAction==='reset-all'){
+        cards.forEach((card,i)=>clear(card,i));
+        count.textContent='All three briefs cleared. Reviewed 0 of '+cards.length+' fictional briefs';
+        cards[0]?.querySelector('input[type="radio"]')?.focus({preventScroll:true});
+        return;
+      }
+      const card=button.closest('.v1700-case');if(!card)return;
+      const i=Number(card.dataset.briefIndex);if(!Number.isInteger(i)||!CASE_BRIEF_EXERCISES[i])return;
+      if(button.dataset.briefAction==='clear'){clear(card,i);return;}
+      if(button.dataset.briefAction!=='compare')return;
+      const choice=card.querySelector('input[type="radio"]:checked');
+      const status=card.querySelector('.v1700-status');
+      const feedback=card.querySelector('.v1700-feedback');
+      if(!choice){
+        feedback.hidden=true;
+        status.textContent='Choose one reading before comparing it with the guidance.';
+        card.querySelector('input[type="radio"]')?.focus();return;
+      }
+      card.querySelector('.v1700-response').textContent=Number(choice.value)===CASE_BRIEF_EXERCISES[i].strong?
+        'This reading matches the fictional summary without overstating its claims.':
+        'A different answer better preserves the limits of this fictional summary.';
+      feedback.hidden=false;
+      status.textContent='Explanation and self-check guidance are available below.';
+      reviewed.add(i);update();
+    });
+    root.addEventListener('change',event=>{
+      const input=event.target;if(!(input instanceof HTMLInputElement)||input.type!=='radio')return;
+      const card=input.closest('.v1700-case');if(!card)return;
+      const i=Number(card.dataset.briefIndex);
+      if(reviewed.has(i)){
+        reviewed.delete(i);update();
+        card.querySelector('.v1700-feedback').hidden=true;
+        card.querySelector('.v1700-status').textContent='Choice changed. Compare again to see guidance for your new reading.';
+      }
+    });
+    update();
+  }
+
   function teachersEmployers(){
     return `<section class="section alt" id="teachers"><div class="container grid cols-2"><article class="panel"><div class="eyebrow">Teachers</div><h2>Teacher-guided learning support.</h2><p>Teachers can review learner practice, prepare lessons, guide roleplays, assign homework, and give feedback while private teacher notes remain appropriately separated.</p><a class="btn teal" href="#teacher-dashboard">Teacher account access</a><p class="v1580-micro-note">Operational teacher tools require the appropriate signed-in role.</p></article><article class="panel" id="employers"><div class="eyebrow">Employers</div><h2>Privacy-conscious team learning.</h2><p>Organizations can use consent-based, aggregate attendance and learning-progress signals. Private drafts, raw AI practice, uploads, recordings, native-language explanations, test answers, and teacher-private notes remain excluded by default.</p><a class="btn teal" href="#employer-dashboard">Employer account access</a><p class="v1580-micro-note">Nothing from a learner's private work is shared automatically.</p></article></div></section>`;
   }
@@ -712,7 +815,7 @@
     const title = {student:'Student dashboard',teacher:'Teacher dashboard',employer:'Employer dashboard',admin:'Owner / staff dashboard'}[role] || 'Dashboard';
     return `<section class="section" id="${role}-dashboard"><div class="container"><article class="panel"><div class="eyebrow">${escapeHtml(title)}</div><h2>Account access required.</h2><p>Operational dashboards require production authentication and the appropriate role. Public learning tools remain available from the homepage.</p><a class="btn gold" href="#start">Return to learning options</a></article></div></section>`;
   }
-  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${emailClarityLab()}${guidedPracticePath()}${teachersEmployers()}${learningExperience()}${trust()}`); }
+  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${emailClarityLab()}${guidedPracticePath()}${caseBriefLab()}${teachersEmployers()}${learningExperience()}${trust()}`); }
 
   let openQuickPracticeStep=null;
   function bindDiagnostic(){
@@ -923,6 +1026,7 @@
     bindMeetingFollowupLab();
     bindEmailClarityLab();
     bindGuidedPracticePath();
+    bindCaseBriefLab();
   }
   function scrollToTarget(id, attempt=0){
     const target=document.getElementById(id);

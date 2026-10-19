@@ -1,0 +1,9 @@
+# EnglishLegalese v1.70.0 — exact source lock, acceptance and rollback
+
+Immediately prior verified v1.69.0: GitHub main SHA `6855691a459571f41945fed55707bf280ac43f8a` equals Render live deploy `dep-dbb2s367bikc73f81r90`, and independent public-site acceptance GitHub Actions `39272477862` passed 39/39 desktop/tablet/mobile checks. Prior release exact-head two gate attempts each 120/120 Chromium/WebKit browser and 173/173 source and governance preservation assertions, zero reported vulnerabilities.
+
+Original approved logo blob `b5f20ef046d75d6f108bc93243c7c14acf3c4eb1` and 19 Roger +10 durable canonical register blob `bd1d33a43180291f3a8ddedcd6884f6ff3d7c666` verified in predecessor full tree; neither may be changed. The feature adds fictional case briefing practice without real legal authorities, legal advice, grading, scores, persistence, AI calls, backend/data migrations, account/role changes, payments or new homepage design. Inherited 9 courses, 21 scenarios, 8 diagnostic questions/explanations, writing workout, AI draft, clause, meeting, email labs and guided path continue unchanged.
+
+**Fail-closed release:** source/no-deletion/governance, dependency audit and desktop/tablet/mobile Chromium and iPad WebKit browser qualification, **two independently completed success runs on exact final PR head**. Reconfirm main and Render predecessor, no conflicting pull request, protected assets and immediate rollback. Qualified GitHub merge must trigger Render same SHA LIVE and separate real site apex/www browser acceptance complete with retained screenshots. No live-correct claim until production passes.
+
+Immediate previous rollback: Render service `srv-d97p18vavr4c73dbls40`, deployment `dep-dbb2s367bikc73f81r90` (v1.69.0), after any rollback confirm live version marker and health. Candidate state when authored: NOT DEPLOYED.

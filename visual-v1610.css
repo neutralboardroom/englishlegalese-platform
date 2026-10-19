@@ -265,3 +265,25 @@ html{scroll-behavior:auto!important}
 .v1690-tried-label input{accent-color:#247d83}
 .v1690-note,.v1690-privacy{font-size:.92rem;color:#506173;line-height:1.6}
 @media(max-width:640px){.v1690-goals{grid-template-columns:1fr}.v1690-results{padding:.9rem}.v1690-steps{padding-left:1.15rem}}
+
+/* v1.70.0 — focused, entirely fictional case-brief literacy. Branding unchanged. */
+.v1700-shell{max-width:920px}
+.v1700-progress{font-weight:700;color:#193b50;line-height:1.6}
+.v1700-case{margin:0 0 1.2rem;padding:1.35rem}
+.v1700-kicker{font-weight:750;color:#286772;font-size:.94rem}
+.v1700-story{background:#f5f9fa;border-left:4px solid #247d83;color:#10283a;line-height:1.65;padding:.9rem 1.15rem;margin:1rem 0}
+.v1700-choices{border:0;padding:0;margin:0 0 1rem;min-width:0}
+.v1700-choices legend{font-weight:750;line-height:1.5;margin-bottom:.7rem}
+.v1700-choices label{display:flex;gap:.7rem;line-height:1.55;align-items:flex-start;padding:.55rem 0;cursor:pointer}
+.v1700-choices input{margin-top:.3rem;accent-color:#247d83;flex:0 0 auto}
+.v1700-draft-label{font-weight:700;line-height:1.5;display:block;margin:.4rem 0}
+.v1700-draft{box-sizing:border-box;width:100%;max-width:100%;min-height:100px;display:block;padding:.8rem;border:1px solid #a6b5c1;border-radius:10px;font:inherit;color:#10283a}
+.v1700-choices input:focus-visible,.v1700-draft:focus-visible,.v1700-actions button:focus-visible,.v1700-reset-all:focus-visible{outline:3px solid #247d83;outline-offset:3px}
+.v1700-actions{display:flex;gap:.7rem;flex-wrap:wrap;margin:.85rem 0}
+.v1700-status{min-height:1.4em;font-size:.96rem}
+.v1700-feedback{background:#f5f9fa;border:1px solid #d8e6e8;padding:1.1rem 1.25rem;border-radius:12px;margin:.7rem 0}
+.v1700-feedback h4{margin:.4rem 0}
+.v1700-feedback p,.v1700-feedback li{line-height:1.65}
+.v1700-model{font-style:italic}
+.v1700-privacy{font-size:.92rem;line-height:1.6;color:#506173}
+@media(max-width:620px){.v1700-case{padding:1rem}.v1700-story{padding:.75rem .85rem}.v1700-actions{display:grid;grid-template-columns:1fr}.v1700-actions .btn{width:100%}}
