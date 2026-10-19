@@ -51,6 +51,7 @@ const {AI_PLAN_DRAFTS,paidEntitlementVerified}=require('../src/aiCommercePolicy'
     if(sql.startsWith('INSERT INTO ai_trial_email_verifications')){events.token=args[1];return {rows:[]};}
     if(sql.startsWith('UPDATE ai_trial_email_verifications')){if(events.token===args[0]){events.verified=true;events.token=null;return {rows:[{user_id:'student-1'}]};}return {rows:[]};}
     if(sql.includes('AS verified')&&sql.includes('count(*)'))return {rows:[{verified:events.verified,used:events.uses.length}]};
+    if(sql.includes('AS site_day')&&sql.includes('AS site_month'))return {rows:[{site_day:events.uses.length,site_month:events.uses.length,network_day:events.uses.length,network_month:events.uses.length}]};
     if(sql.startsWith('INSERT INTO ai_free_trial_uses')){const id=++events.sequence;events.uses.push(id);return {rows:[{id}]};}
     if(sql.startsWith('DELETE FROM ai_free_trial_uses')){events.uses=events.uses.filter(x=>x!==args[1]);return {rows:[]};}
     return {rows:[]};
