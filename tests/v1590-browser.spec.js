@@ -189,3 +189,63 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
   await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.63.0');
 });
+
+test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
+  await page.goto('/#quick-practice');
+  await waitForRecovery(page);
+  await expect(page.locator('#quick-practice')).toBeVisible();
+  await expect(page.locator('#home')).toBeHidden();
+  await expect(page.locator('#elFocusToolbar')).toBeVisible();
+  const steps=page.locator('#quick-practice .v1630-step');
+  await expect(steps).toHaveCount(3);
+  await expect(page.locator('#quick-practice .v1630-step:visible')).toHaveCount(1);
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 1 of 3');
+  await expect(page.locator('#quick-practice [data-practice-action="prev"]')).toBeDisabled();
+
+  const draft='Please send the fictional missing attachment so we can finish the review.';
+  await page.locator('#v1630-answer-0').fill(draft);
+  await page.getByRole('button',{name:'Show model example and checklist'}).click();
+  await expect(page.locator('#v1630-model-0')).toBeVisible();
+  await expect(page.locator('#v1630-model-0')).toContainText('qualified');
+  await expect(page.getByRole('button',{name:'Hide model example and checklist'})).toHaveAttribute('aria-expanded','true');
+  await page.getByRole('button',{name:'Next exercise'}).click();
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 2 of 3');
+  await expect(page.locator('#v1630-step-title-1')).toBeFocused();
+  await page.locator('#v1630-answer-1').fill('Who should receive the summary?');
+  await page.getByRole('button',{name:'Previous'}).click();
+  await expect(page.locator('#v1630-answer-0')).toHaveValue(draft);
+  await expect(page.locator('#v1630-model-0')).toBeVisible();
+  await page.getByRole('button',{name:'Next exercise'}).click();
+  await expect(page.locator('#v1630-answer-1')).toHaveValue('Who should receive the summary?');
+  await page.getByRole('button',{name:'Next exercise'}).click();
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 3 of 3');
+  await expect(page.locator('#quick-practice [data-practice-action="next"]')).toBeDisabled();
+  await expect(page.locator('.v1630-end-note')).toContainText('final exercise');
+  const persisted=await page.evaluate(()=>Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter(k=>/v1630|quickpractice|writingdraft/i.test(k)));
+  expect(persisted).toEqual([]);
+  await page.getByRole('button',{name:'Clear drafts and restart'}).click();
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 1 of 3');
+  await expect(page.locator('#v1630-answer-0')).toHaveValue('');
+  await expect(page.locator('#v1630-answer-1')).toHaveValue('');
+  await expect(page.locator('#v1630-model-0')).toBeHidden();
+  await expect(page.locator('.v1630-end-note')).toContainText('cleared');
+  await page.locator('#v1630-answer-0').fill('Discard on reload.');
+  await page.reload();
+  await waitForRecovery(page);
+  await expect(page.locator('#v1630-answer-0')).toHaveValue('');
+});
+
+test('writing practice is discoverable but does not lengthen the default homepage',async({page})=>{
+  await page.goto('/');
+  await waitForRecovery(page);
+  await expect(page.locator('.v1630-hero-link')).toHaveAttribute('href','#quick-practice');
+  await expect(page.locator('.v1630-hero-link')).toBeVisible();
+  await expect(page.locator('#quick-practice')).toBeHidden();
+  await expect(page.locator('#quick-practice .v1630-step')).toHaveCount(3);
+  await expect(page.locator('footer a[href="#quick-practice"]')).toHaveCount(1);
+  await page.locator('.v1630-hero-link').click();
+  await expect(page.locator('#quick-practice')).toBeVisible();
+  await expect(page.locator('#quick-practice .v1630-privacy')).toContainText('not submitted, scored, stored, or shared');
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+});
