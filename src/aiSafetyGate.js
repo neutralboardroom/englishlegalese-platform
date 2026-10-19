@@ -1,7 +1,7 @@
 'use strict';
 // Per-instance safeguards. No hard dollar budget across restarts or multiple instances.
-const MAX_OUTPUT_TOKENS=128,MAX_PROMPT_CHARS=900,MAX_CONTEXT_BYTES=900;
-const GLOBAL_DAY=20,USER_DAY=3,IP_HOUR=5,PARALLEL=2;
+const MAX_OUTPUT_TOKENS=600,MAX_PROMPT_CHARS=3200,MAX_CONTEXT_BYTES=3000;
+const GLOBAL_DAY=250,USER_DAY=20,IP_HOUR=35,PARALLEL=4;
 const MODES={
   student_tutor:['student','teacher','employer','staff','admin','owner'],
   teacher_assistant:['teacher','staff','admin','owner'],
@@ -25,10 +25,10 @@ function createAiSafetyGate(opts={}){
     if(!req.user?.id||req.user.status!=='active')return reject(403,'AI_ACCOUNT_INVALID','An active account is required.');
     const body=req.body||{},mode=body.mode||'student_tutor';
     if(typeof mode!=='string'||!MODES[mode]||!MODES[mode].includes(req.user.role))return reject(403,'AI_MODE_NOT_PERMITTED','This practice mode is unavailable for your account.');
-    if(typeof body.prompt!=='string'||!body.prompt.trim()||body.prompt.length>MAX_PROMPT_CHARS)return reject(400,'AI_PROMPT_INVALID','Enter 1 to 900 characters of fictional practice text.');
+    if(typeof body.prompt!=='string'||!body.prompt.trim()||body.prompt.length>MAX_PROMPT_CHARS)return reject(400,'AI_PROMPT_INVALID','Enter 1 to 3200 characters of fictional practice text.');
     if(body.context!==undefined&&(body.context===null||typeof body.context!=='object'||Array.isArray(body.context)))return reject(400,'AI_CONTEXT_INVALID','Context must be a fictional object.');
     let serialized;try{serialized=JSON.stringify(body.context||{});}catch{return reject(400,'AI_CONTEXT_INVALID','Invalid practice context.');}
-    if(Buffer.byteLength(serialized,'utf8')>MAX_CONTEXT_BYTES)return reject(400,'AI_CONTEXT_TOO_LARGE','Practice context exceeds 900 bytes.');
+    if(Buffer.byteLength(serialized,'utf8')>MAX_CONTEXT_BYTES)return reject(400,'AI_CONTEXT_TOO_LARGE','Practice context exceeds 3000 bytes.');
     const t=now();refresh(t);
     const id=String(req.user.id),ip=String(req.ip||req.socket?.remoteAddress||'unknown').slice(0,120);
     const history=ips.get(ip)||[];
