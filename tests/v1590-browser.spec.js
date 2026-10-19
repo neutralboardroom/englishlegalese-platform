@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.64.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.64.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.65.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.65.0');
 }
 
-test.describe('EnglishLegalese v1.64.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.65.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -114,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.64\.0/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.65\.0/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -187,7 +187,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.64.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.65.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
@@ -303,4 +303,86 @@ test('incomplete diagnostic guides the learner and reset clears the whole debrie
   await expect(page.locator('.v1580-form-status')).toBeEmpty();
   await page.reload();await waitForRecovery(page);
   await expect(page.locator('input[name="v1580-q0"][value="1"]')).not.toBeChecked();
+});
+
+test('AI draft review lab teaches all three fictional risk cases without external AI',async({page})=>{
+  await page.goto('/#ai-review-lab');await waitForRecovery(page);
+  const lab=page.locator('#ai-review-lab');
+  await expect(lab).toBeVisible();
+  await expect(page.locator('#home')).toBeHidden();
+  await expect(lab.locator('.v1650-case')).toHaveCount(3);
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 0 of 3');
+  await expect(lab).toContainText('No live AI service');
+  await expect(lab).toContainText('Fictional AI draft to review');
+
+  const first=lab.locator('.v1650-case').nth(0);
+  await first.getByRole('button',{name:'Compare my choice'}).click();
+  await expect(first.locator('.v1650-status')).toContainText('Choose the concern');
+  await expect(first.locator('input[type="radio"]').first()).toBeFocused();
+  await expect(first.locator('.v1650-guidance')).toBeHidden();
+  await first.locator('input[value="1"]').check();
+  await first.locator('.v1650-rewrite').fill('Check a fictional deadline with qualified reviewers.');
+  await first.getByRole('button',{name:'Compare my choice'}).click();
+  await expect(first.locator('.v1650-guidance')).toBeVisible();
+  await expect(first.locator('.v1650-judgement')).toContainText('different first step');
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 1 of 3');
+  await first.locator('input[value="0"]').check();
+  await expect(first.locator('.v1650-guidance')).toBeHidden();
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 0 of 3');
+  await first.getByRole('button',{name:'Compare my choice'}).click();
+  await expect(first.locator('.v1650-judgement')).toContainText('matches the recommended');
+  await expect(first.locator('.v1650-rewrite')).toHaveValue('Check a fictional deadline with qualified reviewers.');
+
+  const second=lab.locator('.v1650-case').nth(1);
+  await second.locator('input[value="1"]').check();
+  await second.getByRole('button',{name:'Compare my choice'}).click();
+  await expect(second.locator('.v1650-guidance')).toContainText('legal conclusion is unsupported');
+  const third=lab.locator('.v1650-case').nth(2);
+  await third.locator('input[value="2"]').check();
+  await third.getByRole('button',{name:'Compare my choice'}).click();
+  await expect(third.locator('.v1650-guidance')).toContainText('public AI service');
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 3 of 3');
+
+  await first.getByRole('button',{name:'Clear this case'}).click();
+  await expect(first.locator('.v1650-rewrite')).toHaveValue('');
+  await expect(first.locator('.v1650-guidance')).toBeHidden();
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 2 of 3');
+  await lab.getByRole('button',{name:'Clear all three exercises'}).click();
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 0 of 3');
+  for(const card of await lab.locator('.v1650-case').all()){
+    await expect(card.locator('.v1650-guidance')).toBeHidden();
+    await expect(card.locator('.v1650-rewrite')).toHaveValue('');
+    await expect(card.locator('input[type="radio"]:checked')).toHaveCount(0);
+  }
+  await first.locator('.v1650-rewrite').fill('Temporary fictional test.');
+  await page.reload();await waitForRecovery(page);
+  await expect(page.locator('.v1650-case').first().locator('.v1650-rewrite')).toHaveValue('');
+  const keys=await page.evaluate(()=>Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter(k=>/v1650|aireviewlab|aidraft/i.test(k)));
+  expect(keys).toEqual([]);
+});
+
+test('AI draft review lab is discoverable without changing original home layout',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('#ai-review-lab')).toBeHidden();
+  await expect(page.locator('.v1650-case')).toHaveCount(3);
+  await expect(page.locator('footer a[href="#ai-review-lab"]')).toHaveCount(1);
+  await page.evaluate(()=>location.hash='#smartteacher');
+  await expect(page.locator('.v1650-inline-link')).toBeVisible();
+  await page.locator('.v1650-inline-link').click();
+  await expect(page.locator('#ai-review-lab')).toBeVisible();
+  await expect(page.locator('#elFocusToolbar')).toBeVisible();
+  await expect(page.locator('#ai-review-lab .v1650-case')).toHaveCount(3);
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test('diagnostic AI uncertainty safely routes to the new fictional AI draft lab',async({page})=>{
+  await page.goto('/#diagnostic');await waitForRecovery(page);
+  const answers=[1,1,1,1,1,2,0,0];
+  for(let i=0;i<8;i++)await page.locator('input[name="v1580-q'+i+'"][value="'+answers[i]+'"]').check();
+  await page.getByRole('button',{name:'Get my practice recommendation'}).click();
+  await expect(page.locator('.v1640-next-action')).toHaveAttribute('href','#ai-review-lab');
+  await page.locator('.v1640-next-action').click();
+  await expect(page.locator('#ai-review-lab')).toBeVisible();
+  await expect(page.locator('.v1650-progress')).toContainText('Reviewed 0 of 3');
 });
