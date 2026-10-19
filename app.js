@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.67.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.69.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -575,7 +575,7 @@
         </article>`).join('')}
         <p class="v1680-privacy">These are fictional emails. Answers and draft text remain in this page session and are not transmitted or saved. Refresh or clear to discard them. No real client information, live AI service, legal advice or accredited score.</p>
         <button class="btn light v1680-reset-all" data-email-action="reset-all" type="button">Clear all email exercises</button>
-        <p><a href="#meeting-followup-lab">Return to the fictional meeting follow-up lab →</a></p>
+        <p><a href="#meeting-followup-lab">Return to the fictional meeting follow-up lab →</a></p><p><a href="#guided-practice-path">Choose a free guided practice path →</a></p>
       </div>
     </section>`;
   }
@@ -639,6 +639,66 @@
     update();
   }
 
+
+  // Goal-based links to existing fictional exercises; no grading, storage or AI calls.
+  const GOAL_PATHS=[
+    {id:'writing',label:'Clearer professional writing',intro:'Practise accurate workplace emails, concise writing and meeting follow-ups.',steps:[
+      ['Email clarity','#email-clarity-lab','Improve precision, tone and truthful status in a fictional professional email.'],
+      ['Three-step writing workout','#quick-practice','Draft your own fictional message and compare it with a model and checklist.'],
+      ['Meeting follow-up','#meeting-followup-lab','Identify the right action owner, missing deadline and approval conditions.']]},
+    {id:'reading',label:'Reading contract language',intro:'Understand small words and preserve the meaning of a fictional clause.',steps:[
+      ['Clause Reading Lab','#clause-reading-lab','Notice timing triggers, must/may distinctions and written exceptions.'],
+      ['Fictional clause rewrite','#quick-practice','Use the third writing exercise to preserve actors, obligations and timing.'],
+      ['Legal English scenarios','#practice-studio','Explore document-reading and contract scenarios already in the practice studio.']]},
+    {id:'meetings',label:'Meetings and professional conversations',intro:'Clarify assignments, record responsibilities and follow up politely.',steps:[
+      ['Meeting Follow-up Lab','#meeting-followup-lab','Recognise unknown deadlines, approval dependencies and responsible people.'],
+      ['Communication scenarios','#practice-studio','Explore existing meeting, calls and interpersonal Legal English situations.'],
+      ['Email Clarity Lab','#email-clarity-lab','Turn an unclear request into an accurate, courteous follow-up email.']]},
+    {id:'ai',label:'Careful review of AI-generated writing',intro:'Identify unverified AI claims and practise safe language review.',steps:[
+      ['AI Draft Review Lab','#ai-review-lab','Spot invented deadlines, unsupported conclusions and privacy problems.'],
+      ['Trust and privacy boundaries','#trust','Review why AI fluency is not legal verification and why confidentiality matters.'],
+      ['Offline SmartTeacher prompt preparation','#smartteacher','Prepare a fictional prompt without sending it to any live AI service.']]}
+  ];
+  function guidedPracticePath(){
+    return '<section class="section v1690-guide" id="guided-practice-path" aria-labelledby="v1690-title">'+
+      '<div class="container section-head"><div><div class="eyebrow">Free guided practice path</div><h2 id="v1690-title">Choose a goal. Find your next three useful exercises.</h2></div><p>Follow relevant, already available Legal English activities. Any checkmarks are temporary personal reminders—not a score, verified progress or qualification.</p></div>'+
+      '<div class="container v1690-shell"><fieldset class="v1690-goals"><legend>What would you like to practise?</legend>'+
+        GOAL_PATHS.map(p=>'<label><input type="radio" name="v1690-goal" value="'+escapeHtml(p.id)+'"><span>'+escapeHtml(p.label)+'</span></label>').join('')+
+      '</fieldset><p class="v1690-status" role="status" aria-live="polite">Select a goal to see three suggested practice links.</p>'+
+      '<div class="v1690-results" hidden><h3 class="v1690-plan-title" tabindex="-1"></h3><p class="v1690-plan-description"></p><ol class="v1690-steps"></ol>'+
+      '<p class="v1690-count" role="status" aria-live="polite">Marked as tried: 0 of 3</p><p class="v1690-note">Checkmarks only record what you chose to try during this page visit. They do not confirm lessons completed, qualifications, grades or teacher-reviewed proficiency.</p></div>'+
+      '<button class="btn light v1690-reset" type="button">Clear my temporary plan</button>'+
+      '<p class="v1690-privacy">No account, live AI, network request or saved activity. Refresh or reset to start again. Use fictional details in linked exercises. Learning suggestions only, not legal advice or accredited assessment.</p></div></section>';
+  }
+  function bindGuidedPracticePath(){
+    const root=$('#guided-practice-path');if(!root||root.dataset.bound==='1')return;
+    root.dataset.bound='1';
+    const output=root.querySelector('.v1690-results'),title=root.querySelector('.v1690-plan-title'),description=root.querySelector('.v1690-plan-description');
+    const list=root.querySelector('.v1690-steps'),status=root.querySelector('.v1690-status'),count=root.querySelector('.v1690-count');
+    root.addEventListener('change',event=>{
+      const input=event.target;if(!(input instanceof HTMLInputElement))return;
+      if(input.name==='v1690-goal'){
+        const goal=GOAL_PATHS.find(p=>p.id===input.value);if(!goal)return;
+        title.textContent=goal.label;description.textContent=goal.intro;
+        list.innerHTML=goal.steps.map((s,i)=>'<li><strong>Step '+(i+1)+': '+escapeHtml(s[0])+'</strong><p>'+escapeHtml(s[2])+'</p>'+
+          '<a href="'+s[1]+'">Open this practice →</a><label class="v1690-tried-label"><input class="v1690-tried" type="checkbox"><span>I tried this step (only on this page)</span></label></li>').join('');
+        output.hidden=false;count.textContent='Marked as tried: 0 of 3';
+        status.textContent='Three suggestions for '+goal.label+'. Temporary checkmarks reset when you change your goal.';
+        title.focus({preventScroll:true});return;
+      }
+      if(input.classList.contains('v1690-tried')){
+        count.textContent='Marked as tried: '+root.querySelectorAll('.v1690-tried:checked').length+' of 3';
+      }
+    });
+    root.querySelector('.v1690-reset').addEventListener('click',()=>{
+      root.querySelectorAll('input[name="v1690-goal"]').forEach(input=>{input.checked=false;});
+      list.replaceChildren();output.hidden=true;title.textContent='';description.textContent='';
+      count.textContent='Marked as tried: 0 of 3';
+      status.textContent='Plan cleared. Select a goal to see three suggested practice links.';
+      root.querySelector('input[name="v1690-goal"]')?.focus({preventScroll:true});
+    });
+  }
+
   function teachersEmployers(){
     return `<section class="section alt" id="teachers"><div class="container grid cols-2"><article class="panel"><div class="eyebrow">Teachers</div><h2>Teacher-guided learning support.</h2><p>Teachers can review learner practice, prepare lessons, guide roleplays, assign homework, and give feedback while private teacher notes remain appropriately separated.</p><a class="btn teal" href="#teacher-dashboard">Teacher account access</a><p class="v1580-micro-note">Operational teacher tools require the appropriate signed-in role.</p></article><article class="panel" id="employers"><div class="eyebrow">Employers</div><h2>Privacy-conscious team learning.</h2><p>Organizations can use consent-based, aggregate attendance and learning-progress signals. Private drafts, raw AI practice, uploads, recordings, native-language explanations, test answers, and teacher-private notes remain excluded by default.</p><a class="btn teal" href="#employer-dashboard">Employer account access</a><p class="v1580-micro-note">Nothing from a learner's private work is shared automatically.</p></article></div></section>`;
   }
@@ -652,7 +712,7 @@
     const title = {student:'Student dashboard',teacher:'Teacher dashboard',employer:'Employer dashboard',admin:'Owner / staff dashboard'}[role] || 'Dashboard';
     return `<section class="section" id="${role}-dashboard"><div class="container"><article class="panel"><div class="eyebrow">${escapeHtml(title)}</div><h2>Account access required.</h2><p>Operational dashboards require production authentication and the appropriate role. Public learning tools remain available from the homepage.</p><a class="btn gold" href="#start">Return to learning options</a></article></div></section>`;
   }
-  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${emailClarityLab()}${teachersEmployers()}${learningExperience()}${trust()}`); }
+  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${emailClarityLab()}${guidedPracticePath()}${teachersEmployers()}${learningExperience()}${trust()}`); }
 
   let openQuickPracticeStep=null;
   function bindDiagnostic(){
@@ -862,6 +922,7 @@
     bindClauseReadingLab();
     bindMeetingFollowupLab();
     bindEmailClarityLab();
+    bindGuidedPracticePath();
   }
   function scrollToTarget(id, attempt=0){
     const target=document.getElementById(id);

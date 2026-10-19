@@ -1,0 +1,3 @@
+# EnglishLegalese v1.69.0 — Guided Practice Path
+
+A focused, free, privacy-by-default learning pathway lets students choose writing, contract reading, meetings or AI-output review and open three relevant original learning exercises. Optional self-checkmarks are not grades, accreditation or verified course progress and are cleared on refresh or reset. Existing nine courses, 21 scenarios, diagnostic, labs, homepage, exact approved logo, rule register, user privacy and backend protected. Release requires 2 full candidate gate runs and separate live-site acceptance; immediate previous rollback v1.68.0 dep-dbb2hhu1egvs73e8mqmg.
