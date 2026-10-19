@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.62.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.62.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.63.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.63.0');
 }
 
-test.describe('EnglishLegalese v1.62.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.63.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -114,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.62\.0/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.63\.0/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -187,5 +187,65 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.62.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.63.0');
+});
+
+test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
+  await page.goto('/#quick-practice');
+  await waitForRecovery(page);
+  await expect(page.locator('#quick-practice')).toBeVisible();
+  await expect(page.locator('#home')).toBeHidden();
+  await expect(page.locator('#elFocusToolbar')).toBeVisible();
+  const steps=page.locator('#quick-practice .v1630-step');
+  await expect(steps).toHaveCount(3);
+  await expect(page.locator('#quick-practice .v1630-step:visible')).toHaveCount(1);
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 1 of 3');
+  await expect(page.locator('#quick-practice [data-practice-action="prev"]')).toBeDisabled();
+
+  const draft='Please send the fictional missing attachment so we can finish the review.';
+  await page.locator('#v1630-answer-0').fill(draft);
+  await page.getByRole('button',{name:'Show model example and checklist'}).click();
+  await expect(page.locator('#v1630-model-0')).toBeVisible();
+  await expect(page.locator('#v1630-model-0')).toContainText('not an automatic assessment');
+  await expect(page.getByRole('button',{name:'Hide model example and checklist'})).toHaveAttribute('aria-expanded','true');
+  await page.getByRole('button',{name:'Next exercise'}).click();
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 2 of 3');
+  await expect(page.locator('#v1630-step-title-1')).toBeFocused();
+  await page.locator('#v1630-answer-1').fill('Who should receive the summary?');
+  await page.getByRole('button',{name:'Previous'}).click();
+  await expect(page.locator('#v1630-answer-0')).toHaveValue(draft);
+  await expect(page.locator('#v1630-model-0')).toBeVisible();
+  await page.getByRole('button',{name:'Next exercise'}).click();
+  await expect(page.locator('#v1630-answer-1')).toHaveValue('Who should receive the summary?');
+  await page.getByRole('button',{name:'Next exercise'}).click();
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 3 of 3');
+  await expect(page.locator('#quick-practice [data-practice-action="next"]')).toBeDisabled();
+  await expect(page.locator('.v1630-end-note')).toContainText('final exercise');
+  const persisted=await page.evaluate(()=>Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter(k=>/v1630|quickpractice|writingdraft/i.test(k)));
+  expect(persisted).toEqual([]);
+  await page.getByRole('button',{name:'Clear drafts and restart'}).click();
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 1 of 3');
+  await expect(page.locator('#v1630-answer-0')).toHaveValue('');
+  await expect(page.locator('#v1630-answer-1')).toHaveValue('');
+  await expect(page.locator('#v1630-model-0')).toBeHidden();
+  await expect(page.locator('.v1630-end-note')).toContainText('cleared');
+  await page.locator('#v1630-answer-0').fill('Discard on reload.');
+  await page.reload();
+  await waitForRecovery(page);
+  await expect(page.locator('#v1630-answer-0')).toHaveValue('');
+});
+
+test('writing practice is discoverable but does not lengthen the default homepage',async({page})=>{
+  await page.goto('/');
+  await waitForRecovery(page);
+  await expect(page.locator('.v1630-hero-link')).toHaveAttribute('href','#quick-practice');
+  await expect(page.locator('.v1630-hero-link')).toBeVisible();
+  await expect(page.locator('#quick-practice')).toBeHidden();
+  await expect(page.locator('#quick-practice .v1630-step')).toHaveCount(3);
+  await expect(page.locator('footer a[href="#quick-practice"]')).toHaveCount(1);
+  await page.locator('.v1630-hero-link').click();
+  await expect(page.locator('#quick-practice')).toBeVisible();
+  await expect(page.locator('#quick-practice .v1630-privacy')).toContainText('not submitted, scored, stored, or shared');
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
 });

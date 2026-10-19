@@ -1,18 +1,18 @@
 {
   "name": "englishlegalese-platform",
-  "version": "1.62.0",
-  "description": "EnglishLegalese v1.62.0: user-first learning pathways, functional privacy-conscious practice prompt builder, accessible mobile navigation, course disclosure fix, clear SEO/head and preserved 21 scenarios and approved logo.",
+  "version": "1.63.0",
+  "description": "EnglishLegalese v1.63.0: accessible, private three-exercise Legal English writing workout with model examples, review checklists and no scoring or persistence; previous 21 scenarios, nine courses, trusted logo and account boundaries preserved.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check product-v1570.js && node --check product-v1580.js && node --check product-v1590.js && node --check playwright.config.js && node --check playwright.production.config.js && node --check tests/v1570-browser.spec.js && node --check tests/v1590-browser.spec.js && node --check tests/v1590-production.spec.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1590-live-recovery.js && node --check scripts/verify-v1600-homepage.js && node --check scripts/verify-v1611-webkit.js && node --check scripts/verify-v1620-experience.js && node scripts/verify-v1620-experience.js",
+    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check product-v1570.js && node --check product-v1580.js && node --check product-v1590.js && node --check playwright.config.js && node --check playwright.production.config.js && node --check tests/v1570-browser.spec.js && node --check tests/v1590-browser.spec.js && node --check tests/v1590-production.spec.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1590-live-recovery.js && node --check scripts/verify-v1600-homepage.js && node --check scripts/verify-v1611-webkit.js && node --check scripts/verify-v1620-experience.js && node --check scripts/verify-v1630-workout.js && node scripts/verify-v1630-workout.js",
     "predeploy:check": "node scripts/predeploy-check.js",
     "migrate": "node scripts/migrate.js",
     "prod:readiness": "node scripts/verify-production-readiness.js",
     "live:verify": "node scripts/verify-live-integrations.js",
     "live:verify:strict": "node scripts/verify-live-integrations.js --strict",
     "owner:create": "node scripts/create-owner.js",
-    "ops:verify": "node scripts/verify-v1620-experience.js",
+    "ops:verify": "node scripts/verify-v1630-workout.js",
     "audit:high": "npm audit --audit-level=high",
     "e2e:public": "node scripts/e2e-public-launch-smoke.js",
     "e2e:browser": "playwright test --config=playwright.config.js",
@@ -33,7 +33,8 @@
     "verify:v1600": "node scripts/verify-v1600-homepage.js",
     "verify:v1610": "node scripts/verify-v1610-visual.js",
     "verify:v1611": "node scripts/verify-v1611-webkit.js",
-    "verify:v1620": "node scripts/verify-v1620-experience.js"
+    "verify:v1620": "node scripts/verify-v1620-experience.js",
+    "verify:v1630": "node scripts/verify-v1630-workout.js"
   },
   "dependencies": {
     "express": "4.22.3"
