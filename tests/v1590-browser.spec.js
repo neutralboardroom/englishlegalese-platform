@@ -249,3 +249,58 @@ test('writing practice is discoverable but does not lengthen the default homepag
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
+
+test('eight-question diagnostic explains each practice answer and routes to a relevant exercise',async({page})=>{
+  await page.goto('/#diagnostic');await waitForRecovery(page);
+  await expect(page.locator('.v1580-diagnostic-form')).toBeVisible();
+  const correct=[1,1,1,1,1,2,1,0];
+  for(let i=0;i<correct.length;i++)await page.locator('input[name="v1580-q'+i+'"][value="'+(i===2?0:correct[i])+'"]').check();
+  await page.getByRole('button',{name:'Get my practice recommendation'}).click();
+  const result=page.locator('.v1580-result');
+  await expect(result).toBeVisible();
+  await expect(result).toContainText('7 of 8');
+  await expect(result).toContainText('not a validated proficiency score');
+  await expect(result.locator('.v1640-action-plan')).toContainText('expressing obligations and time limits');
+  const suggested=result.locator('.js-v1640-recommended-practice');
+  await expect(suggested).toHaveAttribute('href','#quick-practice');
+  await expect(suggested).toHaveAttribute('data-practice-step','2');
+  const details=result.locator('details.v1640-review');
+  await expect(details).toBeHidden();
+  await details.locator('summary').click();
+  await expect(details).toHaveAttribute('open','');
+  const items=details.locator('.v1640-review-item');
+  await expect(items).toHaveCount(8);
+  for(let i=0;i<8;i++){
+    await expect(items.nth(i)).toContainText('Question '+(i+1));
+    await expect(items.nth(i)).toContainText('Your answer:');
+    await expect(items.nth(i)).toContainText('Stronger option:');
+  }
+  await expect(items.nth(2)).toContainText('A different answer is stronger');
+  await expect(items.nth(2)).toContainText('“must” for obligations');
+  await expect(items.nth(7)).toContainText('confidentiality risks');
+  await suggested.click();
+  await expect(page.locator('#quick-practice')).toBeVisible();
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 3 of 3');
+  await expect(page.locator('#v1630-step-title-2')).toBeVisible();
+  await expect(page.locator('#quick-practice .v1630-step:visible')).toHaveCount(1);
+});
+
+test('incomplete diagnostic guides the learner and reset clears the whole debrief',async({page})=>{
+  await page.goto('/#diagnostic');await waitForRecovery(page);
+  await page.getByRole('button',{name:'Get my practice recommendation'}).click();
+  await expect(page.locator('.v1580-form-status')).toContainText('8 questions remain');
+  await expect(page.locator('input[name="v1580-q0"]').first()).toBeFocused();
+  const correct=[1,1,1,1,1,2,1,0];
+  for(let i=0;i<8;i++)await page.locator('input[name="v1580-q'+i+'"][value="'+correct[i]+'"]').check();
+  await page.getByRole('button',{name:'Get my practice recommendation'}).click();
+  await expect(page.locator('.v1580-result')).toContainText('8 of 8');
+  await expect(page.locator('.v1640-review-item')).toHaveCount(8);
+  await expect(page.locator('.v1640-next-action')).toHaveAttribute('href','#quick-practice');
+  await page.getByRole('button',{name:'Clear answers'}).click();
+  await expect(page.locator('.v1580-result')).toBeHidden();
+  await expect(page.locator('.v1580-result')).toBeEmpty();
+  await expect(page.locator('input[name="v1580-q0"][value="1"]')).not.toBeChecked();
+  await expect(page.locator('.v1580-form-status')).toBeEmpty();
+  await page.reload();await waitForRecovery(page);
+  await expect(page.locator('input[name="v1580-q0"][value="1"]')).not.toBeChecked();
+});
