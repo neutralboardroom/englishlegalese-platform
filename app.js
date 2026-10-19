@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.65.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.66.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -236,7 +236,7 @@
         <div class="v1630-step-controls"><button class="btn light" type="button" data-practice-action="prev" disabled>Previous</button><button class="btn teal" type="button" data-practice-action="next">Next exercise</button><button class="v1630-clear" type="button" data-practice-action="reset">Clear drafts and restart</button></div>
         <p class="v1630-privacy">Your drafts stay in this page only. They are not submitted, scored, stored, or shared. Refreshing or restarting clears them. Never enter real client information.</p>
         <p class="v1630-end-note" role="status" aria-live="polite"></p>
-        <a class="v1630-next-link" href="#practice-studio">Explore all 21 Legal English scenarios →</a>
+        <a class="v1630-next-link" href="#clause-reading-lab">Practise reading fictional contract clauses →</a><p><a href="#practice-studio">Explore all 21 Legal English scenarios →</a></p>
       </div>
     </section>`;
   }
@@ -267,6 +267,116 @@
       </div>
     </section>`;
   }
+
+  // Fictional clause-reading skill checks. No legal interpretation, storage, grading, or network calls.
+  const CLAUSE_READING_CASES = [
+    {
+      title:'Trigger and time period',
+      clause:'In this fictional services agreement, the provider must send a written progress update within five business days after receiving the client’s written request.',
+      question:'When does the five-business-day period begin in this example?',
+      options:['When the fictional contract was signed','When the provider receives the written request','Whenever the provider starts working'],
+      strong:1,
+      explanation:'The words “after receiving” identify the event that starts the stated period. “Business days” can have a defined meaning in real documents. Do not assume that it means five calendar days, or calculate a real deadline from this exercise.',
+      checks:['Who is required to act? The provider.','What starts the period? Receiving a written request.','What remains to verify in real work? Defined terms, delivery provisions, and applicable law.']
+    },
+    {
+      title:'Permission versus obligation',
+      clause:'In this fictional supply agreement, the buyer may request a replacement if the item arrives damaged. The buyer must provide photographs with the request.',
+      question:'Which reading preserves the difference between “may” and “must”?',
+      options:['The buyer is always required to request a replacement','The buyer can choose to request a replacement but must include photographs if making that request','The seller must replace every item without a request'],
+      strong:1,
+      explanation:'“May” ordinarily signals permission or an option, while “must” normally states an obligation. The second sentence specifies information required if the optional request is made. A real agreement needs the full text and qualified review before relying on that interpretation.',
+      checks:['Separate an option from a requirement.','Identify who must supply the photographs.','Do not infer an automatic replacement right from an excerpt.']
+    },
+    {
+      title:'Exceptions and written approvals',
+      clause:'In this fictional project agreement, changes to the delivery schedule require written approval by both parties, unless the parties agree otherwise in writing.',
+      question:'Which summary keeps the exception instead of dropping it?',
+      options:['The schedule can never change','A change generally needs both parties’ written approval, subject to a different written agreement','Either party can change the schedule alone by phone'],
+      strong:1,
+      explanation:'A sound summary includes both the default written-approval rule and the exception introduced by “unless.” Omitting an exception can materially change the reader’s understanding. This exercise does not decide enforceability or legal effect.',
+      checks:['State the default rule accurately.','Retain the “unless” exception.','Check the whole document and applicable law before real decisions.']
+    }
+  ];
+  function clauseReadingLab(){
+    return `<section class="section v1660-reading-lab" id="clause-reading-lab" aria-labelledby="v1660-title">
+      <div class="container section-head"><div><div class="eyebrow">Free clause reading lab</div><h2 id="v1660-title">Read the small words that change the meaning.</h2></div><p>Practise spotting timing triggers, obligations, options and exceptions in three short fictional clauses. Compare your answer with a clear explanation; no account or live AI is required.</p></div>
+      <div class="container v1660-shell">
+        <p class="v1660-progress" role="status" aria-live="polite" aria-atomic="true">Reviewed 0 of ${CLAUSE_READING_CASES.length} fictional clauses</p>
+        ${CLAUSE_READING_CASES.map((item,i)=>`<article class="panel v1660-case" data-reading-case="${i}">
+          <div class="v1660-kicker">Clause ${i+1} of ${CLAUSE_READING_CASES.length} · ${escapeHtml(item.title)}</div>
+          <h3>Read this fictional clause</h3><blockquote class="v1660-clause">${escapeHtml(item.clause)}</blockquote>
+          <fieldset class="v1660-choices"><legend>${escapeHtml(item.question)}</legend>
+          ${item.options.map((option,j)=>`<label><input type="radio" name="v1660-answer-${i}" value="${j}"><span>${escapeHtml(option)}</span></label>`).join('')}</fieldset>
+          <div class="v1660-actions"><button class="btn teal" type="button" data-reading-action="compare">Compare my reading</button><button class="btn light" type="button" data-reading-action="clear">Clear this clause</button></div>
+          <p class="v1660-status" role="status" aria-live="polite"></p>
+          <div class="v1660-feedback" hidden><h4>What the wording tells us</h4><p class="v1660-response"></p><p>${escapeHtml(item.explanation)}</p><h4>Self-check the language</h4><ul>${item.checks.map(check=>`<li>${escapeHtml(check)}</li>`).join('')}</ul><p>Illustrative language guidance, not legal advice, legal interpretation for a real agreement, or accredited scoring.</p></div>
+        </article>`).join('')}
+        <p class="v1660-privacy">All clauses are fictional. Choices stay only in this page and are not sent or saved. Refresh or clear to restart. Never rely on these excerpts to determine actual rights or deadlines.</p>
+        <button class="btn light v1660-clear-all" type="button" data-reading-action="reset-all">Clear all reading exercises</button>
+        <p><a href="#quick-practice">Continue with a fictional writing exercise →</a></p>
+      </div>
+    </section>`;
+  }
+  function bindClauseReadingLab(){
+    const section=$('#clause-reading-lab');if(!section||section.dataset.bound==='1')return;
+    section.dataset.bound='1';
+    const cards=Array.from(section.querySelectorAll('.v1660-case'));
+    const progress=section.querySelector('.v1660-progress');
+    const reviewed=new Set();
+    function update(){progress.textContent='Reviewed '+reviewed.size+' of '+cards.length+' fictional clauses';}
+    function clear(card,i){
+      card.querySelectorAll('input[type="radio"]').forEach(input=>{input.checked=false;});
+      card.querySelector('.v1660-feedback').hidden=true;
+      card.querySelector('.v1660-response').textContent='';
+      card.querySelector('.v1660-status').textContent='';
+      reviewed.delete(i);update();
+    }
+    section.addEventListener('click',event=>{
+      const target=event.target instanceof Element?event.target:event.target?.parentElement;
+      const button=target?.closest('button[data-reading-action]');
+      if(!button||!section.contains(button))return;
+      if(button.dataset.readingAction==='reset-all'){
+        cards.forEach((card,i)=>clear(card,i));
+        progress.textContent='All three reading exercises cleared. Reviewed 0 of '+cards.length+' fictional clauses';
+        cards[0]?.querySelector('input[type="radio"]')?.focus({preventScroll:true});
+        return;
+      }
+      const card=button.closest('.v1660-case');if(!card)return;
+      const index=Number(card.dataset.readingCase);
+      if(!Number.isInteger(index)||!CLAUSE_READING_CASES[index])return;
+      if(button.dataset.readingAction==='clear'){clear(card,index);return;}
+      if(button.dataset.readingAction!=='compare')return;
+      const choice=card.querySelector('input[type="radio"]:checked');
+      const status=card.querySelector('.v1660-status');
+      const feedback=card.querySelector('.v1660-feedback');
+      if(!choice){
+        feedback.hidden=true;
+        status.textContent='Choose one reading before comparing it with the explanation.';
+        card.querySelector('input[type="radio"]')?.focus();
+        return;
+      }
+      const preferred=CLAUSE_READING_CASES[index].strong;
+      card.querySelector('.v1660-response').textContent=Number(choice.value)===preferred?
+        'Your reading matches the suggested meaning of this fictional excerpt.':
+        'A different reading better preserves the wording in this fictional excerpt.';
+      feedback.hidden=false;
+      status.textContent='Explanation available below. Focus on the wording rather than a score.';
+      reviewed.add(index);update();
+    });
+    section.addEventListener('change',event=>{
+      const input=event.target;if(!(input instanceof HTMLInputElement)||input.type!=='radio')return;
+      const card=input.closest('.v1660-case');if(!card)return;
+      const index=Number(card.dataset.readingCase);
+      if(reviewed.has(index)){
+        reviewed.delete(index);update();
+        card.querySelector('.v1660-feedback').hidden=true;
+        card.querySelector('.v1660-status').textContent='Choice changed. Compare again to review it.';
+      }
+    });
+    update();
+  }
+
   function teachersEmployers(){
     return `<section class="section alt" id="teachers"><div class="container grid cols-2"><article class="panel"><div class="eyebrow">Teachers</div><h2>Teacher-guided learning support.</h2><p>Teachers can review learner practice, prepare lessons, guide roleplays, assign homework, and give feedback while private teacher notes remain appropriately separated.</p><a class="btn teal" href="#teacher-dashboard">Teacher account access</a><p class="v1580-micro-note">Operational teacher tools require the appropriate signed-in role.</p></article><article class="panel" id="employers"><div class="eyebrow">Employers</div><h2>Privacy-conscious team learning.</h2><p>Organizations can use consent-based, aggregate attendance and learning-progress signals. Private drafts, raw AI practice, uploads, recordings, native-language explanations, test answers, and teacher-private notes remain excluded by default.</p><a class="btn teal" href="#employer-dashboard">Employer account access</a><p class="v1580-micro-note">Nothing from a learner's private work is shared automatically.</p></article></div></section>`;
   }
@@ -280,7 +390,7 @@
     const title = {student:'Student dashboard',teacher:'Teacher dashboard',employer:'Employer dashboard',admin:'Owner / staff dashboard'}[role] || 'Dashboard';
     return `<section class="section" id="${role}-dashboard"><div class="container"><article class="panel"><div class="eyebrow">${escapeHtml(title)}</div><h2>Account access required.</h2><p>Operational dashboards require production authentication and the appropriate role. Public learning tools remain available from the homepage.</p><a class="btn gold" href="#start">Return to learning options</a></article></div></section>`;
   }
-  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${teachersEmployers()}${learningExperience()}${trust()}`); }
+  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${teachersEmployers()}${learningExperience()}${trust()}`); }
 
   let openQuickPracticeStep=null;
   function bindDiagnostic(){
@@ -487,6 +597,7 @@
     bindDiagnostic();
     bindQuickPractice();
     bindAiReviewLab();
+    bindClauseReadingLab();
   }
   function scrollToTarget(id, attempt=0){
     const target=document.getElementById(id);

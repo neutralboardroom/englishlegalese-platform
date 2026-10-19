@@ -1,3 +1,21 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.66.0 (candidate)
+
+## Material improvement for v1.66.0
+- Introduce a free, focused, offline **Clause Reading Lab** with three authentic-style *fictional* short contract excerpts: triggering events and business-day wording, the contrast between “may” and “must,” and written-approval exceptions.
+- Learners choose an interpretation, compare their reading with substantive plain-English guidance, and review self-check questions rather than receiving an unvalidated proficiency grade or legal opinion.
+- Full keyboard-native radio/fieldset controls, status guidance, focus on missing response, reconsideration on changed choice and reversible reset with no account, network requests, payment, submissions, saved choices, or external AI.
+- Discoverable by one footer link and the existing three-step writing workout, while keeping the established homepage short and protected logo exactly byte-preserved.
+- Preserve all 9 courses, 21 scenarios, 8 original diagnostic questions and feedback, 3 private writing exercises, 3 AI Draft Review Lab cases, teacher/employer authorization, legacy routes, and accepted v1.65.0 backend.
+- Require two independently completed exact-head Chromium desktop/tablet/mobile and iPad WebKit qualification passes, dependency audit and all inherited/no-drift assertions, followed by independent real apex/www browser acceptance against the exact Render SHA and prior v1.65.0 rollback.
+
+## Next most valuable improvements, not yet built
+1. Independent human keyboard/screen-reader/mobile language walkthrough and fix observed barriers without premature WCAG compliance claims.
+2. Deepen specialised reading/writing for business contracts and legal workplaces with qualified teacher feedback and evidence-based learning outcomes, preserving educational/legal boundary.
+3. Consider careful historical renderer consolidation only after screenshot equivalence and owner-approved goldens; no redesign merely to change appearance.
+4. Real connected AI, authenticated progress, retention/deletion/export, professional testing, or paid services require separately verified credentials, privacy/safety and owner approval; no fake readiness.
+5. Preserve exact protected logo, 19 Roger + 10 durable rules, two release gates, actual production test, no credential disclosure and working immediate prior rollback.
+
+## Entire inherited predecessor list, unchanged
 # EnglishLegalese.com — Next Version Improvement List after v1.65.0 (candidate)
 
 ## Material improvements for v1.65.0

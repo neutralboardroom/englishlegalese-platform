@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.65.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.65.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.66.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.66.0');
 }
 
-test.describe('EnglishLegalese v1.65.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.66.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -114,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.65\.0/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.66\.0/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -187,7 +187,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.65.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.66.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
@@ -385,4 +385,60 @@ test('diagnostic AI uncertainty safely routes to the new fictional AI draft lab'
   await page.locator('.v1640-next-action').click();
   await expect(page.locator('#ai-review-lab')).toBeVisible();
   await expect(page.locator('.v1650-progress')).toContainText('Reviewed 0 of 3');
+});
+
+
+test('fictional clause reading lab explains three different interpretation traps and resets privately',async({page})=>{
+  await page.goto('/#clause-reading-lab');await waitForRecovery(page);
+  const lab=page.locator('#clause-reading-lab');
+  await expect(lab).toBeVisible();
+  await expect(lab.locator('.v1660-case')).toHaveCount(3);
+  await expect(lab.locator('.v1660-progress')).toContainText('Reviewed 0 of 3');
+  await expect(lab).toContainText('All clauses are fictional');
+  const first=lab.locator('.v1660-case').nth(0);
+  await first.getByRole('button',{name:'Compare my reading'}).click();
+  await expect(first.locator('.v1660-status')).toContainText('Choose one reading');
+  await expect(first.locator('input[type="radio"]').first()).toBeFocused();
+  await first.locator('input[value="0"]').check();
+  await first.getByRole('button',{name:'Compare my reading'}).click();
+  await expect(first.locator('.v1660-response')).toContainText('A different reading');
+  await expect(lab.locator('.v1660-progress')).toContainText('Reviewed 1 of 3');
+  await first.locator('input[value="1"]').check();
+  await expect(first.locator('.v1660-feedback')).toBeHidden();
+  await expect(lab.locator('.v1660-progress')).toContainText('Reviewed 0 of 3');
+  await first.getByRole('button',{name:'Compare my reading'}).click();
+  await expect(first.locator('.v1660-response')).toContainText('matches the suggested meaning');
+  const second=lab.locator('.v1660-case').nth(1);
+  await second.locator('input[value="1"]').check();
+  await second.getByRole('button',{name:'Compare my reading'}).click();
+  await expect(second.locator('.v1660-feedback')).toContainText('“May” ordinarily');
+  const third=lab.locator('.v1660-case').nth(2);
+  await third.locator('input[value="1"]').check();
+  await third.getByRole('button',{name:'Compare my reading'}).click();
+  await expect(third.locator('.v1660-feedback')).toContainText('exception');
+  await expect(lab.locator('.v1660-progress')).toContainText('Reviewed 3 of 3');
+  await first.getByRole('button',{name:'Clear this clause'}).click();
+  await expect(lab.locator('.v1660-progress')).toContainText('Reviewed 2 of 3');
+  await lab.getByRole('button',{name:'Clear all reading exercises'}).click();
+  await expect(lab.locator('.v1660-progress')).toContainText('Reviewed 0 of 3');
+  await expect(lab.locator('input[type="radio"]:checked')).toHaveCount(0);
+  await expect(lab.locator('.v1660-feedback:visible')).toHaveCount(0);
+  await first.locator('input[value="1"]').check();
+  await page.reload();await waitForRecovery(page);
+  await expect(page.locator('#clause-reading-lab input[type="radio"]:checked')).toHaveCount(0);
+  const keys=await page.evaluate(()=>Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter(k=>/v1660|clausereadinglab/i.test(k)));
+  expect(keys).toEqual([]);
+});
+
+test('clause reading lab stays out of the home view but is reachable from existing practice',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('#clause-reading-lab')).toBeHidden();
+  await expect(page.locator('footer a[href="#clause-reading-lab"]')).toHaveCount(1);
+  await page.evaluate(()=>location.hash='#quick-practice');
+  await page.locator('.v1630-next-link').click();
+  await expect(page.locator('#clause-reading-lab')).toBeVisible();
+  await expect(page.locator('#elFocusToolbar')).toBeVisible();
+  await expect(page.locator('.v1660-case')).toHaveCount(3);
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
 });
