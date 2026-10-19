@@ -197,7 +197,7 @@
     const section=$('#quick-practice');
     if(!section||section.dataset.bound==='1')return;
     section.dataset.bound='1';
-    const steps=$('.v1630-step',section);
+    const steps=Array.from(section.querySelectorAll('.v1630-step'));
     const progress=$('.v1630-progress',section);
     const prev=$('[data-practice-action="prev"]',section);
     const next=$('[data-practice-action="next"]',section);
@@ -227,9 +227,9 @@
         btn.setAttribute('aria-expanded',String(!expanded));
         btn.textContent=expanded?'Show model example and checklist':'Hide model example and checklist';
       }else if(action==='reset'){
-        $('.v1630-answer',section).forEach(field=>{field.value='';});
-        $('.v1630-model',section).forEach(model=>{model.hidden=true;});
-        $('.v1630-reveal',section).forEach(button=>{button.setAttribute('aria-expanded','false');button.textContent='Show model example and checklist';});
+        section.querySelectorAll('.v1630-answer').forEach(field=>{field.value='';});
+        section.querySelectorAll('.v1630-model').forEach(model=>{model.hidden=true;});
+        section.querySelectorAll('.v1630-reveal').forEach(button=>{button.setAttribute('aria-expanded','false');button.textContent='Show model example and checklist';});
         showStep(0);
         endNote.textContent='All three drafts were cleared from this page.';
       }
