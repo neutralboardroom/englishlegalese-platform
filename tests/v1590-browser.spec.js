@@ -206,7 +206,7 @@ test('guided three-step writing practice is private, usable and preserves work b
   await page.locator('#v1630-answer-0').fill(draft);
   await page.getByRole('button',{name:'Show model example and checklist'}).click();
   await expect(page.locator('#v1630-model-0')).toBeVisible();
-  await expect(page.locator('#v1630-model-0')).toContainText('qualified');
+  await expect(page.locator('#v1630-model-0')).toContainText('not an automatic assessment');
   await expect(page.getByRole('button',{name:'Hide model example and checklist'})).toHaveAttribute('aria-expanded','true');
   await page.getByRole('button',{name:'Next exercise'}).click();
   await expect(page.locator('.v1630-progress')).toHaveText('Exercise 2 of 3');
