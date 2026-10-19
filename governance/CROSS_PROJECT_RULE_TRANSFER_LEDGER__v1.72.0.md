@@ -1,0 +1,1 @@
+Adopted public general accessible-form patterns (W3C) and adapted pedagogical patterns only from public market references. No cross-product code, credentials, records, pricing, subscriptions, private data or product authority imported. No changes to other products. Logo and original rule register protected.
