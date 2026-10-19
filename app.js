@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.64.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.65.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -56,6 +56,68 @@
       ]
     }
   ];
+  const AI_REVIEW_CASES = [
+    {
+      "title": "Unverified deadline",
+      "skill": "Confirm dates and obligations",
+      "context": "Fictional case: A colleague asks an AI assistant to draft a short client update about a service agreement. The signed agreement has not been checked.",
+      "draft": "You are legally required to reply within 24 hours. This deadline is final and cannot be changed.",
+      "question": "What should you do before relying on this wording?",
+      "options": [
+        "Verify the actual agreement and any applicable source before stating a mandatory deadline.",
+        "Keep the precise number because AI output sounds confident.",
+        "Tell the client the AI has already verified the requirement."
+      ],
+      "strong": 0,
+      "explanation": "A confident, precise legal deadline is still unsupported if its source was not checked. Keep the status update factual and verify any obligation or deadline with a qualified source.",
+      "rewrite": "Could you please confirm the relevant response deadline in the signed agreement? We should check the applicable terms before sending a final update.",
+      "checks": [
+        "Distinguish confirmed facts from suggestions.",
+        "Do not invent or overstate a time limit.",
+        "Seek qualified verification of legal meaning."
+      ]
+    },
+    {
+      "title": "Overconfident legal conclusion",
+      "skill": "Separate clear English from legal advice",
+      "context": "Fictional case: An AI assistant summarizes a draft clause without knowing which law governs it or whether exceptions apply.",
+      "draft": "This clause always protects the customer. Every country interprets it in exactly the same way, so no lawyer needs to check it.",
+      "question": "Which response best protects clarity and accuracy?",
+      "options": [
+        "Repeat the claim but shorten it.",
+        "Treat the legal conclusion as unverified and request qualified review of the actual clause and governing context.",
+        "Publish the summary as an official legal opinion."
+      ],
+      "strong": 1,
+      "explanation": "Language can sound natural while the legal conclusion is unsupported. Meaning can depend on wording and context. A learning tool can help explain vocabulary, but cannot substitute for appropriate legal review.",
+      "rewrite": "The clause appears to address customer protections, but its effect depends on the actual wording and context. Please have a qualified reviewer confirm its legal meaning.",
+      "checks": [
+        "Separate an educational explanation from a legal conclusion.",
+        "Watch for unsupported absolute terms such as “always.”",
+        "Do not claim approval or certification."
+      ]
+    },
+    {
+      "title": "Confidential client facts",
+      "skill": "Use fictional details for practice",
+      "context": "Fictional case: A trainee wants to improve an email using a public AI service, but there is no approved secure client-data workflow.",
+      "draft": "Paste the client’s name, passport details, account number, and complete case history into any free AI chatbot so it can write a better email.",
+      "question": "What is the safest starting point for this language exercise?",
+      "options": [
+        "Share the details because the exercise is educational.",
+        "Assume any chatbot automatically protects privileged data.",
+        "Use invented or appropriately de-identified facts, and do not upload real confidential material without specific authorization and safeguards."
+      ],
+      "strong": 2,
+      "explanation": "Practising grammar and tone rarely requires identifying details. Use synthetic examples or properly de-identified facts. Never assume that a public AI service is approved to receive confidential information.",
+      "rewrite": "Practise with an invented client and a fictional situation. If real protected information is needed for an authorized workflow, follow the organization’s approved security and confidentiality requirements.",
+      "checks": [
+        "Replace real names, identifiers and records with fictional details.",
+        "Verify the tool and authorization before sharing sensitive material.",
+        "Keep educational exercises separate from client legal work."
+      ]
+    }
+  ];
   const QUESTIONS = [
     ['Professional tone','Which client-update sentence is clearest and most professional?',['We need your answer ASAP or this could become a problem.','Please send the requested information by Thursday so we can prepare the next step.','You failed to send what we asked for.'],1],
     ['Clarity','A colleague says, “Please handle this soon.” What is the strongest communication response?',['Say nothing and decide what “soon” means yourself.','Ask: “Could you confirm the deadline and the specific deliverable you need?”','Reply: “Okay.”'],1],
@@ -80,7 +142,7 @@
     if(missed.includes('Confidentiality awareness'))
       return {href:'#trust',label:'Review safe practice boundaries',why:'Start by reviewing confidentiality and responsible learning-tool use.'};
     if(missed.includes('AI-output review'))
-      return {href:'#smartteacher',label:'Explore careful AI-draft practice',why:'Practise identifying language concerns without trusting unverified AI legal conclusions.'};
+      return {href:'#ai-review-lab',label:'Practise checking a fictional AI draft',why:'Spot a confident but unverified claim and learn how to request qualified review.'};
     if(missed.some(x=>x==='Legal reading'||x==='Plain English'))
       return {href:'#quick-practice',step:2,label:'Try the fictional clause rewrite',why:'Focus on expressing obligations and time limits in clear English without changing meaning.'};
     if(missed.some(x=>x==='Clarity'||x==='Meetings'))
@@ -181,7 +243,29 @@
 
   function smartTeacher(){
     const starters = ['Client update','Contract clause','Meeting clarification','AI draft review'];
-    return `<section class="section" id="smartteacher"><div class="container section-head"><div><div class="eyebrow">SmartTeacher AI practice</div><h2>Practice with AI. Improve with teacher guidance. Track progress clearly.</h2></div><p>Prepare a realistic Legal English practice or writing-review prompt. This on-page prompt builder does not send text to an AI service or generate live AI feedback. Use synthetic or de-identified details.</p></div><div class="container panel v1620-practice-panel"><div class="v1580-prompt-starters"><span>Try a guided starter:</span>${starters.map((s,i)=>`<button class="v1580-starter" type="button" data-starter="${i}">${s}</button>`).join('')}</div><label class="v1620-input-label" for="el-practice-topic">Your practice topic or draft</label><textarea id="el-practice-topic" class="input big-input js-ai-input" maxlength="1500" placeholder="e.g., Practise a concise client update, using invented facts only."></textarea><div class="tag-row v1620-practice-actions"><button class="btn gold js-ai-demo" type="button">Prepare conversation practice</button><button class="btn light js-save-lesson" type="button">Prepare writing review</button><button class="btn light js-teacher-review" type="button">Teacher review options</button></div><div class="ai-demo-output clean-note js-ai-output v1620-practice-result" role="status" aria-live="polite" tabindex="-1">Choose a starter or describe your task. The prepared prompt stays in this browser until you copy it. No AI response is generated here.</div><button class="btn light js-copy-practice" type="button" hidden>Copy prepared prompt</button><p class="v1580-micro-note">Use this prompt with a connected AI tool or qualified teacher. Always verify legal meaning; this is language practice, not legal advice or an accredited assessment.</p></div></section>`;
+    return `<section class="section" id="smartteacher"><div class="container section-head"><div><div class="eyebrow">SmartTeacher AI practice</div><h2>Practice with AI. Improve with teacher guidance. Track progress clearly.</h2></div><p>Prepare a realistic Legal English practice or writing-review prompt. This on-page prompt builder does not send text to an AI service or generate live AI feedback. Use synthetic or de-identified details.</p></div><div class="container panel v1620-practice-panel"><div class="v1580-prompt-starters"><span>Try a guided starter:</span>${starters.map((s,i)=>`<button class="v1580-starter" type="button" data-starter="${i}">${s}</button>`).join('')}</div><label class="v1620-input-label" for="el-practice-topic">Your practice topic or draft</label><textarea id="el-practice-topic" class="input big-input js-ai-input" maxlength="1500" placeholder="e.g., Practise a concise client update, using invented facts only."></textarea><div class="tag-row v1620-practice-actions"><button class="btn gold js-ai-demo" type="button">Prepare conversation practice</button><button class="btn light js-save-lesson" type="button">Prepare writing review</button><button class="btn light js-teacher-review" type="button">Teacher review options</button></div><div class="ai-demo-output clean-note js-ai-output v1620-practice-result" role="status" aria-live="polite" tabindex="-1">Choose a starter or describe your task. The prepared prompt stays in this browser until you copy it. No AI response is generated here.</div><button class="btn light js-copy-practice" type="button" hidden>Copy prepared prompt</button><p class="v1580-micro-note">Use this prompt with a connected AI tool or qualified teacher. Always verify legal meaning; this is language practice, not legal advice or an accredited assessment.</p><a class="v1650-inline-link" href="#ai-review-lab">Try the free AI Draft Review Lab →</a></div></section>`;
+  }
+  function aiReviewLab(){
+    return `<section class="section v1650-lab" id="ai-review-lab" aria-labelledby="v1650-lab-title">
+      <div class="container section-head"><div><div class="eyebrow">AI draft review lab</div><h2 id="v1650-lab-title">Spot what polished AI writing can get wrong.</h2></div><p>Three short fictional examples help you practise checking legal meaning, claims, and privacy before trusting an AI-assisted draft. No live AI service, account, grading or upload is involved.</p></div>
+      <div class="container v1650-shell"><p class="v1650-progress" role="status" aria-live="polite">Reviewed 0 of ${AI_REVIEW_CASES.length} practice cases</p>
+        ${AI_REVIEW_CASES.map((item,i)=>`<article class="v1650-case panel" data-ai-case="${i}">
+          <div class="v1650-kicker">Case ${i+1} of ${AI_REVIEW_CASES.length} · ${escapeHtml(item.skill)}</div>
+          <h3>${escapeHtml(item.title)}</h3>
+          <p class="v1650-context">${escapeHtml(item.context)}</p>
+          <div class="v1650-draft"><strong>Fictional AI draft to review</strong><blockquote>${escapeHtml(item.draft)}</blockquote></div>
+          <fieldset class="v1650-choices"><legend>${escapeHtml(item.question)}</legend>${item.options.map((option,j)=>`<label><input type="radio" name="v1650-answer-${i}" value="${j}"><span>${escapeHtml(option)}</span></label>`).join('')}</fieldset>
+          <label class="v1650-label" for="v1650-own-rewrite-${i}">Optional: write a safer version in your own words</label>
+          <textarea id="v1650-own-rewrite-${i}" class="v1650-rewrite" rows="3" maxlength="900" autocomplete="off" placeholder="Use fictional facts only. Your text is not sent, saved or scored."></textarea>
+          <div class="v1650-case-actions"><button type="button" class="btn teal" data-ai-action="review">Compare my choice</button><button type="button" class="btn light" data-ai-action="clear">Clear this case</button></div>
+          <p class="v1650-status" role="status" aria-live="polite"></p>
+          <div class="v1650-guidance" hidden><h4>Review guidance</h4><p class="v1650-judgement"></p><p>${escapeHtml(item.explanation)}</p><p><strong>One possible safer version:</strong> ${escapeHtml(item.rewrite)}</p><h4>Self-check</h4><ul>${item.checks.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul><p class="v1650-disclaimer">Educational guidance only, not accredited scoring or legal advice. Other appropriate wording may be possible.</p></div>
+        </article>`).join('')}
+        <p class="v1650-privacy">This lab uses prewritten fictional samples, not live AI. Your practice choices and drafts are temporary page state, never submitted or stored by this exercise. Refreshing the page clears them. Use qualified human review for real legal meaning.</p>
+        <button class="btn light v1650-reset-all" type="button" data-ai-action="reset-all">Clear all three exercises</button>
+        <p><a href="#smartteacher">Prepare your own language-practice prompt →</a></p>
+      </div>
+    </section>`;
   }
   function teachersEmployers(){
     return `<section class="section alt" id="teachers"><div class="container grid cols-2"><article class="panel"><div class="eyebrow">Teachers</div><h2>Teacher-guided learning support.</h2><p>Teachers can review learner practice, prepare lessons, guide roleplays, assign homework, and give feedback while private teacher notes remain appropriately separated.</p><a class="btn teal" href="#teacher-dashboard">Teacher account access</a><p class="v1580-micro-note">Operational teacher tools require the appropriate signed-in role.</p></article><article class="panel" id="employers"><div class="eyebrow">Employers</div><h2>Privacy-conscious team learning.</h2><p>Organizations can use consent-based, aggregate attendance and learning-progress signals. Private drafts, raw AI practice, uploads, recordings, native-language explanations, test answers, and teacher-private notes remain excluded by default.</p><a class="btn teal" href="#employer-dashboard">Employer account access</a><p class="v1580-micro-note">Nothing from a learner's private work is shared automatically.</p></article></div></section>`;
@@ -196,7 +280,7 @@
     const title = {student:'Student dashboard',teacher:'Teacher dashboard',employer:'Employer dashboard',admin:'Owner / staff dashboard'}[role] || 'Dashboard';
     return `<section class="section" id="${role}-dashboard"><div class="container"><article class="panel"><div class="eyebrow">${escapeHtml(title)}</div><h2>Account access required.</h2><p>Operational dashboards require production authentication and the appropriate role. Public learning tools remain available from the homepage.</p><a class="btn gold" href="#start">Return to learning options</a></article></div></section>`;
   }
-  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${teachersEmployers()}${learningExperience()}${trust()}`); }
+  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${teachersEmployers()}${learningExperience()}${trust()}`); }
 
   let openQuickPracticeStep=null;
   function bindDiagnostic(){
@@ -296,6 +380,55 @@
     openQuickPracticeStep=(exercise)=>showStep(exercise,false);
   }
 
+  function bindAiReviewLab(){
+    const section=$('#ai-review-lab');if(!section||section.dataset.bound==='1')return;
+    section.dataset.bound='1';
+    const cases=Array.from(section.querySelectorAll('.v1650-case'));
+    const progress=section.querySelector('.v1650-progress');
+    const reviewed=new Set();
+    function updateProgress(){progress.textContent='Reviewed '+reviewed.size+' of '+cases.length+' practice cases';}
+    function clearCase(card,i){
+      card.querySelectorAll('input[type="radio"]').forEach(input=>{input.checked=false;});
+      const draft=card.querySelector('.v1650-rewrite');if(draft)draft.value='';
+      const status=card.querySelector('.v1650-status');if(status)status.textContent='';
+      const guidance=card.querySelector('.v1650-guidance');if(guidance)guidance.hidden=true;
+      const judgement=card.querySelector('.v1650-judgement');if(judgement)judgement.textContent='';
+      reviewed.delete(i);updateProgress();
+    }
+    section.addEventListener('click',event=>{
+      const btn=event.target.closest('button[data-ai-action]');if(!btn||!section.contains(btn))return;
+      if(btn.dataset.aiAction==='reset-all'){
+        cases.forEach((card,i)=>clearCase(card,i));
+        progress.textContent='All three exercises cleared. Reviewed 0 of '+cases.length+' practice cases';
+        cases[0]?.querySelector('input[type="radio"]')?.focus({preventScroll:true});
+        return;
+      }
+      const card=btn.closest('.v1650-case');if(!card)return;
+      const i=Number(card.dataset.aiCase);if(!Number.isInteger(i)||!AI_REVIEW_CASES[i])return;
+      if(btn.dataset.aiAction==='clear'){clearCase(card,i);return;}
+      if(btn.dataset.aiAction!=='review')return;
+      const choice=card.querySelector('input[type="radio"]:checked');
+      const status=card.querySelector('.v1650-status');
+      const guidance=card.querySelector('.v1650-guidance');
+      if(!choice){if(guidance)guidance.hidden=true;status.textContent='Choose the concern you would address first, then compare your choice.';card.querySelector('input[type="radio"]')?.focus();return;}
+      const strong=AI_REVIEW_CASES[i].strong;
+      const judgement=card.querySelector('.v1650-judgement');
+      judgement.textContent=Number(choice.value)===strong?'Your choice matches the recommended review priority.':'A different first step is recommended for this example.';
+      guidance.hidden=false;status.textContent='Reference guidance is shown below. Compare the reasoning with your own approach.';
+      reviewed.add(i);updateProgress();
+    });
+    section.addEventListener('change',event=>{
+      const input=event.target;
+      if(!(input instanceof HTMLInputElement)||input.type!=='radio')return;
+      const card=input.closest('.v1650-case');if(!card)return;
+      const index=Number(card.dataset.aiCase);
+      if(!reviewed.has(index))return;
+      reviewed.delete(index);updateProgress();
+      card.querySelector('.v1650-guidance').hidden=true;
+      card.querySelector('.v1650-status').textContent='Choice changed. Compare again to review the new selection.';
+    });
+    updateProgress();
+  }
   function bindActions(){
     $$('.js-language-select').forEach(sel=>{ if(sel.dataset.bound) return; sel.dataset.bound='1'; sel.addEventListener('change',()=>{setPreferredLanguage(sel.value);toast(`Preferred explanation language saved: ${sel.value}`);}); });
     const prompts=[
@@ -353,6 +486,7 @@
 
     bindDiagnostic();
     bindQuickPractice();
+    bindAiReviewLab();
   }
   function scrollToTarget(id, attempt=0){
     const target=document.getElementById(id);
