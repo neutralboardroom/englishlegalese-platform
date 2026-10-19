@@ -1,0 +1,3 @@
+# EnglishLegalese.com v1.68.0 — Professional Email Clarity Lab
+
+New free, focused, private, text-only exercise for fictional professional email revisions: precise requests without invented deadlines, truthful draft-versus-approval status, and factual neutral client updates. Each of three cases offers native accessible question choices, optional private learner rewrite, rationale and model, fully reversible reset. No AI grader, audio, client correspondence, external email dispatch, legal advice or durable storage. Existing approved logo, homepage, curriculum, labs, diagnostics, roles, rules and backend preserved. Full qualification and independent production acceptance are release conditions. Immediate rollback: v1.67.0 Render deployment `dep-dbavhq2vcj2c73alvhjg`.

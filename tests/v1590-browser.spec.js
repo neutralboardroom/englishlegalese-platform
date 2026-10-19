@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.67.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.67.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.68.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.68.0');
 }
 
-test.describe('EnglishLegalese v1.67.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.68.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -114,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.67\.0/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.68\.0/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -187,7 +187,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.67.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.68.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
@@ -498,6 +498,65 @@ test('meeting follow-up practice is discoverable without making homepage longer'
   await expect(page.locator('#meeting-followup-lab')).toBeVisible();
   await expect(page.locator('#elFocusToolbar')).toBeVisible();
   await expect(page.locator('.v1670-case')).toHaveCount(3);
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+});
+
+
+test('email clarity lab checks precise requests, approval accuracy and neutral status with private drafts',async({page})=>{
+  await page.goto('/#email-clarity-lab');await waitForRecovery(page);
+  const lab=page.locator('#email-clarity-lab');
+  await expect(lab).toBeVisible();
+  await expect(lab.locator('.v1680-case')).toHaveCount(3);
+  await expect(lab.locator('.v1680-progress')).toContainText('Reviewed 0 of 3');
+  const first=lab.locator('.v1680-case').first();
+  await first.getByRole('button',{name:'Review this email'}).click();
+  await expect(first.locator('.v1680-status')).toContainText('Choose a rewrite');
+  await expect(first.locator('input[type="radio"]').first()).toBeFocused();
+  await first.locator('input[value="0"]').check();
+  await first.locator('.v1680-draft').fill('Please send the latest draft agenda when available.');
+  await first.getByRole('button',{name:'Review this email'}).click();
+  await expect(first.locator('.v1680-response')).toContainText('Another option');
+  await expect(lab.locator('.v1680-progress')).toContainText('Reviewed 1 of 3');
+  await first.locator('input[value="1"]').check();
+  await expect(first.locator('.v1680-feedback')).toBeHidden();
+  await expect(lab.locator('.v1680-progress')).toContainText('Reviewed 0 of 3');
+  await first.getByRole('button',{name:'Review this email'}).click();
+  await expect(first.locator('.v1680-feedback')).toContainText('“ASAP”');
+  await expect(first.locator('.v1680-draft')).toHaveValue('Please send the latest draft agenda when available.');
+  const second=lab.locator('.v1680-case').nth(1);
+  await second.locator('input[value="0"]').check();
+  await second.getByRole('button',{name:'Review this email'}).click();
+  await expect(second.locator('.v1680-feedback')).toContainText('Draft completion');
+  const third=lab.locator('.v1680-case').nth(2);
+  await third.locator('input[value="2"]').check();
+  await third.getByRole('button',{name:'Review this email'}).click();
+  await expect(third.locator('.v1680-feedback')).toContainText('unconfirmed');
+  await expect(lab.locator('.v1680-progress')).toContainText('Reviewed 3 of 3');
+  await first.getByRole('button',{name:'Clear this email'}).click();
+  await expect(first.locator('.v1680-draft')).toHaveValue('');
+  await expect(lab.locator('.v1680-progress')).toContainText('Reviewed 2 of 3');
+  await lab.getByRole('button',{name:'Clear all email exercises'}).click();
+  await expect(lab.locator('.v1680-progress')).toContainText('Reviewed 0 of 3');
+  await expect(lab.locator('.v1680-feedback:visible')).toHaveCount(0);
+  await expect(lab.locator('input[type="radio"]:checked')).toHaveCount(0);
+  await first.locator('.v1680-draft').fill('Only a temporary fictional draft.');
+  await page.reload();await waitForRecovery(page);
+  await expect(page.locator('.v1680-draft').first()).toHaveValue('');
+  const keys=await page.evaluate(()=>Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter(k=>/v1680|emailclaritylab/i.test(k)));
+  expect(keys).toEqual([]);
+});
+
+test('email clarity lab does not expand the homepage and links from existing meeting practice',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('#email-clarity-lab')).toBeHidden();
+  await expect(page.locator('footer a[href="#email-clarity-lab"]')).toHaveCount(1);
+  await page.evaluate(()=>location.hash='#meeting-followup-lab');
+  await expect(page.locator('#meeting-followup-lab')).toBeVisible();
+  await page.locator('#meeting-followup-lab a[href="#email-clarity-lab"]').click();
+  await expect(page.locator('#email-clarity-lab')).toBeVisible();
+  await expect(page.locator('#elFocusToolbar')).toBeVisible();
+  await expect(page.locator('.v1680-case')).toHaveCount(3);
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
