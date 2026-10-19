@@ -42,11 +42,14 @@ class FreeTrialLedger{
   const client=await this.store.pool.connect();
   try{
     await client.query('BEGIN');
-    await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[String(userId)]);
+    await client.query('SELECT pg_advisory_xact_lock(173,3)');
     const check=await client.query(`SELECT EXISTS(SELECT 1 FROM ai_trial_email_verifications WHERE user_id=$1 AND verified_at IS NOT NULL) AS verified,
     (SELECT count(*)::integer FROM ai_free_trial_uses WHERE user_id=$1) AS used`,[userId]);
     if(!check.rows[0]?.verified||Number(check.rows[0]?.used)>=ALLOWANCE){await client.query('ROLLBACK');return {allowed:false,verified:!!check.rows[0]?.verified,remaining:0};}
-    const insert=await client.query('INSERT INTO ai_free_trial_uses(user_id,network_hash,topic,request_chars) VALUES($1,$2,$3,$4) RETURNING id',[userId,digest(ip),topic,chars]);
+    const hashedNetwork=crypto.createHmac('sha256',this.env.SESSION_SECRET||this.env.JWT_SECRET).update('EL-IP-v1:'+String(ip||'unknown').slice(0,140)).digest('hex');
+    const budget=await client.query("SELECT count(*) FILTER (WHERE created_at>=date_trunc('day',now() at time zone 'UTC') at time zone 'UTC')::int AS site_day,count(*) FILTER (WHERE created_at>=date_trunc('month',now() at time zone 'UTC') at time zone 'UTC')::int AS site_month,count(*) FILTER (WHERE network_hash=$1 AND created_at>=now()-interval '24 hours')::int AS network_day,count(*) FILTER (WHERE network_hash=$1 AND created_at>=now()-interval '30 days')::int AS network_month FROM ai_free_trial_uses",[hashedNetwork]);
+    const limits=budget.rows[0];if(Number(limits.site_day)>=18||Number(limits.site_month)>=120||Number(limits.network_day)>=3||Number(limits.network_month)>=12){await client.query('ROLLBACK');return {allowed:false,verified:true,remaining:Math.max(0,3-Number(check.rows[0].used)),budget_limit:true};}
+    const insert=await client.query('INSERT INTO ai_free_trial_uses(user_id,network_hash,topic,request_chars) VALUES($1,$2,$3,$4) RETURNING id',[userId,hashedNetwork,topic,chars]);
     const remaining=ALLOWANCE-Number(check.rows[0].used)-1;
     await client.query('COMMIT');
     return {allowed:true,id:insert.rows[0].id,remaining};
