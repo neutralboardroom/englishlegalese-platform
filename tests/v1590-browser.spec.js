@@ -304,3 +304,85 @@ test('incomplete diagnostic guides the learner and reset clears the whole debrie
   await page.reload();await waitForRecovery(page);
   await expect(page.locator('input[name="v1580-q0"][value="1"]')).not.toBeChecked();
 });
+
+test('AI draft review lab teaches all three fictional risk cases without external AI',async({page})=>{
+  await page.goto('/#ai-review-lab');await waitForRecovery(page);
+  const lab=page.locator('#ai-review-lab');
+  await expect(lab).toBeVisible();
+  await expect(page.locator('#home')).toBeHidden();
+  await expect(lab.locator('.v1650-case')).toHaveCount(3);
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 0 of 3');
+  await expect(lab).toContainText('not live AI');
+  await expect(lab).toContainText('Fictional AI draft to review');
+
+  const first=lab.locator('.v1650-case').nth(0);
+  await first.getByRole('button',{name:'Compare my choice'}).click();
+  await expect(first.locator('.v1650-status')).toContainText('Choose the concern');
+  await expect(first.locator('input[type="radio"]').first()).toBeFocused();
+  await expect(first.locator('.v1650-guidance')).toBeHidden();
+  await first.locator('input[value="1"]').check();
+  await first.locator('.v1650-rewrite').fill('Check a fictional deadline with qualified reviewers.');
+  await first.getByRole('button',{name:'Compare my choice'}).click();
+  await expect(first.locator('.v1650-guidance')).toBeVisible();
+  await expect(first.locator('.v1650-judgement')).toContainText('different first step');
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 1 of 3');
+  await first.locator('input[value="0"]').check();
+  await expect(first.locator('.v1650-guidance')).toBeHidden();
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 0 of 3');
+  await first.getByRole('button',{name:'Compare my choice'}).click();
+  await expect(first.locator('.v1650-judgement')).toContainText('matches the recommended');
+  await expect(first.locator('.v1650-rewrite')).toHaveValue('Check a fictional deadline with qualified reviewers.');
+
+  const second=lab.locator('.v1650-case').nth(1);
+  await second.locator('input[value="1"]').check();
+  await second.getByRole('button',{name:'Compare my choice'}).click();
+  await expect(second.locator('.v1650-guidance')).toContainText('legal conclusion is unsupported');
+  const third=lab.locator('.v1650-case').nth(2);
+  await third.locator('input[value="2"]').check();
+  await third.getByRole('button',{name:'Compare my choice'}).click();
+  await expect(third.locator('.v1650-guidance')).toContainText('public AI service');
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 3 of 3');
+
+  await first.getByRole('button',{name:'Clear this case'}).click();
+  await expect(first.locator('.v1650-rewrite')).toHaveValue('');
+  await expect(first.locator('.v1650-guidance')).toBeHidden();
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 2 of 3');
+  await lab.getByRole('button',{name:'Clear all three exercises'}).click();
+  await expect(lab.locator('.v1650-progress')).toContainText('Reviewed 0 of 3');
+  for(const card of await lab.locator('.v1650-case').all()){
+    await expect(card.locator('.v1650-guidance')).toBeHidden();
+    await expect(card.locator('.v1650-rewrite')).toHaveValue('');
+    await expect(card.locator('input[type="radio"]:checked')).toHaveCount(0);
+  }
+  await first.locator('.v1650-rewrite').fill('Temporary fictional test.');
+  await page.reload();await waitForRecovery(page);
+  await expect(page.locator('.v1650-case').first().locator('.v1650-rewrite')).toHaveValue('');
+  const keys=await page.evaluate(()=>Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter(k=>/v1650|aireviewlab|aidraft/i.test(k)));
+  expect(keys).toEqual([]);
+});
+
+test('AI draft review lab is discoverable without changing original home layout',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('#ai-review-lab')).toBeHidden();
+  await expect(page.locator('.v1650-case')).toHaveCount(3);
+  await expect(page.locator('footer a[href="#ai-review-lab"]')).toHaveCount(1);
+  await page.evaluate(()=>location.hash='#smartteacher');
+  await expect(page.locator('.v1650-inline-link')).toBeVisible();
+  await page.locator('.v1650-inline-link').click();
+  await expect(page.locator('#ai-review-lab')).toBeVisible();
+  await expect(page.locator('#elFocusToolbar')).toBeVisible();
+  await expect(page.locator('#ai-review-lab .v1650-case')).toHaveCount(3);
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test('diagnostic AI uncertainty safely routes to the new fictional AI draft lab',async({page})=>{
+  await page.goto('/#diagnostic');await waitForRecovery(page);
+  const answers=[1,1,1,1,1,2,0,0];
+  for(let i=0;i<8;i++)await page.locator('input[name="v1580-q'+i+'"][value="'+answers[i]+'"]').check();
+  await page.getByRole('button',{name:'Get my practice recommendation'}).click();
+  await expect(page.locator('.v1640-next-action')).toHaveAttribute('href','#ai-review-lab');
+  await page.locator('.v1640-next-action').click();
+  await expect(page.locator('#ai-review-lab')).toBeVisible();
+  await expect(page.locator('.v1650-progress')).toContainText('Reviewed 0 of 3');
+});
