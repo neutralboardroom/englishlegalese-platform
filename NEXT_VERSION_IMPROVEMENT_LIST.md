@@ -1,3 +1,21 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.69.0 (candidate)
+
+## Material change
+- Free goal-based **Guided Practice Path**, rather than another redundant multiple-choice exercise.
+- Four learner-selectable goals (writing, contract reading, meetings and responsible AI output review), each giving exactly three genuine existing site exercise links and short actionable explanations.
+- Accessible native radio selection, three optional learner-only checkboxes and live status; switching goals clears old checkmarks; reset clears everything; refresh loses progress. Not an accredited score, teacher validation, LMS credit, recording or verified course completion.
+- Discoverable from the existing Email Clarity Lab and footer only; no additional homepage content or changes to the immutable approved logo.
+- Preserve all nine courses, 21 scenarios, original 8-question diagnostic and explanations, private three-step writing workout, AI Draft Review, Clause Reading, Meeting Follow-up and Professional Email Clarity labs, role/privacy protections, backend and 19+10 owner rules.
+- 2 complete independent exact-source Chromium desktop/tablet/mobile + WebKit iPad browser/security/source no-drift gates; GitHub main and Render SHA/currentness check, merge qualified PR only, live matched SHA and distinct apex/www production acceptance, retain immediate v1.68.0 rollback.
+
+## Next priority
+1. Human keyboard/screen-reader and real mobile/language usability check; fix observed accessibility barriers, no premature WCAG compliance statement.
+2. Qualified teacher-backed learning outcomes and useful curriculum sequencing based on real learning evidence, without artificial scores.
+3. Refactor legacy CSS/JS only after verified functional and owner-approved visual equivalence, not to make gratuitous changes.
+4. Actual OpenAI API, accounts, retained progress, deletion/export, payment and employer data features require independent operational, security and privacy approval.
+5. Preserve exact logo, 19 Roger/10 durable rules, whole inherited improvement list, two release gates, production tests and previous deploy rollback.
+
+## Entire inherited prior improvement list (unchanged)
 # EnglishLegalese.com — Next Version Improvement List after v1.68.0 (candidate)
 
 ## Material improvement in v1.68.0

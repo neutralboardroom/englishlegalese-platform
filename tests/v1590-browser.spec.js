@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.68.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.68.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.69.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.69.0');
 }
 
-test.describe('EnglishLegalese v1.68.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.69.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -114,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.68\.0/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.69\.0/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -187,7 +187,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.68.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.69.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
@@ -557,6 +557,54 @@ test('email clarity lab does not expand the homepage and links from existing mee
   await expect(page.locator('#email-clarity-lab')).toBeVisible();
   await expect(page.locator('#elFocusToolbar')).toBeVisible();
   await expect(page.locator('.v1680-case')).toHaveCount(3);
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test('guided practice gives four distinct three-step routes, ephemeral checkmarks and full reset',async({page})=>{
+  await page.goto('/#guided-practice-path');await waitForRecovery(page);
+  const guide=page.locator('#guided-practice-path');
+  await expect(guide).toBeVisible();await expect(guide.locator('input[name="v1690-goal"]')).toHaveCount(4);
+  await expect(guide.locator('.v1690-results')).toBeHidden();
+  await guide.locator('input[value="writing"]').check();
+  await expect(guide.locator('.v1690-steps li')).toHaveCount(3);
+  await expect(guide.locator('.v1690-steps a').first()).toHaveAttribute('href','#email-clarity-lab');
+  await guide.locator('.v1690-tried').first().check();
+  await expect(guide.locator('.v1690-count')).toContainText('1 of 3');
+  await guide.locator('input[value="reading"]').check();
+  await expect(guide.locator('.v1690-steps a').first()).toHaveAttribute('href','#clause-reading-lab');
+  await expect(guide.locator('.v1690-tried:checked')).toHaveCount(0);
+  await expect(guide.locator('.v1690-count')).toContainText('0 of 3');
+  await guide.locator('input[value="meetings"]').check();
+  await expect(guide.locator('.v1690-steps a').first()).toHaveAttribute('href','#meeting-followup-lab');
+  await guide.locator('input[value="ai"]').check();
+  await expect(guide.locator('.v1690-steps a').first()).toHaveAttribute('href','#ai-review-lab');
+  await expect(guide.locator('.v1690-steps a').nth(1)).toHaveAttribute('href','#trust');
+  await expect(guide.locator('.v1690-steps a').nth(2)).toHaveAttribute('href','#smartteacher');
+  await guide.getByRole('button',{name:'Clear my temporary plan'}).click();
+  await expect(guide.locator('.v1690-results')).toBeHidden();
+  await expect(guide.locator('input[name="v1690-goal"]:checked')).toHaveCount(0);
+  await expect(guide.locator('input[name="v1690-goal"]').first()).toBeFocused();
+  await guide.locator('input[value="writing"]').check();
+  await guide.locator('.v1690-tried').first().check();
+  await page.reload();await waitForRecovery(page);
+  await expect(page.locator('#guided-practice-path .v1690-results')).toBeHidden();
+  const keys=await page.evaluate(()=>Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter(k=>/v1690|guidedpractice/i.test(k)));
+  expect(keys).toEqual([]);
+});
+test('guided practice stays out of approved homepage and navigates to original exercises',async({page})=>{
+  await page.goto('/');await waitForRecovery(page);
+  await expect(page.locator('#guided-practice-path')).toBeHidden();
+  await expect(page.locator('footer a[href="#guided-practice-path"]')).toHaveCount(1);
+  await page.evaluate(()=>location.hash='#email-clarity-lab');
+  await page.locator('#email-clarity-lab a[href="#guided-practice-path"]').click();
+  await expect(page.locator('#guided-practice-path')).toBeVisible();
+  await page.locator('#guided-practice-path input[value="writing"]').check();
+  await page.locator('#guided-practice-path .v1690-steps a').first().click();
+  await expect(page.locator('#email-clarity-lab')).toBeVisible();
+  await page.evaluate(()=>location.hash='#guided-practice-path');
+  await expect(page.locator('#guided-practice-path input[value="writing"]')).toBeChecked();
+  await expect(page.locator('#elFocusToolbar')).toBeVisible();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });

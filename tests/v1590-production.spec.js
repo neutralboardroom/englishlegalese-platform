@@ -3,11 +3,11 @@ const { test, expect } = require('@playwright/test');
 async function assertProductionRelease(page) {
   await page.goto('/', { waitUntil: 'networkidle' });
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.68.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.68.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.69.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.69.0');
 }
 
-test.describe('EnglishLegalese v1.68.0 production acceptance', () => {
+test.describe('EnglishLegalese v1.69.0 production acceptance', () => {
   test('apex production renders corrected owner-visible homepage', async ({ page }, testInfo) => {
     await assertProductionRelease(page);
 
@@ -45,7 +45,7 @@ test.describe('EnglishLegalese v1.68.0 production acceptance', () => {
     const h=await page.evaluate(()=>document.documentElement.scrollHeight);
     expect(h).toBeLessThan(testInfo.project.name==='production-mobile'?9500:7000);
     const htmlResponse=await page.request.get('/');
-    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.68.0');
+    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.69.0');
     expect(htmlResponse.headers()['cache-control']).toContain('no-cache');
     await page.screenshot({ path: testInfo.outputPath('production-homepage-v1590.png'), fullPage: true, animations: 'disabled' });
     await testInfo.attach('production-homepage-v1590', { path: testInfo.outputPath('production-homepage-v1590.png'), contentType: 'image/png' });
@@ -56,7 +56,7 @@ test.describe('EnglishLegalese v1.68.0 production acceptance', () => {
     for (const hash of ['#teachers','#courses','#language-bridge','#smartteacher','#trust','#practice-studio','#learning-plan','#skills-passport','#home']) {
       await page.evaluate(h => { window.location.hash = h; }, hash);
       await page.waitForTimeout(120);
-      await expect(page.locator('#v1590-live-marker')).toHaveText('1.68.0');
+      await expect(page.locator('#v1590-live-marker')).toHaveText('1.69.0');
       await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
       await expect(page.getByText('New in v1.55', { exact: true })).toHaveCount(0);
       await expect(page.locator('#diagnostic')).toHaveCount(1);
@@ -66,7 +66,7 @@ test.describe('EnglishLegalese v1.68.0 production acceptance', () => {
   test('www production endpoint serves same current release', async ({ page }) => {
     await page.goto('https://www.englishlegalese.com/', { waitUntil: 'networkidle' });
     await page.locator('body.v1590-ready').waitFor();
-    await expect(page.locator('#v1590-live-marker')).toHaveText('1.68.0');
+    await expect(page.locator('#v1590-live-marker')).toHaveText('1.69.0');
     await expect(page.getByRole('heading', { name: 'Clear English for legal work.' })).toBeVisible();
     await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
   });
@@ -219,4 +219,25 @@ test('live production fictional email clarity practice reviews accurately and re
   await expect(lab.locator('.v1680-progress')).toContainText('Reviewed 0 of 3');
   await expect(lab.locator('input[type="radio"]:checked')).toHaveCount(0);
   await expect(lab).toContainText('not transmitted or saved');
+});
+
+test('live guided practice uses actual lab destinations and clears self-checkmarks',async({page})=>{
+  await assertProductionRelease(page);
+  await expect(page.locator('#guided-practice-path')).toBeHidden();
+  await page.evaluate(()=>location.hash='#guided-practice-path');
+  const guide=page.locator('#guided-practice-path');
+  await expect(guide).toBeVisible();
+  await expect(guide.locator('input[name="v1690-goal"]')).toHaveCount(4);
+  await guide.locator('input[value="writing"]').check();
+  await expect(guide.locator('.v1690-steps a')).toHaveCount(3);
+  await expect(guide.locator('.v1690-steps a').first()).toHaveAttribute('href','#email-clarity-lab');
+  await guide.locator('.v1690-tried').first().check();
+  await expect(guide.locator('.v1690-count')).toContainText('1 of 3');
+  await guide.locator('input[value="reading"]').check();
+  await expect(guide.locator('.v1690-count')).toContainText('0 of 3');
+  await guide.locator('.v1690-steps a').first().click();
+  await expect(page.locator('#clause-reading-lab')).toBeVisible();
+  await page.evaluate(()=>location.hash='#guided-practice-path');
+  await guide.getByRole('button',{name:'Clear my temporary plan'}).click();
+  await expect(guide.locator('.v1690-results')).toBeHidden();
 });
