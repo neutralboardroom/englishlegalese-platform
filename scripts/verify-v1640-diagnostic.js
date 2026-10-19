@@ -137,7 +137,7 @@ check('checker runs in normal npm check and preserves original rule register',St
 check('high/critical audit command remains exact', pkg.scripts?.['audit:high'] === 'npm audit --audit-level=high');
 check('v1.59 verifier is wired into npm check', String(pkg.scripts?.check || '').includes('verify-v1640-diagnostic.js'));
 
-check('rule state uses exact v1.58 predecessor', state.accepted_predecessor_commit === '7c87946ecf8e66db23fe66c696a00764c36dc27f');
+check('rule state uses exact verified v1.63.0 predecessor', state.accepted_predecessor_commit === 'e42644aaed55ab087d849c7e473572baaa81611d');
 check('19 Roger Rules and 10 durable rules remain active', state.roger_rule_count === 19 && state.durable_builder_rule_count === 10);
 check('canonical register contains all Roger Rules', Array.from({length:19},(_,i)=>`EL-RGR-${String(i+1).padStart(3,'0')}`).every(id => register.includes(`## ${id}`)));
 check('canonical register contains all durable rules', Array.from({length:10},(_,i)=>`EL-DUR-${String(i+1).padStart(3,'0')}`).every(id => register.includes(`## ${id}`)));
