@@ -219,7 +219,7 @@
       const path=score<=3?'Foundation':score<=6?'Professional':'Advanced';
       const focus=missed.length?missed.slice(0,3):['Nuance and concise drafting','Complex scenario practice','AI-output verification'];
       const action=nextDiagnosticPractice(missed);
-      const deepLink=Number.isInteger(action.step)?' class="js-v1640-recommended-practice" data-practice-step="'+action.step+'"':'';
+      const deepLink=Number.isInteger(action.step)?' data-practice-step="'+action.step+'"':'';
       const review=QUESTIONS.map((q,i)=>{
         const matched=answers[i]===q[3];
         return '<li class="v1640-review-item"><strong>Question '+(i+1)+': '+escapeHtml(q[0])+'</strong><p>'+ (matched?'Your choice matches the practice answer.':'A different answer is stronger for this practice question.')+'</p><p><strong>Your answer:</strong> '+escapeHtml(q[2][answers[i]])+'</p><p><strong>Stronger option:</strong> '+escapeHtml(q[2][q[3]])+'</p><p>'+escapeHtml(QUIZ_FEEDBACK[i])+'</p></li>';
@@ -232,7 +232,7 @@
         '<p>This is only a learning-start signal. It is not a validated proficiency score and has no CEFR, TOLES, academic, licensing, certification, or employment equivalence.</p>'+
         '<strong>Focus first</strong><ul>'+focus.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ul>'+
         '<div class="v1640-action-plan"><h4>A useful next step</h4><p>'+escapeHtml(action.why)+'</p>'+
-          '<a href="'+action.href+'"'+deepLink+' class="btn teal v1640-next-action">'+escapeHtml(action.label)+'</a>'+
+          '<a href="'+action.href+'"'+deepLink+' class="btn teal v1640-next-action'+(Number.isInteger(action.step)?' js-v1640-recommended-practice':'')+'">'+escapeHtml(action.label)+'</a>'+
           '<p class="v1640-small-note">A suggested learning activity based on a few practice questions, not a validated skill diagnosis.</p></div>'+
         '<details class="v1640-review"><summary>Review all 8 questions and explanations</summary>'+
           '<p>Review your selected answer against a stronger communication option. These are educational examples, not authoritative legal interpretations.</p>'+
@@ -241,7 +241,7 @@
           '<a class="btn light" href="#smartteacher">Prepare a practice prompt</a></div>';
       result.focus({preventScroll:true});result.scrollIntoView({behavior:'instant',block:'center'});
     });
-    form.addEventListener('click',event=>{
+    result.addEventListener('click',event=>{
       const link=event.target.closest('.js-v1640-recommended-practice');
       if(!link||!result.contains(link)||!openQuickPracticeStep)return;
       const index=Number(link.dataset.practiceStep);
@@ -251,7 +251,7 @@
       form.reset();status.textContent='';result.hidden=true;result.textContent='';
     });
   }
-    function bindQuickPractice(){
+  function bindQuickPractice(){
     const section=$('#quick-practice');
     if(!section||section.dataset.bound==='1')return;
     section.dataset.bound='1';
