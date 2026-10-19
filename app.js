@@ -1,4 +1,4 @@
-/* EnglishLegalese.com v1.72.0 — canonical public homepage + durable in-page routing.
+/* EnglishLegalese.com v1.73.0 — canonical public homepage + durable in-page routing.
    Critical public correctness lives here; enhancement layers may enrich but must not be required to remove internal copy. */
 (() => {
   'use strict';
@@ -958,6 +958,90 @@
     reset();
   }
 
+
+  let freeTrialToken=null;
+  function freeTrialStudio(){
+    return '<section class="section v1730" id="smartteacher-free-trial" aria-labelledby="v1730-title"><div class="container section-head"><div><div class="eyebrow">Free SmartTeacher AI trial</div><h2 id="v1730-title">Three free, real AI tutoring replies.</h2></div><p>Create a verified learner account to try three real Legal English responses without payment. Then choose paid AI practice or a class once secure checkout is available. No automatic billing.</p></div>'+
+    '<div class="container v1730-shell"><p class="v1730-readiness" role="status" aria-live="polite">Checking safe trial availability…</p>'+
+    '<div class="v1730-auth"><h3>Create a free learner account</h3><form class="v1730-register"><label>Full name<input name="full_name" autocomplete="name" maxlength="100" required></label><label>Email<input name="email" type="email" autocomplete="email" required></label><label>Password<input name="password" type="password" autocomplete="new-password" minlength="10" required></label><button type="submit" class="btn teal">Create free account</button></form>'+
+    '<form class="v1730-login"><h3>Already registered?</h3><label>Email<input name="email" type="email" autocomplete="email" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button type="submit" class="btn light">Sign in</button></form><p class="v1730-auth-status" role="status" aria-live="polite"></p></div>'+
+    '<div class="v1730-session" hidden><p class="v1730-remaining" role="status" aria-live="polite">Checking remaining replies…</p>'+
+    '<label for="v1730-length">Practice length</label><select id="v1730-length"><option value="2500">Standard · 2,500 characters (free)</option><option value="5000">Extended · 5,000 characters (paid access)</option></select>'+
+    '<label for="v1730-message">Your fictional Legal English question</label><textarea id="v1730-message" rows="5" maxlength="2500" placeholder="Ask about a fictional contract clause, professional email or legal vocabulary."></textarea>'+
+    '<p class="v1730-count" role="status" aria-live="polite">2,500 characters remaining</p><button class="btn teal v1730-send" type="button">Use one free AI reply</button>'+
+    '<div class="v1730-result" hidden><h4>Live SmartTeacher response</h4><p class="v1730-answer"></p></div><p class="v1730-status" role="status" aria-live="polite"></p><button class="btn light v1730-out" type="button">Sign out</button></div>'+
+    '<div class="v1730-file"><h3>Future document and screenshot review</h3><p>Select a common PDF, Word document, picture or other learning file to check its type and size. The file stays on this device and is never uploaded or reviewed by AI here. Secure paid file processing is not live yet.</p>'+
+    '<label for="v1730-upload">Choose a file</label><input type="file" id="v1730-upload" accept=".pdf,.doc,.docx,.txt,.rtf,.odt,.png,.jpg,.jpeg,.webp,.heic,.tif,.tiff,.ppt,.pptx,.xls,.xlsx"><p class="v1730-file-status" role="status" aria-live="polite">No file selected.</p></div>'+
+    '<div class="v1730-purchase"><h3>After three free replies</h3><p>AI practice plans, lessons and classes will be available after secure Stripe payment verification is set up. Draft AI plans begin at $12/month, subject to approval. No checkout is active now.</p></div>'+
+    '<p>Use fictional text only. This is English-language learning, not legal advice. <a href="#email-clarity-lab">Continue free email practice →</a></p></div></section>';
+  }
+  function bindFreeTrialStudio(){
+    const r=$('#smartteacher-free-trial');if(!r||r.dataset.bound==='1')return;r.dataset.bound='1';
+    const readiness=r.querySelector('.v1730-readiness'),auth=r.querySelector('.v1730-auth'),session=r.querySelector('.v1730-session');
+    const message=r.querySelector('#v1730-message'),mode=r.querySelector('#v1730-length'),count=r.querySelector('.v1730-count');
+    const result=r.querySelector('.v1730-result'),answer=r.querySelector('.v1730-answer'),status=r.querySelector('.v1730-status'),send=r.querySelector('.v1730-send');
+    let remaining=0,busy=false;
+    const api=async(path,body,token)=>{
+      const resp=await fetch(path,{method:'POST',headers:{'content-type':'application/json',...(token?{authorization:'Bearer '+token}:{})},body:JSON.stringify(body)});
+      return {ok:resp.ok,data:await resp.json().catch(()=>({}))};
+    };
+    function counter(){
+      message.maxLength=Number(mode.value);
+      count.textContent=Math.max(0,Number(mode.value)-message.value.length).toLocaleString('en-US')+' characters remaining (of '+Number(mode.value).toLocaleString('en-US')+')';
+      send.disabled=busy||!message.value.trim()||remaining<1||mode.value!=='2500';
+      if(mode.value==='5000')status.textContent='Extended practice requires a verified paid purchase. Free questions use up to 2,500 characters.';
+    }
+    async function getBalance(){
+      if(!freeTrialToken)return;
+      try{const r1=await fetch('/api/v173/trial/status',{headers:{authorization:'Bearer '+freeTrialToken}});const d=await r1.json();if(!r1.ok)throw Error('no status');
+        auth.hidden=true;session.hidden=false;remaining=d.remaining||0;
+        r.querySelector('.v1730-remaining').textContent=remaining+' of 3 free AI replies remaining';
+        status.textContent=!d.verified?'Verify the email address before using the free trial.':remaining===0?'Your trial has ended. Paid lessons will be available after checkout opens.':'You can send a fictional practice question.';
+        if(!d.verified)remaining=0;counter();
+      }catch{freeTrialToken=null;auth.hidden=false;session.hidden=true;r.querySelector('.v1730-auth-status').textContent='Sign in again to check your trial.';}
+    }
+    async function checkReady(){
+      try{const x=await (await fetch('/api/v173/trial/capabilities')).json();
+        readiness.textContent=x.trial_available?'Free live AI trial is open after verified registration.':'Live registration is awaiting secure account storage and email verification. Existing free lessons remain available without API charges.';
+        r.querySelectorAll('.v1730-auth button').forEach(b=>b.disabled=!x.trial_available);
+      }catch{readiness.textContent='Trial availability could not be confirmed.';r.querySelectorAll('.v1730-auth button').forEach(b=>b.disabled=true);}
+    }
+    [['.v1730-register','/api/v173/trial/register'],['.v1730-login','/api/v119/auth/login']].forEach(([selector,path])=>{
+      r.querySelector(selector).addEventListener('submit',async e=>{
+        e.preventDefault();const form=e.currentTarget;
+        const fields=Object.fromEntries(new FormData(form).entries()),note=r.querySelector('.v1730-auth-status');
+        note.textContent='Checking account…';
+        try{const x=await api(path,fields);if(!x.ok){note.textContent=x.data.error||'Account service unavailable.';return;}
+          if(path.includes('register')){form.reset();note.textContent='Check your email for the confirmation link, then sign in.';}
+          else{freeTrialToken=x.data.token;note.textContent='Signed in.';await getBalance();}
+        }catch{note.textContent='Unable to contact account service.';}
+      });
+    });
+    mode.addEventListener('change',()=>{message.value=message.value.slice(0,Number(mode.value));counter();});
+    message.addEventListener('input',counter);
+    send.addEventListener('click',async()=>{
+      if(!remaining||busy||mode.value!=='2500'||!message.value.trim())return;
+      busy=true;counter();status.textContent='Requesting real AI feedback…';
+      try{const x=await api('/api/v173/trial/answer',{prompt:message.value,topic:'professional_communication'},freeTrialToken);
+        if(!x.ok){status.textContent=x.data.error||'Unable to answer.';await getBalance();return;}
+        answer.textContent=x.data.answer;result.hidden=false;message.value='';remaining=x.data.remaining;
+        r.querySelector('.v1730-remaining').textContent=remaining+' of 3 free AI replies remaining';
+        status.textContent=remaining?'You can ask another fictional question.':'All three free replies used. Paid access opens after checkout setup.';
+      }catch{status.textContent='Request failed; check your remaining balance.';await getBalance();}
+      finally{busy=false;counter();}
+    });
+    r.querySelector('.v1730-out').addEventListener('click',()=>{freeTrialToken=null;auth.hidden=false;session.hidden=true;answer.textContent='';result.hidden=true;message.value='';r.querySelector('.v1730-auth-status').textContent='Signed out.';});
+    r.querySelector('#v1730-upload').addEventListener('change',e=>{
+      const f=e.target.files?.[0],note=r.querySelector('.v1730-file-status');if(!f){note.textContent='No file selected.';return;}
+      const good=/\.(pdf|doc|docx|txt|rtf|odt|png|jpe?g|webp|heic|tiff?|pptx?|xlsx?)$/i.test(f.name);
+      note.textContent=(!good?'This format is not currently supported. ':f.size>10485760?'File exceeds the proposed 10 MB limit. ':'Selected '+f.name+' ('+(f.size/1048576).toFixed(2)+' MB). ')+'File remains on your device; no upload occurred.';
+    });
+    const code=new URLSearchParams(location.search).get('trial_verify');
+    if(code){history.replaceState(null,'',location.pathname+location.hash);
+      api('/api/v173/trial/verify',{token:code}).then(x=>{r.querySelector('.v1730-auth-status').textContent=x.ok?'Email verified. Sign in to use your three free AI replies.':'Verification link expired or unavailable.';}).catch(()=>{r.querySelector('.v1730-auth-status').textContent='Unable to verify email.';});}
+    counter();checkReady();getBalance();
+  }
+
   function teachersEmployers(){
     return `<section class="section alt" id="teachers"><div class="container grid cols-2"><article class="panel"><div class="eyebrow">Teachers</div><h2>Teacher-guided learning support.</h2><p>Teachers can review learner practice, prepare lessons, guide roleplays, assign homework, and give feedback while private teacher notes remain appropriately separated.</p><a class="btn teal" href="#teacher-dashboard">Teacher account access</a><p class="v1580-micro-note">Operational teacher tools require the appropriate signed-in role.</p></article><article class="panel" id="employers"><div class="eyebrow">Employers</div><h2>Privacy-conscious team learning.</h2><p>Organizations can use consent-based, aggregate attendance and learning-progress signals. Private drafts, raw AI practice, uploads, recordings, native-language explanations, test answers, and teacher-private notes remain excluded by default.</p><a class="btn teal" href="#employer-dashboard">Employer account access</a><p class="v1580-micro-note">Nothing from a learner's private work is shared automatically.</p></article></div></section>`;
   }
@@ -971,7 +1055,7 @@
     const title = {student:'Student dashboard',teacher:'Teacher dashboard',employer:'Employer dashboard',admin:'Owner / staff dashboard'}[role] || 'Dashboard';
     return `<section class="section" id="${role}-dashboard"><div class="container"><article class="panel"><div class="eyebrow">${escapeHtml(title)}</div><h2>Account access required.</h2><p>Operational dashboards require production authentication and the appropriate role. Public learning tools remain available from the homepage.</p><a class="btn gold" href="#start">Return to learning options</a></article></div></section>`;
   }
-  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${emailClarityLab()}${guidedPracticePath()}${caseBriefLab()}${vocabularyGuide()}${revisionStudio()}${teachersEmployers()}${learningExperience()}${trust()}`); }
+  function home(){ pageShell(`${hero()}${startSection()}${diagnosticSection()}${languageBridge()}${skillsStudio()}${coursesSection()}${quickPractice()}${smartTeacher()}${aiReviewLab()}${clauseReadingLab()}${meetingFollowupLab()}${emailClarityLab()}${guidedPracticePath()}${caseBriefLab()}${vocabularyGuide()}${revisionStudio()}${freeTrialStudio()}${teachersEmployers()}${learningExperience()}${trust()}`); }
 
   let openQuickPracticeStep=null;
   function bindDiagnostic(){
@@ -1185,6 +1269,7 @@
     bindCaseBriefLab();
     bindVocabularyGuide();
     bindRevisionStudio();
+    bindFreeTrialStudio();
   }
   function scrollToTarget(id, attempt=0){
     const target=document.getElementById(id);
