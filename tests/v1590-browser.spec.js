@@ -2,11 +2,11 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.63.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.63.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.64.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.64.0');
 }
 
-test.describe('EnglishLegalese v1.63.0 hard live recovery', () => {
+test.describe('EnglishLegalese v1.64.0 hard live recovery', () => {
   test('old public homepage state cannot reappear after navigation', async ({ page }) => {
     await page.goto('/');
     await waitForRecovery(page);
@@ -114,7 +114,7 @@ test('focused learning destinations are accessible and link back home',async({pa
 test('approved logo is prominent and unchanged; hero hierarchy is intentionally concise',async({page},testInfo)=>{
   await page.goto('/');await page.locator('body.v1590-ready').waitFor();
   const brand=page.locator('.site-header .brand');
-  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.63\.0/);
+  const logo=brand.locator('img');await expect(logo).toHaveAttribute('src',/englishlegalese-logo\.png\?v=1\.64\.0/);
   const box=await brand.boundingBox();const im=await logo.boundingBox();expect(box).not.toBeNull();expect(im).not.toBeNull();
   expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?165:200);
   expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?85:100);
@@ -187,7 +187,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.63.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.64.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
@@ -248,4 +248,59 @@ test('writing practice is discoverable but does not lengthen the default homepag
   await expect(page.locator('#quick-practice .v1630-privacy')).toContainText('not submitted, scored, stored, or shared');
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test('eight-question diagnostic explains each practice answer and routes to a relevant exercise',async({page})=>{
+  await page.goto('/#diagnostic');await waitForRecovery(page);
+  await expect(page.locator('.v1580-diagnostic-form')).toBeVisible();
+  const correct=[1,1,1,1,1,2,1,0];
+  for(let i=0;i<correct.length;i++)await page.locator('input[name="v1580-q'+i+'"][value="'+(i===2?0:correct[i])+'"]').check();
+  await page.getByRole('button',{name:'Get my practice recommendation'}).click();
+  const result=page.locator('.v1580-result');
+  await expect(result).toBeVisible();
+  await expect(result).toContainText('7 of 8');
+  await expect(result).toContainText('not a validated proficiency score');
+  await expect(result.locator('.v1640-action-plan')).toContainText('expressing obligations and time limits');
+  const suggested=result.locator('.js-v1640-recommended-practice');
+  await expect(suggested).toHaveAttribute('href','#quick-practice');
+  await expect(suggested).toHaveAttribute('data-practice-step','2');
+  const details=result.locator('details.v1640-review');
+  await expect(details).not.toHaveAttribute('open','');
+  await details.locator('summary').click();
+  await expect(details).toHaveAttribute('open','');
+  const items=details.locator('.v1640-review-item');
+  await expect(items).toHaveCount(8);
+  for(let i=0;i<8;i++){
+    await expect(items.nth(i)).toContainText('Question '+(i+1));
+    await expect(items.nth(i)).toContainText('Your answer:');
+    await expect(items.nth(i)).toContainText('Stronger option:');
+  }
+  await expect(items.nth(2)).toContainText('A different answer is stronger');
+  await expect(items.nth(2)).toContainText('“must” for obligations');
+  await expect(items.nth(7)).toContainText('confidentiality risks');
+  await suggested.click();
+  await expect(page.locator('#quick-practice')).toBeVisible();
+  await expect(page.locator('.v1630-progress')).toHaveText('Exercise 3 of 3');
+  await expect(page.locator('#v1630-step-title-2')).toBeVisible();
+  await expect(page.locator('#quick-practice .v1630-step:visible')).toHaveCount(1);
+});
+
+test('incomplete diagnostic guides the learner and reset clears the whole debrief',async({page})=>{
+  await page.goto('/#diagnostic');await waitForRecovery(page);
+  await page.getByRole('button',{name:'Get my practice recommendation'}).click();
+  await expect(page.locator('.v1580-form-status')).toContainText('8 questions remain');
+  await expect(page.locator('input[name="v1580-q0"]').first()).toBeFocused();
+  const correct=[1,1,1,1,1,2,1,0];
+  for(let i=0;i<8;i++)await page.locator('input[name="v1580-q'+i+'"][value="'+correct[i]+'"]').check();
+  await page.getByRole('button',{name:'Get my practice recommendation'}).click();
+  await expect(page.locator('.v1580-result')).toContainText('8 of 8');
+  await expect(page.locator('.v1640-review-item')).toHaveCount(8);
+  await expect(page.locator('.v1640-next-action')).toHaveAttribute('href','#quick-practice');
+  await page.getByRole('button',{name:'Clear answers'}).click();
+  await expect(page.locator('.v1580-result')).toBeHidden();
+  await expect(page.locator('.v1580-result')).toBeEmpty();
+  await expect(page.locator('input[name="v1580-q0"][value="1"]')).not.toBeChecked();
+  await expect(page.locator('.v1580-form-status')).toBeEmpty();
+  await page.reload();await waitForRecovery(page);
+  await expect(page.locator('input[name="v1580-q0"][value="1"]')).not.toBeChecked();
 });

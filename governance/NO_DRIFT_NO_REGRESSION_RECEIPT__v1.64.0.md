@@ -1,0 +1,10 @@
+# v1.64.0 — protected scope, exact predecessor and rollback plan
+
+- Most recent verified EnglishLegalese v1.63.0 GitHub main merge SHA `e42644aaed55ab087d849c7e473572baaa81611d`, Render deployment `dep-dbao2vtg1s2s73bi2t2g`, successful production browser run `39190533638` (21/21). v1.62.0 historical fallback deployment `dep-dbadf467bikc73eh3mg0`.
+- Owner-approved logo remains `assets/englishlegalese-logo.png`, exact Git blob `b5f20ef046d75d6f108bc93243c7c14acf3c4eb1`; 230px desktop and responsive header frame remain unchanged. Protected canonical 19 Roger Rules and 10 durable rules `governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md` exact Git blob `bd1d33a43180291f3a8ddedcd6884f6ff3d7c666`, unchanged.
+- Narrow planned source change: all eight already-public diagnostic response explanations, honest next-practice destinations, first-missing-question focus and explanatory result UI. No change to original question choices/key. No source backend, endpoints, API secrets, credentials, subscriptions, database migrations, persistent user data or protected role access modified.
+- Qualified release requires two independent 4-project Playwright gates (desktop/mobile/tablet Chromium + tablet Safari/WebKit), all source/no-drift checks, npm high/critical audit on *exact same candidate SHA*. Recheck approved logo/rules, Render rollback and main branch lease before merge. Render automatically deploys verified main, then independent real apex and www browser tests must pass.
+- Actual rollback: Render dashboard service `srv-d97p18vavr4c73dbls40` → Deploys → select last successful `dep-dbao2vtg1s2s73bi2t2g` → Rollback → independently verify `live` status and v1.63.0 health/headers on both apex and www. Render may disable auto-deploy after rollback; source reconciliation required. Never claim rollback based on a click only.
+- **Document state: CANDIDATE / NOT DEPLOYED.** Green sources are not automatic owner aesthetic acceptance. All previous next-version improvements remain inherited.
+
+No per-user sensitive data, AI-generated unvalidated assessment, source key, logo/source/auth changes in this scoped material release.
