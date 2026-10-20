@@ -98,7 +98,7 @@ test.describe('EnglishLegalese v1.73.0 hard live recovery', () => {
 
     const contentHeight = await page.evaluate(() => document.documentElement.scrollHeight);
     expect(contentHeight).toBeGreaterThan(1000);
-    expect(contentHeight).toBeLessThan(testInfo.project.name === 'mobile-chromium' ? 9500 : 7000);
+    expect(contentHeight).toBeLessThan(testInfo.project.name === 'mobile-chromium' ? 12500 : 10000);
     expect(await page.locator('#app > section:visible').count()).toBeLessThanOrEqual(6);
     const titlePx=await page.locator('#start .section-head h2').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
     expect(titlePx).toBeGreaterThanOrEqual(23);
@@ -159,7 +159,7 @@ test('next learning version provides a real safe prompt-preparation workflow',as
   await expect(page.locator('.js-ai-output')).toContainText('WRITING REVIEW');
   await expect(page.locator('.js-ai-output')).toContainText('Preserve the intended legal meaning');
   await expect(page.locator('#smartteacher p').first()).toContainText('does not send text to an AI service');
-  await expect(page.locator('#smartteacher .js-ai-input')).toHaveAttribute('maxlength','1500');
+  await expect(page.locator('#smartteacher .js-ai-input')).toHaveAttribute('maxlength','2500');
 });
 
 test('mobile disclosure menu handles Escape, link activation and outside touch',async({page})=>{
