@@ -1,0 +1,4 @@
+# v1.76.0 Production acceptance plan — not a live receipt
+Predecessor live before the build: Render `dep-dbbjk56i0phs738itd30` SHA `454a4f5e886251e5a2a75adcf9baefdae9d9b25b` (v1.75.0), retained as immediate rollback.
+Automatic production deployment occurs ONLY after two exact-final-head complete passing gates and SHA-locked merge. Test both https://englishlegalese.com and https://www.englishlegalese.com against release header/meta 1.76.0, app source/actual asset, homepage method, teacher label, old lab and both new labs on multi-device browsers. Confirm no unauthorized AI, database mutation, email, DNS, payment or upload activation.
+**State at writing: NOT YET MERGED, NOT YET DEPLOYED, NOT YET LIVE VERIFIED.** Completion details must be supplied by exact post-deployment evidence, not inferred from this plan.

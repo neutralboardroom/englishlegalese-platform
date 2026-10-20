@@ -2,8 +2,8 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.75.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.75.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.76.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.76.0');
 }
 
 test.describe('EnglishLegalese v1.73.0 hard live recovery', () => {
@@ -121,7 +121,7 @@ test('approved logo is prominent and unchanged; hero hierarchy is intentionally 
   expect(im.height).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?160:200);
   expect(await logo.evaluate(el=>getComputedStyle(el).objectFit)).toBe('contain');
   await expect(page.locator('.hero-logo')).toHaveCount(0);
-  await expect(page.getByRole('heading',{name:'Clear English for legal work.'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Real-world Legal English. AI tools and human teachers, together.'})).toBeVisible();
   await expect(page.locator('.hero-example.improved p')).toBeVisible();
   expect(await page.locator('.hero-actions .btn').count()).toBe(2);
   await expect(page.locator('.hero-secondary a[href="#smartteacher"]')).toBeVisible();
@@ -187,7 +187,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.75.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.76.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
