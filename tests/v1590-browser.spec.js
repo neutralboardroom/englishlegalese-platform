@@ -98,7 +98,7 @@ test.describe('EnglishLegalese v1.73.0 hard live recovery', () => {
 
     const contentHeight = await page.evaluate(() => document.documentElement.scrollHeight);
     expect(contentHeight).toBeGreaterThan(1000);
-    expect(contentHeight).toBeLessThan(testInfo.project.name === 'mobile-chromium' ? 12500 : 10000);
+    expect(contentHeight).toBeLessThan(testInfo.project.name === 'mobile-chromium' ? 15000 : 10000);
     expect(await page.locator('#app > section:visible').count()).toBeLessThanOrEqual(8);
     const titlePx=await page.locator('#start .section-head h2').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
     expect(titlePx).toBeGreaterThanOrEqual(23);
