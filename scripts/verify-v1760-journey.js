@@ -12,7 +12,7 @@ for(const id of ['conversation-rehearsal-lab','reading-precision-lab','listening
 assert(app.includes('Legal English with AI-supported practice and live online classes with human teachers.'));
 assert(app.includes('Human teacher guidance available'));
 assert(!app.includes('Teacher guidance where available'));
-assert(app.includes('AI tools support practice; human teachers lead live video-class discussions and professional judgment.'));
+assert(app.includes('AI tools help you practise between lessons; human teachers lead live video-class discussions'));
 assert(js.includes("const VERSION='1.76.0'")&&js.includes("id:'clarify'")&&js.includes("id:'deadline'")&&js.includes("id:'permission'"));
 for(const id of ["id:'notice'","id:'approval'","id:'evidence'"])assert(js.includes(id));
 assert(js.includes("form.addEventListener('submit'")&&js.includes("textarea")&&js.includes('textContent'));
