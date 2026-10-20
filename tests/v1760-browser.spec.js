@@ -16,7 +16,7 @@ test('v1.76 practice route preserves direct navigation, three fictional conversa
   await s.locator('#v1760-conversation').selectOption(kind);
   await expect(s.locator('.v1760-example')).toBeHidden();
   await s.locator('#v1760-notes').fill('Fictional draft clarification');
-  await expect(s.locator('.v1760-count')).toContainText('27 of 700');
+  await expect(s.locator('.v1760-count')).toContainText('29 of 700');
   await s.getByRole('button',{name:'Show teaching example'}).click();
   await expect(s.locator('.v1760-example')).toBeVisible();
   await expect(s.locator('.v1760-check-label')).toHaveCount(3);
