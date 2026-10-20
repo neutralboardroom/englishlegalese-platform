@@ -1,0 +1,25 @@
+/* v1.76.0: additive, compact public methodology and two private practice tools. */
+.hero .v1760-method-note{font-size:.95rem;line-height:1.65;color:#354b5a;margin:0 0 1.35rem;max-width:64ch}
+.hero .v1760-method-note strong{color:#0b1d33}
+.v1760-lab .v1760-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.2rem;align-items:start}
+.v1760-lab .v1760-panel{background:#fff;min-width:0;padding:1.4rem;border:1px solid #dce5ea;border-radius:16px}
+.v1760-lab .v1760-picker{margin-bottom:1.2rem}
+.v1760-lab .v1760-label{display:block;font-weight:700;color:#0b1d33;margin-bottom:.5rem}
+.v1760-lab select.input,.v1760-lab textarea.input{box-sizing:border-box;width:100%;max-width:100%}
+.v1760-lab .v1760-situation,.v1760-lab .v1760-passage{font-size:1rem;line-height:1.68;background:#f6f9fb;border-left:4px solid #147783;border-radius:6px;padding:1rem 1.15rem;margin:1rem 0}
+.v1760-lab .v1760-small{font-size:.89rem;line-height:1.5;color:#475967}
+.v1760-lab .v1760-controls{display:flex;gap:.7rem;flex-wrap:wrap;margin:1rem 0}
+.v1760-lab .v1760-controls .btn{min-height:44px}
+.v1760-lab .v1760-example{border-top:1px solid #dce5ea;margin-top:1rem;padding-top:.8rem}
+.v1760-lab .v1760-example p,.v1760-lab .v1760-reasons li{line-height:1.65}
+.v1760-lab .v1760-example ul,.v1760-lab .v1760-reasons ol{padding-left:1.5rem}
+.v1760-lab .v1760-check-label,.v1760-lab .v1760-option{display:flex;gap:.65rem;align-items:flex-start;padding:.5rem .1rem;line-height:1.5}
+.v1760-lab .v1760-check-label input,.v1760-lab .v1760-option input{flex:0 0 auto;min-height:19px;min-width:19px;margin-top:.1rem}
+.v1760-lab .v1760-question{border:1px solid #dce5ea;border-radius:12px;padding:1rem;margin-bottom:1rem;min-width:0}
+.v1760-lab .v1760-question legend{font-weight:700;line-height:1.4;padding:.2rem}
+.v1760-lab .v1760-progress,.v1760-lab .v1760-feedback{color:#155c65;line-height:1.5;min-height:1.5rem}
+.v1760-lab .v1760-links{display:flex;gap:.85rem;flex-wrap:wrap;line-height:1.5;margin-top:1rem}
+.v1760-lab textarea:focus-visible,.v1760-lab input:focus-visible,.v1760-lab select:focus-visible,.v1760-lab button:focus-visible{outline:3px solid #147b87;outline-offset:3px}
+@media(max-width:880px){.v1760-lab .v1760-grid{grid-template-columns:1fr}}
+@media(max-width:540px){.v1760-lab .v1760-panel{padding:1rem}.v1760-lab .v1760-controls{display:grid;grid-template-columns:1fr}.v1760-lab .v1760-controls .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){.v1760-lab *{scroll-behavior:auto!important;transition:none!important}}
