@@ -114,6 +114,7 @@ function mount(){
  document.documentElement.dataset.englishlegaleseMaterialRelease=VERSION;
  if(typeof window.englishLegaleseApplyView==='function')window.englishLegaleseApplyView();
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
-window.addEventListener('hashchange',()=>setTimeout(mount,0));
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{mount();setTimeout(mount,140);},{once:true});else{mount();setTimeout(mount,140);}
+// The preserved v1.77 owner overlay refreshes state at 0/75ms; apply the latest marker afterward.
+window.addEventListener('hashchange',()=>setTimeout(mount,150));
 })();
