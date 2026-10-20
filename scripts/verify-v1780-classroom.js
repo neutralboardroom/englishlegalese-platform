@@ -7,7 +7,7 @@ assert(html.includes('name="englishlegalese-release" content="1.78.0"'));
 for(const f of ['product-v1780.js?v=1.78.0','product-v1780.css?v=1.78.0','product-v1770.js?v=1.77.0','product-v1760.js?v=1.76.0'])assert(html.includes(f),'Asset '+f);
 assert(app.includes('Legal English with AI-supported practice and live online classes with human teachers.'));
 assert(app.includes('Human teacher guidance available'));
-assert(app.includes('live online video classrooms'));
+assert(app.includes('Live online video classrooms'));
 assert(app.includes("'live-classes','learning-pathways'"));
 for(const id of ['live-classes','learning-pathways','v1780-second-unit'])assert(js.includes(id));
 for(const name of ['makePathways','makeUnit2','addClassrooms','enrichTeachers'])assert(js.includes('function '+name));
