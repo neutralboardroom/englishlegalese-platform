@@ -57,7 +57,7 @@ function mountSmartTeacher(){
  [['Document','pdf,doc,docx,txt,rtf,odt,ppt,pptx,xls,xlsx','.pdf,.doc,.docx,.txt,.rtf,.odt,.ppt,.pptx,.xls,.xlsx'],['Image / screenshot','png,jpg,jpeg,webp,heic,tif,tiff','.png,.jpg,.jpeg,.webp,.heic,.tif,.tiff']].forEach((t,i)=>{const lab=node('label','Choose '+t[0]+' (local)','v1770-file-label'),file=node('input');file.type='file';file.id='v1770-file-'+i;file.accept=t[2];lab.htmlFor=file.id;lab.append(file);actions.append(lab);file.addEventListener('change',()=>{const f=file.files?.[0];if(!f){info.textContent='No file selected. Nothing has been uploaded.';return;}const ext=f.name.split('.').pop().toLowerCase(),allow=t[1].split(',');info.textContent=!allow.includes(ext)?'Unsupported file format; nothing uploaded.':f.size>10485760?'File exceeds the local 10 MB selection limit; nothing uploaded.':'Selected '+f.name+' ('+(f.size/1048576).toFixed(2)+' MB). Local selection only: no upload or AI processing.';});});
  group.append(actions,info);const practice=$('.v1620-practice-panel',s);if(practice)practice.append(group);
  function update(){count.textContent=Math.max(0,2500-input.value.length).toLocaleString('en-US')+' characters remaining of 2,500. Prompt preparation only; no live AI response in this box.';}input.addEventListener('input',update);$$('.v1580-starter',s).forEach(b=>b.addEventListener('click',()=>setTimeout(update,0)));update();
- const desc=$('.section-head p',s);if(desc)desc.textContent='This workspace prepares Legal English exercises and prompts without connecting to live AI. Practice with fictional facts; the verified-account AI trial and genuine file review have separate readiness requirements.';
+ const desc=$('.section-head p',s);if(desc)desc.textContent='This on-page prompt builder does not send text to an AI service or generate live AI feedback. Practise with fictional facts. The verified-account AI trial and genuine file review have separate readiness requirements.';
 }
 function mountLanguage(){
  const s=$('#language-bridge');if(!s||s.dataset.v1770Lang)return;s.dataset.v1770Lang='true';
@@ -70,7 +70,14 @@ function mountLanguage(){
  buttons.slice(0,4).forEach((b,i)=>b.addEventListener('click',()=>show(i)));sel.addEventListener('change',()=>{if(mode===2)show(2);});show(0);
 }
 function mountRoleViews(){
- const s=$('#teachers');if(!s||s.dataset.v1770Role)return;s.dataset.v1770Role='true';const grid=$('.grid',s);if(!grid)return;const teacher=grid.children[0],employer=grid.children[1];if(!teacher||!employer)return;
+ const s=$('#teachers');if(!s)return;
+ const active=location.hash.slice(1);
+ if(s.dataset.v1770Role){
+   if(s.dataset.v1770Role===active)return;
+   const prior=$('.v1770-role-details',s);if(prior)prior.remove();
+   const oldGrid=$('.grid',s);if(oldGrid){oldGrid.classList.remove('v1770-role-focus');Array.from(oldGrid.children).forEach(card=>card.hidden=false);}
+ }
+ s.dataset.v1770Role=active;const grid=$('.grid',s);if(!grid)return;const teacher=grid.children[0],employer=grid.children[1];if(!teacher||!employer)return;
  const hash=location.hash.slice(1),isTeacher=hash==='teachers',isEmployer=hash==='employers';
  if(isTeacher||isEmployer){grid.classList.add('v1770-role-focus');if(isTeacher)employer.hidden=true;else teacher.hidden=true;}
  const extra=node('div',undefined,'container v1770-role-details');const content=isEmployer?[
