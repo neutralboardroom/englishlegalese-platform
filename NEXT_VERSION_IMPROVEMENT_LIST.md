@@ -1,3 +1,17 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.76.0 (candidate; subject to final qualification)
+## Cohesive maximum-reasonable successor work
+1. DONE_THIS_RELEASE: Reframe homepage around combined structured Legal English practice, AI tools, real human teachers and the complementary role of each; explicit honesty about separate live AI/paid readiness. Owner-approved exact text: “Human teacher guidance available.”
+2. DONE_THIS_RELEASE: Private self-guided Conversation Rehearsal Lab — three nuanced, fully fictional interactions, optional spoken rehearsal with no microphone access, optional browser-only 700-character practice notes, model responses, explanations, a three-step self-review and reset. Links to listening, message building and teacher paths.
+3. DONE_THIS_RELEASE: Private Reading Precision Lab — three invented professional texts, nine comprehension prompts, correct-answer reasoning and reset across conditional commitments, permission/obligation language and reported versus verified facts.
+4. DONE_THIS_RELEASE: Focused footer discoverability and cross-exercise links, accessible native controls and mobile-specific styles; preserve original nine courses, 21 scenarios, 8-point diagnostic, all earlier labs, original approved logo, 19+10 original rule corpus and predecessor historical improvement list.
+5. BLOCKED: Enable actual three-reply free SmartTeacher AI only after owner approves public launch, Resend sending-only DNS verification and delivery, full-cost cap, abuse/identity/ledger/restart QA and privacy checks. Dedicated Neon DB being connected does NOT authorize trial go-live.
+6. DEFER_WITH_REASON: Actual spoken-word evaluation/microphone upload or authentic documents would require explicit privacy/consent and secure processing; no misleading recorded-speech or legal-interpretation claims.
+7. BLOCKED: Stripe paid plans, verified teacher booking/assessments, production document/image processing and unsolicited external messaging remain OFF until their separate gates.
+8. NEXT BEST: Human-led accessibility and teacher-content review, structured learner progress only after approved consent and durable storage, measured accessibility/performance/retention, independently verified financial and provider readiness.
+9. RELEASE_GATE: Candidate only until TWO independent whole-suite passes at identical head and independent live apex/www proof; retain v1.75 Rollback. Append genuine release/test and live receipts only as verified.
+
+---
+
 # EnglishLegalese.com — Next Version Improvement List after v1.75.0 (candidate, subject to full qualification)
 ## Material release priorities and dispositions
 1. DONE_THIS_RELEASE: Free **Listening & Clarification Lab** with three fully invented legal/professional English exchanges, 12 dialogue turns, nine independent comprehension questions with answer-specific rationale, confidence-preserving self-check, transcript toggle, replay/slow-play/stop using optional native browser voice and graceful no-speech fallback.
