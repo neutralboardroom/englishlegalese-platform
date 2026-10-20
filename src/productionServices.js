@@ -63,15 +63,20 @@ function signToken(payload) {
   return `${header}.${body}.${sig}`;
 }
 function verifyToken(token) {
-  const secret = process.env.SESSION_SECRET || process.env.JWT_SECRET;
-  if(!secret||secret.length<32)return null;
-  const parts = String(token || '').split('.');
-  if (parts.length !== 3) return null;
-  const expected = crypto.createHmac('sha256', secret).update(`${parts[0]}.${parts[1]}`).digest('base64url');
-  if(parts[2].length!==expected.length||!crypto.timingSafeEqual(Buffer.from(parts[2]),Buffer.from(expected)))return null;
-  const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8'));
-  if (payload.exp && payload.exp < Math.floor(Date.now()/1000)) return null;
-  return payload;
+  const secret=process.env.SESSION_SECRET||process.env.JWT_SECRET;
+  if(!secret||secret.length<32||secret==='dev-only-change-me')return null;
+  try{
+    const parts=String(token||'').split('.');
+    if(parts.length!==3||parts.some(x=>!x||!/^[A-Za-z0-9_-]+$/.test(x)))return null;
+    const header=JSON.parse(Buffer.from(parts[0],'base64url').toString('utf8'));
+    if(header.alg!=='HS256'||header.typ!=='JWT')return null;
+    const expected=crypto.createHmac('sha256',secret).update(parts[0]+'.'+parts[1]).digest('base64url');
+    const a=Buffer.from(parts[2]),b=Buffer.from(expected);
+    if(a.length!==b.length||!crypto.timingSafeEqual(a,b))return null;
+    const payload=JSON.parse(Buffer.from(parts[1],'base64url').toString('utf8'));
+    if(!payload||!payload.sub||!Number.isSafeInteger(payload.exp)||payload.exp<=Math.floor(Date.now()/1000))return null;
+    return payload;
+  }catch{return null;}
 }
 
 function requireEnv(names) { return names.every((name) => Boolean(process.env[name])); }

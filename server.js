@@ -30,7 +30,17 @@ app.use((req,res,next)=>{
    return res.status(404).type('text/plain').send('Not found');
  next();
 });
-app.use(express.static(__dirname));
+// Protect source code, migrations, runtime records and operational documents from web access.
+// Only the public root assets should be web-served; Express routes remain available.
+app.use((req,res,next)=>{
+  const path=req.path||'';
+  if(/^\/(?:src|db|data|governance|docs|scripts|tests|node_modules|\.git|\.github)(?:\/|$)/i.test(path)
+    || /^\/(?:server\.js|package(?:-lock)?\.json|\.env(?:\..*)?|NEXT_VERSION_IMPROVEMENT_LIST\.md|RELEASE_.*\.md|playwright.*|README\.md)$/i.test(path)){
+    return res.status(404).send('Not found');
+  }
+  next();
+});
+app.use(express.static(__dirname,{dotfiles:'deny'}));
 
 app.get('/health', (req, res) => {
   res.json({
