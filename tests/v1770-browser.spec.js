@@ -13,11 +13,12 @@ test('v1.77 all 23 old footer destinations retained with compact resource direct
  await ready(page,'home');const footer=page.locator('.site-footer');
  const hrefs=['#courses','#quick-practice','#ai-review-lab','#clause-reading-lab','#meeting-followup-lab','#email-clarity-lab','#guided-practice-path','#case-brief-lab','#legal-vocabulary-guide','#revision-studio','#professional-message-builder','#listening-clarification-lab','#conversation-rehearsal-lab','#reading-precision-lab','#smartteacher-free-trial','#practice-studio','#learning-plan','#smartteacher','#teachers','#language-bridge','#employers','#skills-passport','#trust'];
  for(const href of hrefs)await expect(footer.locator('a[href="'+href+'"]')).toHaveCount(1);
- await expect(footer.locator('a[href="#reading-precision-lab"]')).toBeVisible();
- await footer.locator('#v1770-all-resources summary').click();
+ await expect(footer.locator('#v1770-all-resources')).not.toHaveAttribute('open');
  await expect(footer.locator('a[href="#reading-precision-lab"]')).toBeHidden();
  await footer.locator('#v1770-all-resources summary').click();
  await expect(footer.locator('a[href="#reading-precision-lab"]')).toBeVisible();
+ await footer.locator('#v1770-all-resources summary').click();
+ await expect(footer.locator('a[href="#reading-precision-lab"]')).toBeHidden();
  await expect(footer.locator('.footer-logo')).toBeVisible();
 });
 test('v1.77 six course sample lessons are actionable and explain answers',async({page})=>{
