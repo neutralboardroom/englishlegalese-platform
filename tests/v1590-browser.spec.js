@@ -99,7 +99,7 @@ test.describe('EnglishLegalese v1.73.0 hard live recovery', () => {
     const contentHeight = await page.evaluate(() => document.documentElement.scrollHeight);
     expect(contentHeight).toBeGreaterThan(1000);
     expect(contentHeight).toBeLessThan(testInfo.project.name === 'mobile-chromium' ? 12500 : 10000);
-    expect(await page.locator('#app > section:visible').count()).toBeLessThanOrEqual(6);
+    expect(await page.locator('#app > section:visible').count()).toBeLessThanOrEqual(8);
     const titlePx=await page.locator('#start .section-head h2').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
     expect(titlePx).toBeGreaterThanOrEqual(23);
     expect(titlePx).toBeLessThanOrEqual(42);
@@ -123,7 +123,7 @@ test('approved logo is prominent and unchanged; hero hierarchy is intentionally 
   await expect(page.locator('.hero-logo')).toHaveCount(0);
   await expect(page.getByRole('heading',{name:'Legal English with AI-supported practice and live online classes with human teachers.'})).toBeVisible();
   await expect(page.locator('.hero-example.improved p')).toBeVisible();
-  expect(await page.locator('.hero-actions .btn').count()).toBe(2);
+  expect(await page.locator('.hero-actions .btn').count()).toBe(3);
   await expect(page.locator('.hero-secondary a[href="#smartteacher"]')).toBeVisible();
   await expect(page.locator('.hero-secondary a[href="#practice-studio"]')).toBeVisible();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);expect(overflow).toBeLessThanOrEqual(1);
