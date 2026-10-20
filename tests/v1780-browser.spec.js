@@ -87,4 +87,6 @@ test('v1.78 teachers explain video classroom access without inventing immediate 
  await page.locator('#v1780-teacher-handoff a[href="#live-classes"]').click();
  await expect(page.locator('#live-classes')).toBeVisible();
  await expect(page.locator('#live-classes')).toContainText('Actual classes are confirmed only after teacher assignment');
+ await open(page,'employers');
+ await expect(page.locator('#v1780-teacher-handoff')).toBeHidden();
 });
