@@ -9,6 +9,6 @@ assert(overlay.includes('Local selection only')&&overlay.includes('No file uploa
 assert(css.includes('v1770-footer')&&css.includes('focus-visible')&&css.includes('@media(max-width:620px)'));
 const originalHrefs=['#courses','#quick-practice','#ai-review-lab','#clause-reading-lab','#meeting-followup-lab','#email-clarity-lab','#guided-practice-path','#case-brief-lab','#legal-vocabulary-guide','#revision-studio','#professional-message-builder','#listening-clarification-lab','#conversation-rehearsal-lab','#reading-precision-lab','#smartteacher-free-trial','#practice-studio','#learning-plan','#smartteacher','#teachers','#language-bridge','#employers','#skills-passport','#trust'];
 const footer=index.match(/<footer[\s\S]*?<\/footer>/)[0];for(const href of originalHrefs){assert.equal((footer.split('href="'+href+'"').length-1),1,'Protected footer route: '+href);}
-assert(audit.includes('maximum-reasonable')&&audit.includes('Georgian')&&audit.includes('v1.76.0'));
+assert(audit.includes('Max reasonable substantial compatible work')&&audit.includes('Georgian')&&audit.includes('v1.76.0'));
 for(let i=1;i<=19;i++)assert(register.includes('EL-RGR-'+String(i).padStart(3,'0')));for(let i=1;i<=10;i++)assert(register.includes('EL-DUR-'+String(i).padStart(3,'0')));
 assert(rd('NEXT_VERSION_IMPROVEMENT_LIST.md').includes('after v1.76.0'));console.log('PASS v1.77 owner audit baseline, six actionable course lessons, private file picker, 2500 counter, Georgian language, preserved 23 links and protected 29 rules');
