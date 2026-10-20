@@ -1,0 +1,26 @@
+/* EnglishLegalese v1.75.0 — focused fictional listening & clarification lab. */
+.v1750-listening .v1750-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.15rem;align-items:start}
+.v1750-listening .v1750-work{min-width:0;background:#fff;border:1px solid #dce5ea;border-radius:18px;padding:1.5rem}
+.v1750-listening .v1750-label{display:block;font-weight:700;margin-bottom:.5rem;color:#0b1d33}
+.v1750-listening .v1750-work .input{display:block;width:100%;box-sizing:border-box}
+.v1750-listening .v1750-setting{color:#455b6b;line-height:1.5}
+.v1750-listening .v1750-listen-actions,.v1750-listening .v1750-controls{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0}
+.v1750-listening .v1750-listen-actions .btn,.v1750-listening .v1750-controls .btn{min-height:44px}
+.v1750-listening .v1750-audio-status,.v1750-listening .v1750-feedback{color:#18535b;line-height:1.5;min-height:1.5em}
+.v1750-listening .v1750-transcript{border:1px solid #cfdae1;padding:1rem 1.15rem;border-radius:12px;background:#f7f9fb;margin-top:.7rem}
+.v1750-listening .v1750-lines{padding-left:1.4rem;line-height:1.65}
+.v1750-listening .v1750-lines li+li{margin-top:.6rem}
+.v1750-listening .v1750-questions{display:grid;gap:1rem}
+.v1750-listening .v1750-question{border:1px solid #dce5ea;border-radius:12px;padding:1rem;min-width:0}
+.v1750-listening .v1750-question legend{font-weight:700;line-height:1.35;color:#0b1d33;padding:0 .3rem}
+.v1750-listening .v1750-option{display:flex;align-items:flex-start;gap:.7rem;line-height:1.48;padding:.55rem .1rem}
+.v1750-listening .v1750-option input{flex:none;min-width:19px;min-height:19px;margin-top:.12rem}
+.v1750-listening .v1750-reasons{border-top:1px solid #dce5ea;margin-top:1.1rem;padding-top:.9rem}
+.v1750-listening .v1750-explanations{padding-left:1.5rem;line-height:1.58}
+.v1750-listening .v1750-explanations li+li{margin-top:.65rem}
+.v1750-listening .v1750-private{color:#4a5c6b;font-size:.9rem;line-height:1.54}
+.v1750-listening .v1750-links{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.1rem}
+.v1750-listening button:focus-visible,.v1750-listening select:focus-visible,.v1750-listening input:focus-visible{outline:3px solid #247d83;outline-offset:3px}
+@media(max-width:850px){.v1750-listening .v1750-grid{grid-template-columns:1fr}.v1750-listening .v1750-work{padding:1.2rem}}
+@media(max-width:530px){.v1750-listening .v1750-work{padding:1rem}.v1750-listening .v1750-listen-actions{display:grid;grid-template-columns:1fr}.v1750-listening .v1750-listen-actions .btn{width:100%;justify-content:center}}
+@media(prefers-reduced-motion:reduce){.v1750-listening *{scroll-behavior:auto!important;transition:none!important}}
