@@ -28,8 +28,8 @@ const nvil = read('NEXT_VERSION_IMPROVEMENT_LIST.md');
 
 check('package is protected v1.73.0 or additive v1.74.0', ['1.73.0','1.74.0'].includes(pkg.version));
 check('v1.59 CSS is last public stylesheet', index.indexOf('product-v1590.css?v=1.73.0') > index.indexOf('product-v1580.css?v=1.73.0'));
-check('v1.59 JS is last active presentation script', index.includes('product-v1590.js?v=1.73.0') && index.lastIndexOf('<script src=') < index.indexOf('</body>') && index.indexOf('product-v1590.js?v=1.73.0') > index.indexOf('product-v1560-access.js?v=1.73.0'));
-check('active public assets use fresh v1.59 URLs', ['styles.css','app.js','public-v1548.js','product-v1550.js','product-v1550-research.js','product-v1550-preserve.js','product-v1560-access.js','product-v1590.js'].every(f => index.includes(`${f}?v=1.73.0`)));
+check('v1.59 JS is last active presentation script', index.includes('product-v1590.js?v=1.74.0') && index.lastIndexOf('<script src=') < index.indexOf('</body>') && index.indexOf('product-v1590.js?v=1.74.0') > index.indexOf('product-v1560-access.js?v=1.73.0'));
+check('active public assets use fresh v1.59 URLs', ['styles.css','app.js','public-v1548.js','product-v1550.js','product-v1550-research.js','product-v1550-preserve.js','product-v1560-access.js'].every(f => index.includes(`${f}?v=1.73.0`)) && index.includes('product-v1590.js?v=1.74.0'));
 check('obsolete v1.56-v1.58 presentation JS is intentionally not loaded', !index.includes('src="product-v1560.js?') && !index.includes('src="product-v1570.js?') && !index.includes('src="product-v1580.js?'));
 check('retired presentation source files remain preserved in repository', ['product-v1560.js','product-v1570.js','product-v1580.js'].every(p => fs.existsSync(path.join(root,p))));
 check('HTML includes explicit cache-revalidation metadata', index.includes('Cache-Control') && index.includes('no-cache') && index.includes('max-age=0'));
@@ -72,7 +72,7 @@ check('browser test rejects exact owner-observed stale strings', ['EnglishLegale
 check('browser test verifies six featured scenarios then all 21', (browser.includes('toBe(6)') || browser.includes('toHaveCount(6)')) && (browser.includes('toBe(21)') || browser.includes('toHaveCount(21)')));
 check('browser test verifies three featured courses', browser.includes("#courses article:visible") && browser.includes('toBe(3)'));
 check('browser test verifies planner/progress collapsed by default', browser.includes("#learning-plan .v1550-plan-builder") && browser.includes("#skills-passport .v1550-passport-grid") && browser.includes('toBeHidden()'));
-check('browser test verifies live marker and version', browser.includes('v1590-live-marker') && browser.includes('1.73.0'));
+check('browser test verifies live marker and version', browser.includes('v1590-live-marker') && browser.includes('1.74.0'));
 check('inherited browser gate is successor-aware', inheritedBrowser.includes('body.v1590-ready') && inheritedBrowser.includes('js-v1590-scenarios'));
 
 check('workflow still blocks high/critical npm findings', workflow.includes('npm run audit:high'));

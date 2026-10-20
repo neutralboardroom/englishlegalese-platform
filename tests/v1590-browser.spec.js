@@ -2,8 +2,8 @@ const { test, expect } = require('@playwright/test');
 
 async function waitForRecovery(page) {
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('#v1590-live-marker')).toHaveText('1.73.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.73.0');
+  await expect(page.locator('#v1590-live-marker')).toHaveText('1.74.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.74.0');
 }
 
 test.describe('EnglishLegalese v1.73.0 hard live recovery', () => {
