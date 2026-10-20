@@ -23,6 +23,6 @@ assert(css.includes('@media(max-width:680px)')&&css.includes('focus-visible')&&c
 for(let i=1;i<=19;i++)assert(reg.includes('EL-RGR-'+String(i).padStart(3,'0')));
 for(let i=1;i<=10;i++)assert(reg.includes('EL-DUR-'+String(i).padStart(3,'0')));
 assert(audit.includes('Georgian')&&audit.includes('Human teacher'));
-assert(rd('NEXT_VERSION_IMPROVEMENT_LIST.md').includes('after v1.77.0'));
+assert(rd('NEXT_VERSION_IMPROVEMENT_LIST.md').includes('v1.78.0 — Next Version Improvement List'));
 const inherited=rd('scripts/verify-v1770-owner-audit.js');assert(inherited.includes("product-v1770.js?v=1.77.0"));
 console.log('PASS v1.78: six additional course lessons, live human video classroom method, provider choice, local planning/ICS, retained 29 owner rules and prior assets');
