@@ -10,10 +10,12 @@ test('v1.74 professional message builder is discoverable without expanding homep
   const link=page.locator('.site-footer a[href="#professional-message-builder"]');
   await expect(link).toHaveCount(1);
   await expect(page.locator('#professional-message-builder')).toBeHidden();
+  await page.locator('.site-footer #v1770-all-resources summary').click();
+  await expect(link).toBeVisible();
   await link.click();
   await expect(page.locator('#professional-message-builder')).toBeVisible();
   await expect(page.locator('#home')).toBeHidden();
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.76.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.77.0');
   await expect(page.getByRole('heading',{name:'Turn scattered notes into a clear professional message.'})).toBeVisible();
   await expect(page.locator('.site-header .brand img')).toBeVisible();
 });

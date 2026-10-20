@@ -26,7 +26,7 @@ const research = read('governance/RESEARCH_AND_COMPETITOR_ADOPTION_LEDGER__v1.73
 const rootCause = read('docs/v1.59.0/PRODUCTION_LIVE_RECOVERY_ROOT_CAUSE.md');
 const nvil = read('NEXT_VERSION_IMPROVEMENT_LIST.md');
 
-check('package is protected v1.73.0 or additive v1.74.0', ['1.73.0','1.74.0','1.76.0'].includes(pkg.version));
+check('package is protected v1.73.0 or additive v1.74.0', ['1.73.0','1.74.0','1.76.0','1.77.0'].includes(pkg.version));
 check('v1.59 CSS is last public stylesheet', index.indexOf('product-v1590.css?v=1.73.0') > index.indexOf('product-v1580.css?v=1.73.0'));
 check('v1.59 JS is last active presentation script', index.includes('product-v1590.js?v=1.76.0') && index.lastIndexOf('<script src=') < index.indexOf('</body>') && index.indexOf('product-v1590.js?v=1.76.0') > index.indexOf('product-v1560-access.js?v=1.73.0'));
 check('active public assets use fresh v1.59 URLs', ['styles.css','app.js','public-v1548.js','product-v1550.js','product-v1550-research.js','product-v1550-preserve.js','product-v1560-access.js'].every(f => index.includes(`${f}?v=1.73.0`)) && index.includes('product-v1590.js?v=1.76.0'));
@@ -72,7 +72,7 @@ check('browser test rejects exact owner-observed stale strings', ['EnglishLegale
 check('browser test verifies six featured scenarios then all 21', (browser.includes('toBe(6)') || browser.includes('toHaveCount(6)')) && (browser.includes('toBe(21)') || browser.includes('toHaveCount(21)')));
 check('browser test verifies three featured courses', browser.includes("#courses article:visible") && browser.includes('toBe(3)'));
 check('browser test verifies planner/progress collapsed by default', browser.includes("#learning-plan .v1550-plan-builder") && browser.includes("#skills-passport .v1550-passport-grid") && browser.includes('toBeHidden()'));
-check('browser test verifies live marker and version', browser.includes('v1590-live-marker') && browser.includes('1.76.0'));
+check('browser test verifies live marker and version', browser.includes('v1590-live-marker') && browser.includes('1.77.0'));
 check('inherited browser gate is successor-aware', inheritedBrowser.includes('body.v1590-ready') && inheritedBrowser.includes('js-v1590-scenarios'));
 
 check('workflow still blocks high/critical npm findings', workflow.includes('npm run audit:high'));
@@ -81,7 +81,7 @@ check('security dependency pins remain', pkg.dependencies?.express === '4.22.3' 
 check('Node runtime floor remains 20+', /^>=20/.test(String(pkg.engines?.node || '')));
 check('canonical focus routing exists',app.includes('homepageSectionIds')&&app.includes('applyRouteView')&&app.includes('englishLegaleseApplyView'));
 check('homepage return link and accessible focus toolbar',index.includes('id="elFocusToolbar"')&&index.includes('href="#home"'));
-check('HTML has v1.60 release marker',index.includes('name="englishlegalese-release" content="1.76.0"'));
+check('HTML has v1.60 release marker',index.includes('name="englishlegalese-release" content="1.77.0"'));
 check('HTML response explicitly revalidates without modifying private routes',read('server.js').includes("req.path==='/' || req.path==='/index.html'")&&read('server.js').includes("'no-cache, max-age=0, must-revalidate'"));
 check('responsive homepage heading typography improved',css1590.includes('.hero h1{font-size:clamp(2.45rem')&&css1590.includes('.section-head h2{font-size:clamp(1.7rem'));
 check('learning engine preserves route ownership',v1550.includes('englishLegaleseApplyView'));

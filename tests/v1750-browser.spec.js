@@ -8,10 +8,12 @@ test('v1.75 listening lab opens from original footer without changing homepage o
  await page.goto('/');await page.locator('body.v1590-ready').waitFor();
  await expect(page.locator('#listening-clarification-lab')).toBeHidden();
  await expect(page.locator('.site-footer a[href="#listening-clarification-lab"]')).toHaveCount(1);
+ await page.locator('.site-footer #v1770-all-resources summary').click();
+ await expect(page.locator('.site-footer a[href="#listening-clarification-lab"]')).toBeVisible();
  await page.locator('.site-footer a[href="#listening-clarification-lab"]').click();
  await expect(page.locator('#listening-clarification-lab')).toBeVisible();
  await expect(page.locator('#home')).toBeHidden();
- await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.76.0');
+ await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.77.0');
  await expect(page.locator('.site-header .brand img')).toBeVisible();
  await expect(page.getByRole('heading',{name:'Hear the distinction. Ask the right follow-up.'})).toBeVisible();
 });
