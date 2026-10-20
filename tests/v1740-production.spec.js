@@ -8,6 +8,8 @@ test('v1.74 real apex and www deliver the new private professional message build
    await page.locator('body.v1590-ready').waitFor();
    await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.77.0');
    await expect(page.locator('#professional-message-builder')).toBeHidden();
+   await expect(page.locator('.site-footer a[href="#professional-message-builder"]')).toHaveCount(1);
+   await page.locator('.site-footer #v1770-all-resources summary').click();
    await expect(page.locator('.site-footer a[href="#professional-message-builder"]')).toBeVisible();
    await page.goto(site+'/#professional-message-builder');
    await expect(page.locator('#professional-message-builder')).toBeVisible();
