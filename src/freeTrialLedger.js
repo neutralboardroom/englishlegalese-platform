@@ -7,7 +7,9 @@ function configured({store,env=process.env}={}){
  const secret=env.SESSION_SECRET||env.JWT_SECRET||'';
  const auth=secret.length>=32&&secret!=='dev-only-change-me';
  const smtp=Boolean(env.SMTP_HOST&&env.SMTP_USER&&env.SMTP_PASS);
- return {database:db,secure_session:auth,email_sender:smtp,openai:!!env.OPENAI_API_KEY,enabled:env.SMARTTEACHER_TRIAL_ENABLED==='true',ready:db&&auth&&smtp&&!!env.OPENAI_API_KEY&&env.SMARTTEACHER_TRIAL_ENABLED==='true'};
+ const resend=require('./transactionalEmail').resendConfigured(env);
+ const email=Boolean(smtp||resend);
+ return {database:db,secure_session:auth,email_sender:email,openai:!!env.OPENAI_API_KEY,enabled:env.SMARTTEACHER_TRIAL_ENABLED==='true',ready:db&&auth&&email&&!!env.OPENAI_API_KEY&&env.SMARTTEACHER_TRIAL_ENABLED==='true'};
 }
 class FreeTrialLedger{
  constructor({store,env=process.env,sendMail,now=()=>Date.now()}={}){this.store=store;this.env=env;this.sendMail=sendMail;this.now=now;}
