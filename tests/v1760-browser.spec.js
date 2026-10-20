@@ -2,13 +2,13 @@ const {test,expect}=require('@playwright/test');
 async function open(page,id){await page.goto('/#'+id);await page.locator('body.v1590-ready').waitFor();await expect(page.locator('#'+id)).toBeVisible();}
 test('v1.76 homepage explains the real combined teaching method without altering branding',async({page})=>{
  await page.goto('/');await page.locator('body.v1590-ready').waitFor();
- await expect(page.locator('#home h1')).toContainText('AI tools and human teachers, together');
- await expect(page.locator('#home .v1760-method-note')).toContainText('teachers bring personal instruction');
+ await expect(page.locator('#home h1')).toContainText('live online classes with human teachers');
+ await expect(page.locator('#home .v1760-method-note')).toContainText('human teachers lead live video-class discussions');
  await expect(page.locator('#home .trust-row')).toContainText('Human teacher guidance available');
  await expect(page.locator('.site-header .brand img')).toBeVisible();
  await expect(page.locator('.site-footer a[href="#conversation-rehearsal-lab"]')).toHaveCount(1);
  await expect(page.locator('.site-footer a[href="#reading-precision-lab"]')).toHaveCount(1);
- await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.77.0');
+ await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.78.0');
 });
 test('v1.76 practice route preserves direct navigation, three fictional conversations and private feedback',async({page})=>{
  await open(page,'conversation-rehearsal-lab');const s=page.locator('#conversation-rehearsal-lab');
