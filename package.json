@@ -1,11 +1,11 @@
 {
   "name": "englishlegalese-platform",
-  "version": "1.73.0",
-  "description": "EnglishLegalese v1.73.0: three-reply verified-account AI trial with durable quotas, safe registration, paid fail-closed and document preview.",
+  "version": "1.74.0",
+  "description": "EnglishLegalese v1.74.0: free private professional message builder plus fail-closed Resend HTTPS transactional verification readiness; live AI trial and payments gated.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check product-v1570.js && node --check product-v1580.js && node --check product-v1590.js && node --check playwright.config.js && node --check playwright.production.config.js && node --check tests/v1570-browser.spec.js && node --check tests/v1590-browser.spec.js && node --check tests/v1590-production.spec.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1590-live-recovery.js && node --check scripts/verify-v1600-homepage.js && node --check scripts/verify-v1611-webkit.js && node --check scripts/verify-v1620-experience.js && node --check scripts/verify-v1630-workout.js && node --check scripts/verify-v1640-diagnostic.js && node --check scripts/verify-v1650-ai-review.js && node --check src/aiSafetyGate.js && node --check src/freeTrialLedger.js && node --check src/aiCommercePolicy.js && node --check scripts/test-v1730-ai-guards.js && node scripts/test-v1730-ai-guards.js && node --check scripts/verify-v1730-ai-safety.js && node scripts/verify-v1730-ai-safety.js",
+    "check": "node --check app.js && node --check public-v1548.js && node --check product-v1550.js && node --check product-v1550-research.js && node --check product-v1550-preserve.js && node --check product-v1560.js && node --check product-v1560-access.js && node --check product-v1570.js && node --check product-v1580.js && node --check product-v1590.js && node --check playwright.config.js && node --check playwright.production.config.js && node --check tests/v1570-browser.spec.js && node --check tests/v1590-browser.spec.js && node --check tests/v1590-production.spec.js && node --check server.js && node --check src/persistence.js && node --check src/productionServices.js && node --check scripts/predeploy-check.js && node --check scripts/verify-v1590-live-recovery.js && node --check scripts/verify-v1600-homepage.js && node --check scripts/verify-v1611-webkit.js && node --check scripts/verify-v1620-experience.js && node --check scripts/verify-v1630-workout.js && node --check scripts/verify-v1640-diagnostic.js && node --check scripts/verify-v1650-ai-review.js && node --check src/aiSafetyGate.js && node --check src/freeTrialLedger.js && node --check src/aiCommercePolicy.js && node --check scripts/test-v1730-ai-guards.js && node scripts/test-v1730-ai-guards.js && node --check scripts/verify-v1730-ai-safety.js && node scripts/verify-v1730-ai-safety.js && node --check src/transactionalEmail.js && node --check scripts/verify-v1740-transactional-email.js && node scripts/verify-v1740-transactional-email.js && node --check product-v1740.js && node --check tests/v1740-browser.spec.js && node --check scripts/verify-v1740-practice.js && node scripts/verify-v1740-practice.js",
     "predeploy:check": "node scripts/predeploy-check.js",
     "migrate": "node scripts/migrate.js",
     "prod:readiness": "node scripts/verify-production-readiness.js",
@@ -44,7 +44,8 @@
     "verify:v1700": "node scripts/verify-v1700-case-brief.js",
     "verify:v1710": "node scripts/verify-v1710-vocabulary.js",
     "verify:v1720": "node scripts/verify-v1720-revision-studio.js",
-    "verify:v1730": "node scripts/test-v1730-ai-guards.js && node scripts/verify-v1730-ai-safety.js"
+    "verify:v1730": "node scripts/test-v1730-ai-guards.js && node scripts/verify-v1730-ai-safety.js",
+    "verify:v1740": "node scripts/verify-v1740-transactional-email.js && node scripts/verify-v1740-practice.js"
   },
   "dependencies": {
     "express": "4.22.3"

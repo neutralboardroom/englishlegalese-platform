@@ -1,3 +1,30 @@
+# EnglishLegalese — Next Version Improvement List after v1.74.0 (candidate until qualified)
+## Cohesive material release and inherited dispositions
+1. DONE_THIS_RELEASE: Free private browser-only professional message builder with 3 genres, fictional templates, structured meaning/timing, character count, validation, private preview, reset, self-checks and optional copy. No AI, stored drafts or implied accreditation.
+2. DONE_THIS_RELEASE: Resend HTTPS sender adapter, mocked safe failures and distinct readiness check. BLOCKED: Real verification sender until Resend DNS and API credentials verified.
+3. DONE_THIS_RELEASE: 10 additive Neon migrations in dedicated EnglishLegalese production database (50 tables), DATABASE_URL installed in Render; safe baseline v1.73.0 redeployed live.
+4. BLOCKED: Public three-reply trial pending verified email DNS/delivery, OpenAI cost controls, session key, restore/export tests, abuse testing and explicit user go-live approval.
+5. DEFER_WITH_REASON: Stripe paid prices/webhooks, real uploads, verified teachers and graded assessment need dedicated approved privacy, commerce and security checks.
+6. IN_PROGRESS: Independent human mobile and assistive technology review. Browser checks are not a substitute for certification.
+7. DONE_THIS_RELEASE: Exact logo, original 19 Roger + 10 durable rule corpus, 9 courses, 21 scenarios, original diagnostic and all prior learning labs preserved.
+8. NEXT: Verify sending-only Resend DNS without altering existing MX, SPF or inbox; off-provider Neon export/restore rehearsal, bounded OpenAI spend and full consent gates.
+
+---
+
+# v1.74.0 — Free-Service Automation Preparation (candidate; NOT merged or deployed)
+
+- **Material change:** Implement opt-in Resend HTTPS transactional verification email adapter for Render Free while preserving SMTP fallback for suitable hosts.
+- **Safeguard:** Resend credentials are environment-only and never exposed in public bundles; send only on account-verification actions, and fail closed when unconfigured or provider rejects requests.
+- **Test:** Add mock-only sender acceptance/refusal, safe error redaction, no real mail or AI calls, and full trial-readiness prerequisite regression tests under `npm run check`.
+- **New accounts required:** Owner opens/connects Neon Free, which supports the existing PostgreSQL connection contract; verify dedicated database, migration integrity and off-provider backups before public trial.
+- **Domain:** Verify one EnglishLegalese-only sender in Resend without changing the current mailbox or other businesses. Use `RESEND_API_KEY` + `RESEND_FROM_EMAIL` on Render only after approved DNS verification.
+- **Launch gates:** Two independent successful full exact-head CI/browser qualifications, live Render GitHub SHA match, independent apex/www acceptance screenshots, durable 3-use quota through restart, verification deliverability, strict spend boundaries, and owner's go-live approval. Unavailable credentials must keep trial disabled.
+- **Not yet built/authorized:** Stripe paid entitlements and checkout; upload processing; cold-email campaigns. No premature launch claim, purchases, or unrelated product changes.
+- **Next work after account connection:** Restore-test/backup exports, domain verification, migration in Neon, secrets setup, one end-to-end test account, quota and AI-cost audit, and separate public enablement.
+- **Preservation:** The approved logo, 19+10 canonical rules, earlier nine courses, 21 scenarios and all educational labs remain protected. See `docs/FREE_SERVICES_AUTOMATED_ACTIVATION_V1740.md`.
+
+---
+
 # EnglishLegalese — Next Version Improvement List after v1.73.0
 
 ## Security, actual learning access and monetization readiness
