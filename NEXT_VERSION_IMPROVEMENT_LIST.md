@@ -1,3 +1,28 @@
+# EnglishLegalese.com — v1.77.0 Owner Screenshot Audit Improvement List (CANDIDATE; NOT QUALIFIED/LIVE YET)
+Date: 2026-10-20. Owner authorized next maximum-reasonable material build. Baseline v1.76.0 main `e2fa8ca02801cefb95c3b3c945da5a3675c627f2`, Render `dep-dbbnnml9fdbs73edtbfg`.
+**Canonical complete audit:** `governance/ENGLISHLEGALESE_V1770_OWNER_SCREENSHOT_AUDIT__MASTER_CHECKLIST__2026-10-20.md` (54 separately traceable owner requirements; preserve original). This abbreviated progress overview does not replace that file.
+
+## Implemented in this candidate (requires release tests and independent live verification)
+1. ADDITIVE: Retain comprehensive homepage (not cut short). Rebalance oversized hero headline and first-screen typography, while preserving original brand and human-teacher copy. Intro copy remains explicit about self-guided practice, AI tool limitations, teacher judgment and separate activation.
+2. MATERIAL: Give all nine course offering cards real next actions, creating six original educational micro-lessons with objectives, fictional examples, three response checks each (18 self-review questions and 18 explanations). Keep diagnostic, SmartTeacher and Employer offerings in their appropriate real service paths.
+3. MATERIAL: Add a consistent 2,500-character counter in the main SmartTeacher prompt workspace. Offer clearly local-only document/image selection with type and size checks; no real upload, photo analysis, extraction, network transfer or AI trial unlocking. Free verified-user AI and paid checkout remain gated.
+4. MATERIAL: Alphabetize 35 preferred-language options and add Georgian (ქართული), keeping previous 34. Turn five inert language-action spans into four working exercise modes plus genuine Teachers page navigation; curated short native-language examples in selected languages and safe no-unreviewed-translation fallback; a private English comprehension quiz.
+5. MATERIAL: Create dedicated richer teacher and employer views from the existing shared cards with accurate learner/teaching and organization distinctions; no unverified human bookings or teacher directory assertions.
+6. MATERIAL: Reorganize unwieldy sitewide footer using the original logo asset smaller, balanced topical links and expandable directory of all 14 free-learning resources; all 23 original footer destinations still represented in source and tested.
+7. MATERIAL: Improve Trust with accurate information on private browser-only learning and gated AI/file processing, links to existing guidance without fake Privacy/Terms/contact URLs.
+8. QA: Regression tests in `tests/v1770-browser.spec.js`, `tests/v1770-production.spec.js`, static `scripts/verify-v1770-owner-audit.js`, source-protection audit, inherited full QA, actual Render/apex/www acceptance and rollback receipts required.
+
+## Still partial/deferred or awaiting owner/external readiness
+- Full syllabi across six or more courses, real lesson completion and durable accounts require qualified curriculum/teacher review; initial sample lessons are real but not an invented completed course catalog.
+- Secure document/image upload and full AI review blocked on approved permissions, privacy/security/storage/cost and processing system; browser-only selection must remain honestly labelled, not active upload claim.
+- Live ChatGPT/OpenAI three free trial replies, account email verification and status, transactional Resend DNS, payment/Stripe plans and subscriptions blocked until independent approval gates; no send/purchase/activation.
+- Teacher booking/application and contact workflow: no verified public booking/contact channel inferred; explanatory account path only until owner authorizes real intake.
+- Native-language selection currently has 35 options, but only curated common-language examples for a subset; unmatched languages explicitly show honest unavailability.
+- Accessibility/performance human testing and legal/privacy policy publication remain open work, not implied certified by automated QA.
+- Long homepage intentionally retained per owner directive. No change for change's sake, and complete prior NVIL preserved below.
+
+---
+
 # EnglishLegalese.com — Next Version Improvement List after v1.76.0 (candidate; subject to final qualification)
 ## Cohesive maximum-reasonable successor work
 1. DONE_THIS_RELEASE: Reframe homepage around combined structured Legal English practice, AI tools, real human teachers and the complementary role of each; explicit honesty about separate live AI/paid readiness. Owner-approved exact text: “Human teacher guidance available.”
