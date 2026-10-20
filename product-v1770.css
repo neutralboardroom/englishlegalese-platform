@@ -27,7 +27,7 @@ body[data-el-homepage-view="home"] .hero .hero-actions{margin:.9rem 0!important}
 .v1770-lesson-status{line-height:1.6;color:#17535a;min-height:1.4rem}
 .v1770-lesson-status ol{color:#183849}
 .v1770-course-action{min-height:42px!important;margin-top:auto!important;align-self:flex-start;padding:.55rem .95rem!important;font-size:.86rem!important}
-.v1580-course-card{display:flex!important;flex-direction:column!important;gap:.6rem}
+.v1580-course-card{flex-direction:column;gap:.6rem}
 .v1580-course-card p{flex:1}
 .v1770-main-counter{font-size:.9rem;color:#155c65;line-height:1.5;font-weight:700;margin:.45rem 0 .75rem}
 .v1770-files{border-top:1px solid #dce5e9;margin-top:1.4rem;padding-top:1rem}
