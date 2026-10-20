@@ -8,7 +8,7 @@ test('v1.76 homepage explains the real combined teaching method without altering
  await expect(page.locator('.site-header .brand img')).toBeVisible();
  await expect(page.locator('.site-footer a[href="#conversation-rehearsal-lab"]')).toHaveCount(1);
  await expect(page.locator('.site-footer a[href="#reading-precision-lab"]')).toHaveCount(1);
- await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.76.0');
+ await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.77.0');
 });
 test('v1.76 practice route preserves direct navigation, three fictional conversations and private feedback',async({page})=>{
  await open(page,'conversation-rehearsal-lab');const s=page.locator('#conversation-rehearsal-lab');
