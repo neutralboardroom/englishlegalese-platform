@@ -5,13 +5,13 @@ test.describe('EnglishLegalese v1.73.0 live homepage recovery inheritance', () =
     await page.goto('/');
     await page.locator('body.v1590-ready').waitFor();
 
-    await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.75.0');
+    await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.76.0');
     await expect(page.locator('.site-header .brand img')).toHaveAttribute('src', /assets\/englishlegalese-logo\.png\?v=1\.73\.0/);
     const logoBox = await page.locator('.site-header .brand img').boundingBox();
     expect(logoBox).not.toBeNull();
     expect(logoBox.width).toBeGreaterThanOrEqual(testInfo.project.name === 'mobile-chromium' ? 100 : 140);
 
-    await expect(page.getByRole('heading', { name: 'Clear English for legal work.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Real-world Legal English. AI tools and human teachers, together.' })).toBeVisible();
     await expect(page.locator('#diagnostic')).toBeHidden();
     await expect(page.locator('.hero-actions a').first()).toHaveAttribute('href', '#diagnostic');
     await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
