@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const {resendConfigured,sendResendEmail}=require('./transactionalEmail');
 
 const SERVICE_DATA_DIR = process.env.LOCAL_SERVICE_DATA_DIR || path.join(__dirname, '..', 'data');
 const SERVICE_DATA_PATH = process.env.LOCAL_SERVICE_JSON_DB || path.join(SERVICE_DATA_DIR, 'v119-local-service-store.json');
@@ -83,6 +84,7 @@ function configured() {
     stripe_webhook: requireEnv(['STRIPE_WEBHOOK_SECRET']),
     object_storage: requireEnv(['S3_BUCKET', 'S3_REGION', 'S3_ACCESS_KEY_ID', 'S3_SECRET_ACCESS_KEY']),
     smtp: requireEnv(['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS']),
+    resend: resendConfigured(),
     internal_calendar: true,
     manual_classroom_link: true,
     google_calendar: requireEnv(['GOOGLE_CALENDAR_ID', 'GOOGLE_CALENDAR_ACCESS_TOKEN']),
@@ -244,7 +246,10 @@ class ProductionServices {
 
   async sendEmail({ to, subject, text, html, template = 'generic' }, req = null) {
     const record = { id: id('EL-EMAIL'), to: safeString(to, 500), subject: safeString(subject, 300), template, status: 'queued', provider_message_id: null, created_at: nowIso(), updated_at: nowIso() };
-    if (configured().smtp) {
+    if (configured().resend) {
+      const info = await sendResendEmail({to,subject,text,html});
+      record.status = 'sent'; record.provider_message_id = info.id;
+    } else if (configured().smtp) {
       const nodemailer = tryRequire('nodemailer');
       if (nodemailer) {
         const transporter = nodemailer.createTransport({ host: process.env.SMTP_HOST, port: Number(process.env.SMTP_PORT || 587), secure: process.env.SMTP_SECURE === 'true', auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } });
