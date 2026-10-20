@@ -1,13 +1,19 @@
-# EnglishLegalese v1.74.0 — Free-Services Connection Automation (CANDIDATE ONLY)
+# EnglishLegalese.com — v1.74.0 Release Candidate (2026-10-20)
+Status: QUALIFICATION REQUIRED BEFORE DEPLOYMENT. This document does not claim live launch.
 
-This material candidate adds an optional HTTPS Resend transactional-email transport for existing account-verification emails, suitable for Render Free's blocked SMTP ports, and retains all v1.73.0 protections. It prepares connection to Neon Free via standard `DATABASE_URL`; it does not create a database or verify credentials.
+## Cohesive material improvements
+1. Private Professional Message Builder (free, browser-only): three distinct practice situations (client update, internal handoff, meeting follow-up) with structured confirmed/pending/action/timing wording; fictional presets; bounded five-field composition; uncertain-timing fallbacks, preview invalidation, three review checkboxes, character count, user-initiated copy, complete clearing and refresh discard. Practice content never sent, logged, saved, uploaded or inserted as HTML. No fake legal grading or client document use.
+2. Transactional email infrastructure: opt-in Resend HTTPS transport for Render Free, where SMTP ports are unavailable, with environment prereqs, input checks, timeout and safe errors; SMTP fallback remains.
+3. Actual database groundwork: 10 owner-approved additive Neon PostgreSQL migrations applied (50 tables) to dedicated EnglishLegalese Oregon database; DATABASE_URL securely merged into Render; v1.73.0 baseline redeployed safely.
+4. All prior courses/scenarios/diagnostic/fictional labs, approved exact logo, complete 19 owner + 10 durable rules and inherited improvement list remain in place. No file deletions or unrelated domain modifications.
 
-**Public and deployment status:** NOT MERGED; NOT DEPLOYED; NOT ACTIVATED. Keep v1.73.0 live until two independent release qualifications and separate real production acceptance pass.
+## Release gates
+- Two independent successful exact-final-head source/security/dependency/browser runs on desktop/tablet/mobile Chromium and iPad WebKit.
+- Recheck main and last live Render SHA, merge with expected SHA, preserve rollback, Render auto-deploy exact merge.
+- Independently check apex/www real HTML, browser behaviors, no upload, current release marker and live functionality.
+- Keep public 3-reply OpenAI trial OFF until Resend DNS verified, key/secure session/budget set, delivered test email verified, full end-to-end safety tests and separate owner activation; Stripe, file processing and cold outreach OFF.
+- Resend mail.englishlegalese.com DNS remains NOT VERIFIED; this safe code release does not imply live email or AI account trial.
 
-**Changes:** `src/transactionalEmail.js`; opt-in Resend branch in `src/productionServices.js`; updated email-readiness predicate in `src/freeTrialLedger.js`; mock-only Resend readiness/transport tests; account-owner operations handoff; package version/script and inherited improvement register.
-
-**Gates:** `RESEND_API_KEY` and `RESEND_FROM_EMAIL` both required for HTTPS sending. Existing PostgreSQL+secure session+OpenAI+explicit trial-enable+table-readiness requirements remain intact. No changes to paid entitlement or Stripe fail-closed status. No current verification emails are sent just by deploying code.
-
-**Do not assume:** Resend domain DNS verified; Neon project created; migrations executed; independent backup completed; trial opened; customer verification email delivered; payment working; uploaded documents processed; user credits spent.
-
-**Preservation:** Original approved logo, all previously accepted public UX, nine courses, 21 scenarios, all diagnostic and educational labs, protected 19+10 governance rules, existing Render and database projects remain untouched. Retain live v1.73.0 rollback. Full release qualification and real-site acceptance required before merge or deployment. See `docs/FREE_SERVICES_AUTOMATED_ACTIVATION_V1740.md`.
+## Evidence
+Prior preparation PR #28, first full source/browser gate 39373905810 passed before expanded feature. Re-run twice on exact final head.
+Predecessor Render SHA e18334e13bb32dec891f0a90b6d6f62c1ed84cfd; successful preservation redeploy dep-dbbgd7m7bikc738fs6i0.

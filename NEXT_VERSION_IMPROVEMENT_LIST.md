@@ -1,3 +1,16 @@
+# EnglishLegalese — Next Version Improvement List after v1.74.0 (candidate until qualified)
+## Cohesive material release and inherited dispositions
+1. DONE_THIS_RELEASE: Free private browser-only professional message builder with 3 genres, fictional templates, structured meaning/timing, character count, validation, private preview, reset, self-checks and optional copy. No AI, stored drafts or implied accreditation.
+2. DONE_THIS_RELEASE: Resend HTTPS sender adapter, mocked safe failures and distinct readiness check. BLOCKED: Real verification sender until Resend DNS and API credentials verified.
+3. DONE_THIS_RELEASE: 10 additive Neon migrations in dedicated EnglishLegalese production database (50 tables), DATABASE_URL installed in Render; safe baseline v1.73.0 redeployed live.
+4. BLOCKED: Public three-reply trial pending verified email DNS/delivery, OpenAI cost controls, session key, restore/export tests, abuse testing and explicit user go-live approval.
+5. DEFER_WITH_REASON: Stripe paid prices/webhooks, real uploads, verified teachers and graded assessment need dedicated approved privacy, commerce and security checks.
+6. IN_PROGRESS: Independent human mobile and assistive technology review. Browser checks are not a substitute for certification.
+7. DONE_THIS_RELEASE: Exact logo, original 19 Roger + 10 durable rule corpus, 9 courses, 21 scenarios, original diagnostic and all prior learning labs preserved.
+8. NEXT: Verify sending-only Resend DNS without altering existing MX, SPF or inbox; off-provider Neon export/restore rehearsal, bounded OpenAI spend and full consent gates.
+
+---
+
 # v1.74.0 — Free-Service Automation Preparation (candidate; NOT merged or deployed)
 
 - **Material change:** Implement opt-in Resend HTTPS transactional verification email adapter for Render Free while preserving SMTP fallback for suitable hosts.
