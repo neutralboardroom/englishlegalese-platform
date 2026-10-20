@@ -2,12 +2,12 @@ const {test,expect}=require('@playwright/test');
 async function ready(page,hash){await page.goto('/#'+hash);await page.locator('body.v1590-ready').waitFor();await expect(page.locator('#'+hash)).toBeVisible();}
 
 test('v1.77 comprehensive homepage remains intact with condensed headline and teacher claim',async({page})=>{
- await ready(page,'home');await expect(page.locator('#home h1')).toContainText('AI tools and human teachers, together');
+ await ready(page,'home');await expect(page.locator('#home h1')).toContainText('live online classes with human teachers');
  await expect(page.locator('#home')).toContainText('Human teacher guidance available');
  await expect(page.locator('#start')).toBeVisible();await expect(page.locator('#courses')).toBeVisible();
  await expect(page.locator('.site-header .brand img')).toBeVisible();
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.77.0');
- await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.77.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.78.0');
+ await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.78.0');
 });
 test('v1.77 all 23 old footer destinations retained with compact resource directory',async({page})=>{
  await ready(page,'home');const footer=page.locator('.site-footer');

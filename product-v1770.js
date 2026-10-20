@@ -96,7 +96,7 @@ function mountTrust(){const s=$('#trust');if(!s||s.dataset.v1770Trust)return;s.d
 function mount(){
  const root=$('#app');if(!root)return;
  mountCourses();mountSmartTeacher();mountLanguage();mountRoleViews();mountTrust();
- document.documentElement.dataset.englishlegaleseMaterialRelease=VERSION;
+ document.documentElement.dataset.englishlegaleseMaterialRelease=document.querySelector('meta[name="englishlegalese-release"]')?.content || VERSION;
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(mount,0),{once:true});else setTimeout(mount,0);
 window.addEventListener('hashchange',()=>{setTimeout(mount,0);setTimeout(mount,75);});

@@ -11,7 +11,7 @@ test.describe('EnglishLegalese v1.73.0 live homepage recovery inheritance', () =
     expect(logoBox).not.toBeNull();
     expect(logoBox.width).toBeGreaterThanOrEqual(testInfo.project.name === 'mobile-chromium' ? 100 : 140);
 
-    await expect(page.getByRole('heading', { name: 'Real-world Legal English. AI tools and human teachers, together.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Legal English with AI-supported practice and live online classes with human teachers.' })).toBeVisible();
     await expect(page.locator('#diagnostic')).toBeHidden();
     await expect(page.locator('.hero-actions a').first()).toHaveAttribute('href', '#diagnostic');
     await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);

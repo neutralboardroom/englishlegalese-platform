@@ -45,7 +45,7 @@ test.describe('EnglishLegalese v1.73.0 production acceptance', () => {
     const h=await page.evaluate(()=>document.documentElement.scrollHeight);
     expect(h).toBeLessThan(testInfo.project.name==='production-mobile'?9500:7000);
     const htmlResponse=await page.request.get('/');
-    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.77.0');
+    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.78.0');
     expect(htmlResponse.headers()['cache-control']).toContain('no-cache');
     await page.screenshot({ path: testInfo.outputPath('production-homepage-v1590.png'), fullPage: true, animations: 'disabled' });
     await testInfo.attach('production-homepage-v1590', { path: testInfo.outputPath('production-homepage-v1590.png'), contentType: 'image/png' });
@@ -67,7 +67,7 @@ test.describe('EnglishLegalese v1.73.0 production acceptance', () => {
     await page.goto('https://www.englishlegalese.com/', { waitUntil: 'networkidle' });
     await page.locator('body.v1590-ready').waitFor();
     await expect(page.locator('#v1590-live-marker')).toHaveText('1.76.0');
-    await expect(page.getByRole('heading', { name: 'Real-world Legal English. AI tools and human teachers, together.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Legal English with AI-supported practice and live online classes with human teachers.' })).toBeVisible();
     await expect(page.getByText('EnglishLegalese Team', { exact: true })).toHaveCount(0);
   });
 });
@@ -81,10 +81,10 @@ test('production header shows approved large logo with restrained first screen',
  expect(box.width).toBeGreaterThanOrEqual(testInfo.project.name==='production-mobile'?165:200);
  expect(box.height).toBeGreaterThanOrEqual(testInfo.project.name==='production-mobile'?85:100);
  expect(ib.height).toBeGreaterThanOrEqual(testInfo.project.name==='production-mobile'?160:200);
- await expect(page.getByRole('heading',{name:'Real-world Legal English. AI tools and human teachers, together.'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Legal English with AI-supported practice and live online classes with human teachers.'})).toBeVisible();
  await expect(page.locator('.hero-example.improved p')).toBeVisible();
  await expect(page.locator('.hero-logo')).toHaveCount(0);
- expect(await page.locator('.hero-actions .btn').count()).toBe(2);
+ expect(await page.locator('.hero-actions .btn').count()).toBe(3);
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);expect(overflow).toBeLessThanOrEqual(1);
 });
 

@@ -1,3 +1,25 @@
+# EnglishLegalese v1.78.0 — Next Version Improvement List (PRE-SEAL CANDIDATE)
+Date: 2026-10-20. Inherits the complete v1.77.0 54-item owner audit and all previous successor lists below. Current verified live predecessor v1.77.0, main SHA `450096a71b1e61ef421100d88b40ea9e63e6bf5e`, Render `dep-dbbp81qvcj2c73dnrfug`.
+
+## Maximum-reasonable materially useful work in ONE integrated release
+1. IMPLEMENTED_CANDIDATE: Homepage hero now explicitly says **live online classes with human teachers**, identifies independent learning, AI-supported learning, and personal human teacher-led interactive online video classrooms; preserves the owner-approved exact checkmark **Human teacher guidance available**. No empirical-superiority promises or false assertion of immediate appointments.
+2. IMPLEMENTED_CANDIDATE: A professional **Live Online Video Classes** homepage section with 3 meaningful benefits, a designed simulated video-classroom presentation and five usable provider choices: Zoom, Google Meet, Microsoft Teams, Tencent / VooV and manual approved regional links.
+3. IMPLEMENTED_CANDIDATE: **Interactive class planning**: choose course focus, provider, future lesson time in the visitor's device time zone and duration; local preview includes the correct actual local time and provider; changing any choice invalidates stale plan; optional downloadable **UNCONFIRMED** ICS calendar hold without contacting a provider, inventing teacher availability, booking a meeting, sending email or storing private information. This is a genuine useful private planning tool, not a live booking. The existing role-guarded backend Google/Zoom and manual provider adapters remain unmodified.
+4. IMPLEMENTED_CANDIDATE: Six additional structured unit 2 course lessons (18 new contextual comprehension questions and 18 explanations), layered onto the six original unit 1 modules and 18 original checks, for **12 lesson units and 36 original explained questions**, with reset/changed-answer invalidation and no transmission.
+5. IMPLEMENTED_CANDIDATE: Six homepage goal-based learner cards route directly to real applicable course lessons and existing writing, reading, speaking, AI output or academic labs. The comprehensive homepage remains intact.
+6. IMPLEMENTED_CANDIDATE: Teacher page has a clear actionable link to **online human video classrooms** and class preparation; distinguishes teachers from employer access; maintains existing account/role gates.
+7. QA_IN_PROGRESS: Verify the original 19 Roger Rules + 10 durable rules, protected original logo, existing 23 footer routes, 35 language selections including Georgian, 2,500-character SmartTeacher and prior courses; full Chromium/WebKit desktop/tablet/mobile browser regressions twice on identical head; then exact merge, Render live, apex and www acceptance. Preserve v1.77.0 rollback.
+
+## Remaining external operational dependencies — DO NOT FALSELY CLAIM COMPLETE
+- Teacher match, verified active teaching staff, slot availability and teacher onboarding: confirm actual staff and authorization before accepting real bookings.
+- Provider credentials, scopes and account ownership for Zoom/Google Calendar+Meet/Teams or approved regional video tool; Teams and regional links may require manual staff attachment. Existing backend **createCalendarVideoSession** is restricted to teacher/staff/admin/owner roles; public scheduling is not enabled.
+- A proper production-qualified persistent reservation ledger, access-controlled attendance, confirmation/notification routing and consent for video recording are needed before claiming booking, join links, room creation or sending reminders.
+- No new real OpenAI account trial, Stripe payment, real private document processing, DNS changes, real invite sending or outbound email without their original separate approval gates. Keep the earlier partial/gated 54-item owner audit visible.
+- Do not fabricate a meeting URL, teacher identity, availability, confirmation, performance benchmark or actual lesson purchased.
+- Next successor: complete provider onboarding, teacher dashboard/session record persistence, time zone conversions outside client device, authorized student enrollment, policy/contact pages after vetted ownership, accessible curriculum progress and expanded genuine native-language exercises. Never rewrite original 29 protected rules or remove the old release histories.
+
+---
+
 # EnglishLegalese.com — v1.77.0 Owner Screenshot Audit Improvement List (CANDIDATE; NOT QUALIFIED/LIVE YET)
 Date: 2026-10-20. Owner authorized next maximum-reasonable material build. Baseline v1.76.0 main `e2fa8ca02801cefb95c3b3c945da5a3675c627f2`, Render `dep-dbbnnml9fdbs73edtbfg`.
 **Canonical complete audit:** `governance/ENGLISHLEGALESE_V1770_OWNER_SCREENSHOT_AUDIT__MASTER_CHECKLIST__2026-10-20.md` (54 separately traceable owner requirements; preserve original). This abbreviated progress overview does not replace that file.
