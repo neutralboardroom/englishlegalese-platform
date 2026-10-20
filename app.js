@@ -6,7 +6,7 @@
   const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
   const app = $('#app');
   const preferredLanguageKey = 'elPreferredExplanationLanguage';
-  const languages = ['English','Spanish','Chinese','Arabic','French','Portuguese','Russian','Turkish','Hindi','Urdu','Korean','Japanese','Vietnamese','Indonesian','German','Italian','Polish','Ukrainian','Persian / Farsi','Bengali','Thai','Dutch','Greek','Hebrew','Swedish','Norwegian','Danish','Finnish','Romanian','Czech','Hungarian','Malay','Tagalog','Swahili'];
+  const languages = ["Arabic","Bengali","Chinese","Czech","Danish","Dutch","English","Finnish","French","Georgian (ქართული)","German","Greek","Hebrew","Hindi","Hungarian","Indonesian","Italian","Japanese","Korean","Malay","Norwegian","Persian / Farsi","Polish","Portuguese","Romanian","Russian","Spanish","Swahili","Swedish","Tagalog","Thai","Turkish","Ukrainian","Urdu","Vietnamese"];
   const courses = [
     ['Free Legal English starting diagnostic','Placement','A short, practice-based starting point that recommends what to work on next. It is not an accredited proficiency test or certification.'],
     ['SmartTeacher AI Practice','All levels','Guided Legal English practice for writing, reading, vocabulary, roleplay, professional communication, and careful AI-output review.'],
