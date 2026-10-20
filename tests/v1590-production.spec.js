@@ -84,7 +84,7 @@ test('production header shows approved large logo with restrained first screen',
  await expect(page.getByRole('heading',{name:'Legal English with AI-supported practice and live online classes with human teachers.'})).toBeVisible();
  await expect(page.locator('.hero-example.improved p')).toBeVisible();
  await expect(page.locator('.hero-logo')).toHaveCount(0);
- expect(await page.locator('.hero-actions .btn').count()).toBe(2);
+ expect(await page.locator('.hero-actions .btn').count()).toBe(3);
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);expect(overflow).toBeLessThanOrEqual(1);
 });
 
