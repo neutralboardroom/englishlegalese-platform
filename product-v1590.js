@@ -2,7 +2,7 @@
    Critical public correctness is enforced directly in the DOM, independent of predecessor presentation classes. */
 (() => {
   'use strict';
-  const VERSION='1.75.0';
+  const VERSION='1.76.0';
   const qs=(s,r=document)=>r.querySelector(s);
   const qsa=(s,r=document)=>Array.from(r.querySelectorAll(s));
   // Only modify the DOM when values actually change. Unconditional textContent/innerHTML
