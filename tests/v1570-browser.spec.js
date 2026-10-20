@@ -5,7 +5,7 @@ test.describe('EnglishLegalese v1.73.0 live homepage recovery inheritance', () =
     await page.goto('/');
     await page.locator('body.v1590-ready').waitFor();
 
-    await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.74.0');
+    await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-live-release', '1.75.0');
     await expect(page.locator('.site-header .brand img')).toHaveAttribute('src', /assets\/englishlegalese-logo\.png\?v=1\.73\.0/);
     const logoBox = await page.locator('.site-header .brand img').boundingBox();
     expect(logoBox).not.toBeNull();

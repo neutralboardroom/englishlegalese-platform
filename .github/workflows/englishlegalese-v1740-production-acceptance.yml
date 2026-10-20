@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   production-acceptance:
-    if: contains(github.event.head_commit.message, 'v1.74.0')
+    if: startsWith(github.event.head_commit.message, 'EnglishLegalese v1.74.0 ')
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:

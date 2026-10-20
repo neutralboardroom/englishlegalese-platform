@@ -1,3 +1,16 @@
+# EnglishLegalese.com — Next Version Improvement List after v1.75.0 (candidate, subject to full qualification)
+## Material release priorities and dispositions
+1. DONE_THIS_RELEASE: Free **Listening & Clarification Lab** with three fully invented legal/professional English exchanges, 12 dialogue turns, nine independent comprehension questions with answer-specific rationale, confidence-preserving self-check, transcript toggle, replay/slow-play/stop using optional native browser voice and graceful no-speech fallback.
+2. DONE_THIS_RELEASE: No learner uploads, recording, microphones, backend calls, AI usage, transcripts saved or externally transmitted by the site. Native device voice behavior depends on each browser's voice availability/settings. Source and Chromium/WebKit tests cover privacy, keyboard/touch, reset, transcripts, optional speech control, no-provider fallbacks and content semantics. Truthful non-certified practice status.
+3. DONE_THIS_RELEASE: Fix exact-version production workflows to avoid old v1.73 and v1.74 check jobs incorrectly running on successor commit descriptions; preserve those historical workflows but require their own release prefix. Add v1.75 apex/www real browser acceptance, HTML+health+actual JS freshness gate, and old-release fallback.
+4. DONE_THIS_RELEASE: 19 owner rules, 10 durable builder rules, approved immutable logo, nine courses, 21 scenarios, original diagnostic, all preexisting private learning tools and previous Next Version Improvement Lists preserved. v1.74 is immediate rollback.
+5. BLOCKED: Real 3-reply free AI account trial pending sending-only Resend domain DNS verification, verified transactional email, durable provider budget and full abuse/ledger tests and explicit owner launch authorization. Current dedicated Neon database and Render connection remain intact; no database mutation in v1.75.
+6. DEFER_WITH_REASON: Stripe paid AI, tutor bookings, live document uploads, teacher verification and assessed credentials require approved economics, privacy/security validation and provider acceptance, not cosmetic UI placeholders.
+7. IN_PROGRESS: Live human-assistive-tech, genuine mobile listening quality across devices, professional instructional review and measured adoption/retention. Browser TTS is optional access only; native voice support varies.
+8. NEXT BEST: Owner-approved verified Resend DNS through Hover without replacing any existing records; off-provider Neon export/restore exercise; controlled AI spending cap, signed payment lifecycle and regulated file processing only when independently ready.
+
+---
+
 # EnglishLegalese — Next Version Improvement List after v1.74.0 (candidate until qualified)
 ## Cohesive material release and inherited dispositions
 1. DONE_THIS_RELEASE: Free private browser-only professional message builder with 3 genres, fictional templates, structured meaning/timing, character count, validation, private preview, reset, self-checks and optional copy. No AI, stored drafts or implied accreditation.
