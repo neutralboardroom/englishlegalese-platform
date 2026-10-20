@@ -192,10 +192,10 @@
 
   function hero(){
     return `<section class="hero" id="home"><div class="container hero-grid">
-    <div class="hero-copy"><div class="eyebrow">Learn Legal English with a complete approach</div><h1>Real-world Legal English. AI tools and human teachers, together.</h1><p class="lead">Clear professional communication takes more than a quick AI answer or an occasional lesson. EnglishLegalese combines structured Legal English courses, realistic writing, reading, listening and speaking practice, AI-supported learning tools and guidance from real human teachers.</p><p class="v1760-method-note"><strong>How our method works:</strong> practise independently, check the meaning and tone of your words, then deepen your skills with human feedback. AI tools support practice; teachers bring personal instruction and professional judgment. Free self-guided exercises are available now; live AI and paid services are introduced only when ready.</p>
-    <div class="hero-actions"><a class="btn teal" href="#diagnostic">Start your free diagnostic</a><a class="btn light" href="#courses">Explore courses</a></div>
+    <div class="hero-copy"><div class="eyebrow">Learn Legal English with a complete approach</div><h1>Legal English with AI-supported practice and live online classes with human teachers.</h1><p class="lead">Clear professional communication takes more than a quick AI answer or an occasional lesson. EnglishLegalese brings together structured Legal English courses, independent speaking, reading and writing practice, AI-supported learning tools, and personal instruction with human teachers in interactive online video classrooms.</p><p class="v1760-method-note"><strong>How our method works:</strong> practise independently, check the meaning and tone of your words, then deepen your skills with human feedback. AI tools help you practise between lessons; human teachers lead live video-class discussions, clarify nuanced language, and give personalized feedback. Free exercises work now; video-class booking, real AI replies, and paid services require confirmed availability and separate activation.</p>
+    <div class="hero-actions"><a class="btn teal" href="#diagnostic">Start your free diagnostic</a><a class="btn light" href="#courses">Explore courses</a><a class="btn light" href="#live-classes">Explore live video classes</a></div>
     <div class="hero-secondary"><a href="#smartteacher">Try SmartTeacher AI <span aria-hidden="true">→</span></a><a href="#practice-studio">Practice a legal scenario <span aria-hidden="true">→</span></a></div>
-    <div class="trust-row"><span class="trust-item">Practical language skills</span><span class="trust-item">Human teacher guidance available</span><span class="trust-item">Education, not legal advice</span></div></div>
+    <div class="trust-row"><span class="trust-item">Practical language skills</span><span class="trust-item">Live online classes with human teachers</span><span class="trust-item">Education, not legal advice</span></div></div>
     <aside class="hero-card" aria-label="Legal English example and language support">
       <div class="hero-example-kicker">See the difference</div><h2 class="hero-example-title">Professional English, made clearer.</h2>
       <div class="hero-example"><div class="hero-example-label">Instead of</div><p>Pursuant to the aforementioned correspondence, we hereby request your response.</p></div>
@@ -1276,7 +1276,7 @@
     if(target){ requestAnimationFrame(()=>target.scrollIntoView({behavior:'instant',block:'start'})); return; }
     if(attempt<20) setTimeout(()=>scrollToTarget(id,attempt+1),50);
   }
-  const homepageSectionIds = new Set(['home','start','courses','smartteacher','teachers','trust']);
+  const homepageSectionIds = new Set(['home','start','courses','smartteacher','teachers','trust','live-classes','learning-pathways']);
   const focusBar = document.getElementById('elFocusToolbar');
   const focusBarName = document.getElementById('elFocusName');
   function applyRouteView(){
