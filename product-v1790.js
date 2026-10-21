@@ -55,7 +55,25 @@ function addClassPrep(){
  save.addEventListener('click',()=>{const chosen=$$('input:checked',checks).map(x=>topics[Number(x.value)]),parts=['EnglishLegalese — PRIVATE CLASS PREPARATION','UNCONFIRMED: not a booking or invitation','','Learning focus: '+(focus?.selectedOptions?.[0]?.textContent||'Legal English'),'Preferred device-local time: '+(dateField?.value||'not selected'),'Device timezone: '+(Intl.DateTimeFormat().resolvedOptions().timeZone||'not known'),'','Selected discussion goals:',...chosen.map((x,i)=>(i+1)+'. '+x),'','My question:',question.value||'(none)','','A real instructor and meeting link must be confirmed before class.'];const url=URL.createObjectURL(new Blob([parts.join('\r\n')],{type:'text/plain;charset=utf-8'})),a=E('a');a.href=url;a.download='EnglishLegalese-private-class-preparation.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status.textContent='Your personal brief was downloaded. No booking or message was sent.';});
  refresh();
 }
-function mount(){if(!$('#app'))return;addLessons();addClassPrep();document.documentElement.dataset.englishlegaleseMaterialRelease='1.79.0';}
+function bindResourceMenu(){
+ const menu=$('#v1790-resource-menu');
+ if(!menu||menu.dataset.v1790Bound)return;
+ menu.dataset.v1790Bound='1';
+ menu.addEventListener('click',e=>{
+  if(e.target.closest('a[href^="#"]'))menu.open=false;
+ });
+ document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&menu.open){
+   e.preventDefault();menu.open=false;
+   $('summary',menu)?.focus();
+  }
+ });
+ document.addEventListener('pointerdown',e=>{
+  if(menu.open&&!menu.contains(e.target))menu.open=false;
+ });
+ window.addEventListener('hashchange',()=>{menu.open=false;});
+}
+function mount(){if(!$('#app'))return;addLessons();addClassPrep();bindResourceMenu();document.documentElement.dataset.englishlegaleseMaterialRelease='1.79.0';}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 window.addEventListener('hashchange',()=>setTimeout(mount,0));
 })();
