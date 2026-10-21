@@ -20,7 +20,7 @@ test('v1.78 public apex and www preserve live video classroom teaching journey a
 test('v1.78 live route still preserves earlier SmartTeacher character count, Georgian and expandable footer',async({page})=>{
  await page.goto('https://englishlegalese.com/#smartteacher');await expect(page.locator('#v1770-main-counter')).toBeVisible();
  await page.goto('https://englishlegalese.com/#language-bridge');
- await expect(page.locator('.js-language-select')).toContainText('Georgian');
+ await expect(page.locator('#language-bridge .js-language-select')).toContainText('Georgian');
  await page.goto('https://englishlegalese.com/#home');
  await expect(page.locator('.site-footer #v1770-all-resources')).not.toHaveAttribute('open');
  await page.locator('.site-footer #v1770-all-resources summary').click();
