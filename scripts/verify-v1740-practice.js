@@ -9,7 +9,7 @@ const nvil=fs.readFileSync('NEXT_VERSION_IMPROVEMENT_LIST.md','utf8');
 assert(html.includes('href="#professional-message-builder"'));
 assert(html.includes('product-v1740.js?v=1.74.0'));
 assert(html.includes('product-v1740.css?v=1.74.0'));
-assert(html.includes('name="englishlegalese-release" content="1.78.0"'));
+assert(html.includes('name="englishlegalese-release" content="1.79.0"'));
 assert(src.includes("section.id='professional-message-builder'"));
 assert(src.includes('englishLegaleseApplyView'));
 assert(src.includes('draft.textContent=lines.join'));
