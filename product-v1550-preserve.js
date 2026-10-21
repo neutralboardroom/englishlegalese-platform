@@ -29,9 +29,11 @@
   function ensure() {
     const nav = document.querySelector('#mainNav');
     if (nav) {
-      const current = Array.from(nav.querySelectorAll('a')).map(a => a.getAttribute('href'));
+      const current = Array.from(nav.querySelectorAll(':scope > a')).map(a => a.getAttribute('href'));
       const required = desiredDesktop.map(([href]) => href);
-      if (required.some(href => !current.includes(href)) || current.length !== required.length) {
+      // Preserve valid additive top-level navigation and nested learning-resource menus.
+      // Restore the legacy navigation only if a required original direct link disappears.
+      if (required.some(href => !current.includes(href))) {
         nav.replaceChildren(...desiredDesktop.map(link));
       }
       nav.dataset.v1550 = '1';

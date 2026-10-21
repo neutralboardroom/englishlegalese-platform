@@ -1251,7 +1251,12 @@
       });
       nav.addEventListener('click',e=>{if(e.target.closest('a[href^="#"]'))closeMenu();});
       document.addEventListener('keydown',e=>{
-        if(e.key==='Escape'&&navToggle.getAttribute('aria-expanded')==='true'){e.preventDefault();closeMenu(true);}
+        if(e.key==='Escape'&&navToggle.getAttribute('aria-expanded')==='true'){
+          // Dismiss the nested learning-resources menu before the mobile navigation.
+          // Preserve focus on its trigger for accessible keyboard reuse.
+          if(nav.querySelector('#v1790-resource-menu')?.open)return;
+          e.preventDefault();closeMenu(true);
+        }
       });
       document.addEventListener('pointerdown',e=>{
         if(navToggle.getAttribute('aria-expanded')==='true'&&!nav.contains(e.target)&&!navToggle.contains(e.target))closeMenu();

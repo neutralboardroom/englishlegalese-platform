@@ -2,7 +2,7 @@ const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: './tests',
-  testMatch: ['v1590-production.spec.js', 'v1740-production.spec.js', 'v1750-production.spec.js', 'v1760-production.spec.js', 'v1770-production.spec.js', 'v1780-production.spec.js'],
+  testMatch: ['v1590-production.spec.js', 'v1740-production.spec.js', 'v1750-production.spec.js', 'v1760-production.spec.js', 'v1770-production.spec.js', 'v1780-production.spec.js', 'v1790-production.spec.js'],
   timeout: 30000,
   expect: { timeout: 10000 },
   retries: 1,

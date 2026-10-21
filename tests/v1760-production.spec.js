@@ -2,9 +2,9 @@ const {test,expect}=require('@playwright/test');
 test('v1.76 actual apex and www serve updated combined teaching journey',async({page},info)=>{
  for(const domain of ['https://englishlegalese.com','https://www.englishlegalese.com']){
   const r=await page.goto(domain+'/');expect(r.status()).toBeLessThan(400);
-  expect(r.headers()['x-englishlegalese-release']).toBe('1.78.0');
+  expect(r.headers()['x-englishlegalese-release']).toBe('1.79.0');
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.78.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.79.0');
   await expect(page.locator('#home')).toContainText('Human teacher guidance available');
   await page.goto(domain+'/#conversation-rehearsal-lab');
   await expect(page.locator('#conversation-rehearsal-lab')).toBeVisible();

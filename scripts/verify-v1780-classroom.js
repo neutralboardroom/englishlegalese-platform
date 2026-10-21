@@ -2,7 +2,7 @@
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const rd=p=>fs.readFileSync(p,'utf8');
 const pkg=JSON.parse(rd('package.json')),html=rd('index.html'),app=rd('app.js'),js=rd('product-v1780.js'),css=rd('product-v1780.css'),reg=rd('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md'),audit=rd('governance/ENGLISHLEGALESE_V1770_OWNER_SCREENSHOT_AUDIT__MASTER_CHECKLIST__2026-10-20.md');
-assert.equal(pkg.version,'1.78.0');
+assert.equal(pkg.version,'1.79.0');
 const productionWorkflow=rd('.github/workflows/englishlegalese-v1780-production-acceptance.yml');
 assert(productionWorkflow.includes('product-v1780.js?v=1.78.0&acceptance='),'Live acceptance must inspect exact new asset');
 assert(productionWorkflow.includes("'1.78.0-navigation-domain-hardening'"),'Live acceptance must inspect exact health version');
@@ -11,7 +11,7 @@ const prodLegacy=rd('tests/v1590-production.spec.js'),prodLatest=rd('tests/v1780
 assert(prodLegacy.includes("production-mobile'?18000:12000"),'Preserve comprehensive homepage with bounded height across real devices');
 assert(prodLatest.includes('#language-bridge .js-language-select'),'Scope real Georgian test to language support panel');
 
-assert(html.includes('name="englishlegalese-release" content="1.78.0"'));
+assert(html.includes('name="englishlegalese-release" content="1.79.0"'));
 for(const f of ['product-v1780.js?v=1.78.0','product-v1780.css?v=1.78.0','product-v1770.js?v=1.77.0','product-v1760.js?v=1.76.0'])assert(html.includes(f),'Asset '+f);
 assert(app.includes('Legal English with AI-supported practice and live online classes with human teachers.'));
 assert(app.includes('Human teacher guidance available'));
