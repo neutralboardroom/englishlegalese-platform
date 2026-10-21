@@ -1,3 +1,22 @@
+# EnglishLegalese v1.79.0 — Maximum-Reasonable Human-Class Readiness and Course Continuation (CANDIDATE)
+Date: 2026-10-21. Verified authoritative predecessor v1.78.0 main SHA `94c285b93339e3dd91e551248178f1a7941e0cc9`, Render LIVE `dep-dbc2aau8bjmc73d443c0`. Owner's Universal Builder V3 packet verified intact (19 Roger + 10 durable source rules and original logo unchanged). This section is additive; all earlier improvement entries remain preserved verbatim.
+
+## Material successor improvements
+1. IMPLEMENTED_CANDIDATE: Six new original **course lesson 3** exercises, one per genuine structured course, with six realistic fictional cases, **18 new comprehension questions and 18 answer explanations**. Together with lessons 1 and 2, these make **18 sample lesson units / 54 explained questions** without misrepresenting them as fully accredited courses.
+2. IMPLEMENTED_CANDIDATE: Functional **Prepare for a human-led online video class** studio, integrated with the existing v1.78.0 Zoom/Google Meet/Teams/regional provider-neutral class planner. Four selectable teacher discussion goals, a private free-text question (600-character visible countdown), clear/reset controls, downloadable personal preparation brief. No recipient, enrollment, payment, API request, browser persistence, message sending or false booking.
+3. IMPLEMENTED_CANDIDATE: Global **class-time comparison** with DST-aware city formatting for New York, London, Tbilisi, Bangkok, Hanoi, Tokyo, Seoul and user's device timezone. Updates live when the existing user-selected proposed lesson time changes; not a booking promise.
+4. INHERITED LOCK: Comprehensive homepage, approved large original logo, 35 languages incl Georgian, functioning preferred-language learning, nine offerings, original 21 scenarios, eight-question diagnostic, SmartTeacher 2,500-character counter and browser-only file picker, human-led teaching copy, privacy/trust, complete footer learning tools, real class planning + unconfirmed .ics remain intact.
+5. SAFETY: The educational frontend does not send email/verification messages or enable any transactional provider. Outbound communications **DRAFT ONLY until fresh explicitly scoped SEND approval**, as required by V3 `OCT20-COMMS-OWNER-APPROVAL`. No new DNS, Stripe, OpenAI trial, teacher/provider connection, actual booking, recording, document processing or real student upload activation.
+6. GATES: Candidate until two complete independent exact-final-SHA cross-device browser suites + inherited rule/source checks and zero high/critical npm vulnerabilities; separate actual apex/www release-commit acceptance; retain exact v1.78.0 rollback. Run the V3 locked packet verifier unchanged and verify original canonical Git blob `bd1d33a43180291f3a8ddedcd6884f6ff3d7c666` and approved original logo `b5f20ef046d75d6f108bc93243c7c14acf3c4eb1`.
+
+## External operational gates, not silently completed
+Real video-classroom booking, authorized teacher roster, student slot inventory, provider OAuth/verified video room links, persistent reservation and invitation ledger, instructor/student access and verified calendar time, session privacy and recording consent, Stripe subscriptions and payout, Resend sending DNS and 3-reply trial all require their own confirmed owner-approved activation and separate real-provider tests. A personal local preparation/ICS file must never be presented as a confirmed meeting. Human instructor content review and accessibility spot checks remain ongoing.
+
+## Next material improvement candidates
+Operational teacher dashboard with verified identities/provider connections after owner approves them; genuine authenticated learner lesson progress and classroom confirmation; a rigorously tested time-zone selection override; higher-quality native-language examples for all offered locales after reviewed translation; deeper six-course curriculum content beyond samples; document/image processing only after separate security and spending gates.
+
+---
+
 # EnglishLegalese v1.78.0 — Next Version Improvement List (PRE-SEAL CANDIDATE)
 Date: 2026-10-20. Inherits the complete v1.77.0 54-item owner audit and all previous successor lists below. Current verified live predecessor v1.77.0, main SHA `450096a71b1e61ef421100d88b40ea9e63e6bf5e`, Render `dep-dbbp81qvcj2c73dnrfug`.
 
