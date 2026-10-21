@@ -20,3 +20,8 @@ Owner V3 `OCT20-COMMS-OWNER-APPROVAL`: outward communications remain **DRAFT ONL
 - Full inherited release test + v1.79.0 tests in Chromium desktop/tablet/mobile and tablet WebKit, two independent runs on exact final SHA, zero critical/high dependency vulnerabilities, no logo/rule drift.
 - New production acceptance checks both apex and www real browser plus exact production health `1.79.0-navigation-domain-hardening`, new `product-v1790.js?v=1.79.0`, exact Render SHA.
 - After qualified merge/deploy, attach exact commit, CI IDs, Render deploy ID, real-site browser counts, previously live rollback and remaining blockers; do not call candidate LIVE until evidence exists.
+
+## Additional owner-approved navigation requirement (same material release)
+- Added top-menu **Free learning resources** dropdown with exactly the same 14 link labels and anchors as the existing footer; original footer list remains intact with unchanged collapsed/expanded behavior.
+- Two-column desktop dropdown, mobile disclosure, keyboard Escape/focus return, outside click dismissal, responsive viewport checks and exact footer parity regression guard.
+- This is a discoverability improvement, not a replacement homepage or new site, with all paths protected and restricted SmartTeacher AI trial correctly marked subject to activation.
