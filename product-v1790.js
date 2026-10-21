@@ -65,7 +65,10 @@ function bindResourceMenu(){
  document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&menu.open){
    e.preventDefault();menu.open=false;
-   $('summary',menu)?.focus();
+   const trigger=$('summary',menu);
+   // Some tablet browsers blur a <summary> after the native Escape default action.
+   // Restore focus after that action completes so keyboard users can reopen the menu.
+   setTimeout(()=>{if(trigger?.isConnected)trigger.focus({preventScroll:true});},0);
   }
  });
  document.addEventListener('pointerdown',e=>{
