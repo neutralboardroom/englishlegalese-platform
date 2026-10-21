@@ -27,6 +27,8 @@ assert(index.includes('<a href="#live-classes">Live online classes</a>'),'Keep a
 assert(index.includes('<a href="#teachers">Teachers</a>'),'Keep teacher navigation without legacy conversion to Practice');
 assert(js.includes('function bindResourceMenu')&&js.includes("e.key==='Escape'"),'Accessible resource menu keyboard/close behavior');
 assert(css.includes('.v1790-resource-popover')&&css.includes('@media(max-width:980px)'),'Responsive menu must be designed for desktop and mobile');
+const originalNavigation=get('product-v1550.js');
+assert(originalNavigation.includes("if(t&&!n.querySelector('#v1790-resource-menu'))"),'Legacy teacher-route rewrite must not remove approved Resources and human Teachers navigation');
 const navPreservation=get('product-v1550-preserve.js');
 assert(navPreservation.includes("nav.querySelectorAll(':scope > a')") && navPreservation.includes('if (required.some(href => !current.includes(href)))'),'Legacy protection must not erase additive nested Free learning resources navigation on any hashchange');
 assert(get('tests/v1790-browser.spec.js').includes('Download class preparation brief'));
