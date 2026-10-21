@@ -72,7 +72,7 @@ check('browser test rejects exact owner-observed stale strings', ['EnglishLegale
 check('browser test verifies six featured scenarios then all 21', (browser.includes('toBe(6)') || browser.includes('toHaveCount(6)')) && (browser.includes('toBe(21)') || browser.includes('toHaveCount(21)')));
 check('browser test verifies three featured courses', browser.includes("#courses article:visible") && browser.includes('toBe(3)'));
 check('browser test verifies planner/progress collapsed by default', browser.includes("#learning-plan .v1550-plan-builder") && browser.includes("#skills-passport .v1550-passport-grid") && browser.includes('toBeHidden()'));
-check('browser test verifies live marker and version', browser.includes('v1590-live-marker') && browser.includes('1.78.0'));
+check('browser test verifies live marker and version', browser.includes('v1590-live-marker') && browser.includes('1.79.0'));
 check('inherited browser gate is successor-aware', inheritedBrowser.includes('body.v1590-ready') && inheritedBrowser.includes('js-v1590-scenarios'));
 
 check('workflow still blocks high/critical npm findings', workflow.includes('npm run audit:high'));
