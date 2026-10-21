@@ -111,7 +111,7 @@ function mount(){
  const root=$('#app');if(!root||!$('#home',root))return;
  makePathways();makeUnit2();addClassrooms();enrichTeachers();
  const teacherHandoff=$('#v1780-teacher-handoff');if(teacherHandoff)teacherHandoff.hidden=location.hash==='#employers';
- document.documentElement.dataset.englishlegaleseMaterialRelease=VERSION;
+ document.documentElement.dataset.englishlegaleseMaterialRelease=document.querySelector('meta[name="englishlegalese-release"]')?.content || VERSION;
  if(typeof window.englishLegaleseApplyView==='function')window.englishLegaleseApplyView();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{mount();setTimeout(mount,140);},{once:true});else{mount();setTimeout(mount,140);}
