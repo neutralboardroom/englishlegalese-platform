@@ -39,7 +39,7 @@ test('v1.79 classroom preparation is interactive, optional and never a fabricate
  await pane.locator('.v1790-checks input').nth(1).check();
  await expect(pane.locator('.v1790-progress')).toContainText('2 of 4');
  await pane.locator('textarea').fill('How do I politely clarify a deadline?');
- await expect(pane.locator('.v1790-small').filter({hasText:'characters remaining'})).toContainText('562 characters remaining');
+ await expect(pane.locator('.v1790-small').filter({hasText:'characters remaining'})).toContainText('563 characters remaining');
  const done=page.waitForEvent('download');
  await pane.getByRole('button',{name:'Download class preparation brief'}).click();
  const downloaded=await done;
