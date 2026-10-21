@@ -811,7 +811,11 @@ test('v1.73 local file selection never uploads and free trial is a focused route
   await page.goto('/');await waitForRecovery(page);
   await expect(page.locator('#smartteacher-free-trial')).toBeHidden();
   await expect(page.locator('footer a[href="#smartteacher-free-trial"]')).toHaveCount(1);
-  await page.locator('a[href="#smartteacher-free-trial"]').first().click();
+  const trialFromFooter=page.locator('footer a[href="#smartteacher-free-trial"]');
+  const footerResources=page.locator('#v1770-all-resources');
+  if(await footerResources.count() && !await footerResources.getAttribute('open'))await footerResources.locator('summary').click();
+  await expect(trialFromFooter).toBeVisible();
+  await trialFromFooter.click();
   const t=page.locator('#smartteacher-free-trial');await expect(t).toBeVisible();
   await t.locator('#v1730-upload').setInputFiles({name:'practice.txt',mimeType:'text/plain',buffer:Buffer.from('Only fictional words.')});
   await expect(t.locator('.v1730-file-status')).toContainText('no upload occurred');
