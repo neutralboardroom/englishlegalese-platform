@@ -70,3 +70,44 @@ test('v1.79 preserves previous course units, SmartTeacher 2500 countdown and Geo
  await page.goto('/#language-bridge');await page.locator('body.v1590-ready').waitFor();
  await expect(page.locator('#language-bridge .js-language-select')).toContainText('Georgian');
 });
+
+
+test('v1.79 Free learning resources dropdown mirrors every footer tool without changing footer',async({page})=>{
+ await visit(page,'home');
+ const header=page.locator('#v1790-resource-menu'),footer=page.locator('#v1770-all-resources');
+ const links=['#quick-practice','#ai-review-lab','#clause-reading-lab','#meeting-followup-lab','#email-clarity-lab','#guided-practice-path','#case-brief-lab','#legal-vocabulary-guide','#revision-studio','#professional-message-builder','#listening-clarification-lab','#conversation-rehearsal-lab','#reading-precision-lab','#smartteacher-free-trial'];
+ await expect(header).toHaveCount(1);
+ await expect(header).not.toHaveAttribute('open');
+ await expect(footer).not.toHaveAttribute('open');
+ for(const href of links){
+  await expect(header.locator('a[href="'+href+'"]')).toHaveCount(1);
+  await expect(footer.locator('a[href="'+href+'"]')).toHaveCount(1);
+ }
+ expect(await header.locator('.v1790-resource-nav a').count()).toBe(14);
+ await expect(footer.locator('.v1770-resource-links a')).toHaveCount(14);
+ const mobile=await page.locator('#navToggle').isVisible();
+ if(mobile)await page.locator('#navToggle').click();
+ await header.locator('summary').click();
+ await expect(header).toHaveAttribute('open','');
+ await expect(header.locator('a[href="#quick-practice"]')).toBeVisible();
+ await expect(header.locator('a[href="#smartteacher-free-trial"]')).toContainText('subject to activation');
+ await page.keyboard.press('Escape');
+ await expect(header).not.toHaveAttribute('open');
+ await expect(header.locator('summary')).toBeFocused();
+ await header.locator('summary').click();
+ await header.locator('a[href="#quick-practice"]').click();
+ await expect(page).toHaveURL(/#quick-practice$/);
+ await expect(header).not.toHaveAttribute('open');
+ await expect(page.locator('#v1770-all-resources .v1770-resource-links a')).toHaveCount(14);
+});
+test('v1.79 resource dropdown closes on outside click and does not overflow the viewport',async({page})=>{
+ await visit(page,'home');
+ const header=page.locator('#v1790-resource-menu');
+ if(await page.locator('#navToggle').isVisible())await page.locator('#navToggle').click();
+ await header.locator('summary').click();
+ await expect(header).toHaveAttribute('open','');
+ const width=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:window.innerWidth}));
+ expect(width.scroll).toBeLessThanOrEqual(width.viewport+4);
+ await page.locator('.site-header .brand').click();
+ await expect(header).not.toHaveAttribute('open');
+});
