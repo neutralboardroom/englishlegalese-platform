@@ -1,3 +1,6 @@
+## v1.79.0 — Owner added main-menu learning-resources dropdown (IMPLEMENTED_CANDIDATE)
+Add an accessible **Free learning resources** dropdown to the existing desktop and mobile primary navigation; duplicate exactly all 14 existing footer learning-tool links, preserving the footer content, order, folding, original site logo, and existing primary links. Verify desktop/mobile/keyboard dismissal and parity; no new paid/AI/product activation. User explicitly wants both navigation surfaces maintained, not links moved out of the footer.
+
 # EnglishLegalese v1.79.0 — Maximum-Reasonable Human-Class Readiness and Course Continuation (CANDIDATE)
 Date: 2026-10-21. Verified authoritative predecessor v1.78.0 main SHA `94c285b93339e3dd91e551248178f1a7941e0cc9`, Render LIVE `dep-dbc2aau8bjmc73d443c0`. Owner's Universal Builder V3 packet verified intact (19 Roger + 10 durable source rules and original logo unchanged). This section is additive; all earlier improvement entries remain preserved verbatim.
 
