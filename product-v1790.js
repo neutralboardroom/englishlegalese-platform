@@ -64,13 +64,15 @@ function bindResourceMenu(){
  });
  document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&menu.open){
-   e.preventDefault();menu.open=false;
+   // Handle nested Escape before the parent mobile navigation's own Escape handler.
+   // The parent must stay visible so its submenu trigger can receive keyboard focus.
+   e.preventDefault();e.stopPropagation();menu.open=false;
    const trigger=$('summary',menu);
-   // Some tablet browsers blur a <summary> after the native Escape default action.
-   // Restore focus after that action completes so keyboard users can reopen the menu.
-   setTimeout(()=>{if(trigger?.isConnected)trigger.focus({preventScroll:true});},0);
+   trigger?.focus({preventScroll:true});
+   // WebKit may change focus during the native details closing step.
+   setTimeout(()=>{if(trigger?.isConnected&&document.activeElement!==trigger)trigger.focus({preventScroll:true});},0);
   }
- });
+ },true);
  document.addEventListener('pointerdown',e=>{
   if(menu.open&&!menu.contains(e.target))menu.open=false;
  });
