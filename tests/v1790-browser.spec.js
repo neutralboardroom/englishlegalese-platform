@@ -77,6 +77,9 @@ test('v1.79 Free learning resources dropdown mirrors every footer tool without c
  const header=page.locator('#v1790-resource-menu'),footer=page.locator('#v1770-all-resources');
  const links=['#quick-practice','#ai-review-lab','#clause-reading-lab','#meeting-followup-lab','#email-clarity-lab','#guided-practice-path','#case-brief-lab','#legal-vocabulary-guide','#revision-studio','#professional-message-builder','#listening-clarification-lab','#conversation-rehearsal-lab','#reading-precision-lab','#smartteacher-free-trial'];
  await expect(header).toHaveCount(1);
+ await expect(page.locator('#mainNav > a[href="#teachers"]')).toHaveCount(1);
+ await expect(page.locator('#mainNav > a[href="#live-classes"]')).toHaveCount(1);
+ await expect(page.locator('#mainNav')).toHaveAttribute('data-v1550','1');
  await expect(header).not.toHaveAttribute('open');
  await expect(footer).not.toHaveAttribute('open');
  for(const href of links){
