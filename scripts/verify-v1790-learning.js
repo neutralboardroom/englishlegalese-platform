@@ -24,6 +24,8 @@ assert.deepEqual(toolHrefs(navTools),toolHrefs(footerTools),'Main menu and origi
 assert(index.includes('<summary aria-label="Free learning resources menu">Free learning resources'),'Main dropdown must have recognizable accessible label');
 assert(js.includes('function bindResourceMenu')&&js.includes("e.key==='Escape'"),'Accessible resource menu keyboard/close behavior');
 assert(css.includes('.v1790-resource-popover')&&css.includes('@media(max-width:980px)'),'Responsive menu must be designed for desktop and mobile');
+const navPreservation=get('product-v1550-preserve.js');
+assert(navPreservation.includes("nav.querySelectorAll(':scope > a')") && navPreservation.includes('if (required.some(href => !current.includes(href)))'),'Legacy protection must not erase additive nested Free learning resources navigation on any hashchange');
 assert(get('tests/v1790-browser.spec.js').includes('Download class preparation brief'));
 assert(get('tests/v1790-production.spec.js').includes('x-englishlegalese-release'));
 console.log('PASS v1.79.0 third course units, private class prep, DST-safe times, 29 original rule IDs, no external transmission and current production workflow');
