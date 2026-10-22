@@ -18,7 +18,7 @@ for(const c of all){
  c.units.forEach(s=>assert(s.trim().length>=18,'Each lesson requires a distinct specific learning activity: '+c.title));
  assert.equal(c.vocab.length,5,'Five defined vocabulary terms per class: '+c.id);
  assert.equal(new Set(c.vocab.map(x=>x[0])).size,5);
- c.vocab.forEach(x=>assert(x.length===2&&x.every(s=>s.length>=4),'Each word must have real definition: '+c.id));
+ c.vocab.forEach(x=>assert(x.length===2&&x[0].length>=3&&x[1].length>=8,'Each word must have real definition: '+c.id));
  assert.equal(c.distractors.length,2,'Scenario response exercise needs two genuine distractors: '+c.id);
  assert(c.distractors.every(x=>x!==c.good&&x.length>12),'Meaningful distractors for '+c.id);
 }
