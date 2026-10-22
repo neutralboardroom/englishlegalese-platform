@@ -10,8 +10,8 @@ test('v1.79 is the current material release while prior tools and branding are p
  await expect(page.locator('#courses .v1790-third-action')).toHaveCount(6);
 });
 test('v1.79 adds six genuine third lesson exercises with eighteen explanations',async({page})=>{
- await visit(page,'courses');const course=page.locator('#courses');
- const expand=course.getByRole('button',{name:/View all 9 courses/});
+ await visit(page,'courses');const course=page.locator('#courses');await course.locator('#v1840-sample-lessons summary').click();
+ const expand=course.getByRole('button',{name:/See all sample lessons/});
  if(await expand.count())await expand.click();
  const cards=course.locator('.v1580-course-card');
  for(const i of [2,3,4,5,6,7]){
