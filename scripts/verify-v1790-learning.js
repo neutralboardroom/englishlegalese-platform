@@ -2,7 +2,7 @@
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const get=p=>fs.readFileSync(p,'utf8');
 const pkg=JSON.parse(get('package.json')),index=get('index.html'),rules=get('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md'),js=get('product-v1790.js'),css=get('product-v1790.css');
-assert.equal(pkg.version,'1.79.0','Correct current release version');
+assert.equal(pkg.version,'1.80.0','Correct current release version');
 assert(index.includes('name="englishlegalese-release" content="1.80.0"'));
 for(const name of ['product-v1790.js?v=1.79.0','product-v1790.css?v=1.79.0','product-v1780.js?v=1.78.0','product-v1770.js?v=1.77.0'])assert(index.includes(name),'Prior and current JS/CSS preserved: '+name);
 for(const label of ['function addLessons','function addClassPrep','v1790-third-unit','v1790-class-prep'])assert(js.includes(label),'New material: '+label);
