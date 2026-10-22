@@ -2,10 +2,10 @@ const {test,expect}=require('@playwright/test');
 test('v1.80 live apex and www show the private study planner and preserved Free learning resources',async({page})=>{
  for(const domain of ['https://englishlegalese.com','https://www.englishlegalese.com']){
   const response=await page.goto(domain+'/');expect(response.status()).toBeLessThan(400);
-  expect(response.headers()['x-englishlegalese-release']).toBe('1.83.0');
+  expect(response.headers()['x-englishlegalese-release']).toBe('1.84.0');
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.83.0');
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.83.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
   await expect(page.locator('#v1790-resource-menu .v1790-resource-nav a')).toHaveCount(14);
   await expect(page.locator('#v1770-all-resources .v1770-resource-links a')).toHaveCount(14);
   await page.goto(domain+'/#courses');await page.locator('body.v1590-ready').waitFor();
@@ -21,7 +21,7 @@ test('v1.80 live apex and www show the private study planner and preserved Free 
 
 test('v1.80 deployed 28-class preview retains all five teaching components and operational boundaries',async({page})=>{
  for(const domain of ['https://englishlegalese.com','https://www.englishlegalese.com']){
-  await page.goto(domain+'/#live-classes');await page.locator('body.v1590-ready').waitFor();
+  await page.goto(domain+'/#courses');await page.locator('body.v1590-ready').waitFor();
   const catalog=page.locator('#v1800-class-catalog');
   await expect(catalog.locator('.v1800-class-count')).toContainText('28 class topics');
   await expect(catalog).toContainText('not bookable teacher sessions');
