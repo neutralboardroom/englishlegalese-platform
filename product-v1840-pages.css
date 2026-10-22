@@ -56,3 +56,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #19
 @media(max-width:760px){.v1840-grid{grid-template-columns:1fr}.v1840-foot-grid{grid-template-columns:1fr 1fr}.v1840-foot-grid>*:first-child{grid-column:1/-1}.v1840-topnav{gap:.55rem}.v1840-resource-menu{position:static}.v1840-resource-items{position:static;max-height:300px;min-width:0}.v1840-standalone-pricing #pricing .v1810-grid{grid-template-columns:1fr}}
 @media(max-width:460px){.v1840-foot-grid{grid-template-columns:1fr}.v1840-foot-grid>*:first-child{grid-column:auto}.v1840-foot-resources{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Full 28-topic Courses page: native lesson/quiz/download buttons use this page's own visual system. */
+.v1840-course-catalog-mount .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.68rem .95rem;border:1px solid #176d80;border-radius:7px;background:#176d80;color:#fff;font:inherit;font-size:.88rem;font-weight:750;line-height:1.35;cursor:pointer;text-align:center;text-decoration:none}
+.v1840-course-catalog-mount .btn.light{background:#fff;color:#165c70;border-color:#91bcc5}
+.v1840-course-catalog-mount .btn:is(:hover,:focus-visible){box-shadow:0 1px 0 #b9d8df}
+.v1840-course-catalog-mount .btn:focus-visible{outline:3px solid #197f8d;outline-offset:3px}
+.v1840-course-catalog-mount .v1800-class-grid{align-items:stretch}
