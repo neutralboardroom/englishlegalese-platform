@@ -7,8 +7,8 @@ test('v1.78 homepage explicitly presents live human video teaching while preserv
  await expect(page.locator('#home .trust-row')).toContainText('Live online video classrooms');
  await expect(page.locator('#home a[href="#live-classes"]')).toBeVisible();
  await expect(page.locator('.site-header .brand img')).toBeVisible();
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.83.0');
- await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.83.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
+ await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
 });
 test('v1.78 homepage preserves comprehensive paths, new classroom and courses while no paid service is activated',async({page})=>{
  await open(page,'home');
