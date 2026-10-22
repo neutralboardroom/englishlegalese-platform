@@ -50,7 +50,7 @@ test('v1.84 standalone pricing faithfully repeats homepage prices while leaving 
 test('v1.84 standalone exercises are usable, clearly bounded and responsive',async({page})=>{
  await page.goto('/learn/clause-reading/');
  const item=page.locator('#v1840-content');
- await expect(item).toContainText('Free Contract Clause Reading Lab');
+ await expect(page.getByRole('heading',{name:'Free Contract Clause Reading Lab',exact:true})).toBeVisible();
  await expect(item).toContainText('may notify');
  const btn=item.getByRole('button',{name:'Show original learning example'});
  await btn.click();
