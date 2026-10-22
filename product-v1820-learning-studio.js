@@ -66,7 +66,7 @@ function mount(){
  const status=E('p','Personal planning only. Nothing is sent to EnglishLegalese.','v1820-status');status.setAttribute('role','status');
  form.append(fields,goalLabel,progress,list,homework,teacher,noteLabel,chars,actions,status);
  section.append(p,title,desc,disclaimer,form);wrap.append(section);
- const catalog=$('#v1800-class-catalog');if(catalog)catalog.after(wrap);else host.append(wrap);
+ const catalog=$('#live-classes #v1800-class-catalog');if(catalog)catalog.after(wrap);else host.append(wrap);
  function current(){return lessons.find(c=>c.id===classSelect.value)||lessons[0];}
  function updateOptions(){
   const available=lessons.filter(x=>track.value==='all'||x.group===track.value),prior=classSelect.value;
