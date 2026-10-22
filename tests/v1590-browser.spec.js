@@ -187,7 +187,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.79.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.80.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
