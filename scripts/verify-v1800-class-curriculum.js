@@ -1,0 +1,38 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('node:vm');
+const rd=x=>fs.readFileSync(x,'utf8');
+const code=rd('curriculum-v1800-data.js'),context={window:{}};
+vm.runInNewContext(code,context,{timeout:3000});
+const set=context.window.ELCURRICULUM_V1800;
+assert.equal(set.version,'1.80.0');
+const all=Array.from(set.records);
+assert.equal(all.length,28,'24 Legal English + 4 supplementary business offerings');
+const groups=Object.fromEntries(['Core professional','Legal specialties','International & academic','Professional & Business English'].map(name=>[name,all.filter(x=>x.group===name).length]));
+assert.deepEqual(groups,{'Core professional':8,'Legal specialties':12,'International & academic':4,'Professional & Business English':4});
+assert.equal(new Set(all.map(x=>x.id)).size,28);
+assert.equal(new Set(all.map(x=>x.title)).size,28);
+for(const c of all){
+ for(const key of ['title','level','outcome','scenario','good','homework','teacher'])assert(typeof c[key]==='string'&&c[key].trim().length>22,'Every class needs substantial '+key+': '+c.id);
+ assert.equal(c.units.length,4,'Each class must have 4 distinct lesson outlines: '+c.id);
+ assert.equal(new Set(c.units).size,4,'No duplicate lessons: '+c.id);
+ c.units.forEach(s=>assert(s.includes(':')&&s.trim().length>35,'Each lesson requires named instruction + activity: '+c.title));
+ assert.equal(c.vocab.length,5,'Five defined vocabulary terms per class: '+c.id);
+ assert.equal(new Set(c.vocab.map(x=>x[0])).size,5);
+ c.vocab.forEach(x=>assert(x.length===2&&x.every(s=>s.length>=4),'Each word must have real definition: '+c.id));
+ assert.equal(c.distractors.length,2,'Scenario response exercise needs two genuine distractors: '+c.id);
+ assert(c.distractors.every(x=>x!==c.good&&x.length>12),'Meaningful distractors for '+c.id);
+}
+const protectedRules=rd('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md');
+for(let i=1;i<=19;i++)assert(protectedRules.includes('EL-RGR-'+String(i).padStart(3,'0')),'Original owner rule '+i);
+for(let i=1;i<=10;i++)assert(protectedRules.includes('EL-DUR-'+String(i).padStart(3,'0')),'Original durable rule '+i);
+const addendum=rd('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md');
+for(const id of ['EL-RGR-020','EL-RGR-021','EL-RGR-022'])assert(addendum.includes('## '+id),'Owner 2026-10-22 rule '+id);
+for(const text of ['deploy the version to the actual live','lesson outlines','vocabulary','interactive','homework','teacher','production'])assert(addendum.toLowerCase().includes(text.toLowerCase()),'Core permanent instructions '+text);
+const index=rd('index.html'),render=rd('product-v1800-catalog.js'),css=rd('product-v1800-catalog.css'),tests=rd('tests/v1800-catalog.spec.js');
+for(const name of ['curriculum-v1800-data.js?v=1.80.0','product-v1800-catalog.js?v=1.80.0','product-v1800-catalog.css?v=1.80.0','product-v1800.js?v=1.80.0','product-v1790.js?v=1.79.0'])assert(index.includes(name),'Scripts included: '+name);
+for(const s of ['v1800-class-catalog','Four-lesson teaching outline','Topic vocabulary and meanings','Interactive source-reading and vocabulary exercises','At-home practice and self-check','Instructor teaching brief and materials','Download curriculum and teacher brief','Choose a practical online class topic'])assert(render.includes(s),'Five real class components '+s);
+for(const term of ['fetch(', 'XMLHttpRequest','sendBeacon(','localStorage','sessionStorage','indexedDB','getUserMedia','PaymentRequest'])assert(!render.includes(term)&&!code.includes(term),'New preview must not transmit, persist or capture: '+term);
+assert(css.includes('focus-visible')&&css.includes('@media(max-width:700px)')&&css.includes('grid-template-columns:1fr'));
+assert(tests.includes('28 class topics')&&tests.includes('teacher brief'));
+assert(rd('NEXT_VERSION_IMPROVEMENT_LIST.md').includes('28 class curricula'));
+console.log('PASS v1.80.0 all 28 topic-specific five-part original curricula, 72 Legal English + 12 business practice questions, permanent owner rules EL-RGR-020–022, 19 original owner + 10 durable IDs, no unsafe transmission or activation.');
