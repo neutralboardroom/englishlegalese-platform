@@ -818,6 +818,9 @@ test('v1.73 local file selection never uploads and free trial is a focused route
   if(await footerResources.count() && !await footerResources.getAttribute('open'))await footerResources.locator('summary').click();
   await expect(trialFromFooter).toBeVisible();
   await trialFromFooter.click();
+  await expect(page).toHaveURL(/\/learn\/smartteacher-free-trial\/$/);
+  await expect(page.getByRole('heading',{name:'Free SmartTeacher AI Trial',exact:true})).toBeVisible();
+  await page.goto('/#smartteacher-free-trial');await waitForRecovery(page);
   const t=page.locator('#smartteacher-free-trial');await expect(t).toBeVisible();
   await t.locator('#v1730-upload').setInputFiles({name:'practice.txt',mimeType:'text/plain',buffer:Buffer.from('Only fictional words.')});
   await expect(t.locator('.v1730-file-status')).toContainText('no upload occurred');
