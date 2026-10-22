@@ -6,7 +6,7 @@ test('v1.74 real apex and www deliver the new private professional message build
    expect(res?.status()).toBeLessThan(400);
    expect(res.headers()['x-englishlegalese-release']).toBe('1.84.0');
    await page.locator('body.v1590-ready').waitFor();
-   await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0';
+   await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
    await expect(page.locator('#professional-message-builder')).toBeHidden();
    await expect(page.locator('.site-footer a[href="#professional-message-builder"]')).toHaveCount(1);
    await page.locator('.site-footer #v1770-all-resources summary').click();
