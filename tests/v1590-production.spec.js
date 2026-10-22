@@ -42,10 +42,11 @@ test.describe('EnglishLegalese v1.73.0 production acceptance', () => {
     expect(colors.color).not.toBe('rgb(255, 255, 255)');
     expect(colors.color).not.toBe(colors.background);
 
+    // Preserve a bounded rendered-page height after 28 courses, transparent pricing and a new independent study planner.
     const h=await page.evaluate(()=>document.documentElement.scrollHeight);
-    expect(h).toBeLessThan(testInfo.project.name==='production-mobile'?18000:12000);
+    expect(h).toBeLessThan(testInfo.project.name==='production-mobile'?26000:19000);
     const htmlResponse=await page.request.get('/');
-    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.81.0');
+    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.82.0');
     expect(htmlResponse.headers()['cache-control']).toContain('no-cache');
     await page.screenshot({ path: testInfo.outputPath('production-homepage-v1590.png'), fullPage: true, animations: 'disabled' });
     await testInfo.attach('production-homepage-v1590', { path: testInfo.outputPath('production-homepage-v1590.png'), contentType: 'image/png' });

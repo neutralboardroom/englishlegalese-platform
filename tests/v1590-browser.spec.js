@@ -98,7 +98,7 @@ test.describe('EnglishLegalese v1.73.0 hard live recovery', () => {
 
     const contentHeight = await page.evaluate(() => document.documentElement.scrollHeight);
     expect(contentHeight).toBeGreaterThan(1000);
-    // The comprehensive, owner-approved homepage now includes 28 class curriculum previews.\n    // Retain a firm height ceiling while allowing genuine added educational content.\n    expect(contentHeight).toBeLessThan(testInfo.project.name === 'mobile-chromium' ? 20000 : 14000);
+    // The comprehensive, owner-approved homepage now includes 28 class curriculum previews.\n    // Retain a firm height ceiling while allowing genuine added educational content.\n    expect(contentHeight).toBeLessThan(testInfo.project.name === 'mobile-chromium' ? 26000 : 19000);
     expect(await page.locator('#app > section:visible').count()).toBeLessThanOrEqual(8);
     const titlePx=await page.locator('#start .section-head h2').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
     expect(titlePx).toBeGreaterThanOrEqual(23);
@@ -187,7 +187,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.81.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.82.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{

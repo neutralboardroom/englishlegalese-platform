@@ -2,8 +2,8 @@ const {test,expect}=require('@playwright/test');
 async function visit(page,hash){await page.goto('/#'+hash);await page.locator('body.v1590-ready').waitFor();await expect(page.locator('#'+hash)).toBeVisible();}
 test('v1.79 is the current material release while prior tools and branding are preserved',async({page})=>{
  await visit(page,'home');
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.81.0');
- await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.81.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.82.0');
+ await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.82.0');
  await expect(page.locator('.site-header .brand img')).toBeVisible();
  await expect(page.locator('#home h1')).toContainText('live online classes with human teachers');
  await expect(page.locator('#live-classes #v1790-class-prep summary')).toBeVisible();

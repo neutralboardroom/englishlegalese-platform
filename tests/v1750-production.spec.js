@@ -4,14 +4,14 @@ test('v1.75 real apex and www provide working fictional listening and clarificat
  for(const host of hosts){
   const response=await page.goto(host+'/');
   expect(response.status()).toBeLessThan(400);
-  expect(response.headers()['x-englishlegalese-release']).toBe('1.81.0');
+  expect(response.headers()['x-englishlegalese-release']).toBe('1.82.0');
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.81.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.82.0');
   await expect(page.locator('.site-footer a[href="#listening-clarification-lab"]')).toHaveCount(1);
   await expect(page.locator('#listening-clarification-lab')).toBeHidden();
   await page.goto(host+'/#listening-clarification-lab');
   await expect(page.locator('#listening-clarification-lab')).toBeVisible();
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.81.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.82.0');
   const lab=page.locator('#listening-clarification-lab');
   await lab.getByRole('button',{name:'Show transcript'}).click();
   await expect(lab.locator('#v1750-transcript')).toContainText('receipt');
