@@ -1,3 +1,20 @@
+# EnglishLegalese v1.80.0 — Private Study Planner (UNMERGED CANDIDATE)
+Date: 2026-10-22. Exact predecessor v1.79.0 main commit ea122fb498ded83c3f6fac39a3ba5f27e692d624. Build is additive; all preceding lists, the 19 original Roger Rules, 10 durable rules and approved branding must remain unchanged.
+
+## User-visible improvement
+- Private optional study planner for all six actual courses, each with the three existing sample lessons and self-reported progress. This does NOT issue credits, claim teaching certification, imply durable account progress or alter the quizzes.
+- Per-course optional short goal (120 characters) and review notes (500 characters) with live remaining count; independent state per each of six courses during page session.
+- Clear one course or all six; downloadable local plain-text study plan and next-step guidance; no calls to servers, localStorage, emails, identity collection, payments, bookings or uploads.
+- Collapsed panel next to existing course catalog avoids changing homepage composition, main "Free learning resources" dropdown, all 14 footer links, three-course sample lesson units, international class prep or original approved logo.
+
+## Hard release gates
+- Candidate MUST pass exact-head static/security/no-drift gate and full desktop/tablet/mobile Chromium/WebKit qualification twice, with no high/critical vulnerabilities, before merge. The old v1.79.0 successful Render production deploy must be recorded and retained for rollback.
+- After separately authorized deployment, actual apex/www health, JavaScript, current version, menu/footer parity, all historic lessons and new private planner must pass independent production acceptance. No live claim from PR existence or successful qualification alone.
+- Preserve V3 communications rule: no outbound transactional/send, Resend DNS mutation, trial activation, Stripe, actual teacher bookings/provider access or real document processing without their distinct gates.
+- Deferred: authenticated learner completion or teacher-verified credentials, actual class enrollment and stored progress require opt-in consent and durable access-controlled data model, provider authorization and security tests. Do not advertise as live.
+
+---
+
 ## v1.79.0 — Owner added main-menu learning-resources dropdown (IMPLEMENTED_CANDIDATE)
 Add an accessible **Free learning resources** dropdown to the existing desktop and mobile primary navigation; duplicate exactly all 14 existing footer learning-tool links, preserving the footer content, order, folding, original site logo, and existing primary links. Verify desktop/mobile/keyboard dismissal and parity; no new paid/AI/product activation. User explicitly wants both navigation surfaces maintained, not links moved out of the footer.
 
