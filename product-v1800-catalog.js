@@ -31,7 +31,15 @@ function mount(){
  else{
   const sectionHead=$('.section-head',host);
   if(sectionHead)sectionHead.after(container);else host.prepend(container);
-  const legacyGrid=$('.v1580-course-grid',host),legacyControls=$('.js-v1580-courses',host)?.closest('.v1580-section-controls');
+  const heading=$('.section-head h2',host),intro=$('.section-head >p',host);
+  if(heading)heading.textContent='28 class topics for practical Legal English communication.';
+  if(intro)intro.textContent='Explore one catalog of 28 class topics with real practice, four-lesson plans, vocabulary, homework and instructor materials.';
+  const sampleToggle=$('.js-v1580-courses',host);
+  if(sampleToggle){
+   const relabel=()=>sampleToggle.textContent=sampleToggle.getAttribute('aria-expanded')==='true'?'Show fewer sample lessons':'See all sample lessons';
+   sampleToggle.addEventListener('click',()=>setTimeout(relabel,0));relabel();
+  }
+  const legacyGrid=$('.v1580-course-grid',host),legacyControls=sampleToggle?.closest('.v1580-section-controls');
   if(legacyGrid&&!$('#v1840-sample-lessons',host)){
    const examples=E('details',undefined,'v1840-sample-lessons');examples.id='v1840-sample-lessons';
    const summary=E('summary','Try guided sample lessons');
