@@ -3,7 +3,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 const pkg=JSON.parse(rd('package.json')),html=rd('index.html'),js=rd('product-v1830-feedback.js'),css=rd('product-v1830-feedback.css');
 const rules=rd('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md'),extra=rd('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md');
 assert.equal(pkg.version,'1.84.0');assert(html.includes('name="englishlegalese-release" content="1.84.0"'));
-for(const item of ['product-v1830-feedback.js?v=1.83.0','product-v1830-feedback.css?v=1.83.0','product-v1820-learning-studio.js?v=1.82.0','product-v1810-pricing.js?v=1.81.0','product-v1800-catalog.js?v=1.80.0'])assert(html.includes(item),'Preserve predecessor content and add '+item);
+for(const item of ['product-v1830-feedback.js?v=1.83.0','product-v1830-feedback.css?v=1.83.0','product-v1820-learning-studio.js?v=1.84.0','product-v1810-pricing.js?v=1.81.0','product-v1800-catalog.js?v=1.84.0'])assert(html.includes(item),'Preserve predecessor content and add '+item);
 const ctx={window:{}};vm.runInNewContext(rd('curriculum-v1800-data.js'),ctx,{timeout:2500});
 assert.equal(ctx.window.ELCURRICULUM_V1800.records.length,28);
 for(const c of ctx.window.ELCURRICULUM_V1800.records){assert(c.scenario&&c.good&&c.distractors.length===2&&c.vocab.length===5&&c.homework&&c.teacher,'Each topic has source, examples and teaching brief');}
