@@ -16,7 +16,7 @@ const mobile=root.slice(root.indexOf('<nav class="mobile-sticky-start"'),root.in
 for(const k of names){
  const p=path(k),file=k==='pricing'?'pricing/index.html':'learn/'+k+'/index.html';
  const page=rd(file),d=data[k];
- for(const required of ['<html lang="en">','<main id="main">','<h1>'+d.title+'</h1>','data-page-slug="'+k+'"','href="https://englishlegalese.com'+p+'"','/product-v1840-pages.css?v=1.84.0','/product-v1840-pages.js?v=1.84.0','v1840-content','<nav','<footer'])assert(page.includes(required),'Incomplete dedicated page '+file+' missing '+required);
+ for(const required of ['<html lang="en">','<main id="main">','<h1>'+d.title.replaceAll('&','&amp;')+'</h1>','data-page-slug="'+k+'"','href="https://englishlegalese.com'+p+'"','/product-v1840-pages.css?v=1.84.0','/product-v1840-pages.js?v=1.84.0','v1840-content','<nav','<footer'])assert(page.includes(required),'Incomplete dedicated page '+file+' missing '+required);
  assert(page.includes('href="/#'+d.anchor+'"'),'Separate homepage functional tool link '+file);
  assert(header.includes('href="'+p+'"')||footer.includes('href="'+p+'"'),'Every dedicated page represented in nav '+p);
  if(resources.includes(k))assert(header.includes('href="'+p+'"')&&footer.includes('href="'+p+'"'),'All 14 free learning tools in header dropdown AND footer '+p);
