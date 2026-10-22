@@ -4,6 +4,12 @@ const DATA={"start":{"title":"Start learning Legal English","description":"Choos
 const slug=document.body.dataset.pageSlug;
 function confirmRelease(){document.documentElement.dataset.englishlegaleseMaterialRelease='1.84.0';}
 confirmRelease();
+// Keep the current release marker stable when previously retained learning modules
+// legitimately re-render or announce their historical module versions.
+if(typeof MutationObserver!=='undefined'){
+ const releaseObserver=new MutationObserver(confirmRelease);
+ releaseObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-englishlegalese-material-release']});
+}
 // The prior writing module also marks its release on DOMContentLoaded. Register after it,
 // so the newest exact source version stays accurate immediately, not only after a delay.
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',confirmRelease,{once:true});
