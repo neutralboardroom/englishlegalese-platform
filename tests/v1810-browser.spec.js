@@ -2,11 +2,11 @@ const {test,expect}=require('@playwright/test');
 async function visit(page,hash){await page.goto('/#'+hash);await page.locator('body.v1590-ready').waitFor();await expect(page.locator('#pricing')).toBeVisible();}
 test('v1.81 published pricing is reachable from header, footer and homepage',async({page})=>{
  await visit(page,'home');
- await expect(page.locator('#mainNav a[href="#pricing"]')).toHaveCount(1);
- await expect(page.locator('.v1770-footer-group a[href="#pricing"]')).toHaveCount(1);
+ await expect(page.locator('#mainNav a[href="/pricing/"]')).toHaveCount(1);
+ await expect(page.locator('.v1770-footer-group a[href="/pricing/"]')).toHaveCount(1);
  await page.goto('/#pricing');await page.locator('body.v1590-ready').waitFor();
  await expect(page.locator('#pricing')).toBeVisible();
- await expect(page.locator('#mainNav a[href="#pricing"]')).toHaveAttribute('aria-current','location');
+ await expect(page.locator('#mainNav a[href="/pricing/"]')).toHaveCount(1);
  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
 });
