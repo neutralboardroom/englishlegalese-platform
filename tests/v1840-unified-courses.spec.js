@@ -52,7 +52,7 @@ test('v1.84 sample practice lessons stay accessible without being promoted as ex
  await sample.locator('.js-v1580-courses').click();
  await expect(sample.locator('.v1580-course-card:visible')).toHaveCount(9);
  await expect(sample.locator('.js-v1580-courses')).toHaveText('Show fewer sample lessons');
- await sample.locator('.v1580-course-card').first().getByRole('button',{name:'Start a sample lesson'}).click();
+ await sample.locator('.v1580-course-card').nth(2).getByRole('button',{name:'Start a sample lesson'}).click();
  await expect(section.locator('#v1770-course-lesson')).toBeVisible();
  await expect(section.locator('#v1800-class-catalog .v1800-class-count')).toContainText('28 class topics');
 });
