@@ -4,7 +4,7 @@ test('v1.81 real apex and www display honest researched pricing and preserved fr
   const response=await page.goto(domain+'/');expect(response.status()).toBeLessThan(400);
   expect(response.headers()['x-englishlegalese-release']).toBe('1.83.0');
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.83.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
   await page.goto(domain+'/#pricing');await page.locator('body.v1590-ready').waitFor();
   const p=page.locator('#pricing');await expect(p).toBeVisible();
   for(const price of ['$12/month','$19/month','$29/month','$24','$79 total','$59','$219 total','From $499'])await expect(p).toContainText(price);
