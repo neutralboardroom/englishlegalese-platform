@@ -1,3 +1,13 @@
+## v1.84.0 owner correction — ONE unified catalog of 28 class topics
+
+The owner observed that the homepage and Courses navigation still displayed an old nine-course list, despite the complete 28-class curriculum in the Live Classes section. **Acceptance requirement:** all 28 class topics must be offered together, without grouping them as original/new or 9+19 and without advertising nine courses as the catalog.
+
+- The homepage's Courses section now prominently displays a catalog of **28 class topics**, with twelve immediately readable cards, a clear "Show all 28 class topics" action, real search and track filters, and a full five-part per-topic curriculum viewer. All 28 are sourced from one canonical 28-record dataset.
+- The dedicated `/learn/courses/` page now renders **all 28 class-topic cards by default**, with the same functional previews, topic vocabulary, three source-based exercises, homework and teacher brief. Its heading, descriptions and search all use unified language.
+- The previous nine sample lessons remain available as optional collapsible "Try guided sample lessons" practice under Courses, explicitly *not* counted as separate class topics. No old/new distinction appears in public copy.
+- Existing Live Classes video/provider previews, individual study plans, writing workshop, original source exercises and owner rules are retained. Study-planner placement is kept under Live Classes rather than moved inadvertently when the main catalog was relocated.
+- Dedicated browser tests explicitly verify home 28 total, dedicated page 28 actual cards, sample lessons accessible, privacy, 28-course filter/search, no duplicate curriculum count and real study components. No payment, teacher booking, AI inference or outbound contact activation.
+
 # EnglishLegalese v1.84.0 — full dedicated navigation pages, laptop homepage visually unchanged (OWNER SCOPE, STACKED CANDIDATE)
 Date: 2026-10-22. Added per explicit owner instruction. THIS IS A DEPENDENT RELEASE stacked upon qualified v1.83.0: PR #38 v1.82.0 and PR #39 v1.83.0 must individually receive two complete exact-SHA qualifications, live Render rollouts and independent public apex/www acceptance **before** v1.84.0 may merge/deploy. No shortcut or premature live claims.
 
