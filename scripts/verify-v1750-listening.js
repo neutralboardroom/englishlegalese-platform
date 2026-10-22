@@ -7,8 +7,8 @@ const browser=read('tests/v1750-browser.spec.js'),prod=read('tests/v1750-product
 const pkg=JSON.parse(read('package.json'));
 const reg=read('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md');
 const nvil=read('NEXT_VERSION_IMPROVEMENT_LIST.md');
-assert.equal(pkg.version,'1.80.0');
-assert(html.includes('name="englishlegalese-release" content="1.80.0"'));
+assert.equal(pkg.version,'1.81.0');
+assert(html.includes('name="englishlegalese-release" content="1.81.0"'));
 assert(html.includes('product-v1750.js?v=1.75.0')&&html.includes('product-v1750.css?v=1.75.0'));
 assert(html.includes('href="#listening-clarification-lab"'));
 assert(src.includes("const VERSION='1.75.0'")&&src.includes("id:'intake'")&&src.includes("id:'meeting'")&&src.includes("id:'contract'"));
