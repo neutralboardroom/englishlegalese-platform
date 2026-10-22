@@ -27,7 +27,7 @@ test('v1.79 live primary navigation and footer both expose all 14 resource links
   expect(menuHrefs).toEqual(footerHrefs);
   if(await page.locator('#navToggle').isVisible())await page.locator('#navToggle').click();
   await menu.locator('summary').click();
-  await expect(menu.locator('a[href="#reading-precision-lab"]')).toBeVisible();
+  await expect(menu.locator('a[href="/learn/reading-precision/"]')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(menu).not.toHaveAttribute('open');
   await expect(footer).not.toHaveAttribute('open');
