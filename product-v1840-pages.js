@@ -4,6 +4,10 @@ const DATA={"start":{"title":"Start learning Legal English","description":"Choos
 const slug=document.body.dataset.pageSlug;
 function confirmRelease(){document.documentElement.dataset.englishlegaleseMaterialRelease='1.84.0';}
 confirmRelease();
+// The prior writing module also marks its release on DOMContentLoaded. Register after it,
+// so the newest exact source version stays accurate immediately, not only after a delay.
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',confirmRelease,{once:true});
+else confirmRelease();
 // Older additive modules announce their historic version asynchronously; newest wins without altering the page.
 setTimeout(confirmRelease,550);
 window.addEventListener('hashchange',()=>setTimeout(confirmRelease,550));
