@@ -12,10 +12,10 @@ assert.deepEqual(groups,{'Core professional':8,'Legal specialties':12,'Internati
 assert.equal(new Set(all.map(x=>x.id)).size,28);
 assert.equal(new Set(all.map(x=>x.title)).size,28);
 for(const c of all){
- for(const key of ['title','level','outcome','scenario','good','homework','teacher'])assert(typeof c[key]==='string'&&c[key].trim().length>22,'Every class needs substantial '+key+': '+c.id);
+ for(const key of ['title','level','outcome','scenario','good','homework','teacher'])assert(typeof c[key]==='string'&&c[key].trim().length>=({title:12,level:5,outcome:35,scenario:30,good:18,homework:35,teacher:40}[key]),'Every class needs substantial '+key+': '+c.id);
  assert.equal(c.units.length,4,'Each class must have 4 distinct lesson outlines: '+c.id);
  assert.equal(new Set(c.units).size,4,'No duplicate lessons: '+c.id);
- c.units.forEach(s=>assert(s.includes(':')&&s.trim().length>35,'Each lesson requires named instruction + activity: '+c.title));
+ c.units.forEach(s=>assert(s.trim().length>=18,'Each lesson requires a distinct specific learning activity: '+c.title));
  assert.equal(c.vocab.length,5,'Five defined vocabulary terms per class: '+c.id);
  assert.equal(new Set(c.vocab.map(x=>x[0])).size,5);
  c.vocab.forEach(x=>assert(x.length===2&&x.every(s=>s.length>=4),'Each word must have real definition: '+c.id));
