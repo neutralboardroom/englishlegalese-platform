@@ -52,7 +52,8 @@ test.describe('EnglishLegalese v1.73.0 hard live recovery', () => {
 
     const courseCards = page.locator('#courses article');
     expect(await courseCards.count()).toBeGreaterThanOrEqual(9);
-    expect(await page.locator('#courses article:visible').count()).toBe(3);
+    expect(await page.locator('#courses .v1800-class-card:visible').count()).toBe(12);
+    await expect(page.locator('#v1840-sample-lessons')).not.toHaveAttribute('open');
 
     const scenarios = page.locator('#practice-studio .v1550-scenario-card');
     expect(await scenarios.count()).toBe(21);
