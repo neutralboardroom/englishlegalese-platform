@@ -1,0 +1,36 @@
+/* EnglishLegalese v1.82 — structured, plain, accessible private lesson planning. */
+.v1820-studio-wrap{margin:1.5rem auto 2rem;scroll-margin-top:130px}
+.v1820-studio{border:1px solid #cfe1e7;background:#fff;border-radius:13px;padding:1.4rem;color:#163b51}
+.v1820-studio .v1820-kicker{color:#126878;font-size:.76rem;letter-spacing:.04em;font-weight:800;text-transform:uppercase}
+.v1820-studio h2{font-size:clamp(1.55rem,3vw,2.2rem);line-height:1.2;margin:.4rem 0 .7rem;color:#173e54}
+.v1820-studio h3{font-size:1.19rem;color:#183f51;margin:1.25rem 0 .7rem}
+.v1820-studio h4{font-size:1.01rem;margin:0;color:#174153;line-height:1.45}
+.v1820-studio p,.v1820-studio li{line-height:1.62}
+.v1820-intro{max-width:850px}
+.v1820-note{max-width:950px;border-left:4px solid #237481;background:#f5fafb;padding:.75rem 1rem;color:#365968;font-size:.88rem}
+.v1820-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.v1820-field{display:grid;gap:.38rem;margin:.95rem 0;font-size:.91rem;font-weight:760;color:#204b5c}
+.v1820-field :is(select,input,textarea){box-sizing:border-box;width:100%;min-height:46px;border:1px solid #afc9d3;border-radius:8px;padding:.7rem;background:#fff;color:#173b4f;font:inherit;font-weight:450;line-height:1.5}
+.v1820-field textarea{min-height:105px;resize:vertical}
+.v1820-progress{font-size:.92rem;color:#145d6c;font-weight:750}
+.v1820-lessons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.95rem}
+.v1820-lessons>h3{grid-column:1/-1;margin-bottom:0}
+.v1820-session{border:1px solid #d7e5eb;background:#fbfdfd;border-radius:10px;padding:1rem}
+.v1820-session-head{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:space-between;align-items:flex-start}
+.v1820-check{display:flex;gap:.45rem;align-items:center;font-size:.84rem;color:#185369;font-weight:680}
+.v1820-check input{width:18px;height:18px;flex:0 0 18px}
+.v1820-session .v1820-date{font-size:.83rem;color:#5a6e7b;font-weight:670}
+.v1820-session .v1820-task{font-size:.9rem}
+.v1820-session .v1820-vocab{font-size:.84rem;color:#315e6e}
+.v1820-homework{margin-top:1rem}
+.v1820-homework ul{padding-left:1.3rem}
+.v1820-teacher{border:1px solid #d5e4e8;border-radius:10px;padding:1rem;margin-top:1rem}
+.v1820-teacher>summary{cursor:pointer;color:#175e6d;font-weight:820;font-size:1.02rem;min-height:42px}
+.v1820-teacher ol{padding-left:1.4rem}
+.v1820-small,.v1820-characters{font-size:.84rem;color:#536b79}
+.v1820-actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.7rem}
+.v1820-actions .btn{min-height:44px;white-space:normal;text-align:center}
+.v1820-status{font-size:.88rem;color:#1d5d69}
+.v1820-studio :is(input,select,textarea,button,summary):focus-visible{outline:3px solid #177a86;outline-offset:3px}
+@media(max-width:820px){.v1820-lessons{grid-template-columns:1fr}.v1820-actions .btn{flex:1 1 100%}}
+@media(max-width:700px){.v1820-studio{padding:1rem}.v1820-fields{grid-template-columns:1fr;gap:0}}
