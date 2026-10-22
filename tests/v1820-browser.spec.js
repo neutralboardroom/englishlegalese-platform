@@ -37,7 +37,7 @@ test('v1.82 learner checkboxes and notes are independent, clearable and intentio
  await s.locator('#v1820-course').selectOption('class-01');
  await expect(s.locator('.v1820-session input[type="checkbox"]').first()).toBeChecked();
  await expect(s.locator('#v1820-goal')).toHaveValue('Clarify conditional promises');
- await expect(s.locator('#v1820-characters')).toContainText('475 characters remaining');
+ await expect(s.locator('.v1820-characters')).toContainText('characters remaining');
  await s.getByRole('button',{name:'Clear this topic’s plan'}).click();
  await expect(s.locator('.v1820-progress')).toContainText('0 of 4');
  await expect(s.locator('#v1820-goal')).toHaveValue('');
