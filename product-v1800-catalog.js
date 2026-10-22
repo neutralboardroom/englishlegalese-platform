@@ -1,4 +1,4 @@
-/* EnglishLegalese v1.80.0 — 24 Legal English class curricula + 4 business classes.
+/* EnglishLegalese 28-topic unified catalog (v1.84 integration), no legacy/new labels.
  * Educational previews, not real bookings. All interactions remain in page memory. */
 (()=>{'use strict';
 const $=(q,r=document)=>r.querySelector(q),$$=(q,r=document)=>Array.from(r.querySelectorAll(q));
@@ -7,13 +7,14 @@ const C=window.ELCURRICULUM_V1800;
 if(!C || !Array.isArray(C.records) || C.records.length!==28)return;
 const records=C.records;
 function mount(){
- const host=$('#live-classes');if(!host||$('#v1800-class-catalog'))return;
+ const dedicated=$('#v1840-course-mount');
+ const host=dedicated||$('#courses');if(!host||$('#v1800-class-catalog'))return;
  const container=E('div',undefined,'container v1800-catalog');
  const section=E('section',undefined,'v1800-class-section');section.id='v1800-class-catalog';section.setAttribute('aria-labelledby','v1800-class-heading');
  const head=E('div',undefined,'v1800-catalog-intro');
- const title=E('h2','Choose a practical online class topic');title.id='v1800-class-heading';
- head.append(E('p','EXPANDED CURRICULUM · EDUCATIONAL PREVIEWS','eyebrow'),title,
- E('p','Explore 24 specialized Legal English classes and four additional Professional & Business English classes. Each topic includes a four-lesson outline, a real vocabulary exercise, homework and teacher materials. These are preview materials—not bookable teacher sessions, graded credits or certification.'));
+ const title=E('h2','Explore all 28 class topics');title.id='v1800-class-heading';
+ head.append(E('p','28 CLASS TOPICS · EDUCATIONAL PREVIEWS','eyebrow'),title,
+ E('p','Explore all 28 class topics together. Every topic includes four lesson outlines, defined vocabulary, a practical exercise, homework and teacher materials. These previews are not bookable teacher sessions, graded credits or certification.'));
  const controls=E('div',undefined,'v1800-catalog-controls');
  const searchLabel=E('label',undefined,'v1800-field'),searchText=E('span','Search class topics'),search=E('input');
  search.type='search';search.placeholder='Example: immigration, contract, mediation';search.maxLength=80;search.id='v1800-class-search';
@@ -23,15 +24,29 @@ function mount(){
  groupLabel.append(groupText,group);controls.append(searchLabel,groupLabel);
  const count=E('p',undefined,'v1800-class-count');count.setAttribute('role','status');
  const grid=E('div',undefined,'v1800-class-grid');
- const more=E('button','Show all class topics','btn light v1800-more');more.type='button';
+ const more=E('button','Show all 28 class topics','btn light v1800-more');more.type='button';
  const viewer=E('section',undefined,'panel v1800-class-viewer');viewer.id='v1800-class-viewer';viewer.hidden=true;viewer.setAttribute('aria-label','Curriculum preview and learning materials');
- section.append(head,controls,count,grid,more,viewer);container.append(section);host.append(container);
- let showAll=false,current=null;
+ section.append(head,controls,count,grid,more,viewer);container.append(section);
+ if(dedicated)host.append(container);
+ else{
+  const sectionHead=$('.section-head',host);
+  if(sectionHead)sectionHead.after(container);else host.prepend(container);
+  const legacyGrid=$('.v1580-course-grid',host),legacyControls=$('.js-v1580-courses',host)?.closest('.v1580-section-controls');
+  if(legacyGrid&&!$('#v1840-sample-lessons',host)){
+   const examples=E('details',undefined,'v1840-sample-lessons');examples.id='v1840-sample-lessons';
+   const summary=E('summary','Try guided sample lessons');
+   const explainer=E('p','These additional exercises support the class topics above. They are practice activities, not separate class topics.','v1840-sample-note');
+   examples.append(summary,explainer);
+   legacyGrid.before(examples);examples.append(legacyGrid);
+   if(legacyControls)examples.append(legacyControls);
+  }
+ }
+ let showAll=Boolean(dedicated),current=null;
  function renderList(){
   grid.replaceChildren();
   const query=search.value.trim().toLocaleLowerCase(),track=group.value;
   const matched=records.filter(c=>(track==='all'||c.group===track)&&(!query||[c.title,c.outcome,c.group,...c.vocab.map(v=>v[0])].join(' ').toLocaleLowerCase().includes(query)));
-  const visible=(showAll||query||track!=='all')?matched:matched.slice(0,6);
+  const visible=(showAll||query||track!=='all')?matched:matched.slice(0,12);
   visible.forEach(c=>{
    const article=E('article',undefined,'v1800-class-card');
    article.append(E('p',c.group+' · '+c.level,'v1800-card-kicker'),E('h3',c.title),E('p',c.outcome));
@@ -40,8 +55,9 @@ function mount(){
    button.addEventListener('click',()=>openClass(c));
    article.append(button);grid.append(article);
   });
-  count.textContent=matched.length+' class topics match your selection. '+(visible.length<matched.length?'Showing the first '+visible.length+'.':'');
-  more.hidden=(!!query||track!=='all'||showAll||matched.length<=6);
+  count.textContent=matched.length===28?'28 class topics — explore the complete catalog.':matched.length+' class topics match your selection.';
+  if(visible.length<matched.length)count.textContent+=' Showing '+visible.length+'; choose “Show all 28 class topics” to view every topic.';
+  more.hidden=(!!query||track!=='all'||showAll||matched.length<=12);
   if(!matched.length)grid.append(E('p','No class topic matches. Try a shorter search or select all tracks.','v1800-empty'));
  }
  function qData(c){
