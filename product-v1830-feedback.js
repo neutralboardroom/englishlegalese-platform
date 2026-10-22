@@ -115,6 +115,7 @@ function mount(){
  });
  updateList();
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
-window.addEventListener('hashchange',()=>setTimeout(mount,0));
+function releaseMarker(){document.documentElement.dataset.englishlegaleseMaterialRelease='1.83.0';}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{mount();releaseMarker();setTimeout(releaseMarker,430);},{once:true});}else{mount();releaseMarker();setTimeout(releaseMarker,430);}
+window.addEventListener('hashchange',()=>{setTimeout(mount,0);setTimeout(releaseMarker,430);});
 })();
