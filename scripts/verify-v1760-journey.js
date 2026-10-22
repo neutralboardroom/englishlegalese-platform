@@ -8,7 +8,7 @@ const reg=rd('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md');
 assert.equal(pkg.version,'1.84.0');
 assert(html.includes('name="englishlegalese-release" content="1.84.0"'));
 assert(html.includes('product-v1760.js?v=1.76.0')&&html.includes('product-v1760.css?v=1.76.0'));
-for(const id of ['conversation-rehearsal-lab','reading-precision-lab','listening-clarification-lab','professional-message-builder','smartteacher-free-trial'])assert(html.includes('#'+id));
+for(const id of ['conversation-rehearsal','reading-precision','listening-clarification','professional-message','smartteacher-free-trial']){assert(html.includes('href="/learn/'+id+'/"'),'Retain owner-approved dedicated link: '+id);assert(fs.existsSync('learn/'+id+'/index.html'),'Preserve actual working learning page: '+id);}
 assert(app.includes('Legal English with AI-supported practice and live online classes with human teachers.'));
 assert(app.includes('Human teacher guidance available'));
 assert(!app.includes('Teacher guidance where available'));
