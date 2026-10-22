@@ -18,7 +18,7 @@ assert(wf.includes('product-v1790.js?v=1.79.0&acceptance='));
 assert(wf.includes('1.79.0-navigation-domain-hardening'));
 const footerTools=[...index.matchAll(/<nav class="v1770-resource-links"[^>]*>([\s\S]*?)<\/nav>/g)][0]?.[1]||'';
 const navTools=[...index.matchAll(/<nav class="v1790-resource-nav"[^>]*>([\s\S]*?)<\/nav>/g)][0]?.[1]||'';
-const toolHrefs=s=>[...s.matchAll(/href="(#[^"]+)"/g)].map(x=>x[1]);
+const toolHrefs=s=>[...s.matchAll(/href="(\/learn\/[^"]+\/)"/g)].map(x=>x[1]);
 assert.equal(toolHrefs(footerTools).length,14,'Keep all 14 practical footer tools');
 assert.deepEqual(toolHrefs(navTools),toolHrefs(footerTools),'Main menu and original footer must list the same 14 tools in the same order');
 assert(index.includes('<summary aria-label="Free learning resources menu">Free learning resources'),'Main dropdown must have recognizable accessible label');
