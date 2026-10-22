@@ -16,7 +16,7 @@ function mount(){
  const details=el('details',undefined,'panel v1800-study');details.id='v1800-study-planner';
  details.append(el('summary','My private Legal English study planner'));
  const body=el('div',undefined,'v1800-study-body');
- body.append(el('h3','Plan and review your next learning steps'),el('p','Track what you personally worked through across the three existing sample lessons in each course. This is a private self-check, not a verified completion record or an enrolled course. Everything clears when you reload or leave this page.'));
+ body.append(el('h3','Plan and review your next learning steps'),el('p','Track what you personally worked through across the three existing sample lessons in each course. This is a private self-check, not a verified completion record or an enrolled course. Everything clears when you reload or close this page.'));
  const label=el('label','Choose a course','v1800-label'),select=el('select');select.id='v1800-course-select';
  classes.forEach((entry,i)=>{const opt=el('option',entry.title);opt.value=String(i);select.append(opt);});
  label.append(select);
