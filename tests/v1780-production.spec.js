@@ -2,9 +2,9 @@ const {test,expect}=require('@playwright/test');
 test('v1.78 public apex and www preserve live video classroom teaching journey and versioned assets',async({page})=>{
  for(const domain of ['https://englishlegalese.com','https://www.englishlegalese.com']){
   const r=await page.goto(domain+'/');expect(r.status()).toBeLessThan(400);
-  expect(r.headers()['x-englishlegalese-release']).toBe('1.79.0');
+  expect(r.headers()['x-englishlegalese-release']).toBe('1.80.0');
   await page.locator('body.v1590-ready').waitFor();
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.79.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.80.0');
   await expect(page.locator('#home h1')).toContainText('live online classes with human teachers');
   await expect(page.locator('#live-classes')).toBeVisible();
   await page.goto(domain+'/#live-classes');await page.locator('body.v1590-ready').waitFor();

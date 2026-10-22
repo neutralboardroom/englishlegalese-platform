@@ -1,3 +1,33 @@
+# EnglishLegalese v1.80.0 — 28 complete class curricula + owner-approved deployment permanence (ADDITIVE CANDIDATE)
+Date: 2026-10-22. This amends the already-drafted v1.80 candidate with the explicit additional owner scope; previous candidate work and the COMPLETE inherited improvement record below are preserved.
+
+## Material teaching delivery added
+- 24 Legal English classes covering **8 core professional + 12 practice-area + 4 international/academic** topics; plus a distinct **4-class Professional & Business English** track (28 total).
+- Every one of the 28 records is substantive: **4 specific lesson outlines (112)**, **5 defined topic vocabulary terms (140)**, **3 interactive explained questions (84)**, **one topic-specific homework assignment (28)** and **one instructor brief with fictional roleplay, feedback criteria and 50-minute facilitation plan (28)**.
+- Searchable responsive class directory embedded inside the existing human-led video classes section. Search and track filters, working student self-check with changed-answer feedback and reset, local download of each class curriculum and teacher brief. Educational previews **NOT currently bookable**; no teacher identities, provider integrations, certification or live credentials invented.
+- The v1.80 original private six-course study planner remains intact; all 9 existing offerings, existing lessons 1/2/3, 14 header and 14 footer free resource links, original logo, 19 Roger Rules, 10 durable rules, previous learning labs, existing backend/services and all original integration gates protected.
+- Permanent additive owner directives established in `governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md`: `EL-RGR-020` **automatically deploy every new completed qualified version live**, independently verify apex/www and retain rollback; `EL-RGR-021` enforce all five genuine materials per class; `EL-RGR-022` preserve complete expansion scope. Immutable canonical rule register is unchanged.
+- Do not claim production until two independent full same-final-head cross-device qualifications, high/critical security audit green, no-drift/historical features passed; then guarded merge, Render live, exact asset/commit and apex/www production acceptance. On any failure, leave previous known-good v1.79 live. Existing v1.79 LIVE `dep-dbc5u0h5efls73bdkpb0` and v1.78 rollback `dep-dbc2aau8bjmc73d443c0` preserved for emergency recovery.
+
+---
+
+# EnglishLegalese v1.80.0 — Private Study Planner (UNMERGED CANDIDATE)
+Date: 2026-10-22. Exact predecessor v1.79.0 main commit ea122fb498ded83c3f6fac39a3ba5f27e692d624. Build is additive; all preceding lists, the 19 original Roger Rules, 10 durable rules and approved branding must remain unchanged.
+
+## User-visible improvement
+- Private optional study planner for all six actual courses, each with the three existing sample lessons and self-reported progress. This does NOT issue credits, claim teaching certification, imply durable account progress or alter the quizzes.
+- Per-course optional short goal (120 characters) and review notes (500 characters) with live remaining count; independent state per each of six courses during page session.
+- Clear one course or all six; downloadable local plain-text study plan and next-step guidance; no calls to servers, localStorage, emails, identity collection, payments, bookings or uploads.
+- Collapsed panel next to existing course catalog avoids changing homepage composition, main "Free learning resources" dropdown, all 14 footer links, three-course sample lesson units, international class prep or original approved logo.
+
+## Hard release gates
+- Candidate MUST pass exact-head static/security/no-drift gate and full desktop/tablet/mobile Chromium/WebKit qualification twice, with no high/critical vulnerabilities, before merge. The old v1.79.0 successful Render production deploy must be recorded and retained for rollback.
+- After separately authorized deployment, actual apex/www health, JavaScript, current version, menu/footer parity, all historic lessons and new private planner must pass independent production acceptance. No live claim from PR existence or successful qualification alone.
+- Preserve V3 communications rule: no outbound transactional/send, Resend DNS mutation, trial activation, Stripe, actual teacher bookings/provider access or real document processing without their distinct gates.
+- Deferred: authenticated learner completion or teacher-verified credentials, actual class enrollment and stored progress require opt-in consent and durable access-controlled data model, provider authorization and security tests. Do not advertise as live.
+
+---
+
 ## v1.79.0 — Owner added main-menu learning-resources dropdown (IMPLEMENTED_CANDIDATE)
 Add an accessible **Free learning resources** dropdown to the existing desktop and mobile primary navigation; duplicate exactly all 14 existing footer learning-tool links, preserving the footer content, order, folding, original site logo, and existing primary links. Verify desktop/mobile/keyboard dismissal and parity; no new paid/AI/product activation. User explicitly wants both navigation surfaces maintained, not links moved out of the footer.
 

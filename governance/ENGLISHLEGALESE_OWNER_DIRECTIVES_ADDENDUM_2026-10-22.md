@@ -1,0 +1,21 @@
+# EnglishLegalese — Permanent owner directives addendum (22 October 2026)
+Status: ACTIVE · OWNER-AUTHORIZED · PERMANENT · NO-DRIFT
+Authority: New explicit owner instructions (2026-10-22). Additive to canonical `governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md`; no original Roger Rule or 10 durable rules amended, deleted, renumbered or weakened. This addendum must be inspected by every future builder, fork, release, rollback and test gate.
+
+## EL-RGR-020 — Deploy every completed version live
+For EVERY new EnglishLegalese version, build the maximum reasonably useful material improvement, run required source/no-drift, security, regression and multi-device qualification, and, after complete passing acceptance gates, deploy the version to the actual live EnglishLegalese production site. Verify current source SHA, health, latest assets and the real public apex and www in browser tests. Retain and document an exact known-good previous release and working rollback. Do not treat a PR, source change, passing local tests or intended auto-deploy as proof of production. A failed/incomplete gate does NOT authorize unsafe merge or deploying an unverified version. If provider permission or operational access blocks release, record the exact blocker and leave live stable; do not claim deployment. The owner need not repeat a deployment request with each version. The original mandatory release gates remain in effect.
+
+## EL-RGR-021 — Every online class must have five genuine educational components
+EnglishLegalese must deliver every added online class as a substantive instructional offer. At minimum EACH class has:
+1. A specific, usable sequence of lesson outlines and learning objectives;
+2. A relevant Legal/Professional English vocabulary set with accurate definitions/context;
+3. Functional interactive language exercises with feedback/explanations;
+4. An actionable homework task with a self-check or clear deliverable;
+5. A topic-specific teacher teaching brief/materials: lesson aims, fictional scenario, discussion prompts, facilitation, feedback/rubric and timing.
+Never label mere topics/cards as complete courses. Educational sample curricula may be visible before booking activation but MUST be accurately marked as curriculum previews and must not pretend teachers, class slots, payment, assessment, certification or provider login are live.
+
+## EL-RGR-022 — Expanded curriculum scope and preservation
+Implement all 24 owner-approved Legal English class topics (8 professional skills, 12 legal specialties, 4 international/academic) and an additional clearly labeled Professional & Business English track, in one or multiple releases as needed. Build curriculum depth, useful navigation and clean layouts. Preserve all 9 pre-existing offerings, 14 unchanged header/footer learning resources, approved original logo, 19 original Roger Rules, 10 durable rules, and all existing routes, learning tools, backend, privacy and production safety gates. Never copy or expose a real legal client matter or use student confidential material for examples; fictional examples only. Incomplete external booking, payment, email, AI/free trial, authenticated files and storage remain disabled until distinct approvals and verification.
+
+## Permanent enforcement
+Every future release must source-verify the continued presence and complete meaning of EL-RGR-020–022, the immutable original 19+10 canonical entries, 24-topic coverage, all five components per added class, main/footer navigation parity and actual live deployment evidence. No builder-created edit may weaken or silently reinterpret these owner commands; amendments require explicit owner instruction and an additive successor record.
