@@ -16,6 +16,8 @@ for(let i=1;i<=19;i++)assert(canonical.includes('EL-RGR-'+String(i).padStart(3,'
 for(let i=1;i<=10;i++)assert(canonical.includes('EL-DUR-'+String(i).padStart(3,'0')));
 for(const id of ['EL-RGR-020','EL-RGR-021','EL-RGR-022'])assert(owner.includes(id));
 assert(style.includes(':focus-visible')&&style.includes('@media(max-width:700px)'));
+assert(get('tests/v1590-production.spec.js').includes("production-mobile'?26000:19000"),'Keep bounded cross-device production height, not a removed assertion');
+assert(get('tests/v1590-browser.spec.js').includes('26000 : 19000'),'Keep bounded cross-device qualification height, not a removed assertion');
 assert(get('tests/v1820-browser.spec.js').includes('all 14 free resources'));
 assert(get('NEXT_VERSION_IMPROVEMENT_LIST.md').includes('v1.82.0'));
 console.log('PASS v1.82.0: 28 classes, 112 four-week lessons, 4 session pacing/exports, no external calls/charges, original rule corpus.');
