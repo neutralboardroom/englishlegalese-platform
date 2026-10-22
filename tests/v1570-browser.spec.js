@@ -82,11 +82,15 @@ test.describe('EnglishLegalese v1.73.0 live homepage recovery inheritance', () =
     await page.locator('body.v1590-ready').waitFor();
 
     const courseButton = page.locator('.js-v1580-courses');
+    await expect(page.locator('#courses .v1800-class-card:visible')).toHaveCount(12);
+    await expect(page.locator('#v1840-sample-lessons')).not.toHaveAttribute('open');
+    await page.locator('#v1840-sample-lessons summary').click();
     await expect(courseButton).toHaveAttribute('aria-expanded', 'false');
-    expect(await page.locator('#courses article:visible').count()).toBe(3);
+    await expect(page.locator('#courses .v1580-course-card:visible')).toHaveCount(3);
     await courseButton.click();
     await expect(courseButton).toHaveAttribute('aria-expanded', 'true');
-    expect(await page.locator('#courses article:visible').count()).toBeGreaterThan(3);
+    await expect(page.locator('#courses .v1580-course-card:visible')).toHaveCount(9);
+    await expect(page.locator('#courses .v1800-class-card:visible')).toHaveCount(12);
 
     const scenarioButton = page.locator('.js-v1590-scenarios');
     await expect(scenarioButton).toHaveAttribute('aria-expanded', 'false');
