@@ -104,7 +104,7 @@ test.describe('EnglishLegalese v1.73.0 hard live recovery', () => {
     expect(titlePx).toBeGreaterThanOrEqual(23);
     expect(titlePx).toBeLessThanOrEqual(42);
 
-    await page.screenshot({ path: testInfo.outputPath('v1590-live-recovery-full.png'), fullPage: true, animations: 'disabled' });
+    await page.screenshot({ path: testInfo.outputPath('v1590-live-recovery-full.png'), fullPage: testInfo.project.name !== 'tablet-webkit', animations: 'disabled' });
     await testInfo.attach('v1590-live-recovery-full', { path: testInfo.outputPath('v1590-live-recovery-full.png'), contentType: 'image/png' });
   });
 });
@@ -127,7 +127,7 @@ test('approved logo is prominent and unchanged; hero hierarchy is intentionally 
   await expect(page.locator('.hero-secondary a[href="#smartteacher"]')).toBeVisible();
   await expect(page.locator('.hero-secondary a[href="#practice-studio"]')).toBeVisible();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);expect(overflow).toBeLessThanOrEqual(1);
-  await page.screenshot({path:testInfo.outputPath('v1610-visual-homepage.png'),fullPage:true,animations:'disabled'});
+  await page.screenshot({path:testInfo.outputPath('v1610-visual-homepage.png'),fullPage:testInfo.project.name !== 'tablet-webkit',animations:'disabled'});
 });
 
 // Regression for the formerly self-triggering recovery observer: stable markup must settle.
