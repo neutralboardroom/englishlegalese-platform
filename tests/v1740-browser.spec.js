@@ -7,12 +7,15 @@ async function openLab(page) {
 test('v1.74 professional message builder is discoverable without expanding homepage', async({page})=>{
   await page.goto('/');
   await page.locator('body.v1590-ready').waitFor();
-  const link=page.locator('.site-footer a[href="#professional-message-builder"]');
+  const link=page.locator('.site-footer a[href="/learn/professional-message/"]');
   await expect(link).toHaveCount(1);
   await expect(page.locator('#professional-message-builder')).toBeHidden();
   await page.locator('.site-footer #v1770-all-resources summary').click();
   await expect(link).toBeVisible();
   await link.click();
+  await expect(page).toHaveURL(/\/learn\/professional-message\/$/);
+  await expect(page.getByRole('heading',{name:'Free Professional Message Builder',exact:true})).toBeVisible();
+  await page.goto('/#professional-message-builder');await page.locator('body.v1590-ready').waitFor();
   await expect(page.locator('#professional-message-builder')).toBeVisible();
   await expect(page.locator('#home')).toBeHidden();
   await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
