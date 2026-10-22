@@ -60,7 +60,7 @@ function mount(){
   const matched=records.filter(c=>(track==='all'||c.group===track)&&(!query||[c.title,c.outcome,c.group,...c.vocab.map(v=>v[0])].join(' ').toLocaleLowerCase().includes(query)));
   const visible=(showAll||query||track!=='all')?matched:matched.slice(0,12);
   visible.forEach(c=>{
-   const article=E('article',undefined,'v1800-class-card');
+   const article=E('div',undefined,'v1800-class-card');article.setAttribute('role','group');article.setAttribute('aria-label',c.title+' class topic');
    article.append(E('p',c.group+' · '+c.level,'v1800-card-kicker'),E('h3',c.title),E('p',c.outcome));
    const button=E('button','View lesson & teacher materials','btn teal');button.type='button';
    button.setAttribute('aria-controls','v1800-class-viewer');button.setAttribute('aria-expanded',String(current===c.id&&!viewer.hidden));
