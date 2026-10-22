@@ -66,7 +66,7 @@ test('v1.77 Georgian alphabetic list is persistent and modes actually work',asyn
 });
 test('v1.77 role-focused pages are not two duplicate promotional cards',async({page})=>{
  await ready(page,'teachers');const s=page.locator('#teachers');await expect(s.locator('.v1770-role-cards article')).toHaveCount(3);await expect(s.locator('.grid>article').nth(1)).toBeHidden();await expect(s.locator('.v1770-role-details')).toContainText('Learn with a human teacher');
- await ready(page,'employers');const e=page.locator('#employers');await expect(e.locator('.grid>article').first()).toBeHidden();await expect(e.locator('.v1770-role-details')).toContainText('Employer learning and team training');
+ await ready(page,'employers');const e=page.locator('#teachers');await expect(e.locator('.grid>article').first()).toBeHidden();await expect(e.locator('.v1770-role-details')).toContainText('Employer learning and team training');
 });
 test('v1.77 trust protections honest and prior education boundaries intact',async({page})=>{
  await ready(page,'trust');const s=page.locator('#trust');await expect(s).toContainText('Not a law firm');await expect(s).toContainText('browser-only exercises');await expect(s).toContainText('separate launch requirements');
