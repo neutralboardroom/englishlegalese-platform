@@ -1,3 +1,14 @@
+# EnglishLegalese v1.81.0 — researched transparent pricing, no charges (CANDIDATE)
+Date: 2026-10-22. Exact live predecessor v1.80.0 Render dep-dbcuuefavr4c73d31uc0 commit 1f1f7aeb777a74b13ced20a432030cede3c961e7. Append-only successor: retain original approved logo, original 19 Roger + 10 durable rules, additions EL-RGR-020–022, all nine old offerings, 28 new complete curricula, free 14/14 navigation and footer directory, class/study planner, auth, database, AI safety and prior backend. Never silently overwrite historic improvements below.
+
+Material improvement: true public Pricing link in both primary navigation and footer; clean responsive US-dollar introductory prices visible on homepage; Free $0; existing draft AI Starter $12/month 100 replies max12/day, Plus $19/month 250 max20/day, Pro $29/month 500 max30/day; proposed human-led groups single $24/50 min or 4 for $79 (3–6 learners), private one lesson $59/50 min or four for $219, team four-session up to 8 starting $499. All clearly subject to activation and teacher availability. No checkout, purchase button, payment field, Stripe entitlement, recording, uploads, email or unverified booking. No actual order or subscription created. FAQ addresses currency, taxes, refund and cancellation policies before launch, three free AI samples eligibility and no automatic charges.
+
+Market research (checked 2026-10-22): British Legal Centre specialist group 15x45min US$450, private US$1200 https://www.british-legal-centre.com/set/legal-english-course ; Legal English Academy Standard US$320/year, Premium $960/year, VIP $3,800/year https://www.legalenglish.academy/ ; TOLES original self-study £15 per module https://toleslegal.com/product-category/online-courses/ ; Preply general online English teachers $23-$27/hour https://preply.com/en/online/english-tutors ; Cambly small-group per 30 min starting $5.50 month-to-month https://www.cambly.com/en/subscribe/groups . Rates purposely under specialist coached providers, but materially above general group instruction; bundles reduce learner upfront cost while maintaining instructor compensation room. These public offers are PROPOSED until teacher and Stripe verification; no artificially short discounts or implied availability.
+
+Release discipline: full source/security/no-drift + desktop/tablet/mobile Chromium/WebKit suite TWO independent passes same final head; preserve live v1.80 rollback; separate exact main/Render live/apex/www acceptance; no promotional sends without scoped approval. Verify footer resource parity 14/14, existing 28 class catalog and student free routes remain functional. No premature live claims.
+
+---
+
 # EnglishLegalese v1.80.0 — 28 complete class curricula + owner-approved deployment permanence (ADDITIVE CANDIDATE)
 Date: 2026-10-22. This amends the already-drafted v1.80 candidate with the explicit additional owner scope; previous candidate work and the COMPLETE inherited improvement record below are preserved.
 

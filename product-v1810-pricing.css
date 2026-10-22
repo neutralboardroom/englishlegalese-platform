@@ -1,0 +1,30 @@
+/* EnglishLegalese v1.81.0: public, non-transactional, introductory pricing information. */
+@media(min-width:981px){#mainNav.main-nav{grid-template-columns:repeat(6,minmax(0,1fr))!important}}
+#mainNav a[href="#pricing"]{font-weight:800;color:#146c79}
+#pricing{scroll-margin-top:145px;background:#fff;padding:42px 0 44px;border-top:1px solid #d9e6ea}
+#pricing .v1810-inner{max-width:1180px}
+#pricing .v1810-overline{color:#176879;font-size:.76rem;letter-spacing:.05em;font-weight:850;text-transform:uppercase}
+#pricing h2{font-size:clamp(1.6rem,3.2vw,2.5rem);line-height:1.2;margin:.45rem 0 .65rem;color:#153a4e}
+#pricing h3{font-size:1.22rem;margin:.5rem 0 .7rem;color:#163b4f}
+#pricing p,#pricing li{line-height:1.6}
+#pricing .v1810-intro{max-width:850px;color:#475e6c}
+#pricing .v1810-notice{max-width:1030px;margin:1.2rem 0;border:1px solid #bed7de;border-left:4px solid #1d6c7d;background:#f5fafb;border-radius:7px;padding:1rem 1.1rem;color:#1c4856;font-size:.93rem}
+#pricing .v1810-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin-top:1.3rem}
+#pricing .v1810-card{display:flex;flex-direction:column;min-width:0;border:1px solid #d9e5ea;border-radius:12px;background:#fff;padding:1.2rem;box-shadow:0 4px 14px rgba(10,47,63,.04)}
+#pricing .v1810-card .v1810-label,#pricing .v1810-team .v1810-label{color:#176879;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+#pricing .v1810-price{font-size:clamp(1.55rem,2.8vw,2.15rem);font-weight:850;color:#0a5063;line-height:1.2;margin:.5rem 0}
+#pricing .v1810-price span{font-size:.8rem;font-weight:600;color:#4f6673}
+#pricing .v1810-card p{font-size:.92rem}
+#pricing .v1810-card ul{padding-left:1.15rem;margin:.5rem 0 1rem;flex:1}
+#pricing .v1810-card li{font-size:.88rem;margin:.35rem 0}
+#pricing .v1810-link{display:inline-block;text-decoration:underline;color:#09677d;text-underline-offset:3px;font-weight:780;font-size:.9rem}
+#pricing .v1810-team{margin-top:1rem;border:1px solid #d2e1e5;background:#f8fbfc;padding:1.25rem;border-radius:11px;display:grid;grid-template-columns:1.7fr 1fr;gap:1.2rem}
+#pricing .v1810-team p{font-size:.9rem}
+#pricing .v1810-extra{margin-top:1.2rem;padding-top:1rem;border-top:1px solid #dbe7eb}
+#pricing .v1810-extra-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 1.5rem}
+#pricing .v1810-extra-grid p{font-size:.86rem}
+#pricing .v1810-fine{color:#587079;font-size:.82rem}
+#pricing a:focus-visible{outline:3px solid #137b8c;outline-offset:4px}
+body[data-el-homepage-view="focus"] #pricing{display:none}
+@media(max-width:1180px){#pricing .v1810-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){#pricing{padding:28px 0 34px}#pricing .v1810-grid,#pricing .v1810-team,#pricing .v1810-extra-grid{grid-template-columns:1fr}#pricing .v1810-card{padding:1rem}}

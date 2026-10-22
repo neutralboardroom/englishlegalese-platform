@@ -80,7 +80,7 @@ check('security dependency pins remain', pkg.dependencies?.express === '4.22.3' 
 check('Node runtime floor remains 20+', /^>=20/.test(String(pkg.engines?.node || '')));
 check('canonical focus routing exists',app.includes('homepageSectionIds')&&app.includes('applyRouteView')&&app.includes('englishLegaleseApplyView'));
 check('homepage return link and accessible focus toolbar',index.includes('id="elFocusToolbar"')&&index.includes('href="#home"'));
-check('HTML has v1.60 release marker',index.includes('name="englishlegalese-release" content="1.80.0"'));
+check('HTML has v1.60 release marker',index.includes('name="englishlegalese-release" content="1.81.0"'));
 check('HTML response explicitly revalidates without modifying private routes',read('server.js').includes("req.path==='/' || req.path==='/index.html'")&&read('server.js').includes("'no-cache, max-age=0, must-revalidate'"));
 check('responsive homepage heading typography improved',css1590.includes('.hero h1{font-size:clamp(2.45rem')&&css1590.includes('.section-head h2{font-size:clamp(1.7rem'));
 check('learning engine preserves route ownership',v1550.includes('englishLegaleseApplyView'));

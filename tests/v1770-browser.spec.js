@@ -6,8 +6,8 @@ test('v1.77 comprehensive homepage remains intact with condensed headline and te
  await expect(page.locator('#home')).toContainText('Human teacher guidance available');
  await expect(page.locator('#start')).toBeVisible();await expect(page.locator('#courses')).toBeVisible();
  await expect(page.locator('.site-header .brand img')).toBeVisible();
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.80.0');
- await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.80.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.81.0');
+ await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.81.0');
 });
 test('v1.77 all 23 old footer destinations retained with compact resource directory',async({page})=>{
  await ready(page,'home');const footer=page.locator('.site-footer');
