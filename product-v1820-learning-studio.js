@@ -148,7 +148,7 @@ function mount(){
      'STATUS:TENTATIVE','END:VEVENT');
   });rows.push('END:VCALENDAR');
   saveLocal('EnglishLegalese-'+c.id+'-personal-study-holds.ics',rows.join('\r\n')+'\r\n','text/calendar;charset=utf-8');
-  status.textContent='Downloaded four TENTATIVE personal study reminders. No teacher, calendar account or video provider was contacted.';
+  status.textContent='Downloaded four TENTATIVE (UNCONFIRMED) personal study reminders. No teacher, calendar account or video provider was contacted.';
  });
  updateOptions();
 }
