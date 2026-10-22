@@ -42,7 +42,7 @@ function mount(){
  const form=E('form',undefined,'v1820-form');form.noValidate=true;
  function field(id,caption,node){node.id=id;const label=E('label',undefined,'v1820-field');label.append(E('span',caption),node);return label;}
  const track=E('select');track.id='v1820-track';
- [['All tracks','all'],['Core professional','Core professional'],['Legal specialties','Legal specialties'],['International & academic','International & academic'],['Professional & Business English','Professional & Business English']].forEach(([v,n])=>{const o=E('option',n);o.value=v;track.append(o);});
+ [['All tracks','all'],['Core professional','Core professional'],['Legal specialties','Legal specialties'],['International & academic','International & academic'],['Professional & Business English','Professional & Business English']].forEach(([n,v])=>{const o=E('option',n);o.value=v;track.append(o);});
  // Names intentionally use the actual track values as displayed labels.
  const classSelect=E('select');classSelect.id='v1820-course';
  const pace=E('select');pace.id='v1820-frequency';
