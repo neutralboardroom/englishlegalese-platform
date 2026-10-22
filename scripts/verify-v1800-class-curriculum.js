@@ -34,5 +34,5 @@ for(const s of ['v1800-class-catalog','Four-lesson teaching outline','Topic voca
 for(const term of ['fetch(', 'XMLHttpRequest','sendBeacon(','localStorage','sessionStorage','indexedDB','getUserMedia','PaymentRequest'])assert(!render.includes(term)&&!code.includes(term),'New preview must not transmit, persist or capture: '+term);
 assert(css.includes('focus-visible')&&css.includes('@media(max-width:700px)')&&css.includes('grid-template-columns:1fr'));
 assert(tests.includes('28 class topics')&&tests.includes('teacher brief'));
-assert(rd('NEXT_VERSION_IMPROVEMENT_LIST.md').includes('28 class curricula'));
+assert(rd('NEXT_VERSION_IMPROVEMENT_LIST.md').includes('28 complete class curricula'));
 console.log('PASS v1.80.0 all 28 topic-specific five-part original curricula, 72 Legal English + 12 business practice questions, permanent owner rules EL-RGR-020–022, 19 original owner + 10 durable IDs, no unsafe transmission or activation.');
