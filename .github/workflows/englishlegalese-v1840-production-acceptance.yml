@@ -37,7 +37,7 @@ jobs:
             curriculum="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://englishlegalese.com/curriculum-v1800-data.js?v=1.80.0&acceptance=${GITHUB_SHA}&attempt=${attempt}" || true)"
             catalog="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://englishlegalese.com/product-v1800-catalog.js?v=1.80.0&acceptance=${GITHUB_SHA}&attempt=${attempt}" || true)"
             dedicated="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://englishlegalese.com/pricing/?acceptance=${GITHUB_SHA}&attempt=${attempt}" || true)"
-            if grep -q '1.81.0' <<<"$health" && grep -q 'v1840-content' <<<"$asset" && grep -q 'class-28' <<<"$curriculum" && grep -q 'v1800-class-catalog' <<<"$catalog" && grep -q 'From $499' <<<"$dedicated"; then
+            if grep -q '1.84.0' <<<"$health" && grep -q 'v1840-content' <<<"$asset" && grep -q 'class-28' <<<"$curriculum" && grep -q 'v1800-class-catalog' <<<"$catalog" && grep -q 'From $499' <<<"$dedicated"; then
               echo "v1.84.0 health, 28-topic 28 standalone navigation pages asset and 28 course curricula verified live."
               exit 0
             fi
@@ -54,7 +54,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: englishlegalese-v1810-production-acceptance
+          name: englishlegalese-v1840-production-acceptance
           path: |
             playwright-production-report/
             test-results/
