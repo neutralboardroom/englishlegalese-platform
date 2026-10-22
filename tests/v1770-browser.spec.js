@@ -22,9 +22,9 @@ test('v1.77 all 23 old footer destinations retained with compact resource direct
  await expect(footer.locator('.footer-logo')).toBeVisible();
 });
 test('v1.77 six course sample lessons are actionable and explain answers',async({page})=>{
- await ready(page,'courses');let s=page.locator('#courses');await expect(s.locator('.v1770-course-action')).toHaveCount(9);
+ await ready(page,'courses');let s=page.locator('#courses');await s.locator('#v1840-sample-lessons summary').click();await expect(s.locator('.v1770-course-action')).toHaveCount(9);
  for(const idx of [2,3,4,5,6,7]){
-  if(idx===3)await s.getByRole('button',{name:/View all 9 courses/}).click();
+  if(idx===3)await s.getByRole('button',{name:/See all sample lessons/}).click();
   await s.locator('.v1580-course-card').nth(idx).getByRole('button',{name:'Start a sample lesson'}).click();
   const lesson=s.locator('#v1770-course-lesson');
   await expect(lesson).toBeVisible();await expect(lesson.locator('fieldset')).toHaveCount(3);
