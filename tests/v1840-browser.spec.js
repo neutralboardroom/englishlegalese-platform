@@ -52,7 +52,8 @@ test('v1.84 standalone exercises are usable, clearly bounded and responsive',asy
  const item=page.locator('#v1840-content');
  await expect(page.getByRole('heading',{name:'Free Contract Clause Reading Lab',exact:true})).toBeVisible();
  await expect(item).toContainText('may notify');
- const btn=item.getByRole('button',{name:'Show original learning example'});
+ const btn=item.locator('button.v1840-button');
+ await expect(btn).toHaveText('Show original learning example');
  await btn.click();
  await expect(item).toContainText('The second wording creates a duty');
  await expect(btn).toHaveAttribute('aria-expanded','true');
