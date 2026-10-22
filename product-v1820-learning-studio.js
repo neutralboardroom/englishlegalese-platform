@@ -153,6 +153,6 @@ function mount(){
  updateOptions();
 }
 function init(){mount();document.documentElement.dataset.englishlegaleseMaterialRelease='1.82.0';}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{init();setTimeout(init,150);},{once:true});else{init();setTimeout(init,150);}
-window.addEventListener('hashchange',()=>setTimeout(init,50));
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{init();setTimeout(init,320);},{once:true});else{init();setTimeout(init,320);}
+window.addEventListener('hashchange',()=>setTimeout(init,320));
 })();
