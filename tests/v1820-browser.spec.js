@@ -10,8 +10,8 @@ test('v1.82 studio adds a real navigable guided learner/teacher curriculum for 2
  await expect(s.locator('.v1820-session .v1820-vocab')).toHaveCount(4);
  await expect(s.locator('.v1820-homework li')).toHaveCount(4);
  await expect(s.locator('.v1820-teacher')).toContainText('Fictional classroom case');
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.83.0');
- await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.83.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
+ await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
 });
 test('v1.82 filters all tracks and uses every preserved topic-specific lesson',async({page})=>{
  await open(page);const s=page.locator('#v1820-learning-studio');
