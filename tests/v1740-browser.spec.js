@@ -15,7 +15,7 @@ test('v1.74 professional message builder is discoverable without expanding homep
   await link.click();
   await expect(page.locator('#professional-message-builder')).toBeVisible();
   await expect(page.locator('#home')).toBeHidden();
-  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.81.0');
+  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.82.0');
   await expect(page.getByRole('heading',{name:'Turn scattered notes into a clear professional message.'})).toBeVisible();
   await expect(page.locator('.site-header .brand img')).toBeVisible();
 });
