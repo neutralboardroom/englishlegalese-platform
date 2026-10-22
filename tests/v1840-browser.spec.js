@@ -25,6 +25,9 @@ test('v1.84 homepage keeps pricing visibly unchanged and all former learning exp
  await expect(page.locator('#pricing')).toContainText('not available for purchase today');
  await expect(page.locator('#pricing')).toContainText('$79 total');
  await expect(page.locator('#v1800-class-catalog .v1800-class-count')).toContainText('28 class topics');
+ await expect(page.locator('#courses .v1800-class-card')).toHaveCount(12);
+ await expect(page.locator('#v1840-sample-lessons')).not.toHaveAttribute('open');
+ await expect(page.locator('#courses .section-head h2')).toContainText('28 class topics');
  await expect(page.locator('#mainNav a[href="/pricing/"]')).toHaveCount(1);
  await expect(page.locator('.v1770-footer-group a[href="/pricing/"]')).toHaveCount(1);
  await expect(page.locator('#v1790-resource-menu .v1790-resource-nav a')).toHaveCount(14);
