@@ -13,7 +13,7 @@ test('v1.75 listening lab opens from original footer without changing homepage o
  await page.locator('.site-footer a[href="#listening-clarification-lab"]').click();
  await expect(page.locator('#listening-clarification-lab')).toBeVisible();
  await expect(page.locator('#home')).toBeHidden();
- await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.82.0');
+ await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.83.0');
  await expect(page.locator('.site-header .brand img')).toBeVisible();
  await expect(page.getByRole('heading',{name:'Hear the distinction. Ask the right follow-up.'})).toBeVisible();
 });
