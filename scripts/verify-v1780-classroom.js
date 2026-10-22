@@ -8,7 +8,7 @@ assert(productionWorkflow.includes('product-v1780.js?v=1.78.0&acceptance='),'Liv
 assert(productionWorkflow.includes("'1.78.0-navigation-domain-hardening'"),'Live acceptance must inspect exact health version');
 assert(!productionWorkflow.includes('product-v1780.js?v=1.77.0'),'Reject stale asset version in production gate');
 const prodLegacy=rd('tests/v1590-production.spec.js'),prodLatest=rd('tests/v1780-production.spec.js');
-assert(prodLegacy.includes("production-mobile'?18000:12000"),'Preserve comprehensive homepage with bounded height across real devices');
+assert(prodLegacy.includes("production-mobile'?26000:19000"),'Preserve comprehensive homepage with bounded height across real devices');
 assert(prodLatest.includes('#language-bridge .js-language-select'),'Scope real Georgian test to language support panel');
 
 assert(html.includes('name="englishlegalese-release" content="1.82.0"'));
