@@ -1,3 +1,26 @@
+# EnglishLegalese v1.83.0 — 28-case Legal English drafting and teacher feedback workshop (DEPENDENT CANDIDATE)
+Date: 2026-10-22. Exact starting source is v1.82 candidate SHA 3931d181004b19de0af03970f0189f460f523bd8; prerequisite v1.82 **MUST** pass two complete exact-head source/security/browser suites, guarded merge, live Render and independent apex/www acceptance BEFORE v1.83 merge. v1.81 is last independently confirmed live version at start. **Never merge stacked candidate prematurely.**
+
+## Substantial original public-educational improvements
+- Separate visible, mobile-friendly **fictional drafting and feedback workshop** for all 28 legally specific/Business English curricula. Reuses all 28 original topic scenarios, 140 defined glossary terms, correct model responses, unsafe counterexamples, class outcomes, teacher instructions and homework.
+- Four-track and topic selection, three actual target audiences and three actual communication purposes; up to **84 distinct audience/topic objectives** available by changing audience (and 252 audience/purpose/topic combinations). Each topic retains distinct first and rewritten draft, checkbox self-review and selected persona, all only in ephemeral in-page memory.
+- Functional first and second 2,500-character writing editors, visible countdown, low-certainty versus high-certainty phrasing cues, original model and risky counterexamples. **No false AI grading:** mechanistic caution phrase/high-certainty and vocabulary detection only; explicit statement it cannot verify legal facts or writing quality.
+- Four-part language quality rubric applied per topic; teacher facilitation material with detailed minute plan, original homework, and locally downloadable private before/after learner + teacher workbook. Clear individual or all work. No persistent storage, network send, file upload, billing, appointment booking or real private records.
+- Preserve exact v1.82 guided four-session plans, all 28 complete curriculum units, 14 header+14 footer free resources, original 9 offerings, all rates and pricing limits from v1.81, canonical original 19 Roger + 10 durable and new EL-RGR-020–022, original logo, Neon/Render backend, secure integrations and outgoing communications restrictions.
+
+## Fresh public research decisions (2026-10-22)
+- Council of Europe CEFR Companion Volume mediation and online interaction https://www.coe.int/en/web/common-european-framework-reference-languages/mediation : ADAPT clear, faithful source summary and mediated stakeholder communication with fictional situations. Never present as CEFR level certification.
+- British Legal Centre https://www.british-legal-centre.com/set/legal-english-course : ADAPT between-lesson written homework and feedback workflows, without copying their courses, quiz content or certified achievement claims.
+- W3C forms instructions https://www.w3.org/WAI/tutorials/forms/instructions/ : ADOPT native labels, radio/checkbox fields, instructions and visible progress/status. Do not claim completed accessibility audit without browser evidence.
+- DEFER official certificates, stored portfolios, actual teacher scoring, public model inference/AI quotas, Stripe, booking, outbound email or customer uploads until separate owner/provider/security acceptance.
+
+## Release blockers
+1. Complete v1.82 full exact-head twice, merge/deploy to Render and independently accept production on both apex and www; preserve v1.81 rollback.
+2. Run v1.83 entire source/no-loss/privacy/high-critical dependency and browser test suite twice on SAME final candidate SHA. Verify no protected original logo/rule/backend changes; preserve verified v1.82 rollback for later use.
+3. Only after both, merge exact v1.83 candidate, let Render auto-deploy once and independently verify actual v1.83 assets/health/public functionality across both domains. No live claim without those receipts.
+
+---
+
 # EnglishLegalese v1.82.0 — Guided 28-class learning and instructor studio (CANDIDATE)
 Date 2026-10-22. **Prerequisite:** v1.81.0 transparent pricing must first pass both same-head qualifications, merge, auto-deploy and live acceptance; NEVER skip release 1.81 or claim 1.82 deployed while 1.81 remains unverified. Branch starts from PR #37 exact candidate head b79f6d13c36f5abf5ff9df28dd72252d51f3c44e, *not* a verified live predecessor yet. Do not merge until real predecessor/currentness and rollback are established.
 

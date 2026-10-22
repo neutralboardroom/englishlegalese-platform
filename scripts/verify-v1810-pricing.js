@@ -1,8 +1,8 @@
 'use strict';
 const fs=require('node:fs'),assert=require('node:assert/strict'),read=x=>fs.readFileSync(x,'utf8');
 const pkg=JSON.parse(read('package.json')),html=read('index.html'),pricing=read('product-v1810-pricing.css'),js=read('product-v1810-pricing.js'),policy=read('src/aiCommercePolicy.js'),canonical=read('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md'),owner=read('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md');
-assert.equal(pkg.version,'1.82.0');
-assert(html.includes('name="englishlegalese-release" content="1.82.0"'));
+assert.equal(pkg.version,'1.83.0');
+assert(html.includes('name="englishlegalese-release" content="1.83.0"'));
 for(const q of ['product-v1800.js?v=1.80.0','product-v1800-catalog.js?v=1.80.0','product-v1810-pricing.js?v=1.81.0','product-v1810-pricing.css?v=1.81.0'])assert(html.includes(q),'Retain existing versioned assets '+q);
 assert.equal((html.match(/<a href="#pricing">Pricing<\/a>/g)||[]).length,2);
 for(const q of ['id="pricing"','Clear options for learning Legal English.','not available for purchase today','14 practical free learning resources','100 replies','250 replies','500 replies','12/day','20/day','30/day','$24','$79 total','$59','$219 total','From $499','US dollars','No automatic charges'])assert(html.includes(q),'Transparent pricing '+q);

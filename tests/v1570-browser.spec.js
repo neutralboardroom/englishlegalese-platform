@@ -21,7 +21,7 @@ test.describe('EnglishLegalese v1.73.0 live homepage recovery inheritance', () =
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(1);
 
-    await page.screenshot({ path: testInfo.outputPath('homepage-full-v1590.png'), fullPage: true, animations: 'disabled' });
+    await page.screenshot({ path: testInfo.outputPath('homepage-full-v1590.png'), fullPage: testInfo.project.name !== 'tablet-webkit', animations: 'disabled' });
     await testInfo.attach('homepage-full-v1590', { path: testInfo.outputPath('homepage-full-v1590.png'), contentType: 'image/png' });
   });
 

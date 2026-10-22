@@ -1,0 +1,29 @@
+/* v1.83.0 — responsive Legal English fictional drafting and teacher-review workshop */
+.v1830-wrap{margin:1.4rem auto 2rem;scroll-margin-top:135px}
+.v1830-panel{border:1px solid #d2e2e6;border-radius:13px;background:#fff;padding:1.25rem;color:#173e53}
+.v1830-panel h2{font-size:clamp(1.55rem,3vw,2.2rem);line-height:1.22;margin:.3rem 0 .7rem}
+.v1830-panel h3{font-size:1.14rem;line-height:1.35;color:#19495e;margin:.7rem 0}
+.v1830-panel p,.v1830-panel li{line-height:1.58}
+.v1830-kicker{font-size:.74rem;font-weight:800;letter-spacing:.05em;color:#166977}
+.v1830-safety{padding:.85rem 1.1rem;border-left:4px solid #176b7a;background:#f4f9fb;border-radius:7px;font-size:.9rem}
+.v1830-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.25rem 1rem}
+.v1830-field{display:grid;gap:.4rem;margin:.75rem 0;font-size:.9rem;font-weight:720}
+.v1830-field select,.v1830-field textarea{width:100%;box-sizing:border-box;border:1px solid #b6cdd6;border-radius:9px;padding:.75rem;background:#fff;color:#193e50;font:inherit;font-weight:430;line-height:1.5}
+.v1830-field select{min-height:46px}
+.v1830-field textarea{resize:vertical;min-height:110px}
+.v1830-case,.v1830-brief,.v1830-feedback{border:1px solid #dce8ec;border-radius:9px;padding:1rem;margin:.85rem 0;background:#fafdfd}
+.v1830-brief{background:#f7fafb}
+.v1830-case p,.v1830-brief p{font-size:.93rem}
+.v1830-counter{font-size:.8rem;text-align:right;color:#536b78;margin:.25rem 0}
+.v1830-actions{display:flex;flex-wrap:wrap;gap:.6rem;margin:.85rem 0}
+.v1830-actions .btn{min-height:44px;white-space:normal}
+.v1830-feedback ul{padding-left:1.3rem;margin:.6rem 0}
+.v1830-examples,.v1830-teacher{border:1px solid #d4e4e9;border-radius:9px;padding:1rem;margin:.85rem 0;background:#fbfdfd}
+.v1830-examples summary,.v1830-teacher summary{font-weight:790;color:#195e6f;cursor:pointer;min-height:44px;padding:.3rem}
+.v1830-rubric{border:1px solid #d3e2e6;border-radius:9px;padding:1rem;margin-top:1rem}
+.v1830-rubric legend{font-weight:780}
+.v1830-check{display:flex;align-items:flex-start;gap:.65rem;margin:.7rem 0;line-height:1.5;font-size:.88rem}
+.v1830-check input{width:18px;height:18px;flex:0 0 18px;margin-top:.2rem}
+.v1830-score,.v1830-status{color:#176576;font-weight:650;font-size:.85rem}
+.v1830-panel :is(select,textarea,button,input,summary):focus-visible{outline:3px solid #167f8a;outline-offset:3px}
+@media(max-width:750px){.v1830-controls{grid-template-columns:1fr}.v1830-panel{padding:1rem}.v1830-actions .btn{flex:1 1 100%}}
