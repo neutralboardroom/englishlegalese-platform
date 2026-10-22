@@ -75,7 +75,7 @@ test('v1.79 preserves previous course units, SmartTeacher 2500 countdown and Geo
 test('v1.79 Free learning resources dropdown mirrors every footer tool without changing footer',async({page})=>{
  await visit(page,'home');
  const header=page.locator('#v1790-resource-menu'),footer=page.locator('#v1770-all-resources');
- const links=['#quick-practice','#ai-review-lab','#clause-reading-lab','#meeting-followup-lab','#email-clarity-lab','#guided-practice-path','#case-brief-lab','#legal-vocabulary-guide','#revision-studio','#professional-message-builder','#listening-clarification-lab','#conversation-rehearsal-lab','#reading-precision-lab','#smartteacher-free-trial'];
+ const links=['/learn/free-writing-exercise/','/learn/ai-draft-review/','/learn/clause-reading/','/learn/meeting-followup/','/learn/email-clarity/','/learn/guided-practice/','/learn/case-brief/','/learn/legal-vocabulary/','/learn/revision-studio/','/learn/professional-message/','/learn/listening-clarification/','/learn/conversation-rehearsal/','/learn/reading-precision/','/learn/smartteacher-free-trial/'];
  await expect(header).toHaveCount(1);
  await expect(page.locator('#mainNav > a[href="#teachers"]')).toHaveCount(1);
  await expect(page.locator('#mainNav > a[href="#live-classes"]')).toHaveCount(1);
@@ -99,9 +99,9 @@ test('v1.79 Free learning resources dropdown mirrors every footer tool without c
  await expect(header.locator('summary')).toBeFocused();
  await header.locator('summary').click();
  await header.locator('a[href="#quick-practice"]').click();
- await expect(page).toHaveURL(/#quick-practice$/);
- await expect(header).not.toHaveAttribute('open');
- await expect(page.locator('#v1770-all-resources .v1770-resource-links a')).toHaveCount(14);
+ await expect(page).toHaveURL(/\/learn\/free-writing-exercise\/$/);
+ await expect(page.locator('.v1840-foot-resources a')).toHaveCount(14);
+ await expect(page.locator('body')).toHaveAttribute('data-page-slug','free-writing-exercise');
 });
 test('v1.79 resource dropdown closes on outside click and does not overflow the viewport',async({page})=>{
  await visit(page,'home');
