@@ -69,5 +69,5 @@ test('v1.80 preview is responsive and claims no live booking or certification',a
  await expect(c.locator('#v1800-class-viewer')).toContainText('NOT BOOKABLE');
  const sizes=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:innerWidth}));
  expect(sizes.scroll).toBeLessThanOrEqual(sizes.width+4);
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.81.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.82.0');
 });
