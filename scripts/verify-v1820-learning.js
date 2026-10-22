@@ -4,7 +4,7 @@ const pkg=JSON.parse(get('package.json')),html=get('index.html'),studio=get('pro
 assert.equal(pkg.version,'1.84.0');
 assert(html.includes('name="englishlegalese-release" content="1.84.0"'));
 for(const asset of ['product-v1810-pricing.js?v=1.81.0','product-v1810-pricing.css?v=1.81.0','curriculum-v1800-data.js?v=1.80.0','product-v1800-catalog.js?v=1.80.0','product-v1820-learning-studio.js?v=1.82.0','product-v1820-learning-studio.css?v=1.82.0'])assert(html.includes(asset),'No loss of assets '+asset);
-assert.equal((html.match(/<a href="/learn/study-planner/">Study planner<\/a>/g)||[]).length,2,'Header/footer navigation');
+assert.equal((html.match(/<a href="\/learn\/study-planner\/">Study planner<\/a>/g)||[]).length,2,'Header/footer navigation');
 for(const id of ['pricing','v1790-resource-menu','v1770-all-resources'])assert(html.includes('id="'+id+'"'),'Preserve '+id);
 const ctx={window:{}};vm.runInNewContext(get('curriculum-v1800-data.js'),ctx,{timeout:4000});const all=Array.from(ctx.window.ELCURRICULUM_V1800.records);
 assert.equal(all.length,28);
