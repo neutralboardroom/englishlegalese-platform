@@ -38,6 +38,10 @@ function mount(){
   if(sampleToggle){
    const relabel=()=>sampleToggle.textContent=sampleToggle.getAttribute('aria-expanded')==='true'?'Show fewer sample lessons':'See all sample lessons';
    sampleToggle.addEventListener('click',()=>setTimeout(relabel,0));relabel();
+   if(typeof MutationObserver!=='undefined'){
+    const obs=new MutationObserver(()=>{const desired=sampleToggle.getAttribute('aria-expanded')==='true'?'Show fewer sample lessons':'See all sample lessons';if(sampleToggle.textContent!==desired)sampleToggle.textContent=desired;});
+    obs.observe(sampleToggle,{childList:true,characterData:true,subtree:true});
+   }
   }
   const legacyGrid=$('.v1580-course-grid',host),legacyControls=sampleToggle?.closest('.v1580-section-controls');
   if(legacyGrid&&!$('#v1840-sample-lessons',host)){
