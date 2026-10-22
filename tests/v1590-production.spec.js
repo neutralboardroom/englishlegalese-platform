@@ -26,7 +26,8 @@ test.describe('EnglishLegalese v1.73.0 production acceptance', () => {
 
     await expect(page.locator('#diagnostic')).toBeHidden();
     await expect(page.locator('#diagnostic .v1580-diagnostic-shell')).toBeHidden();
-    expect(await page.locator('#courses article:visible').count()).toBe(3);
+    await expect(page.locator('#courses .v1800-class-card:visible')).toHaveCount(12);
+    await expect(page.locator('#v1840-sample-lessons')).not.toHaveAttribute('open');
     expect(await page.locator('#practice-studio .v1550-scenario-card').count()).toBe(21);
     expect(await page.locator('#practice-studio .v1550-scenario-card:visible').count()).toBe(0);
     await expect(page.locator('#learning-plan .v1550-plan-builder')).toBeHidden();
