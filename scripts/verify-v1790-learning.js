@@ -23,8 +23,8 @@ assert.equal(toolHrefs(footerTools).length,14,'Keep all 14 practical footer tool
 assert.deepEqual(toolHrefs(navTools),toolHrefs(footerTools),'Main menu and original footer must list the same 14 tools in the same order');
 assert(index.includes('<summary aria-label="Free learning resources menu">Free learning resources'),'Main dropdown must have recognizable accessible label');
 assert(index.includes('aria-label="Primary navigation" data-v1550="1"'),'Modern main navigation must opt out of legacy v1550 link rewriting');
-assert(index.includes('<a href="#live-classes">Live online classes</a>'),'Keep actual human video classroom navigation');
-assert(index.includes('<a href="#teachers">Teachers</a>'),'Keep teacher navigation without legacy conversion to Practice');
+assert(index.includes('<a href="/learn/live-classes/">Live online classes</a>'),'Keep actual human video classroom navigation');
+assert(index.includes('<a href="/learn/teachers/">Teachers</a>'),'Keep teacher navigation without legacy conversion to Practice');
 assert(js.includes('function bindResourceMenu')&&js.includes("e.key==='Escape'"),'Accessible resource menu keyboard/close behavior');
 assert(css.includes('.v1790-resource-popover')&&css.includes('@media(max-width:980px)'),'Responsive menu must be designed for desktop and mobile');
 const originalNavigation=get('product-v1550.js');
