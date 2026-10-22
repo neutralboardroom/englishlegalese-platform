@@ -12,6 +12,8 @@ for(const forbidden of ['fetch(', 'XMLHttpRequest','sendBeacon(', 'localStorage'
 for(let i=1;i<=19;i++)assert(rules.includes('EL-RGR-'+String(i).padStart(3,'0')));
 for(let i=1;i<=10;i++)assert(rules.includes('EL-DUR-'+String(i).padStart(3,'0')));
 for(const id of ['EL-RGR-020','EL-RGR-021','EL-RGR-022'])assert(extra.includes(id));
+assert(html.includes('id="v1790-resource-menu"')&&html.includes('id="v1770-all-resources"'),'Original 14+14 visible resource entry points remain');
+assert(html.includes('href="#pricing"')&&html.includes('id="pricing"'),'Original v1.81 homepage prices and pricing route remain');
 assert(css.includes('focus-visible')&&css.includes('@media(max-width:750px)'));
 assert(rd('tests/v1830-browser.spec.js').includes('28 topic-specific fictional'));
 assert(rd('NEXT_VERSION_IMPROVEMENT_LIST.md').includes('v1.83.0'));
