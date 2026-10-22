@@ -34,8 +34,10 @@ jobs:
           for attempt in $(seq 1 48); do
             health="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://englishlegalese.com/health?acceptance=${GITHUB_SHA}&attempt=${attempt}" || true)"
             asset="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://englishlegalese.com/product-v1800.js?v=1.80.0&acceptance=${GITHUB_SHA}&attempt=${attempt}" || true)"
-            if grep -q '1.80.0' <<<"$health" && grep -q 'v1800-study-planner' <<<"$asset"; then
-              echo "v1.80.0 health and actual study-planner JS confirmed live."
+            curriculum="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://englishlegalese.com/curriculum-v1800-data.js?v=1.80.0&acceptance=${GITHUB_SHA}&attempt=${attempt}" || true)"
+            catalog="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://englishlegalese.com/product-v1800-catalog.js?v=1.80.0&acceptance=${GITHUB_SHA}&attempt=${attempt}" || true)"
+            if grep -q '1.80.0' <<<"$health" && grep -q 'v1800-study-planner' <<<"$asset" && grep -q 'class-28' <<<"$curriculum" && grep -q 'v1800-class-catalog' <<<"$catalog"; then
+              echo "v1.80.0 health, private study planner, all 28 class records and lesson/exercise JS confirmed live."
               exit 0
             fi
             echo "Production not yet converged ${attempt}/48."
