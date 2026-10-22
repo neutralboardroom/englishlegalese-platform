@@ -1,3 +1,26 @@
+# EnglishLegalese v1.82.0 — Guided 28-class learning and instructor studio (CANDIDATE)
+Date 2026-10-22. **Prerequisite:** v1.81.0 transparent pricing must first pass both same-head qualifications, merge, auto-deploy and live acceptance; NEVER skip release 1.81 or claim 1.82 deployed while 1.81 remains unverified. Branch starts from PR #37 exact candidate head b79f6d13c36f5abf5ff9df28dd72252d51f3c44e, *not* a verified live predecessor yet. Do not merge until real predecessor/currentness and rollback are established.
+
+## Maximum reasonable material work
+- Publicly accessible Guided Learning Planner, directly linked in header and footer, with course track filtering and full 28-topic selection, automatically grounded in real v1.80 curriculum data.
+- A genuine **four-session learning sequence for EACH of the 28 courses**: original outline, concrete practice workflow, subject-specific vocabulary definitions, fictional scenario, topic homework, source-fidelity four-point feedback rubric and teacher facilitation brief. 112 guided lesson stages and multiple personal pacing options.
+- Learner controls: one/two sessions per week; optional local study-start day with regional-local dates; independent session progress per course (112 self-check positions); 120-character private goal and 500-character temporary reflective notes.
+- Local full study/teacher packet export as text, and separate four-event RFC5545-inspired ICS calendar download clearly identifying each item as an **UNCONFIRMED PERSONAL STUDY** reminder, never a teacher/class reservation or provider invitation. All inputs and state held only in browser-memory; no fetch, storage, uploads, checkout or contact with calendar providers.
+- Responsive clear UI, native labels/controls, visible focus states, explicit status, no claimed CEFR/TOLES endorsement or accredited progress. All prior 28 curricula + 84 original explained questions remain; original 9 learning offers, prices, 14 free header/footer tools, 19 canonical Roger Rules, 10 durable rules, 2026-10-22 EL-RGR-020-022, original approved logo, all backend contracts, privacy gates preserved.
+
+## External research and decision record
+- Council of Europe CEFR Companion volume guidance https://www.coe.int/en/web/common-european-framework-reference-languages/home emphasizes meaningful interaction and mediation skills: ADAPT to realistic fictional legal workplace tasks and professionally accurate summarization. Do not claim formally assessed CEFR level from self-checks.
+- W3C accessible form instructions https://www.w3.org/WAI/tutorials/forms/instructions/ : ADOPT labels, upfront instructions, native controls and visible error/status feedback. Do not rely on placeholder-only instruction.
+- British Legal Centre specialist Legal English curriculum https://www.british-legal-centre.com/set/legal-english-course includes assignment/homework and downloadable materials: ADAPT 4-part study plans and instructor notes, while ensuring every course remains original and no proprietary materials are copied.
+- DEFER: live teacher matching, enrollment, billing, certification and durable student tracking until verified third-party providers, privacy/security and financial gates. No sending without distinct per-campaign owner authorization.
+
+## Release prerequisites
+1. Confirm 1.81 fully qualified and Render live at exact merged SHA, independent apex/www.
+2. Complete new v1.82 source/no-loss/security + multi-browser desktop/tablet/mobile suites twice *at identical final head*; retain 1.81 live deploy for rollback.
+3. Guarded merge v1.82 followed by Render autoDeploy and independent apex/www/actual JS/health acceptance; record exact deploy IDs and health. Do not interpret passing GitHub test as live release.
+
+---
+
 # EnglishLegalese v1.81.0 — researched transparent pricing, no charges (CANDIDATE)
 Date: 2026-10-22. Exact live predecessor v1.80.0 Render dep-dbcuuefavr4c73d31uc0 commit 1f1f7aeb777a74b13ced20a432030cede3c961e7. Append-only successor: retain original approved logo, original 19 Roger + 10 durable rules, additions EL-RGR-020–022, all nine old offerings, 28 new complete curricula, free 14/14 navigation and footer directory, class/study planner, auth, database, AI safety and prior backend. Never silently overwrite historic improvements below.
 
