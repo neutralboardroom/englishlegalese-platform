@@ -4,16 +4,16 @@ test('v1.74 real apex and www deliver the new private professional message build
  for(const site of sites){
    const res=await page.goto(site+'/');
    expect(res?.status()).toBeLessThan(400);
-   expect(res.headers()['x-englishlegalese-release']).toBe('1.80.0');
+   expect(res.headers()['x-englishlegalese-release']).toBe('1.81.0');
    await page.locator('body.v1590-ready').waitFor();
-   await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.80.0');
+   await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.81.0');
    await expect(page.locator('#professional-message-builder')).toBeHidden();
    await expect(page.locator('.site-footer a[href="#professional-message-builder"]')).toHaveCount(1);
    await page.locator('.site-footer #v1770-all-resources summary').click();
    await expect(page.locator('.site-footer a[href="#professional-message-builder"]')).toBeVisible();
    await page.goto(site+'/#professional-message-builder');
    await expect(page.locator('#professional-message-builder')).toBeVisible();
-   await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.80.0');
+   await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.81.0');
    const section=page.locator('#professional-message-builder');
    await section.locator('#v1740-kind').selectOption('client');
    await section.getByRole('button',{name:'Load a fictional example'}).click();
