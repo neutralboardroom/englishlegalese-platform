@@ -5,7 +5,10 @@ test('v1.85 live Business and Legal English accepted: '+host,async({page})=>{
  expect(root.headers()['x-englishlegalese-release']).toBe('1.85.0');
  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.0');
  await expect(page.locator('#courses #v1800-class-catalog .v1800-class-count')).toContainText('28 class topics');
+ await page.goto(host+'/learn/legal-english/');
+ await expect(page.locator('#v1850-legal-16-week details[data-week]')).toHaveCount(16);
  await page.goto(host+'/learn/business-english/');
+ await expect(page.locator('#v1850-business-16-week details[data-week]')).toHaveCount(16);
  await expect(page.locator('#v1850-business-cards .v1850-course-card')).toHaveCount(16);
  await expect(page.locator('#v1850-investor-cards .v1850-course-card')).toHaveCount(8);
  await page.goto(host+'/pricing/#extended-programs');
