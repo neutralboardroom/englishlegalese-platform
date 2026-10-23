@@ -27,7 +27,7 @@ app.use((req,res,next)=>{
 // Prevent public downloads of server code, credentials, databases, governance and build scripts.
 app.use((req,res,next)=>{
  const urlPath=req.path||'';
- if(/^\/(?:src|data|db|scripts|governance|docs|\.git|\.github|node_modules)(?:\/|$)/i.test(urlPath)||
+ if(/^\/(?:src|data|db|scripts|governance|docs|ops|\.git|\.github|node_modules)(?:\/|$)/i.test(urlPath)||
    /^\/(?:server\.js|package(?:-lock)?\.json|\.env(?:\..*)?|render\.yaml|\.npmrc)$/i.test(urlPath))
    return res.status(404).type('text/plain').send('Not found');
  next();
