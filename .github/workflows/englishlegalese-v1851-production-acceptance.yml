@@ -1,0 +1,44 @@
+name: EnglishLegalese v1.85.1 Public Acceptance
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  production-acceptance:
+    if: startsWith(github.event.head_commit.message, 'EnglishLegalese v1.85.1 ')
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies and audit security
+        run: npm install --ignore-scripts --no-fund && npm run audit:high
+      - name: Wait for public apex and www exact version and Legal English navigation
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 55); do
+            a="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://englishlegalese.com/health?check=$GITHUB_SHA&try=$i" || true)"
+            b="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://www.englishlegalese.com/health?check=$GITHUB_SHA&try=$i" || true)"
+            c="$(curl -fsSL --max-time 15 "https://englishlegalese.com/learn/classroom-programs/?check=$GITHUB_SHA" || true)"
+            if grep -q '1.85.1' <<<"$a" && grep -q '1.85.1' <<<"$b" && grep -q 'v1851-legal-sessions' <<<"$c"; then exit 0; fi
+            sleep 10
+          done
+          echo 'Exact production release not confirmed on both hosts' >&2
+          exit 1
+      - name: Check real desktop tablet and mobile browsers on apex and www
+        run: npx playwright test tests/v1851-production.spec.js --config=playwright.production.config.js
+      - name: Preserve public-browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: englishlegalese-v1851-public
+          path: |
+            playwright-production-report/
+            test-results/
+          if-no-files-found: ignore
