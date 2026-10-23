@@ -21,7 +21,8 @@ const topics=context.window.ELCURRICULUM_V1800.records;assert.equal(topics.lengt
 assert.equal(topics.filter(x=>x.group!=='Professional & Business English').length,24);
 for(const topic of topics){assert.equal(topic.units.length,4);assert.equal(topic.vocab.length,5);assert(topic.scenario&&topic.good&&topic.homework&&topic.teacher)}
 const syllabus=rd('product-v1860-syllabi.js');
-for(const fragment of ['0–5 minutes','5–15 minutes','15–27 minutes','27–42 minutes','42–50 minutes','Teacher feedback rubric','Actionable homework','Target vocabulary','window.ELBUSINESS_V1850'])assert(syllabus.includes(fragment),fragment);
+for(const fragment of ['0–5 minutes','5–15 minutes','15–27 minutes','27–42 minutes','42–50 minutes','Teacher feedback rubric','Actionable homework','Target vocabulary'])assert(syllabus.includes(fragment),fragment);
+assert(rd('product-v1850-business.js').includes('window.ELBUSINESS_V1850'));
 const rules=rd('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md'),add=rd('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md');
 for(let n=1;n<=19;n++)assert(rules.includes('EL-RGR-'+String(n).padStart(3,'0')));
 for(let n=1;n<=10;n++)assert(rules.includes('EL-DUR-'+String(n).padStart(3,'0')));
