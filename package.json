@@ -1,7 +1,7 @@
 {
   "name": "englishlegalese-platform",
   "version": "1.85.1",
-  "description": "EnglishLegalese v1.85.1 — preserved v1.85 Business/Wall Street academy plus Legal-first navigation and 32 detailed fictional classroom session guides; no AI avatar integration or card payment.",
+  "description": "EnglishLegalese v1.85.1 — preserved v1.85 Business/Wall Street academy plus Legal-first navigation and 32 detailed fictional classroom session guides; existing safety and payment restrictions retained.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
