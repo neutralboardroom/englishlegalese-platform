@@ -40,6 +40,14 @@ test('v1.84 header/footer and free-resource menu links all lead to separate webp
  await expect(page.locator('#v1790-resource-menu a[href="/learn/free-writing-exercise/"]')).toHaveCount(1);
  await expect(page.locator('#v1770-all-resources a[href="/learn/free-writing-exercise/"]')).toHaveCount(1);
  const link=page.locator('#mainNav a[href="/pricing/"]');
+ // Real tablet/phone users open the collapsed menu before navigating.
+ if(!(await link.isVisible())){
+  const toggle=page.locator('#navToggle');
+  await expect(toggle).toBeVisible();
+  await toggle.click();
+  await expect(toggle).toHaveAttribute('aria-expanded','true');
+ }
+ await expect(link).toBeVisible();
  await link.click();await expect(page).toHaveURL(/\/pricing\/$/);
  await expect(page.getByRole('heading',{name:'Legal English Pricing',exact:true})).toBeVisible();
 });
