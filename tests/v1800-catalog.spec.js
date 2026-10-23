@@ -1,13 +1,13 @@
 const {test,expect}=require('@playwright/test');
-async function open(page){await page.goto('/#live-classes');await page.locator('body.v1590-ready').waitFor();await expect(page.locator('#v1800-class-catalog')).toBeVisible();}
-test('v1.80 catalog lists all 28 class topics and keeps the old live classroom and resources',async({page})=>{
+async function open(page){await page.goto('/#courses');await page.locator('body.v1590-ready').waitFor();await expect(page.locator('#v1800-class-catalog')).toBeVisible();}
+test('v1.84 unified catalog lists 28 class topics and preserves classroom and free resources',async({page})=>{
  await open(page);const c=page.locator('#v1800-class-catalog');
  await expect(c.locator('.v1800-class-count')).toContainText('28 class topics');
- await expect(c.locator('.v1800-class-card')).toHaveCount(6);
- await expect(page.locator('#v1780-provider')).toBeVisible();
+ await expect(c.locator('.v1800-class-card')).toHaveCount(12);
+ await expect(page.locator('#v1780-provider')).toHaveCount(1);
  await expect(page.locator('#v1790-resource-menu .v1790-resource-nav a')).toHaveCount(14);
  await expect(page.locator('#v1770-all-resources .v1770-resource-links a')).toHaveCount(14);
- await c.getByRole('button',{name:'Show all class topics'}).click();
+ await c.getByRole('button',{name:'Show all 28 class topics'}).click();
  await expect(c.locator('.v1800-class-card')).toHaveCount(28);
  await expect(c).toContainText('TOLES Preparation');
  await expect(c).toContainText('Business Emails & Meetings');
@@ -69,5 +69,5 @@ test('v1.80 preview is responsive and claims no live booking or certification',a
  await expect(c.locator('#v1800-class-viewer')).toContainText('NOT BOOKABLE');
  const sizes=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:innerWidth}));
  expect(sizes.scroll).toBeLessThanOrEqual(sizes.width+4);
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.83.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
 });

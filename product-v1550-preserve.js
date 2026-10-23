@@ -1,21 +1,21 @@
 /* EnglishLegalese.com v1.55.0 — no-drift navigation preservation */
 (() => {
   const desiredDesktop = [
-    ['#start','Start'],
-    ['#courses','Courses'],
-    ['#smartteacher','SmartTeacher AI'],
-    ['#teachers','Teachers'],
-    ['#employers','Employers'],
-    ['#language-bridge','Language Support'],
-    ['#trust','Trust'],
-    ['#dashboards','Login / Dashboard','nav-cta']
+    ['/learn/start/','Start'],
+    ['/learn/courses/','Courses'],
+    ['/learn/smartteacher/','SmartTeacher AI'],
+    ['/learn/teachers/','Teachers'],
+    ['/learn/employers/','Employers'],
+    ['/learn/language-support/','Language Support'],
+    ['/learn/trust/','Trust'],
+    ['/learn/account/','Login / Dashboard','nav-cta']
   ];
   const desiredMobile = [
-    ['#start','Start'],
-    ['#courses','Courses'],
-    ['#smartteacher','AI Practice'],
-    ['#language-bridge','Languages'],
-    ['#dashboards','Dashboard']
+    ['/learn/start/','Start'],
+    ['/learn/courses/','Courses'],
+    ['/learn/smartteacher/','AI Practice'],
+    ['/learn/language-support/','Languages'],
+    ['/learn/account/','Dashboard']
   ];
 
   function link([href,label,cls]) {
@@ -32,7 +32,7 @@
       const current = Array.from(nav.querySelectorAll(':scope > a')).map(a => a.getAttribute('href'));
       const required = desiredDesktop.map(([href]) => href);
       // Preserve valid additive top-level navigation and nested learning-resource menus.
-      // Restore the legacy navigation only if a required original direct link disappears.
+      // Keep owner-approved v1.84 dedicated routes without clobbering additional menu items.\n      // Restore the minimal protected navigation only if a required destination disappears.
       if (required.some(href => !current.includes(href))) {
         nav.replaceChildren(...desiredDesktop.map(link));
       }

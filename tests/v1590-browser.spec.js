@@ -52,7 +52,8 @@ test.describe('EnglishLegalese v1.73.0 hard live recovery', () => {
 
     const courseCards = page.locator('#courses article');
     expect(await courseCards.count()).toBeGreaterThanOrEqual(9);
-    expect(await page.locator('#courses article:visible').count()).toBe(3);
+    expect(await page.locator('#courses .v1800-class-card:visible').count()).toBe(12);
+    await expect(page.locator('#v1840-sample-lessons')).not.toHaveAttribute('open');
 
     const scenarios = page.locator('#practice-studio .v1550-scenario-card');
     expect(await scenarios.count()).toBe(21);
@@ -173,10 +174,12 @@ test('mobile disclosure menu handles Escape, link activation and outside touch',
   await expect(toggle).toHaveAttribute('aria-expanded','false');
   await expect(toggle).toBeFocused();
   await toggle.click();
-  await nav.locator('a[href="#courses"]').click();
-  await expect(toggle).toHaveAttribute('aria-expanded','false');
+  await nav.locator('a[href="/learn/courses/"]').click();
+  await expect(page).toHaveURL(/\/learn\/courses\/$/);
+  await expect(page.getByRole('heading',{name:'Legal English Courses',exact:true})).toBeVisible();
+  // The homepage remains a real legacy hash-accessible learning surface.
+  await page.goto('/#courses');await waitForRecovery(page);
   await expect(page.locator('#courses')).toBeVisible();
-  await expect(nav.locator('a[href="#courses"]')).toHaveAttribute('aria-current','location');
   await toggle.click();await page.mouse.click(5,10);
   await expect(toggle).toHaveAttribute('aria-expanded','false');
 });
@@ -187,7 +190,7 @@ test('revised metadata stays aligned with the public learning experience',async(
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/Legal English/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content',/Practical Legal English/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
-  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.83.0');
+  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
 });
 
 test('guided three-step writing practice is private, usable and preserves work between steps',async({page})=>{
@@ -242,7 +245,7 @@ test('writing practice is discoverable but does not lengthen the default homepag
   await expect(page.locator('.v1630-hero-link')).toBeVisible();
   await expect(page.locator('#quick-practice')).toBeHidden();
   await expect(page.locator('#quick-practice .v1630-step')).toHaveCount(3);
-  await expect(page.locator('footer a[href="#quick-practice"]')).toHaveCount(1);
+  await expect(page.locator('footer a[href="/learn/free-writing-exercise/"]')).toHaveCount(1);
   await page.locator('.v1630-hero-link').click();
   await expect(page.locator('#quick-practice')).toBeVisible();
   await expect(page.locator('#quick-practice .v1630-privacy')).toContainText('not submitted, scored, stored, or shared');
@@ -365,7 +368,7 @@ test('AI draft review lab is discoverable without changing original home layout'
   await page.goto('/');await waitForRecovery(page);
   await expect(page.locator('#ai-review-lab')).toBeHidden();
   await expect(page.locator('.v1650-case')).toHaveCount(3);
-  await expect(page.locator('footer a[href="#ai-review-lab"]')).toHaveCount(1);
+  await expect(page.locator('footer a[href="/learn/ai-draft-review/"]')).toHaveCount(1);
   await page.evaluate(()=>location.hash='#smartteacher');
   await expect(page.locator('.v1650-inline-link')).toBeVisible();
   await page.locator('.v1650-inline-link').click();
@@ -433,7 +436,7 @@ test('fictional clause reading lab explains three different interpretation traps
 test('clause reading lab stays out of the home view but is reachable from existing practice',async({page})=>{
   await page.goto('/');await waitForRecovery(page);
   await expect(page.locator('#clause-reading-lab')).toBeHidden();
-  await expect(page.locator('footer a[href="#clause-reading-lab"]')).toHaveCount(1);
+  await expect(page.locator('footer a[href="/learn/clause-reading/"]')).toHaveCount(1);
   await page.evaluate(()=>location.hash='#quick-practice');
   await page.locator('.v1630-next-link').click();
   await expect(page.locator('#clause-reading-lab')).toBeVisible();
@@ -491,7 +494,7 @@ test('meeting follow-up lab checks ambiguous deadlines approval and ownership, a
 test('meeting follow-up practice is discoverable without making homepage longer',async({page})=>{
   await page.goto('/');await waitForRecovery(page);
   await expect(page.locator('#meeting-followup-lab')).toBeHidden();
-  await expect(page.locator('footer a[href="#meeting-followup-lab"]')).toHaveCount(1);
+  await expect(page.locator('footer a[href="/learn/meeting-followup/"]')).toHaveCount(1);
   await page.evaluate(()=>location.hash='#clause-reading-lab');
   await expect(page.locator('#clause-reading-lab')).toBeVisible();
   await page.locator('#clause-reading-lab a[href="#meeting-followup-lab"]').click();
@@ -550,7 +553,7 @@ test('email clarity lab checks precise requests, approval accuracy and neutral s
 test('email clarity lab does not expand the homepage and links from existing meeting practice',async({page})=>{
   await page.goto('/');await waitForRecovery(page);
   await expect(page.locator('#email-clarity-lab')).toBeHidden();
-  await expect(page.locator('footer a[href="#email-clarity-lab"]')).toHaveCount(1);
+  await expect(page.locator('footer a[href="/learn/email-clarity/"]')).toHaveCount(1);
   await page.evaluate(()=>location.hash='#meeting-followup-lab');
   await expect(page.locator('#meeting-followup-lab')).toBeVisible();
   await page.locator('#meeting-followup-lab a[href="#email-clarity-lab"]').click();
@@ -595,7 +598,7 @@ test('guided practice gives four distinct three-step routes, ephemeral checkmark
 test('guided practice stays out of approved homepage and navigates to original exercises',async({page})=>{
   await page.goto('/');await waitForRecovery(page);
   await expect(page.locator('#guided-practice-path')).toBeHidden();
-  await expect(page.locator('footer a[href="#guided-practice-path"]')).toHaveCount(1);
+  await expect(page.locator('footer a[href="/learn/guided-practice/"]')).toHaveCount(1);
   await page.evaluate(()=>location.hash='#email-clarity-lab');
   await page.locator('#email-clarity-lab a[href="#guided-practice-path"]').click();
   await expect(page.locator('#guided-practice-path')).toBeVisible();
@@ -655,7 +658,7 @@ test('fictional case brief lab distinguishes allegations, limited outcomes and r
 test('new case brief reading route does not alter approved homepage and is linked from clause practice',async({page})=>{
   await page.goto('/');await waitForRecovery(page);
   await expect(page.locator('#case-brief-lab')).toBeHidden();
-  await expect(page.locator('footer a[href="#case-brief-lab"]')).toHaveCount(1);
+  await expect(page.locator('footer a[href="/learn/case-brief/"]')).toHaveCount(1);
   await page.evaluate(()=>location.hash='#clause-reading-lab');
   await page.locator('#clause-reading-lab a[href="#case-brief-lab"]').click();
   await expect(page.locator('#case-brief-lab')).toBeVisible();
@@ -701,7 +704,7 @@ test('vocabulary guide filters by word, topic, context and displays no results a
 test('vocabulary guide is linked from prior case reading without changing approved homepage',async({page})=>{
   await page.goto('/');await waitForRecovery(page);
   await expect(page.locator('#legal-vocabulary-guide')).toBeHidden();
-  await expect(page.locator('footer a[href="#legal-vocabulary-guide"]')).toHaveCount(1);
+  await expect(page.locator('footer a[href="/learn/legal-vocabulary/"]')).toHaveCount(1);
   await page.evaluate(()=>location.hash='#case-brief-lab');
   await page.locator('#case-brief-lab a[href="#legal-vocabulary-guide"]').click();
   await expect(page.locator('#legal-vocabulary-guide')).toBeVisible();
@@ -761,7 +764,7 @@ test('revision studio validates empty custom writing, resets and does not save d
 test('revision studio is focused, preserves homepage and connects other learning tools',async({page})=>{
   await page.goto('/');await waitForRecovery(page);
   await expect(page.locator('#revision-studio')).toBeHidden();
-  await expect(page.locator('footer a[href="#revision-studio"]')).toHaveCount(1);
+  await expect(page.locator('footer a[href="/learn/revision-studio/"]')).toHaveCount(1);
   await page.evaluate(()=>location.hash='#email-clarity-lab');
   await page.locator('#email-clarity-lab a[href="#revision-studio"]').click();
   await expect(page.locator('#revision-studio')).toBeVisible();
@@ -810,12 +813,15 @@ test('v1.73 free account registration, paid checkout and anonymous AI fail close
 test('v1.73 local file selection never uploads and free trial is a focused route',async({page})=>{
   await page.goto('/');await waitForRecovery(page);
   await expect(page.locator('#smartteacher-free-trial')).toBeHidden();
-  await expect(page.locator('footer a[href="#smartteacher-free-trial"]')).toHaveCount(1);
-  const trialFromFooter=page.locator('footer a[href="#smartteacher-free-trial"]');
+  await expect(page.locator('footer a[href="/learn/smartteacher-free-trial/"]')).toHaveCount(1);
+  const trialFromFooter=page.locator('footer a[href="/learn/smartteacher-free-trial/"]');
   const footerResources=page.locator('#v1770-all-resources');
   if(await footerResources.count() && !await footerResources.getAttribute('open'))await footerResources.locator('summary').click();
   await expect(trialFromFooter).toBeVisible();
   await trialFromFooter.click();
+  await expect(page).toHaveURL(/\/learn\/smartteacher-free-trial\/$/);
+  await expect(page.getByRole('heading',{name:'Free SmartTeacher AI Trial',exact:true})).toBeVisible();
+  await page.goto('/#smartteacher-free-trial');await waitForRecovery(page);
   const t=page.locator('#smartteacher-free-trial');await expect(t).toBeVisible();
   await t.locator('#v1730-upload').setInputFiles({name:'practice.txt',mimeType:'text/plain',buffer:Buffer.from('Only fictional words.')});
   await expect(t.locator('.v1730-file-status')).toContainText('no upload occurred');

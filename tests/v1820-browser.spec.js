@@ -2,16 +2,16 @@ const {test,expect}=require('@playwright/test');
 async function open(page){await page.goto('/#v1820-learning-studio');await page.locator('body.v1590-ready').waitFor();await expect(page.locator('#v1820-learning-studio')).toBeVisible();}
 test('v1.82 studio adds a real navigable guided learner/teacher curriculum for 28 topics',async({page})=>{
  await open(page);const s=page.locator('#v1820-learning-studio');
- await expect(page.locator('#mainNav a[href="#v1820-learning-studio"]')).toHaveCount(1);
- await expect(page.locator('.v1770-footer-group a[href="#v1820-learning-studio"]')).toHaveCount(1);
+ await expect(page.locator('#mainNav a[href="/learn/study-planner/"]')).toHaveCount(1);
+ await expect(page.locator('.v1770-footer-group a[href="/learn/study-planner/"]')).toHaveCount(1);
  await expect(s.locator('#v1820-course option')).toHaveCount(28);
  await expect(s.locator('.v1820-session')).toHaveCount(4);
  await expect(s.locator('.v1820-session .v1820-task')).toHaveCount(8);
  await expect(s.locator('.v1820-session .v1820-vocab')).toHaveCount(4);
  await expect(s.locator('.v1820-homework li')).toHaveCount(4);
  await expect(s.locator('.v1820-teacher')).toContainText('Fictional classroom case');
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.83.0');
- await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.83.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
+ await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
 });
 test('v1.82 filters all tracks and uses every preserved topic-specific lesson',async({page})=>{
  await open(page);const s=page.locator('#v1820-learning-studio');

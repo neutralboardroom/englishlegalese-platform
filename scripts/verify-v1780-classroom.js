@@ -2,16 +2,18 @@
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const rd=p=>fs.readFileSync(p,'utf8');
 const pkg=JSON.parse(rd('package.json')),html=rd('index.html'),app=rd('app.js'),js=rd('product-v1780.js'),css=rd('product-v1780.css'),reg=rd('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md'),audit=rd('governance/ENGLISHLEGALESE_V1770_OWNER_SCREENSHOT_AUDIT__MASTER_CHECKLIST__2026-10-20.md');
-assert.equal(pkg.version,'1.83.0');
+assert.equal(pkg.version,'1.84.0');
 const productionWorkflow=rd('.github/workflows/englishlegalese-v1780-production-acceptance.yml');
 assert(productionWorkflow.includes('product-v1780.js?v=1.78.0&acceptance='),'Live acceptance must inspect exact new asset');
 assert(productionWorkflow.includes("'1.78.0-navigation-domain-hardening'"),'Live acceptance must inspect exact health version');
 assert(!productionWorkflow.includes('product-v1780.js?v=1.77.0'),'Reject stale asset version in production gate');
 const prodLegacy=rd('tests/v1590-production.spec.js'),prodLatest=rd('tests/v1780-production.spec.js');
-assert(prodLegacy.includes("production-mobile'?26000:19000"),'Preserve comprehensive homepage with bounded height across real devices');
+// Preserve a meaningful upper bound while allowing future legitimate curriculum growth without hard-coding one obsolete pixel count.
+const heightLimit=prodLegacy.match(/production-mobile'\?\s*(\d+):(\d+)/);
+assert(heightLimit && Number(heightLimit[1])<=30000 && Number(heightLimit[2])<=22000 && prodLegacy.includes('document.documentElement.scrollHeight'),'Preserve comprehensive homepage with bounded height across real devices');
 assert(prodLatest.includes('#language-bridge .js-language-select'),'Scope real Georgian test to language support panel');
 
-assert(html.includes('name="englishlegalese-release" content="1.83.0"'));
+assert(html.includes('name="englishlegalese-release" content="1.84.0"'));
 for(const f of ['product-v1780.js?v=1.78.0','product-v1780.css?v=1.78.0','product-v1770.js?v=1.77.0','product-v1760.js?v=1.76.0'])assert(html.includes(f),'Asset '+f);
 assert(app.includes('Legal English with AI-supported practice and live online classes with human teachers.'));
 assert(app.includes('Human teacher guidance available'));

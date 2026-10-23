@@ -1,3 +1,30 @@
+## v1.84.0 owner correction — ONE unified catalog of 28 class topics
+
+The owner observed that the homepage and Courses navigation still displayed an old nine-course list, despite the complete 28-class curriculum in the Live Classes section. **Acceptance requirement:** all 28 class topics must be offered together, without grouping them as original/new or 9+19 and without advertising nine courses as the catalog.
+
+- The homepage's Courses section now prominently displays a catalog of **28 class topics**, with twelve immediately readable cards, a clear "Show all 28 class topics" action, real search and track filters, and a full five-part per-topic curriculum viewer. All 28 are sourced from one canonical 28-record dataset.
+- The dedicated `/learn/courses/` page now renders **all 28 class-topic cards by default**, with the same functional previews, topic vocabulary, three source-based exercises, homework and teacher brief. Its heading, descriptions and search all use unified language.
+- The previous nine sample lessons remain available as optional collapsible "Try guided sample lessons" practice under Courses, explicitly *not* counted as separate class topics. No old/new distinction appears in public copy.
+- Existing Live Classes video/provider previews, individual study plans, writing workshop, original source exercises and owner rules are retained. Study-planner placement is kept under Live Classes rather than moved inadvertently when the main catalog was relocated.
+- Dedicated browser tests explicitly verify home 28 total, dedicated page 28 actual cards, sample lessons accessible, privacy, 28-course filter/search, no duplicate curriculum count and real study components. No payment, teacher booking, AI inference or outbound contact activation.
+
+# EnglishLegalese v1.84.0 — full dedicated navigation pages, laptop homepage visually unchanged (OWNER SCOPE, STACKED CANDIDATE)
+Date: 2026-10-22. Added per explicit owner instruction. THIS IS A DEPENDENT RELEASE stacked upon qualified v1.83.0: PR #38 v1.82.0 and PR #39 v1.83.0 must individually receive two complete exact-SHA qualifications, live Render rollouts and independent public apex/www acceptance **before** v1.84.0 may merge/deploy. No shortcut or premature live claims.
+
+## Maximum reasonable owner-approved material scope
+- Preserve existing **laptop homepage layout and visual identity** exactly. No edits to existing root stylesheet, logo, base app, prior learning tools or original homepage Pricing contents. Root index change is limited to actual header/footer/mobile link destinations and current release meta tag. Existing homepage anchors and exercises continue to work when visited directly via `/#id`.
+- Every main-menu destination, footer Core/For Teams destination, and all **14 Free learning resources** now has its own real static URL with distinct SEO title, description and canonical. **28 dedicated pages** total: 14 main/footer pages including Start, Courses, SmartTeacher, Teachers, Live Classes, separate Pricing, Study Planner, Employers, Language Support, Trust, Account, Scenario Practice, Learning Path, Progress; and 14 specialist free tools.
+- Dedicated fully developed `/pricing/` page duplicates the EXACT unchanged homepage pricing card + team package and all warnings/FAQ, with homepage links appropriately resolved to `/#...`. All other pages feature unique original instructional question, evidence-bound model response, accuracy caveat, functional show/hide sample, clear real activity link to preexisting homepage interactive tool, interlinked navigation, mobile-friendly presentation, original logo and footer Free learning resources.
+- The 14 header dropdown learning tools each link to a distinct real page; the footer links to those same 14 dedicated pages. Responsive mobile menu uses dedicated URLs. All old activities remain accessible on root via direct `/#...`.
+- Protected canonical 19 Roger Rules, 10 durable rules, owner addenda EL-RGR-020–022, unchanged original brand/logo, previously qualified v1.80 28 complete curricula, v1.81 public pricing, v1.82 private four-session studio, v1.83 private writing feedback, and all backend/security/payments/DNS/account gates are preserved. No new network requests, payments, teacher booking, AI calls, email, private uploads, external JS or persistent browser storage introduced.
+
+## No-drift/release verification
+- `scripts/verify-v1840-pages.js` requires exactly 28 real static pages, unique URLs/canonical and original learning content, parity of 14 free links across existing header and footer, exact homepage-to-dedicated Pricing content, old materials and original rules.
+- `tests/v1840-browser.spec.js` checks all 28 routes, navigations, actual free interactive model, responsive device width, both pricing sections and predecessor content. `tests/v1840-production.spec.js` checks apex/www live exact health, real separate Pricing, learning pages, original resources.
+- Mandatory security/no-drift + entire desktop/tablet/mobile Chromium/WebKit browser suite twice on **same final v1.84 source commit**, then guarded exact main merge, Render auto-deploy and independent public apex/www acceptance, retaining v1.83 deploy for rollback. Never claim deployed without exact live artifact proof.
+
+---
+
 # EnglishLegalese v1.83.0 — 28-case Legal English drafting and teacher feedback workshop (DEPENDENT CANDIDATE)
 Date: 2026-10-22. Exact starting source is v1.82 candidate SHA 3931d181004b19de0af03970f0189f460f523bd8; prerequisite v1.82 **MUST** pass two complete exact-head source/security/browser suites, guarded merge, live Render and independent apex/www acceptance BEFORE v1.83 merge. v1.81 is last independently confirmed live version at start. **Never merge stacked candidate prematurely.**
 

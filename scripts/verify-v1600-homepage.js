@@ -69,7 +69,7 @@ check('sticky-header offsets and reduced motion remain', css1590.includes('scrol
 
 check('browser test rejects exact owner-observed stale strings', ['EnglishLegalese Team','Open staff view','NEW IN V1.55','LAUNCH COURSE SET','Safety line:','track payout status'].every(x => browser.includes(x)));
 check('browser test verifies six featured scenarios then all 21', (browser.includes('toBe(6)') || browser.includes('toHaveCount(6)')) && (browser.includes('toBe(21)') || browser.includes('toHaveCount(21)')));
-check('browser test verifies three featured courses', browser.includes("#courses article:visible") && browser.includes('toBe(3)'));
+check('browser test verifies unified 28 class topics with twelve immediately visible options', browser.includes("#courses .v1800-class-card:visible") && browser.includes('toBe(12)') && require('node:fs').readFileSync('tests/v1840-unified-courses.spec.js','utf8').includes('toHaveCount(28)'));
 check('browser test verifies planner/progress collapsed by default', browser.includes("#learning-plan .v1550-plan-builder") && browser.includes("#skills-passport .v1550-passport-grid") && browser.includes('toBeHidden()'));
 check('browser test verifies live marker and version', browser.includes('v1590-live-marker') && browser.includes('1.60.0'));
 check('inherited browser gate is successor-aware', inheritedBrowser.includes('body.v1590-ready') && inheritedBrowser.includes('js-v1590-scenarios'));
@@ -80,7 +80,7 @@ check('security dependency pins remain', pkg.dependencies?.express === '4.22.3' 
 check('Node runtime floor remains 20+', /^>=20/.test(String(pkg.engines?.node || '')));
 check('canonical focus routing exists',app.includes('homepageSectionIds')&&app.includes('applyRouteView')&&app.includes('englishLegaleseApplyView'));
 check('homepage return link and accessible focus toolbar',index.includes('id="elFocusToolbar"')&&index.includes('href="#home"'));
-check('HTML has v1.60 release marker',index.includes('name="englishlegalese-release" content="1.83.0"'));
+check('HTML has v1.60 release marker',index.includes('name="englishlegalese-release" content="1.84.0"'));
 check('HTML response explicitly revalidates without modifying private routes',read('server.js').includes("req.path==='/' || req.path==='/index.html'")&&read('server.js').includes("'no-cache, max-age=0, must-revalidate'"));
 check('responsive homepage heading typography improved',css1590.includes('.hero h1{font-size:clamp(2.45rem')&&css1590.includes('.section-head h2{font-size:clamp(1.7rem'));
 check('learning engine preserves route ownership',v1550.includes('englishLegaleseApplyView'));

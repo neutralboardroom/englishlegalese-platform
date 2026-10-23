@@ -26,7 +26,8 @@ test.describe('EnglishLegalese v1.73.0 production acceptance', () => {
 
     await expect(page.locator('#diagnostic')).toBeHidden();
     await expect(page.locator('#diagnostic .v1580-diagnostic-shell')).toBeHidden();
-    expect(await page.locator('#courses article:visible').count()).toBe(3);
+    await expect(page.locator('#courses .v1800-class-card:visible')).toHaveCount(12);
+    await expect(page.locator('#v1840-sample-lessons')).not.toHaveAttribute('open');
     expect(await page.locator('#practice-studio .v1550-scenario-card').count()).toBe(21);
     expect(await page.locator('#practice-studio .v1550-scenario-card:visible').count()).toBe(0);
     await expect(page.locator('#learning-plan .v1550-plan-builder')).toBeHidden();
@@ -44,12 +45,12 @@ test.describe('EnglishLegalese v1.73.0 production acceptance', () => {
 
     // Preserve a bounded rendered-page height after 28 courses, transparent pricing and a new independent study planner.
     const h=await page.evaluate(()=>document.documentElement.scrollHeight);
-    // The 28 full curricula, guided study planner and writing workshop add real content; retain a strict height bound without rejecting 42px of legitimate material.
+    // The 28-topic curricula, teacher workshop and study planner are real added content; keep a generous but finite height ceiling.
     expect(h).toBeLessThan(testInfo.project.name==='production-mobile'?28000:19000);
     const htmlResponse=await page.request.get('/');
-    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.83.0');
+    expect(htmlResponse.headers()['x-englishlegalese-release']).toBe('1.84.0');
     expect(htmlResponse.headers()['cache-control']).toContain('no-cache');
-    // High-DPI tablet/phone full-page raster images exceed Chromium/WebKit's 32767px limit; capture an actual viewport on small displays. Desktop keeps full-page evidence.
+    // At high device pixel ratios, a valid long homepage exceeds the 32767px screenshot raster limit. Desktop retains full-page proof; tablet/mobile retain viewport proof.
     const fullPageEvidence=testInfo.project.name==='production-desktop';
     await page.screenshot({ path: testInfo.outputPath('production-homepage-v1590.png'), fullPage: fullPageEvidence, animations: 'disabled' });
     await testInfo.attach('production-homepage-v1590', { path: testInfo.outputPath('production-homepage-v1590.png'), contentType: 'image/png' });

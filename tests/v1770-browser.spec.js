@@ -6,25 +6,25 @@ test('v1.77 comprehensive homepage remains intact with condensed headline and te
  await expect(page.locator('#home')).toContainText('Human teacher guidance available');
  await expect(page.locator('#start')).toBeVisible();await expect(page.locator('#courses')).toBeVisible();
  await expect(page.locator('.site-header .brand img')).toBeVisible();
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.83.0');
- await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.83.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
+ await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
 });
 test('v1.77 all 23 old footer destinations retained with compact resource directory',async({page})=>{
  await ready(page,'home');const footer=page.locator('.site-footer');
- const hrefs=['#courses','#quick-practice','#ai-review-lab','#clause-reading-lab','#meeting-followup-lab','#email-clarity-lab','#guided-practice-path','#case-brief-lab','#legal-vocabulary-guide','#revision-studio','#professional-message-builder','#listening-clarification-lab','#conversation-rehearsal-lab','#reading-precision-lab','#smartteacher-free-trial','#practice-studio','#learning-plan','#smartteacher','#teachers','#language-bridge','#employers','#skills-passport','#trust'];
+ const hrefs=['/learn/courses/','/learn/free-writing-exercise/','/learn/ai-draft-review/','/learn/clause-reading/','/learn/meeting-followup/','/learn/email-clarity/','/learn/guided-practice/','/learn/case-brief/','/learn/legal-vocabulary/','/learn/revision-studio/','/learn/professional-message/','/learn/listening-clarification/','/learn/conversation-rehearsal/','/learn/reading-precision/','/learn/smartteacher-free-trial/','/learn/scenario-practice/','/learn/learning-path/','/learn/smartteacher/','/learn/teachers/','/learn/language-support/','/learn/employers/','/learn/progress/','/learn/trust/'];
  for(const href of hrefs)await expect(footer.locator('a[href="'+href+'"]')).toHaveCount(1);
  await expect(footer.locator('#v1770-all-resources')).not.toHaveAttribute('open');
- await expect(footer.locator('a[href="#reading-precision-lab"]')).toBeHidden();
+ await expect(footer.locator('a[href="/learn/reading-precision/"]')).toBeHidden();
  await footer.locator('#v1770-all-resources summary').click();
- await expect(footer.locator('a[href="#reading-precision-lab"]')).toBeVisible();
+ await expect(footer.locator('a[href="/learn/reading-precision/"]')).toBeVisible();
  await footer.locator('#v1770-all-resources summary').click();
- await expect(footer.locator('a[href="#reading-precision-lab"]')).toBeHidden();
+ await expect(footer.locator('a[href="/learn/reading-precision/"]')).toBeHidden();
  await expect(footer.locator('.footer-logo')).toBeVisible();
 });
 test('v1.77 six course sample lessons are actionable and explain answers',async({page})=>{
- await ready(page,'courses');let s=page.locator('#courses');await expect(s.locator('.v1770-course-action')).toHaveCount(9);
+ await ready(page,'courses');let s=page.locator('#courses');await s.locator('#v1840-sample-lessons summary').click();await expect(s.locator('.v1770-course-action')).toHaveCount(9);
  for(const idx of [2,3,4,5,6,7]){
-  if(idx===3)await s.getByRole('button',{name:/View all 9 courses/}).click();
+  if(idx===3)await s.getByRole('button',{name:/See all sample lessons/}).click();
   await s.locator('.v1580-course-card').nth(idx).getByRole('button',{name:'Start a sample lesson'}).click();
   const lesson=s.locator('#v1770-course-lesson');
   await expect(lesson).toBeVisible();await expect(lesson.locator('fieldset')).toHaveCount(3);

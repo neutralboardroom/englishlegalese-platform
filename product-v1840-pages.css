@@ -1,0 +1,65 @@
+/* EnglishLegalese 1.84.0 — dedicated pages only. NO changes to homepage CSS or layout. */
+:root{color-scheme:light;font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:16px;color:#153e51;background:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;line-height:1.6}
+a{color:#126479;text-decoration:underline;text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #197f8d;outline-offset:3px}
+.v1840-shell{max-width:1200px;margin-inline:auto;padding-inline:clamp(1rem,3vw,2rem)}
+.v1840-skip{position:absolute;left:-10000px;top:0;background:#fff;padding:1rem}
+.v1840-skip:focus{left:1rem;z-index:300}
+.v1840-header{border-bottom:1px solid #dbe8ec;background:#fff}
+.v1840-top{display:flex;align-items:center;justify-content:space-between;gap:1.25rem;min-height:86px}
+.v1840-logo{width:155px;height:auto;max-width:100%;object-fit:contain;display:block}
+.v1840-topnav{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem 1rem}
+.v1840-topnav a{text-decoration:none;font-size:.87rem;font-weight:700}
+.v1840-topnav [aria-current="page"]{border-bottom:3px solid #1c8291;color:#15576a}
+.v1840-resource-menu{position:relative}
+.v1840-resource-menu summary{cursor:pointer;font-size:.87rem;font-weight:700;color:#126479}
+.v1840-resource-items{position:absolute;z-index:25;top:calc(100% + .6rem);right:0;max-height:440px;min-width:275px;overflow-y:auto;background:#fff;border:1px solid #cfe1e5;border-radius:10px;padding:.65rem;box-shadow:0 14px 25px #083b5024;display:grid;gap:.22rem}
+.v1840-resource-items a{display:block;padding:.3rem .5rem}
+.v1840-hero{padding-block:2rem 1.5rem}
+.v1840-eyebrow{font-size:.79rem;text-transform:uppercase;letter-spacing:.07em;color:#166d79;font-weight:800}
+.v1840-hero h1{max-width:850px;font-size:clamp(2rem,4.2vw,3rem);line-height:1.16;margin:.4rem 0 .8rem;letter-spacing:-.025em}
+.v1840-lead{max-width:850px;font-size:1.06rem;color:#476575}
+.v1840-breadcrumb{font-size:.82rem;color:#5e747e}
+.v1840-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.65fr);gap:1.25rem;align-items:start;margin-block:1rem 2.5rem}
+.v1840-main,.v1840-practice,.v1840-actions,.v1840-aside{border:1px solid #dbe7e9;border-radius:12px;padding:1.2rem;background:#fff;margin-bottom:1.1rem}
+.v1840-practice{background:#f8fbfc}
+.v1840-main h2,.v1840-practice h2,.v1840-actions h2,.v1840-aside h2{font-size:1.26rem;color:#153e52;margin:.1rem 0 .65rem}
+.v1840-practice h3{font-size:1.07rem}
+.v1840-practice p{font-size:.95rem}
+.v1840-button{display:inline-block;min-height:44px;padding:.65rem 1rem;border:1px solid #115e72;border-radius:7px;background:#156a7d;color:#fff;font-size:.9rem;font-weight:800;cursor:pointer}
+.v1840-response{margin-top:1rem;padding:1rem;background:#fff;border:1px solid #cfe0e6;border-radius:9px}
+.v1840-actions{display:grid;gap:.6rem}
+.v1840-actions a{display:block;font-weight:720}
+.v1840-disclaimer,.v1840-status-note{font-size:.88rem;color:#5b6d78}
+.v1840-aside{background:#fbfdfd}
+.v1840-aside h2{font-size:1.07rem}
+.v1840-aside a{display:block;padding:.35rem 0}
+.v1840-footer{background:#f7fafb;border-top:1px solid #d6e5ea;padding:1.8rem 0}
+.v1840-foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:1.5rem}
+.v1840-foot-grid h2{font-size:1.04rem}
+.v1840-foot-grid a{display:block;margin:.28rem 0;font-size:.86rem}
+.v1840-footer-logo{width:138px;height:auto}
+.v1840-foot-grid p{font-size:.88rem}
+.v1840-footer details summary{font-weight:750;color:#14576d;cursor:pointer}
+.v1840-foot-resources{display:grid;grid-template-columns:1fr 1fr;gap:.05rem .65rem;margin-top:.8rem}
+.v1840-legal{font-size:.77rem;color:#57707b;margin-top:1.4rem}
+.v1840-standalone-pricing #pricing{display:block!important;margin-block:0 2rem}
+.v1840-standalone-pricing #pricing .container{max-width:1200px;margin-inline:auto;padding-inline:clamp(1rem,3vw,2rem)}
+.v1840-standalone-pricing #pricing .v1810-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.v1840-standalone-pricing #pricing .v1810-card{border:1px solid #d5e5e9;border-radius:10px;padding:1.05rem}
+.v1840-standalone-pricing #pricing .v1810-team{margin-block:1rem}
+.v1840-standalone-pricing #pricing .v1810-notice{background:#f0f8fa;border-left:4px solid #277184;padding:.8rem 1rem}
+@media(max-width:1050px){.v1840-top{display:block;padding-block:1rem}.v1840-topnav{margin-top:.85rem}.v1840-standalone-pricing #pricing .v1810-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.v1840-grid{grid-template-columns:1fr}.v1840-foot-grid{grid-template-columns:1fr 1fr}.v1840-foot-grid>*:first-child{grid-column:1/-1}.v1840-topnav{gap:.55rem}.v1840-resource-menu{position:static}.v1840-resource-items{position:static;max-height:300px;min-width:0}.v1840-standalone-pricing #pricing .v1810-grid{grid-template-columns:1fr}}
+@media(max-width:460px){.v1840-foot-grid{grid-template-columns:1fr}.v1840-foot-grid>*:first-child{grid-column:auto}.v1840-foot-resources{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Full 28-topic Courses page: native lesson/quiz/download buttons use this page's own visual system. */
+.v1840-course-catalog-mount .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.68rem .95rem;border:1px solid #176d80;border-radius:7px;background:#176d80;color:#fff;font:inherit;font-size:.88rem;font-weight:750;line-height:1.35;cursor:pointer;text-align:center;text-decoration:none}
+.v1840-course-catalog-mount .btn.light{background:#fff;color:#165c70;border-color:#91bcc5}
+.v1840-course-catalog-mount .btn:is(:hover,:focus-visible){box-shadow:0 1px 0 #b9d8df}
+.v1840-course-catalog-mount .btn:focus-visible{outline:3px solid #197f8d;outline-offset:3px}
+.v1840-course-catalog-mount .v1800-class-grid{align-items:stretch}

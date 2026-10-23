@@ -7,8 +7,8 @@ test('v1.78 homepage explicitly presents live human video teaching while preserv
  await expect(page.locator('#home .trust-row')).toContainText('Live online video classrooms');
  await expect(page.locator('#home a[href="#live-classes"]')).toBeVisible();
  await expect(page.locator('.site-header .brand img')).toBeVisible();
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.83.0');
- await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.83.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
+ await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
 });
 test('v1.78 homepage preserves comprehensive paths, new classroom and courses while no paid service is activated',async({page})=>{
  await open(page,'home');
@@ -28,9 +28,9 @@ test('v1.78 goal navigator opens real existing lessons and existing listening pr
  await expect(page.locator('#conversation-rehearsal-lab')).toBeVisible();
 });
 test('v1.78 six second course units add eighteen explained questions without pretending to be certification',async({page})=>{
- await open(page,'courses');const sec=page.locator('#courses');
+ await open(page,'courses');const sec=page.locator('#courses');await sec.locator('#v1840-sample-lessons summary').click();
  await expect(sec.locator('.v1780-next-action')).toHaveCount(6);
- await sec.getByRole('button',{name:/View all 9 courses/}).click();
+ await sec.getByRole('button',{name:/See all sample lessons/}).click();
  for(const i of [2,3,4,5,6,7]){
   await sec.locator('.v1580-course-card').nth(i).getByRole('button',{name:'Continue: sample lesson 2'}).click();
   const unit=sec.locator('#v1780-second-unit');
