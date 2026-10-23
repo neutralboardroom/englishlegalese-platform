@@ -10,12 +10,28 @@ permissions:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
     steps:
+      - name: Install Git before full-history checkout
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq git ca-certificates
+          git --version
       - name: Checkout full release lineage
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Assert exact candidate source SHA (never synthetic PR merge)
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          expected='${{ github.event.pull_request.head.sha || github.sha }}'
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$expected" || { echo "Wrong source SHA: $actual != $expected" >&2; exit 1; }
+          echo "Qualified exact source SHA: $actual"
 
       - name: Use Node 20
         uses: actions/setup-node@v4
@@ -28,11 +44,22 @@ jobs:
       - name: Block high and critical dependency vulnerabilities
         run: npm run audit:high
 
+      - name: Establish trusted full historical Git lineage in pinned container
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git rev-parse --is-inside-work-tree
+          if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            git fetch --unshallow --no-tags origin
+          fi
+          git cat-file -e '7c87946ecf8e66db23fe66c696a00764c36dc27f^{commit}'
+          git merge-base --is-ancestor '7c87946ecf8e66db23fe66c696a00764c36dc27f' HEAD
+          git cat-file -e '2e39c83559d21b9b3b65f34b23b7605e23417b9f^{commit}'
       - name: Run syntax, regression, rule and no-drift gates
         run: npm run check
 
-      - name: Install Playwright Chromium and WebKit
-        run: npx playwright install --with-deps chromium webkit
+      - name: Verify pinned installed Chromium and WebKit binaries
+        run: |
+          node -e "const fs=require('fs'); const {chromium,webkit}=require('@playwright/test'); for(const browser of [chromium,webkit]) { const executable=browser.executablePath(); if(!fs.existsSync(executable)) { console.error('Required browser missing: '+executable); process.exitCode=1; } }"
 
       - name: Run desktop tablet mobile browser qualification
         run: npm run e2e:browser
@@ -42,6 +69,72 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: englishlegalese-browser-qualification
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  verify-independent:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+    steps:
+      - name: Install Git before full-history checkout
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq git ca-certificates
+          git --version
+      - name: Checkout full release lineage
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Assert exact candidate source SHA (never synthetic PR merge)
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          expected='${{ github.event.pull_request.head.sha || github.sha }}'
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$expected" || { echo "Wrong source SHA: $actual != $expected" >&2; exit 1; }
+          echo "Qualified exact source SHA: $actual"
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install exact declared dependency set
+        run: npm install --ignore-scripts --no-fund
+
+      - name: Block high and critical dependency vulnerabilities
+        run: npm run audit:high
+
+      - name: Establish trusted full historical Git lineage in pinned container
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git rev-parse --is-inside-work-tree
+          if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            git fetch --unshallow --no-tags origin
+          fi
+          git cat-file -e '7c87946ecf8e66db23fe66c696a00764c36dc27f^{commit}'
+          git merge-base --is-ancestor '7c87946ecf8e66db23fe66c696a00764c36dc27f' HEAD
+          git cat-file -e '2e39c83559d21b9b3b65f34b23b7605e23417b9f^{commit}'
+      - name: Run syntax, regression, rule and no-drift gates
+        run: npm run check
+
+      - name: Verify pinned installed Chromium and WebKit binaries
+        run: |
+          node -e "const fs=require('fs'); const {chromium,webkit}=require('@playwright/test'); for(const browser of [chromium,webkit]) { const executable=browser.executablePath(); if(!fs.existsSync(executable)) { console.error('Required browser missing: '+executable); process.exitCode=1; } }"
+
+      - name: Run desktop tablet mobile browser qualification
+        run: npm run e2e:browser
+
+      - name: Preserve browser qualification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: englishlegalese-browser-qualification-independent
           path: |
             playwright-report/
             test-results/

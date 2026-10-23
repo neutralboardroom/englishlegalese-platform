@@ -10,7 +10,7 @@ test('v1.82 studio adds a real navigable guided learner/teacher curriculum for 2
  await expect(s.locator('.v1820-session .v1820-vocab')).toHaveCount(4);
  await expect(s.locator('.v1820-homework li')).toHaveCount(4);
  await expect(s.locator('.v1820-teacher')).toContainText('Fictional classroom case');
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.0');
  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
 });
 test('v1.82 filters all tracks and uses every preserved topic-specific lesson',async({page})=>{
@@ -63,7 +63,7 @@ test('v1.82 local study/teacher pack and four tentative calendar reminders downl
 test('v1.82 preserves previous public pricing, all 14 free resources and 28 classes',async({page})=>{
  await open(page);
  await expect(page.locator('#pricing')).toContainText('$24');
- await expect(page.locator('#pricing')).toContainText('not available for purchase today');
+ await expect(page.locator('#pricing')).toContainText('Class schedules and enrollment requests are open');
  await expect(page.locator('#v1800-class-catalog .v1800-class-count')).toContainText('28 class topics');
  await expect(page.locator('#v1790-resource-menu .v1790-resource-nav a')).toHaveCount(14);
  await expect(page.locator('#v1770-all-resources .v1770-resource-links a')).toHaveCount(14);

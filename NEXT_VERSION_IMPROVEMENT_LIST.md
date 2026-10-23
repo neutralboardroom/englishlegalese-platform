@@ -1,3 +1,31 @@
+# EnglishLegalese v1.85.0 — Business English, Wall Street, staffing and enrolled classroom program
+Date: October 23, 2026. Owner approved. THIS IS A CANDIDATE UNTIL TWO INDEPENDENT EXACT-HEAD FULL QUALIFICATIONS, SOURCE/NO-DRIFT CHECKS, RENDER LIVE DEPLOY AND REAL PUBLIC APEX + WWW ACCEPTANCE PASS. Do not claim launch before evidence.
+
+## Complete approved implementation matrix (non-droppable)
+| Feature | Site code or evidence | Acceptance |
+| --- | --- | --- |
+| Original laptop homepage, protected logo/hero and 28-topic catalog | index.html; app.js; curriculum-v1800-data.js; product-v1800-catalog.js | Preserve prior homepage and 28 existing topics; only discreet Business English mentions/navigation |
+| Unified general Business English | learn/business-english/index.html; product-v1850-business.js | 16 developed coherent courses, no artificial old/new labels; five educational components each |
+| Wall Street & Investor English | learn/business-english/index.html; product-v1850-business.js | 8 distinct fictional finance-language courses, no personal financial advice |
+| Free Legal English resources | learn/legal-resources/index.html; 14 previous /learn/ routes | Preserve all 14 individual resource tools and original footer entries |
+| Free Business English resources | learn/business-resources/index.html; eight /learn/business-resources/*/ routes; product-v1850-free-resources.js | Eight functioning individual vocabulary, scenario-feedback and private writing labs |
+| Separate extended Legal and Business English | pricing/index.html; learn/courses/index.html; learn/business-english/index.html | Independent group $249/student and private $699, sixteen 50-minute lessons, optional investor focus within Business |
+| Real instructor-led schedules | Connected Google Calendar series: Legal Monday Nov 2 2026 19:00, Business Wednesday Nov 4 2026 19:00, both Asia/Ho_Chi_Minh | 16 weekly 50-minute sessions per distinct program, teacher assignment and privacy gate; do not publish join links |
+| Open classroom enrollment requests | learn/enroll/index.html; product-v1850-enrollment.js; src/v1850-public-intake.js | Backend validation/rate limit/honeypot; durable Neon enrollment table; confirm capacity/identity before individual joining details |
+| Open teacher staffing applications | learn/teach-with-us/index.html; product-v1850-teacher-application.js | Durable Neon applications, qualifications, availability, role review, multiple teacher capacity, no fabricated hires |
+| Easier top laptop menu and both footer libraries | index.html; product-v1550-preserve.js; dedicated navigation pages | Clear Courses, Business English, Free Resources, Teachers & Classes, Pricing, Enroll, Account; no loss of protected original navigation |
+| Stripe off, privacy and current owner rules | server.js; src/v1850-public-intake.js; governance register; v1.85 verifier | No checkout/charges or paid AI bypass, no unsolicited outbound email, original 19 Roger + 10 durable + newer owner directives |
+| Release qualification and production | scripts/verify-v1850-business.js; tests/v1850-browser.spec.js; tests/v1850-production.spec.js; Playwright and GitHub Actions | All platforms, independent whole-suite runs x2 same SHA, Render live SHA, apex/www separate acceptance, revert if unsafe |
+
+## Next-release priorities, only AFTER qualified live v1.85.0
+- Staffing operations: protected owner review dashboard for teacher applications, credentials, scheduling and interviews; no unauthenticated applicant access.
+- Enrollment operations: verified email confirmation and staff assignment, student capacity, waitlist and cancellation/refund terms; maintain real private data separation.
+- Calendar synchronization and time-zone conversion: display learners' local equivalent of instructor-specific class times without publishing unconfirmed availability or meeting links.
+- Higher-quality homework, pronunciation and AI assistance only when vendor/privacy/billing gates qualify; Stripe remains off absent further authorization.
+- Systematically improve responsive use while preserving the protected laptop homepage and all 14+8 free resources.
+
+---
+
 ## v1.84.0 owner correction — ONE unified catalog of 28 class topics
 
 The owner observed that the homepage and Courses navigation still displayed an old nine-course list, despite the complete 28-class curriculum in the Live Classes section. **Acceptance requirement:** all 28 class topics must be offered together, without grouping them as original/new or 9+19 and without advertising nine courses as the catalog.

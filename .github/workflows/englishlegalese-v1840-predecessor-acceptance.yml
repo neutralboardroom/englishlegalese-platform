@@ -1,0 +1,46 @@
+name: EnglishLegalese v1.84.0 Predecessor Public Acceptance
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  predecessor-public:
+    if: github.event.pull_request.number == 41
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+    steps:
+      - name: Checkout exact PR head (acceptance test source only)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies and block high/critical vulnerabilities
+        run: npm install --ignore-scripts --no-fund && npm run audit:high
+      - name: Verify Chromium and WebKit browser binaries
+        run: |
+          node -e "const fs=require('fs'); const {chromium,webkit}=require('@playwright/test'); for(const browser of [chromium,webkit]) if(!fs.existsSync(browser.executablePath())) process.exitCode=1"
+      - name: Confirm real predecessor version on both public hosts
+        run: |
+          set -eu
+          for host in https://englishlegalese.com https://www.englishlegalese.com; do
+            response="$(curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "$host/health?predecessor=${GITHUB_SHA}")"
+            echo "$response" | grep -q '"version":"1.84.0'
+          done
+      - name: Browser-verify live apex and www v1.84.0 protected functional acceptance
+        run: npx playwright test tests/v1840-production.spec.js --config=playwright.production.config.js
+      - name: Preserve predecessor acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: englishlegalese-v1840-predecessor-public
+          path: |
+            playwright-production-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14

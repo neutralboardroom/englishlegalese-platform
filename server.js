@@ -3,6 +3,8 @@ const path = require('path');
 const pkg = require('./package.json');
 
 const app = express();
+// Render uses a single trusted edge proxy: resolve each client address for rate-limited public enrollment and teaching applications.
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 const VERSION = `${pkg.version}-navigation-domain-hardening`;
 const { PersistentStore, REQUIRED_TABLES } = require('./src/persistence');
@@ -222,6 +224,7 @@ app.post('/api/v119/stripe/webhook', express.raw({ type: 'application/json' }), 
 });
 
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
+require('./src/v1850-public-intake').install(app);
 
 app.get('/api/video-providers', (req, res) => {
   res.json({

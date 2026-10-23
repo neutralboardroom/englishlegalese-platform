@@ -21,7 +21,8 @@ for(const host of ['https://englishlegalese.com','https://www.englishlegalese.co
   await expect(page.locator('#courses .v1800-class-card')).toHaveCount(12);
   await expect(page.locator('#v1840-sample-lessons')).not.toHaveAttribute('open');
   await page.goto(host+'/learn/legal-vocabulary/');
-  await expect(page.locator('#v1840-content')).toContainText('Vocabulary');
+  await expect(page.locator('#v1840-content')).toContainText('counteroffer');
+  await expect(page.locator('#v1840-content')).toContainText('subject to');
   await expect(page.locator('#v1840-content button')).toHaveCount(1);
  });
 }

@@ -26,10 +26,10 @@ const research = read('governance/RESEARCH_AND_COMPETITOR_ADOPTION_LEDGER__v1.73
 const rootCause = read('docs/v1.59.0/PRODUCTION_LIVE_RECOVERY_ROOT_CAUSE.md');
 const nvil = read('NEXT_VERSION_IMPROVEMENT_LIST.md');
 
-check('package is protected v1.73.0 or additive v1.74.0', ['1.73.0','1.74.0','1.76.0','1.77.0','1.78.0','1.79.0','1.80.0','1.81.0','1.82.0','1.83.0','1.84.0'].includes(pkg.version));
+check('package is protected v1.73.0 or additive v1.74.0', ['1.73.0','1.74.0','1.76.0','1.77.0','1.78.0','1.79.0','1.80.0','1.81.0','1.82.0','1.83.0','1.84.0','1.85.0'].includes(pkg.version));
 check('v1.59 CSS is last public stylesheet', index.indexOf('product-v1590.css?v=1.73.0') > index.indexOf('product-v1580.css?v=1.73.0'));
 check('v1.59 JS is last active presentation script', index.includes('product-v1590.js?v=1.76.0') && index.lastIndexOf('<script src=') < index.indexOf('</body>') && index.indexOf('product-v1590.js?v=1.76.0') > index.indexOf('product-v1560-access.js?v=1.73.0'));
-check('active public assets use fresh v1.59 URLs', ['styles.css','app.js','public-v1548.js','product-v1550.js','product-v1550-research.js','product-v1560-access.js'].every(f => index.includes(`${f}?v=1.73.0`)) && index.includes('product-v1550-preserve.js?v=1.84.0') && index.includes('product-v1590.js?v=1.76.0'));
+check('active public assets use fresh v1.59 URLs', ['styles.css','app.js','public-v1548.js','product-v1550.js','product-v1550-research.js','product-v1560-access.js'].every(f => index.includes(`${f}?v=1.73.0`)) && index.includes('product-v1550-preserve.js?v=1.85.0') && index.includes('product-v1590.js?v=1.76.0'));
 check('obsolete v1.56-v1.58 presentation JS is intentionally not loaded', !index.includes('src="product-v1560.js?') && !index.includes('src="product-v1570.js?') && !index.includes('src="product-v1580.js?'));
 check('retired presentation source files remain preserved in repository', ['product-v1560.js','product-v1570.js','product-v1580.js'].every(p => fs.existsSync(path.join(root,p))));
 check('HTML includes explicit cache-revalidation metadata', index.includes('Cache-Control') && index.includes('no-cache') && index.includes('max-age=0'));
@@ -72,7 +72,7 @@ check('browser test rejects exact owner-observed stale strings', ['EnglishLegale
 check('browser test verifies six featured scenarios then all 21', (browser.includes('toBe(6)') || browser.includes('toHaveCount(6)')) && (browser.includes('toBe(21)') || browser.includes('toHaveCount(21)')));
 check('browser test verifies unified 28 class topics with 12 immediately visible cards and 28 on dedicated page', browser.includes("#courses .v1800-class-card:visible") && browser.includes('toBe(12)') && require('node:fs').readFileSync('tests/v1840-unified-courses.spec.js','utf8').includes('toHaveCount(28)'));
 check('browser test verifies planner/progress collapsed by default', browser.includes("#learning-plan .v1550-plan-builder") && browser.includes("#skills-passport .v1550-passport-grid") && browser.includes('toBeHidden()'));
-check('browser test verifies live marker and version', browser.includes('v1590-live-marker') && browser.includes('1.84.0'));
+check('browser test verifies live marker and version', browser.includes('v1590-live-marker') && browser.includes('1.85.0'));
 check('inherited browser gate is successor-aware', inheritedBrowser.includes('body.v1590-ready') && inheritedBrowser.includes('js-v1590-scenarios'));
 
 check('workflow still blocks high/critical npm findings', workflow.includes('npm run audit:high'));
@@ -81,7 +81,7 @@ check('security dependency pins remain', pkg.dependencies?.express === '4.22.3' 
 check('Node runtime floor remains 20+', /^>=20/.test(String(pkg.engines?.node || '')));
 check('canonical focus routing exists',app.includes('homepageSectionIds')&&app.includes('applyRouteView')&&app.includes('englishLegaleseApplyView'));
 check('homepage return link and accessible focus toolbar',index.includes('id="elFocusToolbar"')&&index.includes('href="#home"'));
-check('HTML has v1.60 release marker',index.includes('name="englishlegalese-release" content="1.84.0"'));
+check('HTML has v1.60 release marker',index.includes('name="englishlegalese-release" content="1.85.0"'));
 check('HTML response explicitly revalidates without modifying private routes',read('server.js').includes("req.path==='/' || req.path==='/index.html'")&&read('server.js').includes("'no-cache, max-age=0, must-revalidate'"));
 check('responsive homepage heading typography improved',css1590.includes('.hero h1{font-size:clamp(2.45rem')&&css1590.includes('.section-head h2{font-size:clamp(1.7rem'));
 check('learning engine preserves route ownership',v1550.includes('englishLegaleseApplyView'));
@@ -97,7 +97,7 @@ check('duplicate hero branding removed',!app.includes('class="hero-logo"'));
 check('updated tests assert prominent logo and absence of horizontal scrolling',browser.includes('approved logo is prominent') && browser.includes('scrollWidth') && browser.includes('toBeGreaterThanOrEqual'));
 check('new css makes buttons and headings readable without unsafe branding changes',css1610.includes('.hero h1')&&css1610.includes('.section-head h2')&&css1610.includes('.hero-actions .btn'));
 check('WebKit premerge browser target exists',read('playwright.config.js').includes("name: 'tablet-webkit'"));
-check('CI includes WebKit browser install',read('.github/workflows/englishlegalese-release-gate.yml').includes('npx playwright install --with-deps chromium webkit'));
+check('CI includes WebKit browser install',(read('.github/workflows/englishlegalese-release-gate.yml').includes('npx playwright install --with-deps chromium webkit') || ['mcr.microsoft.com/playwright:v1.64.1-noble','Verify pinned installed Chromium and WebKit binaries','browser.executablePath()'].every(x=>read('.github/workflows/englishlegalese-release-gate.yml').includes(x))));
 check('scenario controls use stable single delegated event listener',v1590.includes("document.addEventListener('click',event=>")&&v1590.includes('},true)')&&!v1590.includes("more.addEventListener('click'"));
 check('scenario controls report expanded state for production acceptance',read('tests/v1590-production.spec.js').includes("toHaveAttribute('aria-expanded','true')"));
 check('diagnostic, planner, progress and scenarios all use stable delegated click routing', ['.js-v1590-diagnostic','.js-v1590-planner','.js-v1590-progress','.js-v1590-scenarios'].every(x=>v1590.includes("target?.closest('"+x+"')")) && !v1590.includes("btn.addEventListener('click',()=>{progressExpanded") && !v1590.includes("btn.addEventListener('click',()=>{plannerExpanded") && !v1590.includes("btn.addEventListener('click',()=>{diagnosticExpanded"));
@@ -168,7 +168,9 @@ try {
   check('locked logo file remains unchanged', !changed.includes('assets/englishlegalese-logo.png'));
   const status = cp.execFileSync('git', ['diff','--name-status',`${base}...HEAD`], {cwd:root, encoding:'utf8'});
   check('v1.59 deletes no predecessor file', !status.split(/\r?\n/).some(line => /^D\s/.test(line)));
-} catch {
+} catch (err) {
+  // Full Git history remains a mandatory release gate; report the exact cause without accepting missing proof.
+  console.error('Historical no-drift Git guard failure:', String(err && err.message || err).slice(0,550));
   check('exact predecessor/no-drift Git evidence available', false);
 }
 

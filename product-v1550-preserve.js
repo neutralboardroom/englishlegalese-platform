@@ -29,11 +29,11 @@
   function ensure() {
     const nav = document.querySelector('#mainNav');
     if (nav) {
-      const current = Array.from(nav.querySelectorAll(':scope > a')).map(a => a.getAttribute('href'));
+      const current = Array.from(nav.querySelectorAll(':scope > a, details a')).map(a => a.getAttribute('href'));
       const required = desiredDesktop.map(([href]) => href);
       // Preserve valid additive top-level navigation and nested learning-resource menus.
       // Keep owner-approved v1.84 dedicated routes without clobbering additional menu items.\n      // Restore the minimal protected navigation only if a required destination disappears.
-      if (required.some(href => !current.includes(href))) {
+      if (required.some(href => !current.includes(href)) || !current.includes('/learn/business-english/') || !current.includes('/learn/enroll/')) {
         nav.replaceChildren(...desiredDesktop.map(link));
       }
       nav.dataset.v1550 = '1';

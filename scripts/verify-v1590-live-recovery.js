@@ -101,7 +101,10 @@ try {
   check('locked logo file remains unchanged', !changed.includes('assets/englishlegalese-logo.png'));
   const status = cp.execFileSync('git', ['diff','--name-status',`${base}...HEAD`], {cwd:root, encoding:'utf8'});
   check('v1.59 deletes no predecessor file', !status.split(/\r?\n/).some(line => /^D\s/.test(line)));
-} catch {
+} catch (err) {
+  // Preserve the mandatory historical Git no-drift check and report its specific failed subprocess.
+  // Do not convert a missing commit or an unauthorized deletion into an automatic pass.
+  console.error('v1.59 predecessor evidence failure:', String(err && err.message || err).slice(0,500));
   check('exact predecessor/no-drift Git evidence available', false);
 }
 
