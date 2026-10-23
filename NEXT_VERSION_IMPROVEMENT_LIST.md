@@ -1,3 +1,20 @@
+# EnglishLegalese v1.85.1 — Legal English first and 16-session teacher materials
+Date: October 23, 2026. Owner approved. Status: DRAFT RELEASE CANDIDATE until two separate complete green exact-head qualifications, merge, Render LIVE and actual apex/www public browser acceptance. Preserve all historical backlog below untouched.
+
+## Approval and evidence matrix
+- Legal English appears immediately BEFORE Business English in the homepage header, all 43 dedicated-page headers and corresponding footers. Two distinct destination pages are linked and all existing 42 HTML pages remain intact.
+- Dedicated /learn/legal-english/ describes the independent Legal English pathway and links the preserved 28-topic catalog, 14 unchanged learning tools, teacher standards, enrollment and transparent pricing.
+- /learn/classroom-programs/ has independently planned 16 Legal English + 16 Business English sessions, each with explicit goals, four defined terms, fictional roleplay, model-language feedback, five-stage 50-minute plan, homework deliverable and teacher feedback rubrics. Existing course-level material remains unchanged.
+- Preserve all 16 existing Business English topics, 8 Wall Street/Investor topics, 28 existing unified catalog topics, 14 Legal English tools, 8 Business English tools, $249 group/$699 private extended pricing, scheduled classroom series and approved original laptop homepage/logo/hero.
+- Student enrollment and teacher application remain working database-backed receipt REQUESTS, not automatic acceptance, assignment, billing or guaranteed attendance. Existing API endpoints, additive tables and abuse guards retained unchanged.
+- Teacher staffing operations: applicant screening requires identity, qualifications, relevant subject mastery, 50-minute live demonstration, work authorization and student-data handling; no unverified hires or calendar join links published.
+- Future owner review: inspect new enrollment/teacher intake through authenticated Neon tools (read-only select by created_at, no public dashboard of personal data). Review duplicates, eligibility, actual timetable availability, teacher suitability; contact applicants only under the governing outgoing-email permission. No automatic emails, no recruitment sends and no provider/DNS changes from this version.
+- Preserve original 19 Roger rules, 10 durable rules and additional EL-RGR-020–022 verbatim; never weaken governance, source checks, rollback, privacy or blocked payment/AI activation.
+- Qualification required: npm run check, npm run audit:high, desktop/tablet/mobile Chromium and WebKit, v1.85.1 navigation and curriculum tests, two independent jobs on exact final head, then public apex + www v1.85.1 regression including enrollment DB readiness.
+- Deferred: actual applicant review workflow and notifications (only after separately approved secure implementation), external instructor recruitment, deeper individual class materials across all 28+24 course topics, AI avatar tutors (explicitly on hold), payments and paid AI subscriptions (unapproved).
+
+---
+
 # EnglishLegalese v1.85.0 — Business English, Wall Street, staffing and enrolled classroom program
 Date: October 23, 2026. Owner approved. THIS IS A CANDIDATE UNTIL TWO INDEPENDENT EXACT-HEAD FULL QUALIFICATIONS, SOURCE/NO-DRIFT CHECKS, RENDER LIVE DEPLOY AND REAL PUBLIC APEX + WWW ACCEPTANCE PASS. Do not claim launch before evidence.
 
