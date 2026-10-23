@@ -1,8 +1,8 @@
 'use strict';
 const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('node:vm'),get=x=>fs.readFileSync(x,'utf8');
 const pkg=JSON.parse(get('package.json')),html=get('index.html'),studio=get('product-v1820-learning-studio.js'),style=get('product-v1820-learning-studio.css'),canonical=get('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md'),owner=get('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md');
-assert.equal(pkg.version,'1.85.0');
-assert(html.includes('name="englishlegalese-release" content="1.85.0"'));
+assert.equal(pkg.version,'1.86.0');
+assert(html.includes('name="englishlegalese-release" content="1.86.0"'));
 for(const asset of ['product-v1810-pricing.js?v=1.81.0','product-v1810-pricing.css?v=1.81.0','curriculum-v1800-data.js?v=1.80.0','product-v1800-catalog.js?v=1.84.0','product-v1820-learning-studio.js?v=1.84.0','product-v1820-learning-studio.css?v=1.82.0'])assert(html.includes(asset),'No loss of assets '+asset);
 assert.equal((html.match(/<a href="\/learn\/study-planner\/">Study planner<\/a>/g)||[]).length,2,'Header/footer navigation');
 for(const id of ['pricing','v1790-resource-menu','v1770-all-resources'])assert(html.includes('id="'+id+'"'),'Preserve '+id);

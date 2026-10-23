@@ -2,7 +2,7 @@
 (() => {
   const desiredDesktop = [
     ['/learn/start/','Start'],
-    ['/learn/courses/','Courses'],
+    ['/learn/courses/','Legal English'],
     ['/learn/smartteacher/','SmartTeacher AI'],
     ['/learn/teachers/','Teachers'],
     ['/learn/employers/','Employers'],
