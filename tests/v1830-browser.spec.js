@@ -7,7 +7,7 @@ test('v1.83 writing lab presents 28 topic-specific fictional professional cases'
  await expect(p.locator('.v1830-case')).toContainText('fictional case');
  await expect(p.locator('.v1830-brief')).toContainText('Topic-specific vocabulary');
  await expect(p.locator('.v1830-check')).toHaveCount(4);
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.1');
  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
 });
 test('v1.83 track filtering works for core, specialty, international and business',async({page})=>{

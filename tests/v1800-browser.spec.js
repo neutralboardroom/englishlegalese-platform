@@ -2,7 +2,7 @@ const {test,expect}=require('@playwright/test');
 async function open(page){await page.goto('/#courses');await page.locator('body.v1590-ready').waitFor();await expect(page.locator('#courses')).toBeVisible();}
 test('v1.80 study plan is present alongside all existing sample learning tools',async({page})=>{
  await open(page);
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.1');
  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
  await expect(page.locator('#v1800-study-planner > summary')).toBeVisible();
  await expect(page.locator('#courses .v1790-third-action')).toHaveCount(6);

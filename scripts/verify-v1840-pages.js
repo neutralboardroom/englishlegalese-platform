@@ -2,8 +2,8 @@
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const rd=x=>fs.readFileSync(x,'utf8');
 const pkg=JSON.parse(rd('package.json')),root=rd('index.html'),js=rd('product-v1840-pages.js'),css=rd('product-v1840-pages.css');
-assert.equal(pkg.version,'1.85.0');
-assert(root.includes('name="englishlegalese-release" content="1.85.0"'));
+assert.equal(pkg.version,'1.85.1');
+assert(root.includes('name="englishlegalese-release" content="1.85.1"'));
 const data=JSON.parse(js.slice(js.indexOf('const DATA=')+'const DATA='.length,js.indexOf(';\nconst slug=')));
 const names=Object.keys(data);
 assert.equal(names.length,28,'28 unique actual dedicated destination pages');

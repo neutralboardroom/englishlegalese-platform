@@ -7,7 +7,7 @@ test('v1.81 published pricing is reachable from header, footer and homepage',asy
  await page.goto('/#pricing');await page.locator('body.v1590-ready').waitFor();
  await expect(page.locator('#pricing')).toBeVisible();
  await expect(page.locator('#mainNav a[href="/pricing/"]')).toHaveCount(1);
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.1');
  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
 });
 test('v1.81 researched price disclosure stays accurate, explicit and non-transactional',async({page})=>{
