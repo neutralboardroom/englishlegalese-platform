@@ -46,5 +46,10 @@ assert(rd('product-v1850-enrollment.js').includes("fetch('/api/v1850/enroll'"),'
 assert(rd('product-v1850-teacher-application.js').includes("fetch('/api/v1850/teacher-applications'"),'staffing application form');
 for(const id of ['business-email','business-meetings','business-negotiations','business-presentations','business-interviews','business-global','investor-earnings','investor-markets'])assert(rd('learn/business-resources/'+id+'/index.html').includes('product-v1850-free-resources.js'),'active free business resource '+id);
 assert(rd('learn/business-resources/index.html').includes('Free Business English learning resources'),'resource directory');
+// Owner scope lock: avatar products/vendors are research-only and must not ship in v1.85.
+const avatarVendor=/\b(?:heygen|synthesia|colossyan|deepbrain)\b|d-id(?:\.com)?|elai\.io|avatar[-_ ]?(?:sdk|api|provider|integration)/i;
+for(const file of ['server.js','package.json','index.html','product-v1850-business.js','product-v1850-free-resources.js','src/v1850-public-intake.js','learn/business-english/index.html','learn/enroll/index.html','learn/teach-with-us/index.html']){
+ assert(!avatarVendor.test(rd(file)),'Unapproved avatar integration blocked in '+file);
+}
 const rootCss=rd('product-v1850-business.css');assert(rootCss.includes('@media(max-width:650px)'));
 console.log('PASS v1.85: 24 uniform Business English curricula, independent Legal/Business extended plans, teacher recruitment gates, preserved 28 original topics, original homepage hero, and 19+10+3 owner rules.');
