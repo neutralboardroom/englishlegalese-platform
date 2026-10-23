@@ -1,0 +1,33 @@
+/* v1.85.0 Business English only. No homepage/base styling is touched. */
+.v1850-page{padding-bottom:3rem}.v1850-page section{scroll-margin-top:1.5rem;margin-block:2rem 3rem}
+.v1850-hero{padding-block:2.3rem}.v1850-hero h1{max-width:990px}
+.v1850-jump{display:flex;flex-wrap:wrap;gap:.8rem;margin:1.4rem 0}
+.v1850-jump a{padding:.62rem .9rem;border:1px solid #a7cbd1;border-radius:7px;font-weight:700;text-decoration:none;min-height:44px}
+.v1850-jump a:hover{background:#edf8fa}
+.v1850-boundary{font-size:.91rem;color:#506b79;background:#f3f9fa;border-left:3px solid #378699;padding:.8rem 1rem;border-radius:2px}
+.v1850-page h2{font-size:clamp(1.4rem,2.7vw,2rem);line-height:1.25;margin:0 0 .55rem}
+.v1850-page h3{line-height:1.35}
+.v1850-page section>p{max-width:900px}
+.v1850-lead-grid,.v1850-course-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-block:1.25rem}
+.v1850-lead-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.v1850-lead-grid article,.v1850-course-card,.v1850-plan,.v1850-next{border:1px solid #d5e4e9;background:#fff;border-radius:12px;padding:1.15rem}
+.v1850-course-card{display:flex;flex-direction:column;gap:.3rem}
+.v1850-course-card h3{margin:.2rem 0}
+.v1850-kicker,.v1850-track{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:#126579;font-weight:800}
+.v1850-course-card>p{margin:.35rem 0}
+.v1850-course-card details{border-top:1px solid #dde9ed;padding-top:.65rem;margin-top:auto}
+.v1850-course-card summary{font-weight:750;color:#146478;cursor:pointer;min-height:42px;display:flex;align-items:center}
+.v1850-course-card summary:focus-visible,.v1850-jump a:focus-visible{outline:3px solid #207889;outline-offset:3px}
+.v1850-material{display:grid;gap:.7rem;padding-top:.6rem}
+.v1850-material h4{font-size:.95rem;margin:.55rem 0 .25rem}
+.v1850-material ol,.v1850-material dl{margin:.3rem 0 .5rem}
+.v1850-material li{margin:.35rem 0}.v1850-material dt{font-weight:750}.v1850-material dd{margin:0 0 .38rem}
+.v1850-quiz{border:1px solid #cfe2e8;border-radius:9px;background:#f8fcfd;padding:.8rem}
+.v1850-quiz legend{font-weight:750}.v1850-quiz label{display:flex;gap:.5rem;align-items:flex-start;margin:.5rem 0;cursor:pointer}
+.v1850-feedback{font-size:.9rem;min-height:1.6em;font-weight:600}
+.v1850-course-card button{padding:.55rem .9rem;border:1px solid #126478;background:#126478;color:white;border-radius:6px;font:inherit;cursor:pointer;min-height:44px}
+.v1850-plan{background:#f7fbfc}.v1850-plan select{display:block;width:min(100%,620px);font:inherit;padding:.72rem;border:1px solid #80a7b1;border-radius:7px;min-height:44px;margin:.45rem 0 1rem}
+.v1850-plan label{font-weight:750;display:block}.v1850-result{margin-top:1.1rem;background:#fff;border:1px solid #c9dce2;border-radius:9px;padding:1rem}
+.v1850-result ol{padding-left:1.25rem}
+@media(max-width:920px){.v1850-lead-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.v1850-lead-grid,.v1850-course-grid{grid-template-columns:1fr}.v1850-hero{padding-block:1.4rem}.v1850-jump{display:grid}.v1850-jump a{text-align:center}}
