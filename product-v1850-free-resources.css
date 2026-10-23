@@ -1,0 +1,10 @@
+
+/* Dedicated Business English free-learning resources: no effect on homepage. */
+#v1850-resource-app{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:2rem 0}#v1850-resource-app>section:last-child{grid-column:1/-1}
+.v1850-free-glossary{display:grid;grid-template-columns:auto 1fr;gap:.6rem .8rem}.v1850-free-glossary dt{font-weight:750;color:#14566c}.v1850-free-glossary dd{margin:0}
+.v1850-free-case{border:1px solid #d4e4e8;border-radius:8px;margin:.7rem 0;padding:.85rem}.v1850-free-case legend{font-weight:700;padding:.2rem}
+.v1850-free-case label,.v1850-free-checklist label{display:flex;gap:.65rem;margin:.55rem 0;cursor:pointer;align-items:flex-start}.v1850-free-case input,.v1850-free-checklist input{margin-top:.2rem}
+#v1850-resource-app textarea{display:block;width:100%;min-height:140px;padding:.75rem;border:1px solid #a7bec6;border-radius:6px;font:inherit;margin:.7rem 0}
+.v1850-outline{padding:.6rem .85rem;min-height:44px;border:1px solid #2b788d;border-radius:6px;color:#155568;background:white;font:inherit;cursor:pointer;margin:.4rem}
+.v1850-free-status{min-height:1.4rem;font-weight:650}.v1850-free-checklist{margin:.8rem 0}
+@media(max-width:760px){#v1850-resource-app{grid-template-columns:1fr}#v1850-resource-app>section:last-child{grid-column:auto}}
