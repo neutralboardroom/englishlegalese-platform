@@ -29,7 +29,8 @@ jobs:
             a="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://englishlegalese.com/health?commit=${GITHUB_SHA}&try=$i" || true)"
             b="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://www.englishlegalese.com/health?commit=${GITHUB_SHA}&try=$i" || true)"
             page="$(curl -fsSL --max-time 15 "https://englishlegalese.com/learn/business-english/?check=${GITHUB_SHA}" || true)"
-            if grep -q '1.85.0' <<<"$a" && grep -q '1.85.0' <<<"$b" && grep -q 'v1850-business-cards' <<<"$page"; then exit 0; fi
+            legal="$(curl -fsSL --max-time 15 "https://englishlegalese.com/learn/legal-english/?check=${GITHUB_SHA}" || true)"
+            if grep -q '1.85.0' <<<"$a" && grep -q '1.85.0' <<<"$b" && grep -q 'v1850-business-cards' <<<"$page" && grep -q 'v1850-business-16-week' <<<"$page" && grep -q 'v1850-legal-16-week' <<<"$legal"; then exit 0; fi
             sleep 10
           done
           echo 'Public hosts did not converge to required release' >&2
