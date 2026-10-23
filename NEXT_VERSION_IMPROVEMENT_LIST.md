@@ -1,3 +1,12 @@
+## Owner-approved v1.85.0 follow-through — October 23, 2026
+
+- Added **Legal English** to the top menu immediately before **Business English** across the homepage and all dedicated pages. Added matching footer destinations; preserved original Courses link and homepage visual assets.
+- Added a dedicated Legal English landing page with links to the existing 28-topic catalog and 14 free Legal English tools.
+- Added 16 individual session outlines for **each** of the separate Legal English and Business English extended programs. Each has its own objective, four defined vocabulary terms, a 50-minute suggested sequence, fictional interactive task, homework and teacher guidance.
+- Added regression coverage for menu order and curricula, and required independent production acceptance to verify both public language curricula.
+- Added an owner-only enrollment/staffing intake follow-up procedure. Automatic notifications, individual acceptance, staff verification and payments remain unactivated and should not be represented as complete.
+- No avatar research or integrations; existing 19 Roger Rules, 10 durable rules and later directives remain protected. Keep the predecessor live until qualified exact-head CI and postdeploy public testing pass.
+
 # EnglishLegalese v1.85.0 — Business English, Wall Street, staffing and enrolled classroom program
 Date: October 23, 2026. Owner approved. THIS IS A CANDIDATE UNTIL TWO INDEPENDENT EXACT-HEAD FULL QUALIFICATIONS, SOURCE/NO-DRIFT CHECKS, RENDER LIVE DEPLOY AND REAL PUBLIC APEX + WWW ACCEPTANCE PASS. Do not claim launch before evidence.
 
