@@ -26,7 +26,7 @@ const research = read('governance/RESEARCH_AND_COMPETITOR_ADOPTION_LEDGER__v1.73
 const rootCause = read('docs/v1.59.0/PRODUCTION_LIVE_RECOVERY_ROOT_CAUSE.md');
 const nvil = read('NEXT_VERSION_IMPROVEMENT_LIST.md');
 
-check('package is protected v1.73.0 or additive v1.74.0', ['1.73.0','1.74.0','1.76.0','1.77.0','1.78.0','1.79.0','1.80.0','1.81.0','1.82.0','1.83.0','1.84.0','1.85.0'].includes(pkg.version));
+check('package is protected v1.73.0 or additive v1.74.0', ['1.73.0','1.74.0','1.76.0','1.77.0','1.78.0','1.79.0','1.80.0','1.81.0','1.82.0','1.83.0','1.84.0','1.85.0','1.86.0'].includes(pkg.version));
 check('v1.59 CSS is last public stylesheet', index.indexOf('product-v1590.css?v=1.73.0') > index.indexOf('product-v1580.css?v=1.73.0'));
 check('v1.59 JS is last active presentation script', index.includes('product-v1590.js?v=1.76.0') && index.lastIndexOf('<script src=') < index.indexOf('</body>') && index.indexOf('product-v1590.js?v=1.76.0') > index.indexOf('product-v1560-access.js?v=1.73.0'));
 check('active public assets use fresh v1.59 URLs', ['styles.css','app.js','public-v1548.js','product-v1550.js','product-v1550-research.js','product-v1560-access.js'].every(f => index.includes(`${f}?v=1.73.0`)) && index.includes('product-v1550-preserve.js?v=1.85.0') && index.includes('product-v1590.js?v=1.76.0'));

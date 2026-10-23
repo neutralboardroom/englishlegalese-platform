@@ -1,3 +1,29 @@
+# EnglishLegalese v1.86.0 — Legal English navigation and 32-session classroom guides
+Date: October 23, 2026. Candidate until exact-head CI, live Render and apex/www acceptance pass.
+
+## Owner-approved work preserved and extended
+- Keep all 19 original Roger Rules, 10 canonical durable rules and the subsequent 3 owner directives; all corresponding governance files remain unchanged.
+- Existing 28-topic catalog, all 16 general Business English and 8 Wall Street and Investor topics, existing 14 Legal English tools and 8 Business English tools remain intact.
+- Top menu first-level label **Legal English** routes to /learn/courses/; it precedes **Business English** /learn/business-english/ across all existing and new dedicated pages. Avoid duplicate Courses and Legal links in top menu; keep footer course links intact.
+- Two new fully independent weekly teaching guides: /learn/legal-english-program/ and /learn/business-english-program/, each with 16 distinct 50-minute session objectives, teaching steps, five vocabulary prompts, real interactive *local-only* drafting/reveal activity, homework and instructor feedback notes.
+- The classroom program guides link from Legal English course pages, Business English course pages, Pricing and Enrollment. The original homepage layout, hero image, logo and pricing layout remain unchanged.
+- No live payment, no automatic reservations, no teaching assignments implied, and no live student information in public teaching exercises. Calendar sessions and enrollment status stay as v1.85.0.
+- Teacher and learner intake stay on dedicated Neon tables, with origin, IP rate and input checks; new owner-only local CLI summary does not create a public intake listing, send emails or mutate application records.
+- AI video avatar tutor work stays on HOLD. No avatar API or fees.
+
+## Verification and release procedure
+1. Preserve previously green v1.85.0 as rollback.
+2. Run all predecessor no-drift and functional browser tests plus new v1.86 static checks.
+3. Run two independent full same-SHA browser qualification jobs before merge. Confirm exact commit, then merge with explicit v1.86.0 prefix.
+4. Wait for Render live v1.86.0 commit and exact public apex/www health check.
+5. Run 6 public browser checks on both hosts, including 16+16 guides and enrollment readiness.
+6. Do not claim independent production submission notification; it remains a future infrastructure task.
+
+## Follow-up operations, truthful scope
+Private owner intake review is supported by `npm run intake:review` on a secure machine with ENGLISHLEGALESE_INTAKE_DATABASE_URL. No public record access. Manually review any new enrollments or instructor applications and note replies in an authorized private workspace; never promise applicant confirmation until separately contacted. Add private status/assigned-owner/next-contact tracking and verified Resend alerts only after the owner confirms the sending identity and workflow.
+
+---
+
 # EnglishLegalese v1.85.0 — Business English, Wall Street, staffing and enrolled classroom program
 Date: October 23, 2026. Owner approved. THIS IS A CANDIDATE UNTIL TWO INDEPENDENT EXACT-HEAD FULL QUALIFICATIONS, SOURCE/NO-DRIFT CHECKS, RENDER LIVE DEPLOY AND REAL PUBLIC APEX + WWW ACCEPTANCE PASS. Do not claim launch before evidence.
 
