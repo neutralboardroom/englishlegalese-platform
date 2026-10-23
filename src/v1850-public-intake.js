@@ -9,7 +9,7 @@ const schedules=Object.freeze([
 const allowedPrograms=new Set(['legal','business','investor']);
 const allowedFormats=new Set(['group','private']);
 const allowedTracks=new Set(['legal','business','investor','multiple']);
-const pool=process.env.ENGLISHLEGALESE_INTAKE_DATABASE_URL?new Pool({connectionString:process.env.ENGLISHLEGALESE_INTAKE_DATABASE_URL,ssl:process.env.PGSSLMODE==='disable'?false:{rejectUnauthorized:false},max:3,connectionTimeoutMillis:6500,idleTimeoutMillis:12000}):null;
+const pool=process.env.ENGLISHLEGALESE_INTAKE_DATABASE_URL?new Pool({connectionString:process.env.ENGLISHLEGALESE_INTAKE_DATABASE_URL,ssl:{rejectUnauthorized:true},max:3,connectionTimeoutMillis:6500,idleTimeoutMillis:12000}):null;
 const hits=new Map();
 function sourceValid(req){const origin=req.get('origin');if(origin){try{return trustedHosts.has(new URL(origin).hostname)}catch{return false}}const referer=req.get('referer');if(referer){try{return trustedHosts.has(new URL(referer).hostname)}catch{return false}}return false}
 function rate(req){
