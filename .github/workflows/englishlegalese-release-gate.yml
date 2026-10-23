@@ -36,6 +36,16 @@ jobs:
       - name: Block high and critical dependency vulnerabilities
         run: npm run audit:high
 
+      - name: Establish trusted full historical Git lineage in pinned container
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git rev-parse --is-inside-work-tree
+          if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            git fetch --unshallow --no-tags origin
+          fi
+          git cat-file -e '7c87946ecf8e66db23fe66c696a00764c36dc27f^{commit}'
+          git merge-base --is-ancestor '7c87946ecf8e66db23fe66c696a00764c36dc27f' HEAD
+          git cat-file -e '2e39c83559d21b9b3b65f34b23b7605e23417b9f^{commit}'
       - name: Run syntax, regression, rule and no-drift gates
         run: npm run check
 

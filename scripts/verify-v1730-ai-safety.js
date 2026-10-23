@@ -168,7 +168,9 @@ try {
   check('locked logo file remains unchanged', !changed.includes('assets/englishlegalese-logo.png'));
   const status = cp.execFileSync('git', ['diff','--name-status',`${base}...HEAD`], {cwd:root, encoding:'utf8'});
   check('v1.59 deletes no predecessor file', !status.split(/\r?\n/).some(line => /^D\s/.test(line)));
-} catch {
+} catch (err) {
+  // Full Git history remains a mandatory release gate; report the exact cause without accepting missing proof.
+  console.error('Historical no-drift Git guard failure:', String(err && err.message || err).slice(0,550));
   check('exact predecessor/no-drift Git evidence available', false);
 }
 
