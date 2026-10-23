@@ -38,5 +38,13 @@ for(let i=1;i<=19;i++)assert(rules.includes('EL-RGR-'+String(i).padStart(3,'0'))
 for(let i=1;i<=10;i++)assert(rules.includes('EL-DUR-'+String(i).padStart(3,'0')));
 const add=rd('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md');
 for(const x of ['EL-RGR-020','EL-RGR-021','EL-RGR-022'])assert(add.includes(x));
+const intake=rd('src/v1850-public-intake.js');
+assert(intake.includes('englishlegalese_enrollment_requests')&&intake.includes('englishlegalese_teacher_applications'),'working durable Postgres intake');
+assert(intake.includes('stripe_enabled:false')&&intake.includes('sourceValid(req)')&&intake.includes('rate(req)'),'stripe disabled and source/rate guards');
+assert(rd('learn/enroll/index.html').includes('id="v1850-enrollment-app"'),'public enrollment page');
+assert(rd('product-v1850-enrollment.js').includes("fetch('/api/v1850/enroll'"),'enrollment form network submit');
+assert(rd('product-v1850-teacher-application.js').includes("fetch('/api/v1850/teacher-applications'"),'staffing application form');
+for(const id of ['business-email','business-meetings','business-negotiations','business-presentations','business-interviews','business-global','investor-earnings','investor-markets'])assert(rd('learn/business-resources/'+id+'/index.html').includes('product-v1850-free-resources.js'),'active free business resource '+id);
+assert(rd('learn/business-resources/index.html').includes('Free Business English learning resources'),'resource directory');
 const rootCss=rd('product-v1850-business.css');assert(rootCss.includes('@media(max-width:650px)'));
 console.log('PASS v1.85: 24 uniform Business English curricula, independent Legal/Business extended plans, teacher recruitment gates, preserved 28 original topics, original homepage hero, and 19+10+3 owner rules.');
