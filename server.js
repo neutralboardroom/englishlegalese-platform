@@ -222,6 +222,7 @@ app.post('/api/v119/stripe/webhook', express.raw({ type: 'application/json' }), 
 });
 
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
+require('./src/v1850-public-intake').install(app);
 
 app.get('/api/video-providers', (req, res) => {
   res.json({
