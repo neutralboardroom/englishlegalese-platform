@@ -1,0 +1,19 @@
+/* v1.86 dedicated course-page teaching materials. No protected homepage styling. */
+.v1860-session-list{display:grid;gap:.65rem;margin:1.25rem 0 2rem}
+.v1860-session{border:1px solid #d5e5e9;border-radius:9px;background:#fff}
+.v1860-session>summary{padding:.85rem 1rem;min-height:44px;font-weight:750;color:#146478;cursor:pointer}
+.v1860-session-detail,.v1860-topic-detail{padding:0 1rem 1.2rem}
+.v1860-session-detail h3,.v1860-session-detail h4,.v1860-topic-detail h4{margin:1.1rem 0 .4rem}
+.v1860-session-detail ol,.v1860-topic-detail ol{padding-left:1.5rem}
+.v1860-session-detail li,.v1860-topic-detail li{margin:.35rem 0}
+.v1860-session-detail dl,.v1860-topic-detail dl{display:grid;grid-template-columns:minmax(115px,1fr) 3fr;gap:.35rem 1rem}
+.v1860-session-detail dt,.v1860-topic-detail dt{font-weight:750}
+.v1860-session-detail dd,.v1860-topic-detail dd{margin:0}
+.v1860-exercise{border:1px solid #d5e5e9;padding:.85rem;border-radius:8px;margin:.9rem 0}
+.v1860-exercise legend{font-weight:750}
+.v1860-exercise label{display:flex;gap:.55rem;align-items:flex-start;margin:.6rem 0}
+.v1860-exercise input{margin-top:.34rem;flex-shrink:0}
+.v1860-exercise button{background:#126479;border:0;border-radius:6px;color:#fff;padding:.55rem .85rem;font-weight:750;cursor:pointer}
+.v1860-exercise button:focus-visible{outline:3px solid #228599;outline-offset:3px}
+.v1860-feedback{font-size:.91rem}
+@media(max-width:640px){.v1860-session-detail dl,.v1860-topic-detail dl{grid-template-columns:1fr}.v1860-session-detail dd,.v1860-topic-detail dd{margin-bottom:.35rem}}
