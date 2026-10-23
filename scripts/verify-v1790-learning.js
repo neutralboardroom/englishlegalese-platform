@@ -23,14 +23,14 @@ assert.equal(toolHrefs(footerTools).length,14,'Keep all 14 practical footer tool
 assert.deepEqual(toolHrefs(navTools),toolHrefs(footerTools),'Main menu and original footer must list the same 14 tools in the same order');
 assert(index.includes('<summary aria-label="Free learning resources menu">Free learning resources'),'Main dropdown must have recognizable accessible label');
 assert(index.includes('aria-label="Primary navigation" data-v1550="1"'),'Modern main navigation must opt out of legacy v1550 link rewriting');
-assert(index.includes('<a href="/learn/live-classes/">Live online classes</a>'),'Keep actual human video classroom navigation');
+assert(index.includes('<a href="/learn/live-classes/">Class schedules</a>'),'Keep actual human video classroom navigation');
 assert(index.includes('<a href="/learn/teachers/">Teachers</a>'),'Keep teacher navigation without legacy conversion to Practice');
 assert(js.includes('function bindResourceMenu')&&js.includes("e.key==='Escape'"),'Accessible resource menu keyboard/close behavior');
 assert(css.includes('.v1790-resource-popover')&&css.includes('@media(max-width:980px)'),'Responsive menu must be designed for desktop and mobile');
 const originalNavigation=get('product-v1550.js');
 assert(originalNavigation.includes("if(t&&!n.querySelector('#v1790-resource-menu'))"),'Legacy teacher-route rewrite must not remove approved Resources and human Teachers navigation');
 const navPreservation=get('product-v1550-preserve.js');
-assert(navPreservation.includes("nav.querySelectorAll(':scope > a')") && navPreservation.includes('if (required.some(href => !current.includes(href)))'),'Legacy protection must not erase additive nested Free learning resources navigation on any hashchange');
+assert(navPreservation.includes("nav.querySelectorAll(':scope > a, details a')") && navPreservation.includes('if (required.some(href => !current.includes(href)))'),'Legacy protection must not erase additive nested Free learning resources navigation on any hashchange');
 assert(get('tests/v1790-browser.spec.js').includes('Download class preparation brief'));
 assert(get('tests/v1790-production.spec.js').includes('x-englishlegalese-release'));
 console.log('PASS v1.79.0 third course units, private class prep, DST-safe times, 29 original rule IDs, no external transmission and current production workflow');
