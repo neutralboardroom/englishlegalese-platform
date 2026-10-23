@@ -31,3 +31,6 @@
 .v1850-result ol{padding-left:1.25rem}
 @media(max-width:920px){.v1850-lead-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){.v1850-lead-grid,.v1850-course-grid{grid-template-columns:1fr}.v1850-hero{padding-block:1.4rem}.v1850-jump{display:grid}.v1850-jump a{text-align:center}}
+
+.v1850-price{font-size:1.35rem;font-weight:850;color:#123e50}.v1850-price span{font-size:.9rem;font-weight:400}.v1850-pricing{padding-block:1.5rem}
+.v1850-legal-extended,.v1850-teacher-preview{padding-block:1rem 2rem}.v1850-legal-extended h2,.v1850-teacher-preview h2{font-size:1.4rem;margin:.2rem 0}
