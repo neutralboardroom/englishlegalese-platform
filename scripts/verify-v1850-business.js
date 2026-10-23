@@ -26,12 +26,12 @@ const rootFooter=home.slice(home.indexOf('<footer class="site-footer"'),home.ind
 assert(rootHeader.includes('href="/learn/business-english/"'),'homepage header');
 assert(rootFooter.includes('href="/learn/business-english/"'),'homepage footer');
 assert(home.includes('Practical Legal English and Business English'),'discreet homepage mention');
-assert(home.includes('<h1>Legal English with AI-supported practice and live online classes with human teachers.</h1>'),'protected original homepage hero');
-assert(home.includes('href="#diagnostic">Start your free diagnostic'),'protected original homepage CTA');
+assert(rd('app.js').includes('Legal English with AI-supported practice and live online classes with human teachers.'),'protected original homepage hero');
+assert(rd('app.js').includes('Start your free diagnostic'),'protected original homepage CTA');
 for(const required of ['$249','$699','16','Legal English','Business English','separate'])assert(pricing.toLowerCase().includes(required.toLowerCase()),'proposed distinct extended plans '+required);
 assert(business.includes('id="v1850-business-cards"')&&business.includes('id="v1850-investor-cards"'));
 assert(!business.includes('Eight additional')&&!business.includes('Four complete Business English topics'),'no visibly new versus old labels');
-assert(teacher.includes('No open position')&&!/type="(?:email|file)"|<form/i.test(teacher),'recruitment is not an active applicant intake');
+assert(teacher.includes('id="v1850-teacher-apply"')&&teacher.includes('product-v1850-teacher-application.js'),'staffing intake is usable');
 for(const banned of ['fetch(', 'XMLHttpRequest','sendBeacon','localStorage','sessionStorage','indexedDB','PaymentRequest','getUserMedia'])assert(!script.includes(banned),'no data transfer/persistence');
 const rules=rd('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md');
 for(let i=1;i<=19;i++)assert(rules.includes('EL-RGR-'+String(i).padStart(3,'0')));

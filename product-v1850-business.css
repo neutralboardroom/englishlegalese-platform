@@ -36,3 +36,6 @@
 .v1850-legal-extended,.v1850-teacher-preview{padding-block:1rem 2rem}.v1850-legal-extended h2,.v1850-teacher-preview h2{font-size:1.4rem;margin:.2rem 0}
 
 .v1850-field{display:block;margin:.85rem 0;font-weight:650;max-width:690px}.v1850-field input,.v1850-field select,.v1850-field textarea{display:block;width:100%;box-sizing:border-box;border:1px solid #a5c4cd;border-radius:6px;min-height:44px;padding:.65rem;font:inherit;margin-top:.3rem}.v1850-hp{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}.v1850-success{padding:1.15rem;border:1px solid #7da8ac;border-radius:8px;background:#f5fbfb}.v1850-free-links{margin-block:2rem;padding:1rem;border:1px solid #d0e1e5;border-radius:9px}
+
+/* v1.85 teachers/classroom drop-down: no change to homepage hero or layout */
+.v1850-teachers-menu .v1790-resource-popover{min-width:245px}.v1850-teachers-menu summary{white-space:nowrap}.v1850-teachers-menu .v1790-resource-nav a{display:block}
