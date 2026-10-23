@@ -1,6 +1,8 @@
 const {test,expect}=require('@playwright/test');
 for(const host of ['https://englishlegalese.com','https://www.englishlegalese.com']){
 test('v1.85 live Business and Legal English accepted: '+host,async({page})=>{
+ const ownerOps=await page.request.get(host+'/ops/ENGLISHLEGALESE_INTAKE_FOLLOWUP_2026-10-23.md');
+ expect(ownerOps.status()).toBe(404);
  const root=await page.goto(host+'/');expect(root.status()).toBeLessThan(400);
  expect(root.headers()['x-englishlegalese-release']).toBe('1.85.0');
  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.0');
