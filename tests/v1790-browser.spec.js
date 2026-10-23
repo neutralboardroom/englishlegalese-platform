@@ -2,7 +2,7 @@ const {test,expect}=require('@playwright/test');
 async function visit(page,hash){await page.goto('/#'+hash);await page.locator('body.v1590-ready').waitFor();await expect(page.locator('#'+hash)).toBeVisible();}
 test('v1.79 is the current material release while prior tools and branding are preserved',async({page})=>{
  await visit(page,'home');
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.0');
  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');
  await expect(page.locator('.site-header .brand img')).toBeVisible();
  await expect(page.locator('#home h1')).toContainText('live online classes with human teachers');
@@ -77,8 +77,8 @@ test('v1.79 Free learning resources dropdown mirrors every footer tool without c
  const header=page.locator('#v1790-resource-menu'),footer=page.locator('#v1770-all-resources');
  const links=['/learn/free-writing-exercise/','/learn/ai-draft-review/','/learn/clause-reading/','/learn/meeting-followup/','/learn/email-clarity/','/learn/guided-practice/','/learn/case-brief/','/learn/legal-vocabulary/','/learn/revision-studio/','/learn/professional-message/','/learn/listening-clarification/','/learn/conversation-rehearsal/','/learn/reading-precision/','/learn/smartteacher-free-trial/'];
  await expect(header).toHaveCount(1);
- await expect(page.locator('#mainNav > a[href="/learn/teachers/"]')).toHaveCount(1);
- await expect(page.locator('#mainNav > a[href="/learn/live-classes/"]')).toHaveCount(1);
+ await expect(page.locator('#mainNav a[href="/learn/teachers/"]')).toHaveCount(1);
+ await expect(page.locator('#mainNav a[href="/learn/live-classes/"]')).toHaveCount(1);
  await expect(page.locator('#mainNav')).toHaveAttribute('data-v1550','1');
  await expect(header).not.toHaveAttribute('open');
  await expect(footer).not.toHaveAttribute('open');
