@@ -39,3 +39,13 @@
 
 /* v1.85 teachers/classroom drop-down: no change to homepage hero or layout */
 .v1850-teachers-menu .v1790-resource-popover{min-width:245px}.v1850-teachers-menu summary{white-space:nowrap}.v1850-teachers-menu .v1790-resource-nav a{display:block}
+
+/* Additive classroom syllabus styles; home styles untouched. */
+.v1850-syllabus .v1850-weeks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.85rem;margin:1rem 0}
+.v1850-syllabus .v1850-week{align-self:start;border:1px solid #d0e2e7;border-radius:10px;background:#fff;padding:.4rem .9rem}
+.v1850-syllabus .v1850-week summary{cursor:pointer;color:#145b70;font-weight:760;min-height:44px;display:flex;align-items:center}
+.v1850-syllabus .v1850-week summary:focus-visible{outline:3px solid #197f8d;outline-offset:2px}
+.v1850-syllabus .v1850-week-body{border-top:1px solid #e1ebee;padding:.6rem .25rem 1rem}
+.v1850-syllabus .v1850-week-body h3{font-size:1.02rem;margin:.85rem 0 .2rem}
+.v1850-syllabus .v1850-week-body p,.v1850-syllabus .v1850-week-body li{font-size:.94rem}
+@media(max-width:760px){.v1850-syllabus .v1850-weeks{grid-template-columns:1fr}}
