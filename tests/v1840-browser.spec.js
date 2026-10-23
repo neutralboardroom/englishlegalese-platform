@@ -21,7 +21,7 @@ test('v1.84 verifies 28 distinct dedicated destinations · group '+(i+1),async({
 }
 test('v1.84 homepage keeps pricing visibly unchanged and all former learning experiences in place',async({page})=>{
  await page.goto('/#home');await page.locator('body.v1590-ready').waitFor();
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.0');
  await expect(page.locator('#pricing')).toContainText('Class schedules and enrollment requests are open');
  await expect(page.locator('#pricing')).toContainText('$79 total');
  await expect(page.locator('#v1800-class-catalog .v1800-class-count')).toContainText('28 class topics');
