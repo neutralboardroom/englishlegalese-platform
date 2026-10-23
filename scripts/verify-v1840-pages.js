@@ -35,6 +35,7 @@ assert(rd('learn/courses/index.html').includes('/product-v1800-catalog.js?v=1.84
 assert(rd('product-v1800-catalog.js').includes("const host=dedicated||$('#courses')"),'Homepage course catalog uses same full 28-topic data as dedicated page');
 assert(!rd('learn/courses/index.html').includes('expanded 28-topic'),'No old/new distinction on course page');
 assert(rd('tests/v1840-unified-courses.spec.js').includes('toHaveCount(28)'),'Browser test genuinely exercises all topics');
+assert(js.includes("if(document.documentElement.dataset.englishlegaleseMaterialRelease!=='1.84.0')"),'Release marker MutationObserver must be idempotent to prevent browser navigation hangs');
 for(const prev of ['product-v1800-catalog.js?v=1.84.0','product-v1810-pricing.js?v=1.81.0','product-v1820-learning-studio.js?v=1.84.0','product-v1830-feedback.js?v=1.83.0'])assert(root.includes(prev),'Previous substantial improvements preserved '+prev);
 const original=rd('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md'),owner=rd('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md');
 for(let i=1;i<=19;i++)assert(original.includes('EL-RGR-'+String(i).padStart(3,'0')));
