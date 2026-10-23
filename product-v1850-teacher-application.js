@@ -1,0 +1,15 @@
+(()=>{'use strict';const mount=document.querySelector('#v1850-teacher-apply');if(!mount)return;const f=document.createElement('form');f.id='v1850-staff-form';const E=(t,s)=>{let n=document.createElement(t);if(s)n.textContent=s;return n};
+const field=(name,title,type='text',limit=2500)=>{let l=E('label',title);l.className='v1850-field';let a=E(type==='textarea'?'textarea':'input');if(type!=='textarea')a.type=type;a.name=name;a.maxLength=limit;a.required=true;l.append(a);f.append(l);return a;};
+field('full_name','Full name','text',120).autocomplete='name';field('email','Email address','email',254).autocomplete='email';
+const l=E('label','Subject you can teach');l.className='v1850-field';const select=E('select');select.name='teaching_track';[['legal','Legal English'],['business','Business English'],['investor','Wall Street & Investor English'],['multiple','More than one specialization']].forEach(([v,t])=>{let o=E('option',t);o.value=v;select.append(o)});l.append(select);f.append(l);
+const qual=field('qualifications','Qualifications and teaching experience','textarea',2500);qual.minLength=20;qual.rows=5;
+const tz=field('timezone','Time zone (IANA name)','text',100);tz.value=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';
+const avail=field('weekly_availability','Weekly teaching availability','textarea',500);avail.minLength=4;avail.rows=3;
+const hp=field('website','Website (leave blank)','text',100);hp.parentElement.classList.add('v1850-hp');hp.required=false;hp.tabIndex=-1;
+const submit=E('button','Submit teaching application');submit.type='submit';submit.className='v1840-button';const status=E('p');status.className='v1850-feedback';status.setAttribute('role','status');f.append(submit,status);mount.append(f);
+f.addEventListener('submit',async e=>{e.preventDefault();if(!f.reportValidity())return;submit.disabled=true;status.textContent='Saving teaching application…';
+let data=Object.fromEntries(new FormData(f));data.client_request_id=crypto.randomUUID();
+try{const r=await fetch('/api/v1850/teacher-applications',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}),result=await r.json();if(!r.ok||!result.ok)throw Error(result.error||'Could not submit');
+let p=E('p','Application received. Your reference: '+result.reference+'. Our teaching team will review your application.');p.className='v1850-success';f.replaceWith(p);
+}catch(err){status.textContent=err.message;submit.disabled=false}});
+})();

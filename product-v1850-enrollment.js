@@ -1,0 +1,18 @@
+(()=>{'use strict';
+const mount=document.querySelector('#v1850-enrollment-app');if(!mount)return;
+const f=document.createElement('form');f.id='v1850-enroll-form';const el=(t,s)=>{const n=document.createElement(t);if(s)n.textContent=s;return n;};
+const field=(name,label,type='text')=>{const l=el('label',label);l.className='v1850-field';const x=el('input');x.name=name;x.type=type;x.required=true;x.maxLength=name==='email'?254:120;l.append(x);f.append(l);return x;};
+const name=field('full_name','Your full name');name.autocomplete='name';const email=field('email','Email address','email');email.autocomplete='email';
+const select=(name,label,values)=>{const l=el('label',label);l.className='v1850-field';const s=el('select');s.name=name;for(const [v,t]of values){let o=el('option',t);o.value=v;s.append(o)}l.append(s);f.append(l);return s;};
+const program=select('program','Study program',[['legal','Legal English'],['business','Business English'],['investor','Wall Street & Investor English (Business English)']]);
+const format=select('format','Classroom format',[['group','Small-group, 16 lessons · $249'],['private','Private, 16 lessons · $699']]);
+const schedule=select('schedule_id','Schedule',[]);const update=()=>{const val=format.value==='private'?'private-time-request':program.value==='legal'?'legal-group-mon':'business-group-wed';const label=val==='private-time-request'?'Request private session times':val==='legal-group-mon'?'Mondays 7:00 p.m. · Asia/Ho_Chi_Minh · from November 2, 2026':'Wednesdays 7:00 p.m. · Asia/Ho_Chi_Minh · from November 4, 2026';let o=el('option',label);o.value=val;schedule.replaceChildren(o);};program.addEventListener('change',update);format.addEventListener('change',update);update();
+const l=el('label','Preferred times or goals (optional)');l.className='v1850-field';const note=el('textarea');note.name='note';note.rows=3;note.maxLength=500;l.append(note);f.append(l);
+const hp=field('website','Website (leave blank)');hp.parentElement.classList.add('v1850-hp');hp.tabIndex=-1;hp.required=false;
+const submit=el('button','Submit enrollment');submit.type='submit';submit.className='v1840-button';const status=el('p');status.className='v1850-feedback';status.setAttribute('role','status');f.append(submit,status);mount.append(f);
+f.addEventListener('submit',async e=>{e.preventDefault();if(!f.reportValidity())return;submit.disabled=true;status.textContent='Saving enrollment…';
+const data=Object.fromEntries(new FormData(f));data.client_request_id=crypto.randomUUID();
+try{const resp=await fetch('/api/v1850/enroll',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const result=await resp.json();if(!resp.ok||!result.ok)throw Error(result.error||'Could not submit');
+const success=el('p','Enrollment received. Reference: '+result.reference+'. We will confirm your class place and meeting access separately. No payment was taken.');success.className='v1850-success';f.replaceWith(success);
+}catch(err){status.textContent=err.message;submit.disabled=false}});
+})();
