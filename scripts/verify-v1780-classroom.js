@@ -9,7 +9,7 @@ assert(productionWorkflow.includes("'1.78.0-navigation-domain-hardening'"),'Live
 assert(!productionWorkflow.includes('product-v1780.js?v=1.77.0'),'Reject stale asset version in production gate');
 const prodLegacy=rd('tests/v1590-production.spec.js'),prodLatest=rd('tests/v1780-production.spec.js');
 // Preserve a meaningful upper bound while allowing future legitimate curriculum growth without hard-coding one obsolete pixel count.
-const heightLimit=prodLegacy.match(/production-mobile'\\?\\s*(\\d+):(\\d+)/);
+const heightLimit=prodLegacy.match(/production-mobile'\?\s*(\d+):(\d+)/);
 assert(heightLimit && Number(heightLimit[1])<=30000 && Number(heightLimit[2])<=22000 && prodLegacy.includes('document.documentElement.scrollHeight'),'Preserve comprehensive homepage with bounded height across real devices');
 assert(prodLatest.includes('#language-bridge .js-language-select'),'Scope real Georgian test to language support panel');
 
