@@ -8,6 +8,8 @@ jobs:
   production-acceptance:
     if: startsWith(github.event.head_commit.message, 'EnglishLegalese v1.85.0 ')
     runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -16,8 +18,9 @@ jobs:
           node-version: '20'
       - name: Install dependencies and audit security
         run: npm install --ignore-scripts --no-fund && npm run audit:high
-      - name: Install desktop/tablet/mobile browser
-        run: npx playwright install --with-deps chromium webkit
+      - name: Verify pinned installed Chromium and WebKit binaries
+        run: |
+          node -e "const fs=require('fs'); const {chromium,webkit}=require('@playwright/test'); for(const browser of [chromium,webkit]) { const executable=browser.executablePath(); if(!fs.existsSync(executable)) { console.error('Required browser missing: '+executable); process.exitCode=1; } }"
       - name: Wait for actual public apex and www exact release
         shell: bash
         run: |

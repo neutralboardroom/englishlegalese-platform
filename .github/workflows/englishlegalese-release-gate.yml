@@ -10,7 +10,10 @@ permissions:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
     steps:
       - name: Checkout full release lineage
         uses: actions/checkout@v4
@@ -31,8 +34,9 @@ jobs:
       - name: Run syntax, regression, rule and no-drift gates
         run: npm run check
 
-      - name: Install Playwright Chromium and WebKit
-        run: npx playwright install --with-deps chromium webkit
+      - name: Verify pinned installed Chromium and WebKit binaries
+        run: |
+          node -e "const fs=require('fs'); const {chromium,webkit}=require('@playwright/test'); for(const browser of [chromium,webkit]) { const executable=browser.executablePath(); if(!fs.existsSync(executable)) { console.error('Required browser missing: '+executable); process.exitCode=1; } }"
 
       - name: Run desktop tablet mobile browser qualification
         run: npm run e2e:browser
