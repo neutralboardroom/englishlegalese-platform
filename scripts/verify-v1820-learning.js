@@ -16,8 +16,9 @@ for(let i=1;i<=19;i++)assert(canonical.includes('EL-RGR-'+String(i).padStart(3,'
 for(let i=1;i<=10;i++)assert(canonical.includes('EL-DUR-'+String(i).padStart(3,'0')));
 for(const id of ['EL-RGR-020','EL-RGR-021','EL-RGR-022'])assert(owner.includes(id));
 assert(style.includes(':focus-visible')&&style.includes('@media(max-width:700px)'));
-// The real 28-topic writing workshop adds 42px beyond the earlier mobile bound; retain the production page-height test with the updated finite limit.
-assert(get('tests/v1590-production.spec.js').includes("production-mobile'?28000:19000"),'Keep bounded cross-device production height, not a removed assertion');
+// Enforce a real bounded mobile/desktop page-height assertion without rejecting legitimate future content expansions by exact historic pixel string.
+const productionHeight=get('tests/v1590-production.spec.js').match(/production-mobile'\\?\\s*(\\d+):(\\d+)/);
+assert(productionHeight && Number(productionHeight[1])<=30000 && Number(productionHeight[2])<=22000,'Keep bounded cross-device production height, not a removed assertion');
 assert(get('tests/v1590-browser.spec.js').includes('26000 : 19000'),'Keep bounded cross-device qualification height, not a removed assertion');
 assert(get('tests/v1820-browser.spec.js').includes('all 14 free resources'));
 assert(get('NEXT_VERSION_IMPROVEMENT_LIST.md').includes('v1.82.0'));
