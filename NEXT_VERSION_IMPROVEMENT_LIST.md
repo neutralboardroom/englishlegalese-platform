@@ -1,3 +1,18 @@
+# EnglishLegalese v1.86.0 — dual Legal / Business English menus and 32 instructor-led session materials
+Owner approved October 23, 2026. RELEASE CANDIDATE; not production until two independent full exact-SHA qualification jobs and verified apex + www acceptance.
+
+- [x] Legal English primary menu link before Business English; preserve original laptop homepage appearance. Parallel menu and footer access throughout dedicated pages.
+- [x] Dedicated Legal English landing page: 24 Legal topics with instructional previews; existing 28-topic combined Courses catalog remains available.
+- [x] 16 Legal English + 16 Business English 50-minute class outlines with time blocks, topic-specific vocabulary, interactive self-review, homework, teaching instructions and feedback rubric.
+- [x] No AI avatar integrations. Preserve all 19 original Roger Rules, 10 durable rules and three active addendum rules.
+- [x] Private owner read-only intake follow-up and teacher screening runbook in docs/V1860_OWNER_INTAKE_FOLLOWUP_PRIVATE.md.
+- [ ] Authenticated owner review queue, email notification delivery and applicant status updates require separate tested implementation. No applicant should be falsely considered contacted.
+- [ ] Confirm actual production form submissions without introducing unreviewed applicant data; intake database readiness checks alone do not prove delivery of notifications.
+- [ ] Do not enable checkout/paid subscriptions until distinct payment approval and real end-to-end verification.
+- [ ] Two independent exact-head GitHub CI validations + actual Render and public apex / www green production acceptance are mandatory before declaring live. Keep verified v1.85 rollback.
+
+---
+
 # EnglishLegalese v1.85.0 — Business English, Wall Street, staffing and enrolled classroom program
 Date: October 23, 2026. Owner approved. THIS IS A CANDIDATE UNTIL TWO INDEPENDENT EXACT-HEAD FULL QUALIFICATIONS, SOURCE/NO-DRIFT CHECKS, RENDER LIVE DEPLOY AND REAL PUBLIC APEX + WWW ACCEPTANCE PASS. Do not claim launch before evidence.
 
