@@ -7,7 +7,7 @@ test('v1.81 real apex and www display honest researched pricing and preserved fr
   await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.84.0');
   await page.goto(domain+'/#pricing');await page.locator('body.v1590-ready').waitFor();
   const p=page.locator('#pricing');await expect(p).toBeVisible();
-  for(const price of ['$12/month','$19/month','$29/month','$28','$89 total','$68','$249 total','From $575'])await expect(p).toContainText(price);
+  for(const price of ['$12/month','$19/month','$29/month','$26','$85 total','$59','$219 total','From $575'])await expect(p).toContainText(price);
   await expect(p).toContainText('Class schedules and enrollment requests are open');
   await expect(page.locator('#mainNav a[href="/pricing/"]')).toHaveCount(1);
   await expect(page.locator('#v1790-resource-menu .v1790-resource-nav a')).toHaveCount(14);
