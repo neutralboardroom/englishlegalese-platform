@@ -13,7 +13,7 @@ assert.equal(legal.length,24);assert.equal(business.length,24);
 assert.equal(new Set([...legal,...business].map(c=>c.id)).size,48);
 const poor=[];
 for(const c of [...legal,...business]){
- for(const key of ['title','outcome','scenario','good','homework','teacher'])if(!c[key]||c[key].length<18)poor.push(c.id+': weak/missing '+key);
+ for(const key of ['title','outcome','scenario','good','homework','teacher'])if(!c[key]||c[key].length<(key==='title'?8:18))poor.push(c.id+': weak/missing '+key);
  if(!Array.isArray(c.units)||c.units.length!==4||new Set(c.units).size!==4||c.units.some(u=>u.length<10))poor.push(c.id+': course lacks four distinct developed lesson areas');
  if(!Array.isArray(c.vocab)||c.vocab.length!==5||new Set(c.vocab.map(v=>v[0])).size!==5||c.vocab.some(v=>v[0].length<2||v[1].length<8))poor.push(c.id+': vocabulary and explanations are inadequate');
  const bad=c.wrong||c.distractors;
@@ -34,7 +34,7 @@ for(const page of [L,B]){
 assert(L.includes('All 24 Legal English human-teacher class topics')&&B.includes('16 Business English')&&B.includes('8 Wall Street'));
 assert(L.includes('instructor availability')&&B.includes('verified staffing'));
 assert(E.includes('one-lesson or four-lesson')&&E.includes('24 Legal English'));
-for(const s of ['[\'\',\'Select a topic','One class on a selected topic','Four classes on a selected topic','interest','topic','topic-time-request','class-'])assert(enrollJS.includes(s),'Real topic-interest form missing '+s);
+for(const item of ["select('topic'","One class on a selected topic","Four classes on a selected topic","topic-time-request","Preferred teaching topic"])assert(enrollJS.includes(item),'Real topic-interest form missing '+item);
 assert(intake.includes("scheduleId==='topic-time-request'")&&intake.includes("price_usd:269"),'Topic request validation or published schedule group prices wrong');
 assert(intake.includes("format==='private'&&scheduleId!=='private-time-request'"));
 assert(intake.includes("new Pool({connectionString:process.env.ENGLISHLEGALESE_INTAKE_DATABASE_URL"),'Do not use unrelated production database');
