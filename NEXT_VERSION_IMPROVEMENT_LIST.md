@@ -1,3 +1,12 @@
+## October 24, 2026 — navigation and classroom follow-through (v1.85.0 source-compatible enhancement)
+Status: implementation candidate; NOT PUBLIC until exact release gate and production acceptance. AI avatars on hold and outside scope.
+- Add plain-text Legal English top-menu link immediately before Business English; preserve original Courses link, original laptop homepage hero/logo, 28-course catalog, and all older routes.
+- Make the 41 previously existing dedicated pages share a consistent navigation set, keeping all 14 free Legal English tools and adding directory access plus all 8 Business English tools and teacher/classroom links. Provide footer paths back to both curricula.
+- Publish original 16-session Legal English and separate 16-session Business English human teacher plans. Each has specific objective, sample language, vocabulary, fictional scenario, 50-minute agenda, homework and teacher assessment note; these are not auto-bookings and student work is not transmitted by the plans.
+- Introduce a private read-only owner intake review CLI and a safe explicit CSV export with permissions 0600. Do NOT publish applicant PII, add public access, send emails, change payments, or promise automatic owner alerts.
+- Preserve original class enrollment request and teacher screening flows, privacy-safe use, and owner 19 Roger Rules, 10 durable rules, and 3 later directives.
+- Required deployment evidence: two independent exact-head source+browser qualification jobs, live Render SHA, real public apex+www browser acceptance; no unverified launch claims.
+
 # EnglishLegalese v1.85.0 — Business English, Wall Street, staffing and enrolled classroom program
 Date: October 23, 2026. Owner approved. THIS IS A CANDIDATE UNTIL TWO INDEPENDENT EXACT-HEAD FULL QUALIFICATIONS, SOURCE/NO-DRIFT CHECKS, RENDER LIVE DEPLOY AND REAL PUBLIC APEX + WWW ACCEPTANCE PASS. Do not claim launch before evidence.
 

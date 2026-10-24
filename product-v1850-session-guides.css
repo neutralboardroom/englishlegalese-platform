@@ -1,0 +1,11 @@
+/* Dedicated teaching plan pages only; does not touch approved homepage. */
+.v1850-program-grid{max-width:1050px;padding-bottom:3rem}
+.v1850-program-grid section{margin:2rem 0 3rem;scroll-margin-top:1rem}
+.v1850-program-grid h2{font-size:clamp(1.45rem,3vw,2rem);line-height:1.2}
+.v1850-session-card{border:1px solid #d3e4e8;background:#fff;border-radius:10px;margin:.7rem 0;overflow:hidden}
+.v1850-session-card summary{font-size:1.01rem;font-weight:750;color:#14596d;padding:.85rem 1rem;cursor:pointer;min-height:46px}
+.v1850-session-card[open],.v1850-session-card:has(details[open]){background:#fbfefe}
+.v1850-session-body{padding:0 1rem 1rem;color:#28495a}
+.v1850-session-body p{margin:.6rem 0}
+.v1850-session-body strong{color:#17465b}
+@media(max-width:650px){.v1850-session-card summary{font-size:.96rem}}
