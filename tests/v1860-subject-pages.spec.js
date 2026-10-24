@@ -12,7 +12,7 @@ test('Dedicated Legal English page lists all 24 detailed topics across its three
  await expect(cards.last().locator('.v1860-always-outline li')).toHaveCount(4);
  await expect(page.locator('#v1850-legal-sessions article')).toHaveCount(16);
  await expect(page.locator('.v1860-overview')).toContainText('$269');
- await expect(page.locator('.v1860-overview')).toContainText('$499');
+ await expect(page.locator('.v1860-overview')).toContainText('$699');
  await expect(page.locator('.v1860-overview')).toContainText('24 subject-specific');
 });
 test('Legal English detail provides useful vocabulary, interactive feedback, homework and teacher notes',async({page})=>{
@@ -40,7 +40,7 @@ test('Business English page shows 16 + 8 detailed course outlines and 16-class p
  await expect(page.locator('#v1850-business-sessions article')).toHaveCount(16);
  await expect(page.locator('.v1860-overview')).toContainText('24 detailed courses');
  await expect(page.locator('.v1860-overview')).toContainText('$269');
- await expect(page.locator('.v1860-overview')).toContainText('$499');
+ await expect(page.locator('.v1860-overview')).toContainText('$699');
  const program=page.locator('#v1850-extended'),catalog=page.locator('#v1850-business');
  expect(await program.evaluate((node,other)=>!!(node.compareDocumentPosition(document.getElementById(other)) & Node.DOCUMENT_POSITION_FOLLOWING),'v1850-business')).toBeTruthy();
  const card=catalog.locator('.v1850-course-card').first();
