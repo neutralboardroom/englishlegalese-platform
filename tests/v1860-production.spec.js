@@ -8,7 +8,7 @@ for(const host of ['https://englishlegalese.com','https://www.englishlegalese.co
   await expect(page.locator('#v1850-legal-sessions article')).toHaveCount(16);
   await page.locator('.v1860-course-card summary').first().click();
   await expect(page.locator('.v1860-course-card').first().locator('.v1860-glossary dt')).toHaveCount(5);
-  await expect(page.locator('.v1860-overview')).toContainText('$249');
+  await expect(page.locator('.v1860-overview')).toContainText('$289');
  });
  test('Complete 24-course Business English page and 16 sessions public on '+host,async({page})=>{
   const res=await page.goto(host+'/learn/business-english/');expect(res.status()).toBeLessThan(400);
@@ -19,6 +19,6 @@ for(const host of ['https://englishlegalese.com','https://www.englishlegalese.co
   await expect(page.locator('#v1850-business-sessions article')).toHaveCount(16);
   await page.locator('#v1850-business-cards .v1850-course-card summary').first().click();
   await expect(page.locator('#v1850-business-cards .v1850-course-card').first().locator('dt')).toHaveCount(5);
-  await expect(page.locator('.v1860-overview')).toContainText('$699');
+  await expect(page.locator('.v1860-overview')).toContainText('$799');
  });
 }
