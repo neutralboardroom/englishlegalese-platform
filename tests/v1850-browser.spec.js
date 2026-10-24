@@ -35,7 +35,7 @@ test('v1.85 extended Legal and Business classrooms, enrollment and teacher recru
  await page.goto('/pricing/#extended-programs');
  await expect(page.locator('#extended-programs .v1850-course-card')).toHaveCount(2);
  await expect(page.locator('#extended-programs')).toContainText('$269');
- await expect(page.locator('#extended-programs')).toContainText('$499');
+ await expect(page.locator('#extended-programs')).toContainText('$699');
  await expect(page.locator('#extended-programs')).toContainText('independent');
  await expect(page.locator('input[type="payment"]')).toHaveCount(0);
  await page.goto('/learn/teach-with-us/');
