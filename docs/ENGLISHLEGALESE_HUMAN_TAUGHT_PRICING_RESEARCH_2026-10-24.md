@@ -1,4 +1,24 @@
 # EnglishLegalese: human-taught class pricing benchmark and owner-approved rates
+
+## Current final introductory pricing — owner delegates judgment (24 October 2026)
+This section is **the current price authority** and supersedes the initial approximately-15% proposal documented below. The owner specifically prioritizes not pricing EnglishLegalese out of the market and delegates the final choice. Competitor reassessment showed wide variability: Corporate Lingua Academy advertises 16 × 45-minute **private Business English** sessions at US$400 (https://corporatelinguaacademy.com/pages/pricing); Preply advertises a broad low-priced tutor marketplace (https://preply.com/en/online/tutors-business-english). British Legal Centre specialist programs (https://www.british-legal-centre.com/set/legal-english-course) are much more expensive but have different credentials and scope. No guarantee of parity or conversion is claimed.
+
+| Human-led 50-minute offering | Final introductory USD price | Previous USD price |
+|---|---:|---:|
+| One small-group lesson | **$26** | $24 |
+| Four small-group lessons | **$85** | $79 |
+| Sixteen small-group lessons | **$269** | $249 |
+| One private lesson | **$59** (unchanged) | $59 |
+| Four private lessons | **$219** (unchanged) | $219 |
+| Sixteen private lessons | **$699** (unchanged) | $699 |
+| Corporate team training, starting at | **$549** | $499 |
+
+Discount calculations: sixteen group singles cost $416, package saves **$147 / 35.34%**; sixteen private singles cost $944, package saves **$245 / 25.95%**. Four group singles cost $104, save $19; four private singles cost $236, save $17. No guaranteed teachers or bookings; existing enrollments and individually confirmed quotes must be honored; no actual card checkout enabled. Existing free lessons/resources stay free; AI subscription tiers stay $12/$19/$29, unchanged. This is not an instruction for the builder to send emails; EL-RGR-023 and EL-DUR-011 prohibit any builder outbound mail.
+
+**History:** The initial 15%-uplift proposal below was later modified by an explicit owner request for market-accessible pricing. Its numerical table is historical, **not the current rate card**.
+
+---
+
 Date: October 24, 2026. Decision: owner agreed to approximately 15% increase following competitor research.
 Scope: Legal English, Business English, and Wall Street/Investor English human-led 50-minute lessons. Do not change AI subscription tiers, group capacity, bookings, payments, or payment activation.
 
