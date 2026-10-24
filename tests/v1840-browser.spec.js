@@ -23,7 +23,7 @@ test('v1.84 homepage keeps pricing visibly unchanged and all former learning exp
  await page.goto('/#home');await page.locator('body.v1590-ready').waitFor();
  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.0');
  await expect(page.locator('#pricing')).toContainText('Class schedules and enrollment requests are open');
- await expect(page.locator('#pricing')).toContainText('$79 total');
+ await expect(page.locator('#pricing')).toContainText('$85 total');
  await expect(page.locator('#v1800-class-catalog .v1800-class-count')).toContainText('28 class topics');
  await expect(page.locator('#courses .v1800-class-card')).toHaveCount(12);
  await expect(page.locator('#v1840-sample-lessons')).not.toHaveAttribute('open');
@@ -53,7 +53,7 @@ test('v1.84 header/footer and free-resource menu links all lead to separate webp
 });
 test('v1.84 standalone pricing faithfully repeats homepage prices while leaving homepage visible',async({page})=>{
  await page.goto('/pricing/');const p=page.locator('#pricing');await expect(p).toBeVisible();
- for(const rate of ['$12/month','$19/month','$29/month','$24','$79 total','$59','$219 total','From $499'])await expect(p).toContainText(rate);
+ for(const rate of ['$12/month','$19/month','$29/month','$26','$85 total','$59','$219 total','From $499'])await expect(p).toContainText(rate);
  await expect(p).toContainText('Class schedules and enrollment requests are open');
  await expect(page.locator('a[href="/"]')).not.toHaveCount(0);
  await expect(page.locator('.v1840-foot-resources a')).toHaveCount(14);
