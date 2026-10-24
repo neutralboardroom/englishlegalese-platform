@@ -3,8 +3,8 @@ const { randomUUID } = require('node:crypto');
 const { Pool } = require('pg');
 const trustedHosts=new Set(['englishlegalese.com','www.englishlegalese.com','englishlegalese-platform.onrender.com']);
 const schedules=Object.freeze([
- {id:'legal-group-mon',program:'legal',format:'group',title:'Legal English Extended Classroom',teacher:'Roger Gillman',start:'2026-11-02T19:00:00+07:00',duration_minutes:50,timezone:'Asia/Ho_Chi_Minh',repeat:'weekly',sessions:16,day:'Monday',capacity:6,price_usd:249,calendar_reference:'u4lgv6pad4kk506cm03g313gfo'},
- {id:'business-group-wed',program:'business',format:'group',title:'Business English Extended Classroom',teacher:'Roger Gillman',start:'2026-11-04T19:00:00+07:00',duration_minutes:50,timezone:'Asia/Ho_Chi_Minh',repeat:'weekly',sessions:16,day:'Wednesday',capacity:6,price_usd:249,calendar_reference:'cc3a8e2b7lg4tqrimb2scel73s'}
+ {id:'legal-group-mon',program:'legal',format:'group',title:'Legal English Extended Classroom',teacher:'Roger Gillman',start:'2026-11-02T19:00:00+07:00',duration_minutes:50,timezone:'Asia/Ho_Chi_Minh',repeat:'weekly',sessions:16,day:'Monday',capacity:6,price_usd:269,calendar_reference:'u4lgv6pad4kk506cm03g313gfo'},
+ {id:'business-group-wed',program:'business',format:'group',title:'Business English Extended Classroom',teacher:'Roger Gillman',start:'2026-11-04T19:00:00+07:00',duration_minutes:50,timezone:'Asia/Ho_Chi_Minh',repeat:'weekly',sessions:16,day:'Wednesday',capacity:6,price_usd:269,calendar_reference:'cc3a8e2b7lg4tqrimb2scel73s'}
 ]);
 const allowedPrograms=new Set(['legal','business','investor']);
 const allowedFormats=new Set(['group','private']);
