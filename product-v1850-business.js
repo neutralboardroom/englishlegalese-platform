@@ -10,6 +10,7 @@ const all=[...businessCatalog,...finance];
 /* Read-only course content for the independent, local-only workbook UI. No network or account data. */
 window.ELBUSINESS_V1850_CATALOG=Object.freeze(all.map(c=>Object.freeze(c)));
 function card(c,host,track){
+ if(!host)return;
  const a=E('article',undefined,'v1850-course-card');a.setAttribute('aria-label',c.title+' course');
  a.append(E('p',track+' · '+c.level,'v1850-track'),E('h3',c.title),E('p',c.outcome));
  const d=E('details'),summary=E('summary','View full lessons, vocabulary, exercise, homework & teacher notes'),body=E('div',undefined,'v1850-material');
@@ -26,6 +27,7 @@ function card(c,host,track){
 businessCatalog.forEach(x=>card(x,get('v1850-business-cards'),'Business English'));
 finance.forEach(x=>card(x,get('v1850-investor-cards'),'Wall Street & Investor English'));
 const select=get('v1850-plan-select'),button=get('v1850-plan-build'),result=get('v1850-plan-result');
+if(!select||!button||!result)return;
 all.forEach(c=>{const o=E('option',c.title);o.value=c.id;select.append(o)});
 button.addEventListener('click',()=>{const c=all.find(x=>x.id===select.value);result.replaceChildren();result.hidden=false;if(!c){result.append(E('p','Please choose a topic first.'));select.focus();return;}
  result.append(E('h3','Four-step practice plan: '+c.title),E('p','Private educational outline only; not a live booking.'));
