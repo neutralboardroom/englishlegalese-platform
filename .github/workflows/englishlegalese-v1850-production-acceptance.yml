@@ -34,8 +34,8 @@ jobs:
           done
           echo 'Public hosts did not converge to required release' >&2
           exit 1
-      - name: Run exact v1.85.0 public browser acceptance on apex and www
-        run: npx playwright test tests/v1850-production.spec.js --config=playwright.production.config.js
+      - name: Run v1.85.0 pages, legal/business nav and full teaching plan acceptance on both public hosts
+        run: npx playwright test tests/v1850-production.spec.js tests/v1850-followthrough-production.spec.js --config=playwright.production.config.js
       - name: Preserve evidence
         if: always()
         uses: actions/upload-artifact@v4

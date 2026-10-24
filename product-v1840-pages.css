@@ -63,3 +63,11 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #19
 .v1840-course-catalog-mount .btn:is(:hover,:focus-visible){box-shadow:0 1px 0 #b9d8df}
 .v1840-course-catalog-mount .btn:focus-visible{outline:3px solid #197f8d;outline-offset:3px}
 .v1840-course-catalog-mount .v1800-class-grid{align-items:stretch}
+
+/* Compact, readable unified dedicated-page navigation; homepage styles unchanged. */
+.v1840-topnav{gap:.45rem .8rem}
+.v1840-topnav>a,.v1840-topnav summary{font-size:.84rem;white-space:nowrap}
+.v1840-resource-items .v1850-nav-heading{display:block;padding:.55rem .5rem .2rem;font-size:.75rem;letter-spacing:.04em;color:#426575;font-weight:800}
+.v1840-resource-menu summary{min-height:34px;display:flex;align-items:center}
+.v1850-program-navigation{padding:.7rem 0;font-size:.85rem}
+@media(max-width:650px){.v1840-topnav{gap:.45rem .65rem}.v1840-resource-items{right:auto;left:0;max-width:85vw;min-width:min(80vw,275px);max-height:65vh}.v1840-top{flex-direction:column;align-items:flex-start;padding-block:1rem}}
