@@ -22,3 +22,6 @@ To record confirmed enrollment, add --verified-class-place after personally conf
 
 ## No-drift gates and remaining work
 Preserve 19 Roger Rules, 10 durable rules, three later directives; original laptop hero/logo; 28-topic catalog; 16+16 classroom session plans; 14 Legal and 8 Business resources; disabled Stripe; AI-avatar hold; 8da2e7e rollback. The branch must pass two independent source+browser qualification jobs and production acceptance before any live release. Owner notifications, private web dashboard, teacher vetting, waitlist enforcement, outbound confirmations and payments are not operational.
+
+## Absolute no-email builder rule (EL-RGR-023)
+**Never send emails.** This builder cannot and will not send, queue, schedule or activate owner alerts, student/teacher confirmations, marketing or test messages. Prior issue #48 is closed as not planned. The private CLI performs database-only review; no email is sent. Separate email/outreach workflows require separate explicit instructions and are outside the scope of this builder.
