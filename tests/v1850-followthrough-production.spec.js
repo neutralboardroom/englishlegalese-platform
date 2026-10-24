@@ -5,7 +5,7 @@ for(const host of ['https://englishlegalese.com','https://www.englishlegalese.co
   expect(res.headers()['x-englishlegalese-release']).toBe('1.85.0');
   const titles=(await page.locator('#mainNav > a').allTextContents()).map(x=>x.trim());
   expect(titles.indexOf('Business English')).toBe(titles.indexOf('Legal English')+1);
-  await page.goto(host+'/learn/classroom-programs/');
+  await page.goto(host+'/learn/legal-english/');await expect(page.getByRole('heading',{name:'Legal English courses, practice and live classes'})).toBeVisible();await page.goto(host+'/learn/classroom-programs/');
   await expect(page.getByRole('heading',{name:/Legal English and Business English: 16-session learning plans/})).toBeVisible();
   await expect(page.locator('#v1850-legal-sessions article')).toHaveCount(16);
   await expect(page.locator('#v1850-business-sessions article')).toHaveCount(16);
