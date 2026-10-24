@@ -31,6 +31,10 @@ assert(!/(?:sendResendEmail|sendMail|stripe\.|fetch\(|app\.post\(|express\(|proc
 assert(sql.includes('BEGIN;')&&sql.includes('COMMIT;'));
 const rules=fs.readFileSync('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md','utf8');
 assert(rules.includes('EL-RGR-023')&&rules.includes('NEVER sends emails'),'No-email builder directive must remain');
+const durable=fs.readFileSync('governance/ENGLISHLEGALESE_DURABLE_BUILDER_RULES_ADDENDUM_2026-10-24.md','utf8');
+for(const phrase of ['EL-DUR-011','NEVER send emails','EL-RGR-023','fail-closed','separate explicit authorization']) assert(durable.includes(phrase),'Durable builder rule missing: '+phrase);
+assert(durable.includes('EL-DUR-001…010'),'Ten original durable rules must remain');
+assert(!cli.includes('sendResendEmail'),'Builder CLI must not send emails');
 const doc=fs.readFileSync('docs/ENGLISHLEGALESE_PRIVATE_INTAKE_TRIAGE_V1851_2026-10-24.md','utf8');
 assert(doc.includes('Never send emails'),'No-email release statement must remain');
 console.log('PASS private v1.85.1 intake triage: validated statuses and UTC dates, additive isolated DB tables, auditable owner-only workflows; no public routes, emails or payments.');
