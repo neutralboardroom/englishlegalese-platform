@@ -22,3 +22,5 @@
 .v1870-rubric{padding:.4rem 0}
 .v1870-lab .v1870-module-list,.v1870-lab .v1870-checks{margin:.6rem 0}
 @media(max-width:650px){.v1870-workbook{padding:.55rem .65rem}.v1870-module{padding:.5rem .6rem}}
+
+.v1870-question-title{font-weight:750;margin:.1rem 0 .5rem;color:#17465a}
