@@ -1,0 +1,78 @@
+const {test,expect}=require('@playwright/test');
+// All course data is fictional, local to browser. Do not send emails or invoke any external service.
+test('Dedicated Legal English page lists all 24 detailed topics across its three tracks',async({page})=>{
+ await page.goto('/learn/legal-english/');
+ await expect(page.getByRole('heading',{name:/All 24 Legal English courses/})).toBeVisible();
+ await expect(page.locator('#v1860-legal-catalog .v1860-course-card')).toHaveCount(24);
+ await expect(page.locator('#v1860-track-core-professional .v1860-course-card')).toHaveCount(8);
+ await expect(page.locator('#v1860-track-legal-specialties .v1860-course-card')).toHaveCount(12);
+ await expect(page.locator('#v1860-track-international-academic .v1860-course-card')).toHaveCount(4);
+ const cards=page.locator('#v1860-legal-catalog .v1860-course-card');
+ await expect(cards.first().locator('.v1860-always-outline li')).toHaveCount(4);
+ await expect(cards.last().locator('.v1860-always-outline li')).toHaveCount(4);
+ await expect(page.locator('#v1850-legal-sessions article')).toHaveCount(16);
+ await expect(page.locator('.v1860-overview')).toContainText('$249');
+ await expect(page.locator('.v1860-overview')).toContainText('$699');
+ await expect(page.locator('.v1860-overview')).toContainText('24 subject-specific');
+});
+test('Legal English detail provides useful vocabulary, interactive feedback, homework and teacher notes',async({page})=>{
+ await page.goto('/learn/legal-english/');
+ const first=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await first.locator('summary').click();
+ await expect(first.locator('.v1860-glossary dt')).toHaveCount(5);
+ await expect(first.locator('.v1860-choice')).toHaveCount(3);
+ await expect(first.locator('.v1860-full-panel')).toContainText('Homework and self-check');
+ await expect(first.locator('.v1860-full-panel')).toContainText('Teacher lesson materials');
+ await first.getByRole('button',{name:'Check my answer'}).click();
+ await expect(first.locator('.v1860-feedback')).toContainText('Select a response first');
+ await first.locator('input[type="radio"]').first().check();
+ await first.getByRole('button',{name:'Check my answer'}).click();
+ await expect(first.locator('.v1860-feedback')).toContainText('Correct.');
+ await page.locator('#v1850-legal-sessions summary').first().click();
+ await expect(page.locator('#v1850-legal-sessions article').first()).toContainText('50-minute instructor agenda');
+});
+test('Business English page shows 16 + 8 detailed course outlines and 16-class plan',async({page})=>{
+ await page.goto('/learn/business-english/');
+ await expect(page.locator('#v1850-business-cards .v1850-course-card')).toHaveCount(16);
+ await expect(page.locator('#v1850-investor-cards .v1850-course-card')).toHaveCount(8);
+ await expect(page.locator('.v1850-course-card .v1860-always-outline')).toHaveCount(24);
+ await expect(page.locator('.v1850-course-card .v1860-always-outline li')).toHaveCount(96);
+ await expect(page.locator('#v1850-business-sessions article')).toHaveCount(16);
+ await expect(page.locator('.v1860-overview')).toContainText('24 detailed courses');
+ await expect(page.locator('.v1860-overview')).toContainText('$249');
+ await expect(page.locator('.v1860-overview')).toContainText('$699');
+ const program=page.locator('#v1850-extended'),catalog=page.locator('#v1850-business');
+ expect(await program.evaluate((node,other)=>!!(node.compareDocumentPosition(document.getElementById(other)) & Node.DOCUMENT_POSITION_FOLLOWING),'v1850-business')).toBeTruthy();
+ const card=catalog.locator('.v1850-course-card').first();
+ await card.locator('summary').click();
+ await expect(card.locator('.v1850-material dt')).toHaveCount(5);
+ await expect(card.locator('.v1850-material li')).toHaveCount(4);
+ await page.locator('#v1850-business-sessions summary').first().click();
+ await expect(page.locator('#v1850-business-sessions article').first()).toContainText('Homework');
+});
+test('Subject pages link to free resources, pricing, enrollment, and one another',async({page})=>{
+ await page.goto('/learn/legal-english/');
+ await expect(page.locator('.v1860-subject-jump a[href="#v1860-legal-courses"]')).toBeVisible();
+ await expect(page.locator('.v1860-subject-jump a[href="#v1860-legal-program"]')).toBeVisible();
+ await expect(page.locator('.v1860-overview a[href="/learn/enroll/"]')).toHaveCount(1);
+ await expect(page.locator('.v1860-overview a[href="/pricing/"]')).toHaveCount(1);
+ await expect(page.locator('a[href="/learn/business-english/"]').first()).toBeAttached();
+ await page.goto('/learn/business-english/');
+ await expect(page.locator('.v1850-jump a[href="#v1850-business"]')).toBeVisible();
+ await expect(page.locator('.v1850-jump a[href="#v1850-investors"]')).toBeVisible();
+ await expect(page.locator('.v1850-jump a[href="#v1860-business-program"]')).toBeVisible();
+ await expect(page.locator('.v1860-overview a[href="/learn/business-resources/"]')).toHaveCount(1);
+});
+test('No POST requests are made by the detailed courses or local practice',async({page})=>{
+ const posts=[];
+ page.on('request',req=>{if(req.method()==='POST')posts.push(req.url())});
+ await page.goto('/learn/legal-english/');
+ const c=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await c.locator('summary').click();
+ await c.locator('input[type=radio]').first().check();
+ await c.getByRole('button',{name:'Check my answer'}).click();
+ await page.goto('/learn/business-english/');
+ const b=page.locator('#v1850-business-cards .v1850-course-card').first();
+ await b.locator('summary').click();await b.locator('input[type=radio]').first().check();await b.locator('button').click();
+ expect(posts).toEqual([]);
+});
