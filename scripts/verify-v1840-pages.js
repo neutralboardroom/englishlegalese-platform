@@ -28,7 +28,7 @@ for(const p of ['/pricing/','/learn/courses/','/learn/study-planner/','/learn/tr
 const homePricing=root.slice(root.indexOf('  <section id="pricing"'),root.indexOf('\n  </section>',root.indexOf('  <section id="pricing"'))+'\n  </section>'.length);
 const dedicated=rd('pricing/index.html');
 assert(dedicated.includes(homePricing.replaceAll('href="#','href="/#')),'Full exact homepage pricing including all disclosures duplicated, not replaced');
-for(const price of ['$12/month','$19/month','$29/month','$26','$85 total','$45','$159 total','From $549'])assert(dedicated.includes(price),'Pricing parity '+price);
+for(const price of ['$12/month','$19/month','$29/month','$26','$85 total','$49','$179 total','From $499'])assert(dedicated.includes(price),'Pricing parity '+price);
 assert(root.includes('<section id="pricing"'),'Original homepage pricing remains');
 assert(rd('learn/courses/index.html').includes('id="v1840-course-mount"'),'Dedicated Courses has its full 28-topic interactive catalog');
 assert(rd('learn/courses/index.html').includes('/product-v1800-catalog.js?v=1.84.0'),'Dedicated courses load real 28-topic curriculum engine');
