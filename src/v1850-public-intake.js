@@ -33,7 +33,10 @@ function install(app){
   const scheduleId=safe(body.schedule_id,4,100),note=String(body.note||'').slice(0,500),requestId=safe(body.client_request_id,36,36);
   if(!name||!emailValid(email)||!allowedPrograms.has(program)||!allowedFormats.has(format)||!scheduleId||!requestId||!/^[a-f\d-]{36}$/i.test(requestId))return send(res,400,{ok:false,error:'Please check the required enrollment details.'});
   const slot=schedules.find(s=>s.id===scheduleId);
-  if(format==='group'&&(!slot||(program!==slot.program&&!(program==='investor'&&slot.program==='business'))))return send(res,400,{ok:false,error:'Select a valid group schedule.'});
+  const isTopicInquiry=scheduleId==='topic-time-request';
+  const topicNote=/^\\[Topic-specific inquiry: (?:class-\\d{2}|be-\\d{2}|ws-\\d{2}) \\| [^\\]\\n]{5,140}; sessions=(?:1|4); format=(?:group|private)\\]/.test(note);
+  if(isTopicInquiry&&(!topicNote||format!=='group'))return send(res,400,{ok:false,error:'Provide a valid topic-specific group inquiry.'});
+  if(format==='group'&&!isTopicInquiry&&(!slot||(program!==slot.program&&!(program==='investor'&&slot.program==='business'))))return send(res,400,{ok:false,error:'Select a valid group schedule.'});
   if(format==='private'&&scheduleId!=='private-time-request')return send(res,400,{ok:false,error:'Please request a private lesson time.'});
   try{
    const q=await pool.query(`INSERT INTO englishlegalese_enrollment_requests(full_name,email,program,format,schedule_id,note,client_request_id) VALUES($1,$2,$3,$4,$5,$6,$7::uuid) ON CONFLICT (client_request_id) DO UPDATE SET client_request_id=EXCLUDED.client_request_id RETURNING id`,[name,email,program,format,scheduleId,note,requestId]);
