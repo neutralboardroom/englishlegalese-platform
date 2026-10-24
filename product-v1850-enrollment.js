@@ -57,7 +57,7 @@ f.addEventListener('submit',async e=>{
  try{
   const resp=await fetch('/api/v1850/enroll',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
   const result=await resp.json();if(!resp.ok||!result.ok)throw Error(result.error||'Could not submit');
-  const success=el('p','Inquiry received. Reference: '+result.reference+'. A class place, teacher and meeting access are not confirmed; no payment or automatic email was sent.');
+  const success=el('p','Inquiry received. Reference: '+result.reference+'. A class place, teacher and meeting access are not confirmed. No payment was taken, and no automatic email was sent.');
   success.className='v1850-success';f.replaceWith(success);
  }catch(err){status.textContent=err.message;submit.disabled=false}
 });
