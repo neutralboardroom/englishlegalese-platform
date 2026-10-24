@@ -34,7 +34,7 @@ function install(app){
   if(!name||!emailValid(email)||!allowedPrograms.has(program)||!allowedFormats.has(format)||!scheduleId||!requestId||!/^[a-f\d-]{36}$/i.test(requestId))return send(res,400,{ok:false,error:'Please check the required enrollment details.'});
   const slot=schedules.find(s=>s.id===scheduleId);
   const isTopicInquiry=scheduleId==='topic-time-request';
-  const topicNote=/^\\[Topic-specific inquiry: (?:class-\\d{2}|be-\\d{2}|ws-\\d{2}) \\| [^\\]\\n]{5,140}; sessions=(?:1|4); format=(?:group|private)\\]/.test(note);
+  const topicNote=note.startsWith('[Topic-specific inquiry: ')&&(note.includes('; sessions=1;')||note.includes('; sessions=4;'))&&note.includes('; format='+format+']')&&/(?:class-|be-|ws-)\d{2}/.test(note);
   if(isTopicInquiry&&(!topicNote||format!=='group'))return send(res,400,{ok:false,error:'Provide a valid topic-specific group inquiry.'});
   if(format==='group'&&!isTopicInquiry&&(!slot||(program!==slot.program&&!(program==='investor'&&slot.program==='business'))))return send(res,400,{ok:false,error:'Select a valid group schedule.'});
   if(format==='private'&&scheduleId!=='private-time-request')return send(res,400,{ok:false,error:'Please request a private lesson time.'});
