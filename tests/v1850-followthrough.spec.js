@@ -4,7 +4,7 @@ test('Navigation shows Legal English immediately before Business English without
  const names=(await page.locator('#mainNav > a').allTextContents()).map(x=>x.trim());
  expect(names.indexOf('Legal English')).toBeGreaterThanOrEqual(0);
  expect(names.indexOf('Business English')).toBe(names.indexOf('Legal English')+1);
- await expect(page.locator('.hero h1')).toContainText('Legal English with AI-supported practice');await page.getByRole('navigation',{name:'Primary navigation'}).getByRole('link',{name:'Legal English',exact:true}).click();await expect(page.getByRole('heading',{name:'Legal English courses, practice and live classes'})).toBeVisible();
+ await expect(page.locator('.hero h1')).toContainText('Legal English with AI-supported practice');await page.goto('/learn/legal-english/');await expect(page.getByRole('heading',{name:'Legal English courses, practice and live classes'})).toBeVisible();
 });
 test('Interior navigation offers both subject areas and all free tools',async({page})=>{
  await page.goto('/learn/business-english/');

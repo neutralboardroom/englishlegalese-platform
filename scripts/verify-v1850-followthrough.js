@@ -14,6 +14,7 @@ for(const file of pages){const html=rd(file),n=html.slice(html.indexOf('<nav cla
  for(const slug of biz)assert(n.includes('href="/learn/business-resources/'+slug+'/"'),file+' missing Business tool '+slug);
  for(const p of ['/learn/legal-resources/','/learn/business-resources/','/learn/teach-with-us/','/learn/classroom-programs/','/learn/enroll/'])assert(n.includes('href="'+p+'"'),file+' missing '+p);
  assert(html.includes('href="/learn/classroom-programs/"'),file+' missing plan route in header/footer');
+ const footer=html.slice(html.indexOf('<footer'));assert.equal(footer.split('href="/learn/business-english/"').length-1,1,file+' must keep exactly one Business English footer route');
 }
 const guide=rd('product-v1850-session-guides.js');const json=guide.slice(guide.indexOf('const PLANS=')+'const PLANS='.length,guide.indexOf(';\nconst render='));
 const plans=JSON.parse(json);
