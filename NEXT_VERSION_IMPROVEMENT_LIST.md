@@ -1,3 +1,9 @@
+## October 24, 2026 — FINAL owner decision for next LIVE Legal and Business English release
+
+**Authoritative introductory human-taught prices (supersede the older research proposals below):** Group 50-minute classes: **$26 for one, $85 for four, $269 for sixteen**. Private 50-minute classes: **$49 for one, $179 for four, $699 for sixteen**. The owner explicitly retains **$699 for the 16-private-lesson package** despite lowering the shorter private options. Corporate team-training inquiries **start at $499**, individually quoted. Apply identically to Legal English, Business English, and the Wall Street/Investor English pathway. AI subscription tiers **$12/$19/$29 monthly remain unchanged**; free resources remain free. No automatic charges, no unverified instructor promises. Permanent builder **NEVER SEND EMAIL** EL-RGR-023 and EL-DUR-011 remain binding. See docs/ENGLISHLEGALESE_HUMAN_TAUGHT_PRICING_RESEARCH_2026-10-24.md for the final current rate card and historical context. Original homepage design/hero protected; complete 24-topic Legal, 24-topic Business/Investor catalogs and separate 16+16 session details below each dedicated subject page.
+
+---
+
 ## EnglishLegalese v1.85.0 HF3 — Subject-page detail + researched human-class prices (October 24, 2026)
 Release state: SOURCE CANDIDATE. Do not claim deployed/accepted until two independent exact-head CI jobs, Render SHA, and public apex/www desktop-tablet-mobile tests pass.
 
