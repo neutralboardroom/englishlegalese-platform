@@ -3,8 +3,8 @@ const { randomUUID } = require('node:crypto');
 const { Pool } = require('pg');
 const trustedHosts=new Set(['englishlegalese.com','www.englishlegalese.com','englishlegalese-platform.onrender.com']);
 const schedules=Object.freeze([
- {id:'legal-group-mon',program:'legal',format:'group',title:'Legal English Extended Classroom',teacher:'Roger Gillman',start:'2026-11-02T19:00:00+07:00',duration_minutes:50,timezone:'Asia/Ho_Chi_Minh',repeat:'weekly',sessions:16,day:'Monday',capacity:6,price_usd:249,calendar_reference:'u4lgv6pad4kk506cm03g313gfo'},
- {id:'business-group-wed',program:'business',format:'group',title:'Business English Extended Classroom',teacher:'Roger Gillman',start:'2026-11-04T19:00:00+07:00',duration_minutes:50,timezone:'Asia/Ho_Chi_Minh',repeat:'weekly',sessions:16,day:'Wednesday',capacity:6,price_usd:249,calendar_reference:'cc3a8e2b7lg4tqrimb2scel73s'}
+ {id:'legal-group-mon',program:'legal',format:'group',title:'Legal English Extended Classroom',teacher:'Roger Gillman',start:'2026-11-02T19:00:00+07:00',duration_minutes:50,timezone:'Asia/Ho_Chi_Minh',repeat:'weekly',sessions:16,day:'Monday',capacity:6,price_usd:269,calendar_reference:'u4lgv6pad4kk506cm03g313gfo'},
+ {id:'business-group-wed',program:'business',format:'group',title:'Business English Extended Classroom',teacher:'Roger Gillman',start:'2026-11-04T19:00:00+07:00',duration_minutes:50,timezone:'Asia/Ho_Chi_Minh',repeat:'weekly',sessions:16,day:'Wednesday',capacity:6,price_usd:269,calendar_reference:'cc3a8e2b7lg4tqrimb2scel73s'}
 ]);
 const allowedPrograms=new Set(['legal','business','investor']);
 const allowedFormats=new Set(['group','private']);
@@ -33,7 +33,10 @@ function install(app){
   const scheduleId=safe(body.schedule_id,4,100),note=String(body.note||'').slice(0,500),requestId=safe(body.client_request_id,36,36);
   if(!name||!emailValid(email)||!allowedPrograms.has(program)||!allowedFormats.has(format)||!scheduleId||!requestId||!/^[a-f\d-]{36}$/i.test(requestId))return send(res,400,{ok:false,error:'Please check the required enrollment details.'});
   const slot=schedules.find(s=>s.id===scheduleId);
-  if(format==='group'&&(!slot||(program!==slot.program&&!(program==='investor'&&slot.program==='business'))))return send(res,400,{ok:false,error:'Select a valid group schedule.'});
+  const isTopicInquiry=scheduleId==='topic-time-request';
+  const topicNote=note.startsWith('[Topic-specific inquiry: ')&&(note.includes('; sessions=1;')||note.includes('; sessions=4;'))&&note.includes('; format='+format+']')&&/(?:class-|be-|ws-)\d{2}/.test(note);
+  if(isTopicInquiry&&(!topicNote||format!=='group'))return send(res,400,{ok:false,error:'Provide a valid topic-specific group inquiry.'});
+  if(format==='group'&&!isTopicInquiry&&(!slot||(program!==slot.program&&!(program==='investor'&&slot.program==='business'))))return send(res,400,{ok:false,error:'Select a valid group schedule.'});
   if(format==='private'&&scheduleId!=='private-time-request')return send(res,400,{ok:false,error:'Please request a private lesson time.'});
   try{
    const q=await pool.query(`INSERT INTO englishlegalese_enrollment_requests(full_name,email,program,format,schedule_id,note,client_request_id) VALUES($1,$2,$3,$4,$5,$6,$7::uuid) ON CONFLICT (client_request_id) DO UPDATE SET client_request_id=EXCLUDED.client_request_id RETURNING id`,[name,email,program,format,scheduleId,note,requestId]);

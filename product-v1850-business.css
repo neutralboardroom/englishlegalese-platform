@@ -39,3 +39,6 @@
 
 /* v1.85 teachers/classroom drop-down: no change to homepage hero or layout */
 .v1850-teachers-menu .v1790-resource-popover{min-width:245px}.v1850-teachers-menu summary{white-space:nowrap}.v1850-teachers-menu .v1790-resource-nav a{display:block}
+
+/* Preserve native HTML hidden attribute for conditional topic interest fields. */
+.v1850-field[hidden]{display:none!important}

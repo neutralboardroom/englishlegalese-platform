@@ -1,0 +1,26 @@
+/* v1.85 HF4 — subject page course workbooks only; no homepage changes. */
+.v1870-classification{font-size:.8rem;font-weight:750;color:#155971;background:#edf7fa;border-left:3px solid #438898;padding:.45rem .7rem;margin:.55rem 0}
+.v1870-workbook{border:1px solid #cbdfe6;border-radius:9px;margin-top:1rem;padding:.65rem .85rem;background:#f7fbfc}
+.v1870-toggle{display:flex;align-items:center;gap:.65rem;cursor:pointer;min-height:44px;font-weight:750;color:#155c72}
+.v1870-toggle input{height:19px;width:19px;flex:none;accent-color:#155c72}
+.v1870-lab{display:none;padding-top:.5rem}
+.v1870-workbook:has(> .v1870-toggle input:checked)>.v1870-lab{display:block}
+.v1870-lab h5{font-size:1.03rem;color:#16465a;margin:.9rem 0 .45rem}
+.v1870-lab h6{font-size:.95rem;margin:.55rem 0 .25rem;color:#17445a}
+.v1870-disclaimer{font-size:.87rem;color:#4f6876;line-height:1.5}
+.v1870-module{padding:.55rem .75rem;border:1px solid #d7e5e9;border-radius:7px;background:#fff;margin:.5rem 0}
+.v1870-module p,.v1870-worked p{font-size:.93rem;margin:.45rem 0}
+.v1870-worked{background:#fff;padding:.65rem .8rem;border:1px solid #d1e1e7;border-radius:7px;margin:.75rem 0}
+.v1870-question{margin:.7rem 0;border:1px solid #d3e3e8;border-radius:8px;padding:.75rem;min-width:0}
+.v1870-question legend{font-weight:750}
+.v1870-answer,.v1870-rubric-item{display:flex;align-items:flex-start;gap:.6rem;padding:.28rem 0;cursor:pointer;line-height:1.5}
+.v1870-answer input,.v1870-rubric-item input{flex:none;margin-top:.34rem;accent-color:#12667c}
+.v1870-check-feedback{font-size:.88rem;font-weight:650;min-height:1.3em}
+.v1870-assignment{margin-top:.8rem}
+.v1870-draft-label{display:block;font-size:.94rem;font-weight:650}
+.v1870-draft-label textarea{display:block;width:100%;box-sizing:border-box;margin-top:.4rem;padding:.7rem;border:1px solid #91b9c5;border-radius:7px;font:inherit;resize:vertical;min-height:95px}
+.v1870-rubric{padding:.4rem 0}
+.v1870-lab .v1870-module-list,.v1870-lab .v1870-checks{margin:.6rem 0}
+@media(max-width:650px){.v1870-workbook{padding:.55rem .65rem}.v1870-module{padding:.5rem .6rem}}
+
+.v1870-question-title{font-weight:750;margin:.1rem 0 .5rem;color:#17465a}
