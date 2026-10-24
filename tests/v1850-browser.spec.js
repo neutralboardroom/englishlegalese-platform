@@ -34,8 +34,8 @@ test('v1.85 private study planner operates without account or server submission'
 test('v1.85 extended Legal and Business classrooms, enrollment and teacher recruitment workflows',async({page})=>{
  await page.goto('/pricing/#extended-programs');
  await expect(page.locator('#extended-programs .v1850-course-card')).toHaveCount(2);
- await expect(page.locator('#extended-programs')).toContainText('$289');
- await expect(page.locator('#extended-programs')).toContainText('$799');
+ await expect(page.locator('#extended-programs')).toContainText('$269');
+ await expect(page.locator('#extended-programs')).toContainText('$699');
  await expect(page.locator('#extended-programs')).toContainText('independent');
  await expect(page.locator('input[type="payment"]')).toHaveCount(0);
  await page.goto('/learn/teach-with-us/');
