@@ -13,7 +13,7 @@ test('v1.81 published pricing is reachable from header, footer and homepage',asy
 test('v1.81 researched price disclosure stays accurate, explicit and non-transactional',async({page})=>{
  await visit(page,'pricing');const p=page.locator('#pricing');
  await expect(p.locator('.v1810-card')).toHaveCount(4);
- for(const value of ['14 practical free learning resources','Starter:','$12/month','Plus:','$19/month','Pro:','$29/month','100 replies','250 replies','500 replies','$24','$79 total','$59','$219 total','From $499','Class schedules and enrollment requests are open','No automatic charges','US dollars'])await expect(p).toContainText(value);
+ for(const value of ['14 practical free learning resources','Starter:','$12/month','Plus:','$19/month','Pro:','$29/month','100 replies','250 replies','500 replies','$28','$89 total','$68','$249 total','From $499','Class schedules and enrollment requests are open','No automatic charges','US dollars'])await expect(p).toContainText(value);
  await expect(p.locator('button')).toHaveCount(0);
  await expect(p.locator('input')).toHaveCount(0);
  await expect(p.locator('form')).toHaveCount(0);
