@@ -1,19 +1,24 @@
 # EnglishLegalese: human-taught class pricing benchmark and owner-approved rates
 
-## Current final introductory pricing — owner delegates judgment (24 October 2026)
-This section is **the current price authority** and supersedes the initial approximately-15% proposal documented below. The owner specifically prioritizes not pricing EnglishLegalese out of the market and delegates the final choice. Competitor reassessment showed wide variability: Corporate Lingua Academy advertises 16 × 45-minute **private Business English** sessions at US$400 (https://corporatelinguaacademy.com/pages/pricing); Preply advertises a broad low-priced tutor marketplace (https://preply.com/en/online/tutors-business-english). British Legal Centre specialist programs (https://www.british-legal-centre.com/set/legal-english-course) are much more expensive but have different credentials and scope. No guarantee of parity or conversion is claimed.
+## FINAL INTRODUCTORY PRICE CARD — latest owner instruction, October 24, 2026
 
-| Human-led 50-minute offering | Final introductory USD price | Previous USD price |
-|---|---:|---:|
-| One small-group lesson | **$26** | $24 |
-| Four small-group lessons | **$85** | $79 |
-| Sixteen small-group lessons | **$269** | $249 |
-| One private lesson | **$59** (unchanged) | $59 |
-| Four private lessons | **$219** (unchanged) | $219 |
-| Sixteen private lessons | **$699** (unchanged) | $699 |
-| Corporate team training, starting at | **$549** | $499 |
+This section is the sole CURRENT human-class price authority; prior pricing proposals below are history only. The owner delegates overall pricing judgment but specifically requests that the **16-lesson private package remain $699**. To avoid pricing students out of the market, reduce single and four-lesson private prices while keeping the 16-lesson bundle unchanged.
 
-Discount calculations: sixteen group singles cost $416, package saves **$147 / 35.34%**; sixteen private singles cost $944, package saves **$245 / 25.95%**. Four group singles cost $104, save $19; four private singles cost $236, save $17. No guaranteed teachers or bookings; existing enrollments and individually confirmed quotes must be honored; no actual card checkout enabled. Existing free lessons/resources stay free; AI subscription tiers stay $12/$19/$29, unchanged. This is not an instruction for the builder to send emails; EL-RGR-023 and EL-DUR-011 prohibit any builder outbound mail.
+| Human-taught offering (50 min each) | FINAL USD price |
+| --- | ---: |
+| Group: one session | **$26** |
+| Group: four sessions | **$85** |
+| Group: sixteen sessions | **$269** |
+| Private: one session | **$49** |
+| Private: four sessions | **$179** |
+| Private: sixteen sessions | **$699** (explicitly retained) |
+| Corporate team training | **From $499**, bespoke quote |
+
+Package math: group 16 × $26 = $416 versus $269, saving $147 (35.34%); private 16 × $49 = $784 versus $699, saving $85 (10.84%). Group four saves $19 versus $104 individually; private four saves $17 versus $196 individually. At $699, a private 16-pack works out to $43.69 per session, compared with $44.75 per session for a four-pack. This is an intentionally modest incremental discount consistent with the express request to retain $699.
+
+Apply one consistent rate card to both Legal English and Business/Investor English dedicated pages, pricing and homepage, enrollment, 16-session plan, source verification and browser assertions. **Do not alter** AI $12/$19/$29 monthly plan prices, existing free tools, original protected homepage hero/logo, inactive Stripe checkout, or staffing/bookability guarantees. Do not send emails or activate any email workflow: owner EL-RGR-023 and durable EL-DUR-011.
+
+Competitor context: British Legal Centre specialist course https://www.british-legal-centre.com/set/legal-english-course (not like-for-like credentials or duration), lower-cost Preply Business English tutoring marketplace https://preply.com/en/online/tutors-business-english, Corporate Lingua Academy private business language packages https://corporatelinguaacademy.com/pages/pricing. Pricing is a launch decision to prioritize acquisition and perceived value; monitor real teacher costs, conversion and retention before revisiting.
 
 **History:** The initial 15%-uplift proposal below was later modified by an explicit owner request for market-accessible pricing. Its numerical table is historical, **not the current rate card**.
 
