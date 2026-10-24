@@ -29,4 +29,8 @@ for(const text of ['englishlegalese_intake_triage_audit','FOR UPDATE','ROLLBACK'
 assert(!/\b(?:DROP\s+TABLE|TRUNCATE|DELETE\s+FROM|ALTER\s+TABLE)\b/i.test(sql));
 assert(!/(?:sendResendEmail|sendMail|stripe\.|fetch\(|app\.post\(|express\(|process\.env\.DATABASE_URL\b)/.test(cli));
 assert(sql.includes('BEGIN;')&&sql.includes('COMMIT;'));
+const rules=fs.readFileSync('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md','utf8');
+assert(rules.includes('EL-RGR-023')&&rules.includes('NEVER sends emails'),'No-email builder directive must remain');
+const doc=fs.readFileSync('docs/ENGLISHLEGALESE_PRIVATE_INTAKE_TRIAGE_V1851_2026-10-24.md','utf8');
+assert(doc.includes('Never send emails'),'No-email release statement must remain');
 console.log('PASS private v1.85.1 intake triage: validated statuses and UTC dates, additive isolated DB tables, auditable owner-only workflows; no public routes, emails or payments.');
