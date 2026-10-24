@@ -1,0 +1,37 @@
+/* v1.86.0 dedicated Legal and Business English pages only; preserve approved homepage. */
+.v1860-overview{border:1px solid #cbdfe6;border-radius:13px;padding:1.2rem 1.45rem;background:#f5fafb;margin:1.35rem 0 1.9rem}
+.v1860-overview h2{font-size:clamp(1.25rem,2.5vw,1.7rem);margin:0 0 .5rem}
+.v1860-overview p{max-width:920px;margin:.45rem 0}
+.v1860-subject-jump{display:flex;gap:.65rem;flex-wrap:wrap;margin:1rem 0}
+.v1860-subject-jump a{display:inline-flex;align-items:center;min-height:44px;padding:.52rem .82rem;border:1px solid #9bbfc9;border-radius:7px;background:#fff;color:#0c6077;font-weight:700;text-decoration:none}
+.v1860-subject-jump a:focus-visible,.v1860-full-material summary:focus-visible,.v1860-check:focus-visible{outline:3px solid #1a7890;outline-offset:3px}
+.v1860-catalog>h2,.v1860-sessions>h2{margin:0 0 .65rem}
+.v1860-course-track{scroll-margin-top:1rem}
+.v1860-course-track>h3{font-size:1.35rem;color:#164459;margin-bottom:.4rem}
+.v1860-course-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1rem 0 2rem}
+.v1860-course-card{border:1px solid #d0e0e5;border-radius:12px;padding:1.1rem 1.2rem;background:#fff;min-width:0}
+.v1860-course-card h4{font-size:1.08rem;line-height:1.35;margin:.35rem 0 .5rem}
+.v1860-course-tag{font-size:.77rem;text-transform:uppercase;letter-spacing:.05em;color:#17667a;font-weight:750;margin:0}
+.v1860-outcome{color:#284c5c;margin:.5rem 0}
+.v1860-always-outline{border-top:1px solid #d8e7ea;margin-top:.85rem;padding-top:.7rem}
+.v1860-always-outline h4,.v1860-always-outline h5{font-size:.95rem;font-weight:750;margin:.1rem 0 .5rem;color:#18485b}
+.v1860-always-outline ol{padding-left:1.3rem;margin:.35rem 0 .9rem}
+.v1860-always-outline li{padding-left:.1rem;margin:.35rem 0;line-height:1.55}
+.v1860-full-material,.v1850-course-card:has(.v1860-always-outline) details{border-top:1px solid #dbe8ec;margin-top:.6rem;padding-top:.45rem}
+.v1860-full-material summary{min-height:44px;cursor:pointer;color:#13627b;font-weight:750;display:flex;align-items:center}
+.v1860-full-panel{display:grid;gap:.85rem;padding-top:.5rem}
+.v1860-detail-section{margin:0!important;padding:.25rem 0}
+.v1860-detail-section h5{font-size:.94rem;color:#143e53;margin:.2rem 0 .5rem}
+.v1860-glossary{margin:0;display:grid;grid-template-columns:minmax(80px,1fr) 2.5fr;gap:.4rem}
+.v1860-glossary dt{font-weight:750}.v1860-glossary dd{margin:0}
+.v1860-selfcheck fieldset{border:1px solid #cfe0e5;border-radius:8px;padding:.7rem;min-width:0}
+.v1860-choice{display:flex;align-items:flex-start;gap:.55rem;margin:.55rem 0;cursor:pointer}
+.v1860-choice input{margin-top:.35rem;flex-shrink:0}
+.v1860-check{border:0;border-radius:6px;padding:.55rem .85rem;min-height:44px;color:#fff;background:#125e73;cursor:pointer;font:inherit;margin:.6rem 0}
+.v1860-feedback{font-size:.94rem;font-weight:600;min-height:1.5em}
+.v1860-note{font-size:.9rem;color:#486777}
+.v1860-sessions{border-top:1px solid #d3e5e9;padding-top:1.3rem}
+.v1860-sessions .v1850-session-card{max-width:900px}
+.v1850-course-card:has(.v1860-always-outline){gap:.15rem}
+@media(max-width:720px){.v1860-course-grid{grid-template-columns:1fr}.v1860-overview{padding:1rem}.v1860-glossary{grid-template-columns:minmax(85px,1fr) 2fr}}
+@media(prefers-reduced-motion:reduce){.v1860-subject-jump a{scroll-behavior:auto}}
