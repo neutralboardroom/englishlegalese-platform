@@ -20,5 +20,7 @@ Implement all 24 owner-approved Legal English class topics (8 professional skill
 ## EL-RGR-023 — Absolute no-email rule for the EnglishLegalese builder (owner instruction 2026-10-24)
 The EnglishLegalese universal next-version builder **NEVER sends emails**. It must not send, test-send, queue, schedule, or enable any outbound messages to owners, students, teacher applicants, employment targets, companies, or any other recipients. Owner notification email work suggested in issue #48 is explicitly rejected and closed as not planned. Do not introduce it in this builder in later versions. Separate, independently authorized email workflows are beyond this builder's scope and may not be inferred from an approval to continue, finish or deploy a website release. Preserve existing independently managed systems without changing their authorization or sending messages.
 
+**Companion durable builder rule:** EL-DUR-011 in `governance/ENGLISHLEGALESE_DURABLE_BUILDER_RULES_ADDENDUM_2026-10-24.md`; both are mandatory. The ten predecessor durable rules remain intact.
+
 ## Permanent enforcement
 Every future release must source-verify the continued presence and complete meaning of EL-RGR-020–023, the immutable original 19+10 canonical entries, 24-topic coverage, all five components per added class, main/footer navigation parity and actual live deployment evidence. No builder-created edit may weaken or silently reinterpret these owner commands; amendments require explicit owner instruction and an additive successor record.
