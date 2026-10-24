@@ -4,6 +4,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs');
 const {records,isUUID,parseFollowup,validate}=require('../src/v1851-intake-triage-policy');
 const sql=fs.readFileSync('db/intake/v1851-triage.sql','utf8');
 const cli=fs.readFileSync('scripts/owner-triage-v1851-intake.js','utf8');
+const policy=fs.readFileSync('src/v1851-intake-triage-policy.js','utf8');
 const id='a1234567-1234-4234-8234-123456789abc';
 assert(isUUID(id));assert(!isUUID('not-an-id'));assert(!isUUID('abc;DROP TABLE users'));
 assert.equal(parseFollowup(''),null);
@@ -21,7 +22,7 @@ assert.throws(()=>validate({...record,actor:'x'}));
 for(const [kind,c] of Object.entries(records)){
  assert(sql.includes('CREATE TABLE IF NOT EXISTS '+c.review));
  assert(sql.includes('REFERENCES '+c.source+'(id) ON DELETE RESTRICT'));
- assert(cli.includes(c.source)&&cli.includes(c.review));
+ assert(policy.includes(c.source)&&policy.includes(c.review));
  assert(c.statuses.includes('new')&&c.statuses.includes('closed'));
 }
 for(const text of ['englishlegalese_intake_triage_audit','FOR UPDATE','ROLLBACK','--acknowledge-personal-data','ENGLISHLEGALESE_INTAKE_DATABASE_URL','rejectUnauthorized:true','--verified-class-place','--verified-qualifications'])assert(cli.includes(text),'Missing guard '+text);
