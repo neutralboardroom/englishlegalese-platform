@@ -31,7 +31,7 @@ for(const page of [L,B]){
  for(const t of ['Human-taught classes','16-session','Self-guided','SmartTeacher AI','v1870-curriculum-workbooks.js','v1870-curriculum-workbooks.css','/learn/enroll/'])assert(page.includes(t),'Dedicated page missing learning modality or scripts: '+t);
  assert(!/AI-led (?:classes|courses) available now|automated tutor now live/i.test(page),'Do not claim planned AI actually teaches classes');
 }
-assert(L.includes('All 24 Legal English human-teacher class topics')&&B.includes('16 Business English')&&B.includes('8 Wall Street'));
+assert(L.includes('All 24 Legal English courses')&&L.includes('human-teacher topic options')&&B.includes('16 Business English')&&B.includes('8 Wall Street'));
 assert(L.includes('instructor availability')&&B.includes('verified staffing'));
 assert(E.includes('one-lesson or four-lesson')&&E.includes('24 Legal English'));
 for(const item of ["select('topic'","One class on a selected topic","Four classes on a selected topic","topic-time-request","Preferred teaching topic"])assert(enrollJS.includes(item),'Real topic-interest form missing '+item);
