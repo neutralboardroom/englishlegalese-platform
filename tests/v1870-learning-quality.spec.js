@@ -40,7 +40,7 @@ test('Three scenario-specific knowledge checks grade locally, and draft disappea
  await quiz.first().locator('input[type=radio]').first().check();
  await expect(quiz.first().locator('.v1870-check-feedback')).not.toContainText('Choose one answer');
  await quiz.nth(1).locator('input[type=radio]').nth(1).check();
- await expect(quiz.nth(1).locator('.v1870-check-feedback')).toContainText(/Correct\\.|Review\\./);
+ await expect(quiz.nth(1).locator('.v1870-check-feedback')).toContainText(/Correct|Review/);
  await c.locator('.v1870-draft-label textarea').fill('Invented practice text only; no client data.');
  await c.locator('.v1870-rubric-item input').first().check();
  expect(posts).toEqual([]);
