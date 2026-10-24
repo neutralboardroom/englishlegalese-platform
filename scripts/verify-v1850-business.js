@@ -28,7 +28,7 @@ assert(rootFooter.includes('href="/learn/business-english/"'),'homepage footer')
 assert(home.includes('Practical Legal English and Business English'),'discreet homepage mention');
 assert(rd('app.js').includes('Legal English with AI-supported practice and live online classes with human teachers.'),'protected original homepage hero');
 assert(rd('app.js').includes('Start your free diagnostic'),'protected original homepage CTA');
-for(const required of ['$249','$699','16','Legal English','Business English','separate'])assert(pricing.toLowerCase().includes(required.toLowerCase()),'proposed distinct extended plans '+required);
+for(const required of ['$269','$699','16','Legal English','Business English','separate'])assert(pricing.toLowerCase().includes(required.toLowerCase()),'proposed distinct extended plans '+required);
 assert(business.includes('id="v1850-business-cards"')&&business.includes('id="v1850-investor-cards"'));
 assert(!business.includes('Eight additional')&&!business.includes('Four complete Business English topics'),'no visibly new versus old labels');
 assert(teacher.includes('id="v1850-teacher-apply"')&&teacher.includes('product-v1850-teacher-application.js'),'staffing intake is usable');

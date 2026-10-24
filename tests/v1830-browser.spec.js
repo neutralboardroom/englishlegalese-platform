@@ -60,7 +60,7 @@ test('v1.83 learner and teacher workbook downloads locally and older work remain
  await p.locator('.v1830-teacher summary').click();await expect(p.locator('.v1830-teacher li')).toHaveCount(6);
  await expect(page.locator('#v1820-learning-studio')).toBeVisible();
  await expect(page.locator('#v1800-class-catalog .v1800-class-count')).toContainText('28 class topics');
- await expect(page.locator('#pricing')).toContainText('$24');
+ await expect(page.locator('#pricing')).toContainText('$26');
  await expect(page.locator('#v1790-resource-menu .v1790-resource-nav a')).toHaveCount(14);
  await expect(page.locator('#v1770-all-resources .v1770-resource-links a')).toHaveCount(14);
  const dim=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));

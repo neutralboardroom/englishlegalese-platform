@@ -5,7 +5,7 @@ assert.equal(pkg.version,'1.85.0');
 assert(html.includes('name="englishlegalese-release" content="1.85.0"'));
 for(const q of ['product-v1800.js?v=1.80.0','product-v1800-catalog.js?v=1.84.0','product-v1810-pricing.js?v=1.81.0','product-v1810-pricing.css?v=1.81.0'])assert(html.includes(q),'Retain existing versioned assets '+q);
 assert.equal((html.match(/<a href="\/pricing\/">Pricing<\/a>/g)||[]).length,2);
-for(const q of ['id="pricing"','Clear options for learning Legal English.','Class schedules and enrollment requests are open','14 practical free learning resources','100 replies','250 replies','500 replies','12/day','20/day','30/day','$24','$79 total','$59','$219 total','From $499','US dollars','No automatic charges'])assert(html.includes(q),'Transparent pricing '+q);
+for(const q of ['id="pricing"','Clear options for learning Legal English.','Class schedules and enrollment requests are open','14 practical free learning resources','100 replies','250 replies','500 replies','12/day','20/day','30/day','$26','$85 total','$49','$179 total','From $499','US dollars','No automatic charges'])assert(html.includes(q),'Transparent pricing '+q);
 for(const q of ['Starter:','Plus:','Pro:'])assert(html.includes(q),'AI tier '+q);
 for(const policyLine of ['price_usd_month:12,monthly_responses:100,daily_responses:12','price_usd_month:19,monthly_responses:250,daily_responses:20','price_usd_month:29,monthly_responses:500,daily_responses:30'])assert(policy.includes(policyLine),'Preserve already-approved draft AI policy');
 for(const forbidden of ['<form','<button','stripe.checkout','fetch(','XMLHttpRequest','checkoutSession','PaymentRequest','<input'])assert(!html.slice(html.indexOf('<section id="pricing"'),html.indexOf('</section>',html.indexOf('<section id="pricing"'))).includes(forbidden),'Pricing presentation cannot charge or collect '+forbidden);
@@ -17,4 +17,5 @@ assert(pricing.includes('grid-template-columns:repeat(6')&&pricing.includes('foc
 assert(read('tests/v1810-browser.spec.js').includes('Class schedules and enrollment requests are open'));
 assert(read('tests/v1810-production.spec.js').includes('mainNav a[href="/pricing/"]'));
 assert(read('NEXT_VERSION_IMPROVEMENT_LIST.md').includes('v1.81.0'));
+assert(read('governance/ENGLISHLEGALESE_DURABLE_BUILDER_RULES_ADDENDUM_2026-10-24.md').includes('EL-DUR-011'));
 console.log('PASS v1.81 researched prices, AI policy parity, free/class resource preservation, no payment or booking, all 22 Roger and 10 durable rule IDs.');
