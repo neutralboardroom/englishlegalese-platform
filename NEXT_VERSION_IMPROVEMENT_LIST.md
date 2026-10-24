@@ -1,3 +1,22 @@
+## EnglishLegalese v1.85.0 HF3 — Subject-page detail + researched human-class prices (October 24, 2026)
+Release state: SOURCE CANDIDATE. Do not claim deployed/accepted until two independent exact-head CI jobs, Render SHA, and public apex/www desktop-tablet-mobile tests pass.
+
+**Owner requested / implemented in this candidate:**
+- Put the essential value proposition, subject, key links, enrollment availability disclaimers, class prices and package description at TOP of the dedicated Legal English and Business English pages.
+- Show all 24 Legal English topic-specific course previews and 24 Business/Investor English courses directly under those introductions; show four-lesson outlines without extra clicks and make vocabulary, practice feedback, homework and instructor materials accessible within each course card.
+- Republish the existing separate Legal and Business 16-session classroom teaching plans ON each subject page, retaining the original separate session page.
+- Research 2026 competitor prices; apply owner-approved approximately 15% increase to all human-taught packages and single/4-lesson options: group $28/$89/$289 and private $68/$249/$799; retain monthly AI prices $12/$19/$29, free tools, staffing verification and no active payment checkout.
+- Test 48 complete course previews, 32 session summaries, local-only practice, price parity, accessibility/responsiveness, original homepage assets, protected existing 28-topic catalog, and permanent no-email builder rules EL-RGR-023 + EL-DUR-011. No outbound email must occur.
+- Preserve predecessor known-good release commit e6a14d2c42eb5bdfeb44729274264c0575a960b4 and documented rollback.
+
+**Next improvements (deferred until separately qualified):**
+- Improve individual 4-lesson course-topic progression and learner self-assessment without forcing sign-in; preserve original quiz data, privacy and accessibility.
+- Only after appropriate instructor and scheduling verification, provide more exact staffed availability; do not publish fictitious availability.
+- AI avatar tutors remain ON HOLD; no email operations in this builder ever.
+- Staged database triage migration remains unapplied pending separate explicit authorization; public frontend may not misrepresent it as active.
+
+---
+
 ## October 24, 2026 — navigation and classroom follow-through (v1.85.0 source-compatible enhancement)
 Status: implementation candidate; NOT PUBLIC until exact release gate and production acceptance. AI avatars on hold and outside scope.
 - Add plain-text Legal English top-menu link immediately before Business English; preserve original Courses link, original laptop homepage hero/logo, 28-course catalog, and all older routes.
