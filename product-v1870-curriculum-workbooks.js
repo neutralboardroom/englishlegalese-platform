@@ -4,9 +4,11 @@
 (()=>{'use strict';
 const base=window.ELCURRICULUM_V1800?.records||[];
 const business=window.ELBUSINESS_V1850_CATALOG||[];
-if(base.length!==28||business.length!==24)return;
+if(base.length!==28)return;
 const legal=base.filter(c=>c.group!=='Professional & Business English');
 if(legal.length!==24)return;
+/* Legal English pages do not load the separate Business English catalog. */
+if(document.getElementById('v1850-business-cards')&&business.length!==24)return;
 const E=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 function para(title,value){const p=E('p');p.append(E('strong',title+' '),document.createTextNode(value));return p}
 function appendWorkbook(card,c,kind){
@@ -49,7 +51,7 @@ function appendWorkbook(card,c,kind){
  ];
  const results=[];
  tasks.forEach((task,i)=>{
-  const item=E('fieldset',undefined,'v1870-question');item.append(E('legend',(i+1)+'. '+task.question));
+  const item=E('div',undefined,'v1870-question');item.setAttribute('role','group');item.setAttribute('aria-label',(i+1)+'. '+task.question);item.append(E('p',(i+1)+'. '+task.question,'v1870-question-title'));
   const rot=(c.id.length+i+c.title.length)%3;
   const options=task.options.map((_,j)=>task.options[(j+rot)%3]);
   const right=(task.answer-rot+3)%3;
