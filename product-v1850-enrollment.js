@@ -61,7 +61,7 @@ form.addEventListener('submit',async event=>{
  const prefix=interest.value==='one'||interest.value==='four'
  ?'[Topic-specific inquiry: '+topic.value+' | '+(topic.selectedOptions[0]?.textContent||'')+'; sessions='+sessions[interest.value]+'; format='+format.value+']'
  :'[Program package inquiry: program='+program.value+'; sessions='+sessions[interest.value]+'; format='+format.value+(employer.checked?'; employer_seats='+seats.value+'; organization='+organization.value.trim().replace(/[;\]<>]/g,' '):'')+']';
- info.note=(prefix+' '+note.value).slice(0,500);
+ info.note=(prefix+(employer.checked&&(interest.value==='one'||interest.value==='four')?' [Employer seats='+seats.value+'; organization='+organization.value.trim().replace(/[;\\]<>]/g,' ')+']':'')+' '+note.value).slice(0,500);
  delete info.topic;delete info.interest;delete info.employer_interest;delete info.organization;delete info.employee_seats;
  info.client_request_id=crypto.randomUUID();
  submit.disabled=true;status.textContent='Saving enrollment inquiry…';
