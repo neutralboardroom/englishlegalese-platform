@@ -24,3 +24,9 @@
 @media(max-width:650px){.v1870-workbook{padding:.55rem .65rem}.v1870-module{padding:.5rem .6rem}}
 
 .v1870-question-title{font-weight:750;margin:.1rem 0 .5rem;color:#17465a}
+
+/* v1.85.1: topic-specific workbook tasks, keyboard focus and local progress */
+.v1880-targeted-task{line-height:1.6;overflow-wrap:anywhere}
+.v1880-progress{padding:.55rem .75rem;border-left:3px solid #437f8d;background:#edf7fa;color:#17465a;font-size:.9rem;font-weight:650}
+.v1870-workbook:focus-within{outline:2px solid #437f8d;outline-offset:2px}
+.v1870-answer:focus-within,.v1870-rubric-item:focus-within{background:#edf7fa;border-radius:4px}

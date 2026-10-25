@@ -22,9 +22,11 @@ for(const c of [...legal,...business]){
 }
 assert.deepEqual(poor,[],poor.join('\n'));
 const js=rd('product-v1870-curriculum-workbooks.js'),css=rd('product-v1870-curriculum-workbooks.css');
-for(const token of ['Four guided lesson activities','Worked professional-language example','Three knowledge checks','Practical assignment and feedback rubric','Instructor assessment plan:','Self-guided workbook','c.units.forEach','c.vocab','c.scenario','c.good','c.homework','c.teacher'])assert(js.includes(token),'Workbook capability missing: '+token);
+for(const token of ['Four guided lesson activities','Worked professional-language example','Three knowledge checks','Practical assignment and feedback rubric','Instructor assessment plan:','Self-guided workbook','c.units.forEach','v1880-targeted-task','v1880-progress','c.vocab','c.scenario','c.good','c.homework','c.teacher'])assert(js.includes(token),'Workbook capability missing: '+token);
 assert(js.includes("legal.length!==24")&&js.includes("business.length!==24"));
 assert(css.includes(':has(> .v1870-toggle input:checked)'));
+assert(css.includes('.v1880-progress'));
+assert(js.includes("acts[i][1](unit)"),'Each learning stage must exercise its own unit-specific objective');
 assert(!/(?:\bfetch\s*\(|XMLHttpRequest|sendMail|sendResendEmail|nodemailer|axios\s*\(|mailto:)/i.test(js),'NO NETWORK, NO EMAIL in new learning workbooks');
 const L=rd('learn/legal-english/index.html'),B=rd('learn/business-english/index.html'),E=rd('learn/enroll/index.html'),intake=rd('src/v1850-public-intake.js'),enrollJS=rd('product-v1850-enrollment.js');
 for(const page of [L,B]){

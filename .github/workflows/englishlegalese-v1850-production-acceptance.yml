@@ -1,4 +1,4 @@
-name: EnglishLegalese v1.85.0 Public Acceptance
+name: EnglishLegalese v1.85.0 HF5 Public Acceptance
 on:
   push:
     branches: [main]
@@ -30,7 +30,7 @@ jobs:
             b="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' "https://www.englishlegalese.com/health?commit=${GITHUB_SHA}&try=$i" || true)"
             page="$(curl -fsSL --max-time 15 "https://englishlegalese.com/learn/business-english/?check=${GITHUB_SHA}" || true)"
             legal="$(curl -fsSL --max-time 15 "https://englishlegalese.com/learn/legal-english/?check=${GITHUB_SHA}" || true)"
-            if grep -q '1.85.0' <<<"$a" && grep -q '1.85.0' <<<"$b" && grep -q 'v1860-business-program' <<<"$page" && grep -q 'v1860-legal-catalog' <<<"$legal" && grep -q 'v1870-learning-modes' <<<"$legal" && grep -q 'v1870-learning-modes' <<<"$page"; then exit 0; fi
+            if grep -q '1.85.1' <<<"$a" && grep -q '1.85.1' <<<"$b" && grep -Fq "\"git_commit\":\"$GITHUB_SHA\"" <<<"$a" && grep -Fq "\"git_commit\":\"$GITHUB_SHA\"" <<<"$b" && grep -q 'v1860-business-program' <<<"$page" && grep -q 'v1860-legal-catalog' <<<"$legal" && grep -q 'v1870-learning-modes' <<<"$legal" && grep -q 'v1870-learning-modes' <<<"$page"; then exit 0; fi
             sleep 10
           done
           echo 'Public hosts did not converge to required release' >&2

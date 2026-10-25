@@ -23,14 +23,14 @@ function appendWorkbook(card,c,kind){
  const panel=E('div',undefined,'v1870-lab');panel.append(E('p','Self-guided workbook · Not an AI chat or a booked teacher session. Work stays on this page and is not submitted.','v1870-disclaimer'));
  const outline=E('div',undefined,'v1870-module-list');outline.append(E('h5','Four guided lesson activities'));
  const acts=[
-  ['Identify and define','Read the fictional situation, “'+c.scenario+'” Identify which statements are established, which require checking, and how the word “'+c.vocab[0][0]+'” ('+c.vocab[0][1]+') helps describe the situation.'],
-  ['Question and clarify','Using the same scenario, compose two neutral clarifying questions before making any conclusion. Use “'+c.vocab[1][0]+'” accurately ('+c.vocab[1][1]+') and refer to the lesson focus.'],
-  ['Revise a professional response','Compare the worked response below with the overconfident alternative. Draft a two-sentence revision that preserves facts, mentions the missing evidence, and uses “'+c.vocab[2][0]+'” ('+c.vocab[2][1]+') in context.'],
-  ['Apply the skill','Produce the real course homework using invented names and data only. Check your work against the rubric and be ready to explain it aloud.']
+  ['Analyze this case',unit=>'Read this fictional case: '+c.scenario+' For "'+unit+'", identify two known facts and one assumption that needs checking. Explain "'+c.vocab[0][0]+'" in the situation ('+c.vocab[0][1]+').'],
+  ['Ask targeted questions',unit=>'For "'+unit+'", compose two neutral questions a professional should ask before drawing conclusions. Include "'+c.vocab[1][0]+'" accurately ('+c.vocab[1][1]+') and say what evidence would answer each question.'],
+  ['Compare and revise',unit=>'For "'+unit+'", compare the case-specific model below with the misleading alternative. Rewrite the alternative as two carefully qualified sentences using "'+c.vocab[2][0]+'" ('+c.vocab[2][1]+').'],
+  ['Produce an applied deliverable',unit=>'Apply "'+unit+'" to the fictional case. '+c.homework+' Include "'+c.vocab[3][0]+'" ('+c.vocab[3][1]+') and check against the rubric for audience, accuracy, terminology and next steps.']
  ];
  c.units.forEach((unit,i)=>{
   const part=E('article',undefined,'v1870-module');
-  part.append(E('h6','Lesson '+(i+1)+' — '+unit),E('p',acts[i][0]+': '+acts[i][1]));
+  part.append(E('h6','Lesson '+(i+1)+' — '+unit),E('p',acts[i][0]+': '+acts[i][1](unit),'v1880-targeted-task'));
   outline.append(part);
  });
  panel.append(outline);
@@ -50,6 +50,8 @@ function appendWorkbook(card,c,kind){
   {question:'Which term means “'+vocab[3][1]+'”?',options:[vocab[2][0],vocab[3][0],vocab[4][0]],answer:1,reason:vocab[3][0]+' = '+vocab[3][1]}
  ];
  const results=[];
+ const progress=E('p','Knowledge checks answered: 0 of 3 · Correct: 0 of 3','v1880-progress');
+ progress.setAttribute('role','status');progress.setAttribute('aria-live','polite');
  tasks.forEach((task,i)=>{
   const item=E('div',undefined,'v1870-question');item.setAttribute('role','group');item.setAttribute('aria-label',(i+1)+'. '+task.question);item.append(E('p',(i+1)+'. '+task.question,'v1870-question-title'));
   const rot=(c.id.length+i+c.title.length)%3;
@@ -63,11 +65,15 @@ function appendWorkbook(card,c,kind){
     const correct=j===right;feedback.textContent=(correct?'Correct. ':'Review. ')+task.reason;
     feedback.dataset.correct=String(correct);
     results[i]=correct;
+    const answered=results.filter(x=>typeof x==='boolean').length;
+    const accurate=results.filter(x=>x===true).length;
+    progress.textContent='Knowledge checks answered: '+answered+' of 3 · Correct: '+accurate+' of 3. '+(answered===3?'Review any missed answer above and retry.':'Continue with the next check.');
    });
    answerLabel.append(radio,E('span',option));item.append(answerLabel);
   });
   item.append(feedback);quiz.append(item);
  });
+ quiz.append(progress);
  panel.append(quiz);
  const assignment=E('div',undefined,'v1870-assignment');
  assignment.append(E('h5','Practical assignment and feedback rubric'),para('Assignment:',c.homework));

@@ -39,6 +39,7 @@ app.get('/health', (req, res) => {
     ok: true,
     app: 'EnglishLegalese.com',
     version: VERSION,
+    git_commit: process.env.RENDER_GIT_COMMIT || null,
     features: [
       'v1.54.2 hardens public launch navigation and domain-readiness handoff: legacy header/footer/mobile anchors from earlier builds are mapped to the stable v1.54.1 Render frontend sections, custom-domain setup notes remain non-destructive, and no backend routes, migrations, credentials, or data structures are removed.',
       'v1.54 adds a Public Launch Readiness Sprint: production configuration gates, public beta mode, first-course lesson templates, teacher onboarding, diagnostic-to-course flow, end-to-end launch test planning, and no-data-loss launch safeguards so real API keys, Stripe, video/calendar vendors, SMTP, object storage, OpenAI, and production PostgreSQL can be connected safely after the code is deployed.',
