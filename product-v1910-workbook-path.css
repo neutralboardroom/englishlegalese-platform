@@ -1,0 +1,14 @@
+/* HF10: additive workbook navigation only, no homepage/header/pricing changes. */
+.v1910-path{margin:.9rem 0 1.1rem;padding:.8rem 1rem;border:1px solid #a7c8d0;border-radius:8px;background:#f5fafb;color:#173f51}
+.v1910-path h5{margin:0 0 .55rem;font-size:1.08rem;line-height:1.4}
+.v1910-hint{font-size:.9rem;line-height:1.55;color:#3a5a69;margin:.4rem 0}
+.v1910-path-links{margin:.55rem 0 .75rem;padding:0 0 0 1.35rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.45rem 1.1rem}
+.v1910-path-links li{min-width:0;padding-left:.2rem;line-height:1.5}
+.v1910-path-links a{color:#155575;text-decoration:underline;text-underline-offset:2px;overflow-wrap:anywhere}
+.v1910-path-links a:focus-visible{outline:3px solid #1e6d83;outline-offset:3px;border-radius:3px}
+.v1910-path-links li[data-attempted="true"]::marker{color:#0f6448}
+.v1910-path-links li[data-attempted="true"] a{font-weight:700}
+.v1910-status{margin:.7rem 0;font-size:.95rem;font-weight:700;color:#184b62;line-height:1.45}
+.v1910-path~.v1870-module-list{scroll-margin-top:1rem}
+.v1900-evidence-lab:focus,.v1870-module:focus,.v1870-worked:focus,.v1870-checks:focus,.v1870-assignment:focus{outline:2px solid #26718a;outline-offset:3px}
+@media(max-width:720px){.v1910-path{padding:.65rem}.v1910-path-links{grid-template-columns:1fr;gap:.45rem}}

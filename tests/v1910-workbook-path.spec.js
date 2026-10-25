@@ -1,0 +1,51 @@
+const {test,expect}=require('@playwright/test');
+// Browser-only course navigation: never submit inquiries, send messages, or call payment endpoints.
+test('HF10 provides eight navigable sections in each of 48 preserved workbooks',async({page})=>{
+ await page.goto('/learn/legal-english/');
+ await expect(page.locator('#v1860-legal-catalog .v1910-path')).toHaveCount(24);
+ await expect(page.locator('#v1860-legal-catalog .v1910-path-links a')).toHaveCount(192);
+ await expect(page.locator('#v1860-legal-catalog .v1870-module')).toHaveCount(96);
+ await expect(page.locator('#v1860-legal-catalog .v1890-stage')).toHaveCount(96);
+ await page.goto('/learn/business-english/');
+ await expect(page.locator('#v1850-business-cards .v1910-path')).toHaveCount(16);
+ await expect(page.locator('#v1850-investor-cards .v1910-path')).toHaveCount(8);
+ await expect(page.locator('.v1910-path-links a')).toHaveCount(192);
+ await expect(page.locator('.v1900-evidence-lab')).toHaveCount(24);
+});
+test('HF10 activity count is factual, editable, locally held and not a teacher grade',async({page})=>{
+ const posts=[];page.on('request',req=>{if(req.method()==='POST')posts.push(req.url())});
+ await page.goto('/learn/legal-english/');
+ const card=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await card.locator('.v1870-toggle input').check();
+ const path=card.locator('.v1910-path');
+ await expect(path.locator('.v1910-status')).toContainText('0 of 7');
+ await path.locator('a').first().click();
+ await expect(card.locator('.v1900-evidence-lab')).toBeFocused();
+ await card.locator('.v1900-evidence-lab input[value="wrong"]').check();
+ await expect(path.locator('.v1910-status')).toContainText('1 of 7');
+ const area=card.locator('.v1890-stage').first().locator('textarea');
+ await area.fill('Fact 1: This fictional case has a written record. Fact 2: No decision has been checked. Assumption: We need another source to verify the conclusion before sending a message.');
+ await card.locator('.v1890-stage').first().locator('.v1890-check').click();
+ await expect(path.locator('.v1910-status')).toContainText('2 of 7');
+ await area.fill('Edited');
+ await expect(path.locator('.v1910-status')).toContainText('1 of 7');
+ const a=card.locator('.v1870-assignment');
+ await a.locator('.v1870-draft-label textarea').fill('A fictional professional explanation must distinguish stated facts from missing source documents.');
+ await a.locator('.v1870-rubric-item input').nth(0).check();
+ await a.locator('.v1870-rubric-item input').nth(1).check();
+ await expect(path.locator('.v1910-status')).toContainText('2 of 7');
+ expect(posts).toHaveLength(0);
+ await page.reload();await card.locator('.v1870-toggle input').check();
+ await expect(card.locator('.v1910-status')).toContainText('0 of 7');
+});
+test('HF10 on mobile leaves original evidence and written-response sections accessible',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/learn/business-english/');
+ const card=page.locator('#v1850-investor-cards .v1850-course-card').first();
+ await card.locator('.v1870-toggle input').check();
+ await expect(card.locator('.v1910-path-links a')).toHaveCount(8);
+ await card.locator('.v1910-path-links a').nth(7).click();
+ await expect(card.locator('.v1870-assignment')).toBeFocused();
+ await expect(card.locator('.v1890-stage')).toHaveCount(4);
+ await expect(card.locator('.v1900-contrast')).toHaveCount(1);
+});
