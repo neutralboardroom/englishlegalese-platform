@@ -34,8 +34,8 @@
    });
    label.append(input,mk('span',o.label));field.append(label);
   });lab.append(field,feedback);
-  const contrast=mk('details',undefined,'v1900-contrast');
-  contrast.append(mk('summary','Compare unsafe and careful statements'),
+  const contrast=mk('section',undefined,'v1900-contrast');
+  contrast.append(mk('h6','Compare unsafe and careful statements'),
    mk('p','Overclaim: '+(c.wrong||c.distractors||[])[0]),
    mk('p','Careful professional-language example: '+c.good),
    mk('p','Follow-up question: '+n[3]),
