@@ -29,7 +29,8 @@ test('HF12 requires the first answer before revealing new facts and can restart 
  await expect(s.locator('.v1930-round-two')).toContainText('New information');
  await expect(s.locator('.v1930-reveal')).toBeDisabled();
  await s.locator('.v1930-label textarea').nth(1).fill('The envelope differs from what we expected. I would request the notice and verify its actual deadline.');
- await s.locator('.v1930-exemplar summary').click();
+ await s.locator('.v1930-model').click();
+ await expect(s.locator('.v1930-exemplar')).toBeVisible();
  await expect(s.locator('.v1930-exemplar')).toContainText('Course-specific model expression');
  await s.locator('.v1930-rubric input').first().check();
  expect(posts).toHaveLength(0);
