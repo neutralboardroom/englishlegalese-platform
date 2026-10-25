@@ -17,8 +17,8 @@
   lab.setAttribute('aria-label','Source evidence practice for '+c.title);
   lab.append(mk('h5','Evidence before conclusion · '+c.title),
    mk('p','Using this fictional case, choose which source must be checked before drawing a conclusion. This local learning exercise is not legal, investment, human-teacher or AI assessment. Nothing is saved or sent.','v1900-limits'));
-  const field=mk('fieldset',undefined,'v1900-choice');
-  field.append(mk('legend','Which evidence step is more responsible?'));
+  const field=mk('div',undefined,'v1900-choice');field.setAttribute('role','group');field.setAttribute('aria-label','Evidence step for '+c.title);
+  field.append(mk('p','Which evidence step is more responsible?','v1900-question'));
   const opts=[{value:'correct',label:n[1]},{value:'wrong',label:n[2]},
    {value:'shortcut',label:'Use the model sentence itself as proof without checking the facts'}];
   const rot=c.id.length%3;
