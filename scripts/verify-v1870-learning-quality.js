@@ -21,6 +21,11 @@ for(const c of [...legal,...business]){
  if(/\b(?:TBD|lorem ipsum|dummy lesson|coming soon|placeholder curriculum)\b/i.test([c.title,c.outcome,...c.units,c.homework,c.teacher].join(' ')))poor.push(c.id+': placeholder copy');
 }
 assert.deepEqual(poor,[],poor.join('\n'));
+// The CI release-version gate must read the current package version, not a previous planned version.
+const acceptance=rd('.github/workflows/englishlegalese-v1850-production-acceptance.yml');
+assert(acceptance.includes("expectedVersion=\"$(node -p 'require(\"./package.json\").version')-navigation-domain-hardening\""),'Production version must derive from package.json');
+assert(acceptance.includes('git_commit')&&acceptance.includes('$GITHUB_SHA'),'Production gate must verify exact merged commit');
+assert(!acceptance.includes("grep -q '1.85.1'"),'Reject stale 1.85.1 production gate');
 const js=rd('product-v1870-curriculum-workbooks.js'),css=rd('product-v1870-curriculum-workbooks.css');
 for(const token of ['Four guided lesson activities','Worked professional-language example','Three knowledge checks','Practical assignment and feedback rubric','Instructor assessment plan:','Self-guided workbook','c.units.forEach','v1880-targeted-task','v1880-progress','c.vocab','c.scenario','c.good','c.homework','c.teacher'])assert(js.includes(token),'Workbook capability missing: '+token);
 assert(js.includes("legal.length!==24")&&js.includes("business.length!==24"));
