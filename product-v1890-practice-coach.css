@@ -1,0 +1,12 @@
+/* HF8: per-subject local writing coach; no homepage impact. */
+.v1890-boundary{font-size:.9rem;line-height:1.55;color:#3a5665;margin:.55rem 0}
+.v1890-writing-summary{margin:.65rem 0 1rem;padding:.7rem .8rem;background:#edf7fa;border-left:3px solid #236a80;color:#17475a;font-weight:700;line-height:1.5}
+.v1890-stage{margin:.8rem 0 .2rem;padding:.65rem;border:1px solid #a9ccd6;border-radius:8px;background:#f6fbfd}
+.v1890-stage-label{display:block;font-size:.93rem;font-weight:680;line-height:1.45}
+.v1890-stage-label textarea{display:block;width:100%;box-sizing:border-box;min-height:110px;resize:vertical;margin:.4rem 0;padding:.65rem;font:inherit;border:1px solid #628b98;border-radius:5px;color:#183847;background:#fff}
+.v1890-stage-label textarea:focus-visible,.v1890-check:focus-visible{outline:3px solid #24647c;outline-offset:3px}
+.v1890-word-counter{font-size:.85rem;color:#466473;line-height:1.45;overflow-wrap:anywhere}
+.v1890-check{font:inherit;font-size:.9rem;font-weight:700;background:#f6fbfd;border:1px solid #2f6d80;border-radius:6px;color:#15495b;padding:.55rem .8rem;min-height:44px;cursor:pointer}
+.v1890-check:hover{background:#e7f3f7}
+.v1890-stage-feedback{font-size:.9rem;color:#15465a;line-height:1.55;min-height:1.4rem;margin:.6rem 0;overflow-wrap:anywhere}
+@media(max-width:600px){.v1890-stage{padding:.45rem}.v1890-check{width:100%}}

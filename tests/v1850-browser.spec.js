@@ -19,8 +19,8 @@ test('v1.85 all Business English courses have interactive practice and teacher m
  await card.locator('summary').click();await expect(card.locator('.v1850-material li')).toHaveCount(4);
  await expect(card.locator('dt')).toHaveCount(5);
  await expect(card.locator('fieldset label')).toHaveCount(3);
- await card.locator('button').click();await expect(card.locator('.v1850-feedback')).toContainText('Choose a response first');
- await card.locator('input[type=radio]').first().check();await card.locator('button').click();
+ await card.getByRole('button',{name:'Check answer',exact:true}).click();await expect(card.locator('.v1850-feedback')).toContainText('Choose a response first');
+ await card.locator('fieldset input[type=radio]').first().check();await card.getByRole('button',{name:'Check answer',exact:true}).click();
  await expect(card.locator('.v1850-feedback')).toContainText('Correct.');
 });
 test('v1.85 private study planner operates without account or server submission',async({page})=>{

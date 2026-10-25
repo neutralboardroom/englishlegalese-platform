@@ -73,6 +73,6 @@ test('No POST requests are made by the detailed courses or local practice',async
  await c.getByRole('button',{name:'Check my answer'}).click();
  await page.goto('/learn/business-english/');
  const b=page.locator('#v1850-business-cards .v1850-course-card').first();
- await b.locator('summary').click();await b.locator('input[type=radio]').first().check();await b.locator('button').click();
+ await b.locator('summary').click();await b.locator('fieldset input[type=radio]').first().check();await b.getByRole('button',{name:'Check answer',exact:true}).click();
  expect(posts).toEqual([]);
 });

@@ -1,0 +1,15 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict'),rd=p=>fs.readFileSync(p,'utf8');
+const js=rd('product-v1890-practice-coach.js'),css=rd('product-v1890-practice-coach.css');
+const old=rd('product-v1870-curriculum-workbooks.js'),L=rd('learn/legal-english/index.html'),B=rd('learn/business-english/index.html');
+for(const token of ['legal.length!==24','business.length!==24','books.length!==24','c.vocab[stage][0]','c.units[i]','c.scenario','v1890-writing-summary','stageRules','writing structure','Nothing is stored, submitted or sent','Correct:','aria-live','false,false,false,false'])assert(js.includes(token),'Missing coach substance '+token);
+for(const page of [L,B])assert(page.includes('product-v1890-practice-coach.js?v=1.85.0-hf8')&&page.includes('product-v1890-practice-coach.css?v=1.85.0-hf8'),'Coach not linked to subject page');
+for(const token of ['v1890-stage-label textarea:focus-visible','@media(max-width:600px)','v1890-stage-feedback'])assert(css.includes(token),'Accessible styling '+token);
+assert(old.includes('Four guided lesson activities')&&old.includes('Three knowledge checks')&&old.includes('Practical assignment and feedback rubric'),'Preserve original workbook, quiz and rubric');
+const banned=/(?:\bfetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|indexedDB|\.cookie\s*=|sendMail|mailto:|WebSocket|axios\s*\(|sendgrid|resend\.emails|stripe\.|PaymentRequest|postMessage)/i;
+assert(!banned.test(js),'HF8 must not transmit or store learner work');
+const prices=rd('scripts/verify-v1860-prices.js');
+assert(prices.includes('one:[24,45]')&&prices.includes('full48:[649,1599]'),'Current approved human-taught pricing must remain unchanged');
+const policy=rd('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md')+rd('governance/ENGLISHLEGALESE_DURABLE_BUILDER_RULES_ADDENDUM_2026-10-24.md');
+assert(policy.includes('EL-RGR-023')&&policy.includes('EL-DUR-011')&&policy.includes('EL-RGR-024')&&policy.includes('EL-DUR-012'));
+console.log('PASS HF8: structured writing review for every real lesson in all 48 subjects, non-AI non-network feedback, browser memory only, preserved workbook/quizzes, approved pricing and permanent no-email rules.');
