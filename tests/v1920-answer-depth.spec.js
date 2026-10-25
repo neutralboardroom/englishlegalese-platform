@@ -23,7 +23,7 @@ test('HF11 Business and Investor show differentiated second distractors and tail
  expect(texts).toHaveLength(72);
  expect(texts.join(' ')).not.toContain('The outcome is guaranteed and does not need independent verification.');
  expect(texts.join(' ')).not.toContain('This definitely proves the future outcome, so no further verification is necessary.');
- const business=page.locator('#v1850-business-cards .v1850-course-card').first();
+ const business=page.locator('#v1850-business-cards .v1850-course-card').filter({hasText:'Business Negotiations'}).first();
  await business.locator('.v1870-toggle input').check();
  const answer=business.locator('.v1870-question').first().locator('.v1870-answer').filter({hasText:'The buyer can treat the discount'});
  await answer.locator('input').check();
