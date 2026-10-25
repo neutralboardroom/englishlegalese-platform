@@ -1,0 +1,18 @@
+/* HF9 scoped course-only evidence learning; hero and pricing unchanged. */
+.v1900-evidence-lab{padding:1rem;margin:1rem 0 1.3rem;border:1px solid #99bfc7;border-radius:9px;background:#f7fbfc;color:#173a4b;overflow-wrap:anywhere}
+.v1900-evidence-lab h5{margin:0 0 .65rem;font-size:1.06rem}
+.v1900-limits{font-size:.89rem;line-height:1.55;color:#375e6c}
+.v1900-choice{border:1px solid #bed5da;border-radius:6px;padding:.7rem;margin:.7rem 0;min-width:0}
+.v1900-choice legend{font-weight:700;line-height:1.45}
+.v1900-option{display:flex;gap:.65rem;align-items:flex-start;line-height:1.5;padding:.45rem;cursor:pointer}
+.v1900-option input{flex:none;margin-top:.35rem;accent-color:#155d70}
+.v1900-option:focus-within{outline:2px solid #1b687d;outline-offset:2px}
+.v1900-feedback{min-height:1.5rem;line-height:1.55;font-weight:650}
+.v1900-feedback[data-correct="true"]{color:#135c3b}
+.v1900-contrast{padding:.55rem .75rem;border:1px solid #b4ccd0;border-radius:6px;background:white;margin:.7rem 0}
+.v1900-contrast summary{cursor:pointer;font-weight:700}
+.v1900-contrast p{line-height:1.55}
+.v1900-draft{display:block;font-weight:650;line-height:1.5}
+.v1900-draft textarea{width:100%;box-sizing:border-box;margin:.55rem 0;padding:.7rem;min-height:100px;resize:vertical;border:1px solid #72929a;border-radius:6px;font:inherit;font-weight:400;background:white;color:#173a4b}
+.v1900-draft textarea:focus-visible,.v1900-contrast summary:focus-visible{outline:3px solid #246a83;outline-offset:2px}
+@media(max-width:600px){.v1900-evidence-lab{padding:.55rem}.v1900-choice{padding:.45rem}.v1900-option{padding:.4rem .15rem}}
