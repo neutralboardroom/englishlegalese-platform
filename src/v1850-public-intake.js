@@ -3,10 +3,10 @@ const { randomUUID } = require('node:crypto');
 const { Pool } = require('pg');
 const trustedHosts=new Set(['englishlegalese.com','www.englishlegalese.com','englishlegalese-platform.onrender.com']);
 const schedules=Object.freeze([
- {id:'legal-group-mon',program:'legal',format:'group',title:'Legal English Extended Classroom',teacher:'Roger Gillman',start:'2026-11-02T19:00:00+07:00',duration_minutes:50,timezone:'Asia/Ho_Chi_Minh',repeat:'weekly',sessions:16,day:'Monday',capacity:6,price_usd:269,calendar_reference:'u4lgv6pad4kk506cm03g313gfo'},
- {id:'business-group-wed',program:'business',format:'group',title:'Business English Extended Classroom',teacher:'Roger Gillman',start:'2026-11-04T19:00:00+07:00',duration_minutes:50,timezone:'Asia/Ho_Chi_Minh',repeat:'weekly',sessions:16,day:'Wednesday',capacity:6,price_usd:269,calendar_reference:'cc3a8e2b7lg4tqrimb2scel73s'}
+ {id:'legal-group-mon',program:'legal',format:'group',title:'Legal English Extended Classroom',teacher:'Roger Gillman',start:'2026-11-02T19:00:00+07:00',duration_minutes:50,timezone:'Asia/Ho_Chi_Minh',repeat:'weekly',sessions:16,day:'Monday',capacity:6,price_usd:249,calendar_reference:'u4lgv6pad4kk506cm03g313gfo'},
+ {id:'business-group-wed',program:'business',format:'group',title:'Business English Extended Classroom',teacher:'Roger Gillman',start:'2026-11-04T19:00:00+07:00',duration_minutes:50,timezone:'Asia/Ho_Chi_Minh',repeat:'weekly',sessions:16,day:'Wednesday',capacity:6,price_usd:249,calendar_reference:'cc3a8e2b7lg4tqrimb2scel73s'}
 ]);
-const allowedPrograms=new Set(['legal','business','investor']);
+const allowedPrograms=new Set(['legal','business','investor','complete']);
 const allowedFormats=new Set(['group','private']);
 const allowedTracks=new Set(['legal','business','investor','multiple']);
 const pool=process.env.ENGLISHLEGALESE_INTAKE_DATABASE_URL?new Pool({connectionString:process.env.ENGLISHLEGALESE_INTAKE_DATABASE_URL,ssl:{rejectUnauthorized:true},max:3,connectionTimeoutMillis:6500,idleTimeoutMillis:12000}):null;
@@ -35,7 +35,12 @@ function install(app){
   const slot=schedules.find(s=>s.id===scheduleId);
   const isTopicInquiry=scheduleId==='topic-time-request';
   const topicNote=note.startsWith('[Topic-specific inquiry: ')&&(note.includes('; sessions=1;')||note.includes('; sessions=4;'))&&note.includes('; format='+format+']')&&/(?:class-|be-|ws-)\d{2}/.test(note);
-  if(isTopicInquiry&&(!topicNote||format!=='group'))return send(res,400,{ok:false,error:'Provide a valid topic-specific group inquiry.'});
+  const packageMatch=note.match(/^\[Program package inquiry: program=(legal|business|investor|complete); sessions=(8|16|24|48); format=(group|private)(?:; employer_seats=(\d{1,3}); organization=([^;\]<>]{2,80}))?\]/);
+  const packageInquiry=Boolean(packageMatch&&packageMatch[1]===program&&packageMatch[3]===format&&
+    (Number(packageMatch[2])!==48||program==='complete')&&
+    (Number(packageMatch[2])!==24||program==='legal'||program==='business')&&
+    (!packageMatch[4]||(Number(packageMatch[4])>=1&&Number(packageMatch[4])<=999)));
+  if(isTopicInquiry&&(!topicNote&&!packageInquiry||format!=='group'))return send(res,400,{ok:false,error:'Provide a valid topic or course-package inquiry.'});
   if(format==='group'&&!isTopicInquiry&&(!slot||(program!==slot.program&&!(program==='investor'&&slot.program==='business'))))return send(res,400,{ok:false,error:'Select a valid group schedule.'});
   if(format==='private'&&scheduleId!=='private-time-request')return send(res,400,{ok:false,error:'Please request a private lesson time.'});
   try{

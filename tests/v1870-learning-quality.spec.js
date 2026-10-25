@@ -61,7 +61,7 @@ test('Subject-specific group requests allow one/four lesson options without misr
  await expect(form.locator('select[name=topic] option')).toHaveCount(25);
  await form.locator('select[name=topic]').selectOption('class-01');
  await expect(form.locator('select[name=schedule_id]')).toHaveValue('topic-time-request');
- await expect(form.locator('select[name=format] option[value=group]')).toContainText('$26');
+ await expect(form.locator('select[name=format] option[value=group]')).toContainText('$24');
  await form.locator('input[name=full_name]').fill('Fictional Student');
  await form.locator('input[name=email]').fill('fictional@example.org');
  await form.getByRole('button',{name:'Submit enrollment inquiry'}).click();
@@ -76,13 +76,13 @@ test('Business and investor topic inquiry dropdowns are correct and preserve pri
  await form.locator('select[name=program]').selectOption('business');
  await form.locator('select[name=interest]').selectOption('four');
  await expect(form.locator('select[name=topic] option')).toHaveCount(17);
- await expect(form.locator('select[name=format] option[value=group]')).toContainText('$85');
+ await expect(form.locator('select[name=format] option[value=group]')).toContainText('$79');
  await form.locator('select[name=format]').selectOption('private');
  await expect(form.locator('select[name=schedule_id]')).toHaveValue('private-time-request');
- await expect(form.locator('select[name=format] option[value=private]')).toContainText('$179');
+ await expect(form.locator('select[name=format] option[value=private]')).toContainText('$169');
  await form.locator('select[name=program]').selectOption('investor');
  await expect(form.locator('select[name=topic] option')).toHaveCount(9);
  await form.locator('select[name=interest]').selectOption('extended');
  await expect(form.locator('select[name=topic]').locator('xpath=..')).toBeHidden();
- await expect(form.locator('select[name=format] option[value=private]')).toContainText('$699');
+ await expect(form.locator('select[name=format] option[value=private]')).toContainText('$599');
 });

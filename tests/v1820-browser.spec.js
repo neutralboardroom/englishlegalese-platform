@@ -62,7 +62,7 @@ test('v1.82 local study/teacher pack and four tentative calendar reminders downl
 });
 test('v1.82 preserves previous public pricing, all 14 free resources and 28 classes',async({page})=>{
  await open(page);
- await expect(page.locator('#pricing')).toContainText('$26');
+ await expect(page.locator('#pricing')).toContainText('$24');
  await expect(page.locator('#pricing')).toContainText('Class schedules and enrollment requests are open');
  await expect(page.locator('#v1800-class-catalog .v1800-class-count')).toContainText('28 class topics');
  await expect(page.locator('#v1790-resource-menu .v1790-resource-nav a')).toHaveCount(14);

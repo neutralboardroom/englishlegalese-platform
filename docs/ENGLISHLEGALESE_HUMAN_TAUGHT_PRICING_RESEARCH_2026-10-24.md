@@ -1,3 +1,28 @@
+# OCTOBER 25, 2026 CURRENT OWNER AUTHORITY — introductory human-teacher plans and multi-employee discounts
+
+The owner authorized this updated price ladder and complete-course offerings. This section supersedes prior "FINAL" labels below, which are historical evidence only.
+
+Each class is 50 minutes; per-person prices in US dollars. Small group ordinarily 3–6; actual teacher, dates, staffing and any split cohorts require manual confirmation. No tuition is charged until separate payment approval.
+
+| Number of instructor-led classes | Small group total | Group per class | Private total | Private per class |
+|---|---:|---:|---:|---:|
+| 1 | $24 | $24.00 | $45 | $45.00 |
+| 4 | $79 | $19.75 | $169 | $42.25 |
+| 8 | $149 | $18.63 | $319 | $39.88 |
+| 16 | $249 | $15.56 | $599 | $37.44 |
+| 24 | $349 | $14.54 | $849 | $35.38 |
+| 48 | $649 | $13.52 | $1,599 | $33.31 |
+
+Eight sessions are a substantive eight-part foundation for either Legal or Business English, drawn from full 16-session teacher curricula. A 24-session legal plan covers the 24 Legal English topics; a 24-session Business + Investor plan covers all 16 Business and 8 Investor topics. The comprehensive 48-session plan teaches all 24+24 topics. Every full-pathway subject is one 50-minute teacher-led class with independent workbook lessons, vocabulary, scenario, knowledge checks, homework, and teacher materials. No invented teacher availability or AI-taught class.
+
+Longer lessons strictly cost less per class. Private 16 sessions is revised from prior $699 to $599 on the owner's newer instruction to adjust pricing for acquisition and ensure genuine long-package incentives; the earlier $699 was previous historical approval. Group 16 $249 instead of $269. Four group $79, one group $24. AI subscription pricing of $12 / $19 / $29 is unchanged.
+
+Employer tier discounts apply only to 8+ group packages, per participating employee, not stacked with other incentives: 3–5 employees 5%, 6–10 employees 10%, 11+ employees 15%, with separately arranged cohorts as needed. Private enterprise or bespoke projects (published from $499) require a distinct manually approved quote and are not automatically discounted. Actual offer contingent on cohort sizes, teachers, group level and timetable.
+
+The current EnglishLegalese builder must never send, queue, schedule or activate an outbound email under EL-RGR-023 and EL-DUR-011. Preserve original protected logo/homepage, all free tools, 48 subject curricula, separate 16+16 curricula, account/AI/payment constraints. No DB migrations, Stripe activation, external notification or price collection. Student and employer details are saved only as an enrollment inquiry when production intake prerequisites are available.
+
+---
+
 # EnglishLegalese: human-taught class pricing benchmark and owner-approved rates
 
 ## FINAL INTRODUCTORY PRICE CARD — latest owner instruction, October 24, 2026

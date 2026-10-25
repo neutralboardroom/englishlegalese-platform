@@ -35,13 +35,13 @@ for(const host of ['https://englishlegalese.com','https://www.englishlegalese.co
   await form.locator('select[name=interest]').selectOption('four');
   await form.locator('select[name=topic]').selectOption('class-01');
   await expect(form.locator('select[name=schedule_id]')).toHaveValue('topic-time-request');
-  await expect(form.locator('select[name=format] option[value=group]')).toContainText('$85');
+  await expect(form.locator('select[name=format] option[value=group]')).toContainText('$79');
   const schedules=await page.request.get(host+'/api/v1850/schedules');
   expect(schedules.status()).toBe(200);
   const body=await schedules.json();
   expect(body.schedules).toHaveLength(2);
-  expect(body.schedules[0].price_usd).toBe(269);
-  expect(body.schedules[1].price_usd).toBe(269);
+  expect(body.schedules[0].price_usd).toBe(249);
+  expect(body.schedules[1].price_usd).toBe(249);
   expect(body.stripe_enabled).toBe(false);
  });
 }
