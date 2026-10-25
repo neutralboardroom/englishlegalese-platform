@@ -19,6 +19,7 @@ const ids=[...ctx.window.ELCURRICULUM_V1800.records,...wider,...finance].map(x=>
 assert.deepEqual(new Set(rows.map(x=>x[0])),new Set(ids),'Exactly one substantive dialogue per existing subject');
 for(const t of ['roleplays.length!==48','v1930-round-two','v1930-brief','v1930-reveal','v1930-reset','v1930-rubric','c.scenario','c.good','c.teacher','c.vocab'])if(t!=='c.teacher')assert(js.includes(t),'Missing functional roleplay '+t);
 for(const t of [':focus-visible','[hidden]','@media(max-width:600px)','v1930-simulation'])assert(css.includes(t));
+assert(js.includes('v1930-model')&&js.includes("setAttribute('aria-expanded'")&&!js.includes("E('summary'")&&!js.includes("E('details'"),'Do not add nested course summaries; model must reveal via a separately named accessible button');
 assert(!/\bfetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|indexedDB|\.cookie\s*=|sendMail|mailto:|WebSocket|axios\s*\(|postMessage|PaymentRequest/i.test(js),'HF12 dialogue must never send/store user responses');
 for(const p of ['learn/legal-english/index.html','learn/business-english/index.html']){
  const s=read(p);
