@@ -42,12 +42,17 @@ for(const c of courses){
  second.setAttribute('aria-label','Revised fictional roleplay response for '+c.title);
  second.placeholder='With this new information, I would explain… I still need to check…';
  l2.append(second);phase2.append(l2);
- const exemplar=E('details',undefined,'v1930-exemplar');
- exemplar.append(E('summary','Compare with a careful model and teacher coaching notes'),
-  E('p','Course-specific model expression: '+c.good),E('p','Language focus: '+c.vocab[1][0]+' — '+c.vocab[1][1]+'.'),
+ const exemplar=E('div',undefined,'v1930-exemplar');exemplar.hidden=true;
+ const modelButton=E('button','Show model language and teacher coaching');modelButton.type='button';modelButton.className='v1930-model';modelButton.setAttribute('aria-expanded','false');
+ exemplar.append(E('p','Course-specific model expression: '+c.good),E('p','Language focus: '+c.vocab[1][0]+' — '+c.vocab[1][1]+'.'),
   E('p','Teacher / peer coaching focus: '+data[5]),
   E('p','This model is a language example, not an independently verified answer or professional advice.','v1930-boundary'));
- phase2.append(exemplar);
+ modelButton.addEventListener('click',()=>{
+  exemplar.hidden=!exemplar.hidden;
+  modelButton.setAttribute('aria-expanded',String(!exemplar.hidden));
+  modelButton.textContent=exemplar.hidden?'Show model language and teacher coaching':'Hide model language and teacher coaching';
+ });
+ phase2.append(modelButton,exemplar);
  const reflection=E('div',undefined,'v1930-reflection');
  reflection.append(E('p','Before finishing, review your own answer:','v1930-subhead'));
  for(const word of ['I separated known facts from assumptions.','I asked for a relevant missing source or confirmation.','My revised wording remained professional and did not guarantee an outcome.']){
@@ -64,7 +69,7 @@ for(const c of courses){
  });
  reset.addEventListener('click',()=>{
   first.value='';second.value='';phase2.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);
-  exemplar.open=false;phase2.hidden=true;reveal.disabled=false;
+  exemplar.hidden=true;modelButton.setAttribute('aria-expanded','false');modelButton.textContent='Show model language and teacher coaching';phase2.hidden=true;reveal.disabled=false;
   status.textContent='Practice reset. Your responses were not saved or submitted.';first.focus({preventScroll:true});
  });
  wrap.append(reveal,status,phase2);
