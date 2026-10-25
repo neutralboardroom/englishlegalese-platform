@@ -11,6 +11,22 @@ if(legal.length!==24)return;
 if(document.getElementById('v1850-business-cards')&&business.length!==24)return;
 const E=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 function para(title,value){const p=E('p');p.append(E('strong',title+' '),document.createTextNode(value));return p}
+function explainAnswer(i,chosen,correct,c){
+ const v=c.vocab||[],wrong=c.wrong||c.distractors||[];
+ if(i===0){
+  if(correct)return 'Professional reasoning: '+c.good+' The fictional case states: '+c.scenario+' This response is appropriately conditional; check the underlying source before treating any missing fact as verified.';
+  const kind=chosen===wrong[0]?'first':'second';
+  return 'Scenario reasoning ('+kind+' alternative): the selected wording says "'+chosen+'" but the fictional case only states: '+c.scenario+' It may assert an unverified outcome, authority, approval, timeframe or conclusion. More defensible: '+c.good+' Identify which document, decision or confirmation is still needed.';
+ }
+ if(i===1){
+  const terms=v.slice(0,3),selected=terms.find(x=>x[1]===chosen);
+  if(correct)return 'Vocabulary reasoning: "'+v[0][0]+'" means "'+v[0][1]+'" in this topic. Use it in a sentence about '+c.title+' and check the context.';
+  return 'Vocabulary reasoning: "'+chosen+'" defines "'+(selected?selected[0]:'a different term')+'", not "'+v[0][0]+'". The requested term means "'+v[0][1]+'". Compare the two definitions before retrying.';
+ }
+ const options=v.slice(2,5),selected=options.find(x=>x[0]===chosen);
+ if(correct)return 'Terminology reasoning: "'+v[3][0]+'" means "'+v[3][1]+'". Explain how it applies to the fictional case without making an unsupported professional claim.';
+ return 'Terminology reasoning: "'+chosen+'" refers to "'+(selected?selected[1]:'a different definition')+'", not "'+v[3][1]+'". The precise term is "'+v[3][0]+'". Use both terms in contrasting example sentences.';
+}
 function appendWorkbook(card,c,kind){
  const old=card.querySelector('.v1870-workbook');if(old)return;
  const tag=E('p','Human-taught topic: request instructor availability · Independently usable workbook: available now','v1870-classification');
@@ -62,7 +78,7 @@ function appendWorkbook(card,c,kind){
    const answerLabel=E('label',undefined,'v1870-answer');
    const radio=E('input');radio.type='radio';radio.name='v1870-'+c.id+'-q'+i;radio.value=String(j);
    radio.addEventListener('change',()=>{
-    const correct=j===right;feedback.textContent=(correct?'Correct. ':'Review. ')+task.reason;
+    const correct=j===right;feedback.textContent=(correct?'Correct. ':'Review. ')+explainAnswer(i,option,correct,c);
     feedback.dataset.correct=String(correct);
     results[i]=correct;
     const answered=results.filter(x=>typeof x==='boolean').length;
