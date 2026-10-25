@@ -14,7 +14,7 @@ for(const host of ['https://englishlegalese.com','https://www.englishlegalese.co
  test('HF11 source-aware Business feedback corrects conditional-discount overclaim on '+host,async({page})=>{
   const response=await page.goto(host+'/learn/business-english/');expect(response.status()).toBeLessThan(400);
   await expect(page.locator('#v1850-business-cards .v1870-workbook')).toHaveCount(16);
-  const card=page.locator('#v1850-business-cards .v1850-course-card').first();
+  const card=page.locator('#v1850-business-cards .v1850-course-card').filter({hasText:'Business Negotiations'}).first();
   await card.locator('.v1870-toggle input').check();
   await card.locator('.v1870-question').first().locator('.v1870-answer').filter({hasText:'The buyer can treat the discount'}).locator('input').check();
   const fb=card.locator('.v1870-question').first().locator('.v1870-check-feedback');
