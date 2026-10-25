@@ -5,7 +5,7 @@ test('HF11 gives source-specific reasoning for all three checks and preserves pr
  await page.goto('/learn/legal-english/');
  const card=page.locator('#v1860-legal-catalog .v1860-course-card').first();
  await card.locator('.v1870-toggle input').check();
- await card.locator('.v1870-question').first().locator('input[type=radio]').first().check();
+ await card.locator('.v1870-question').first().locator('.v1870-answer').filter({hasText:'The filing deadline is definitely Friday'}).locator('input').check();
  await expect(card.locator('.v1870-question').first().locator('.v1870-check-feedback')).toContainText('Scenario reasoning');
  await card.locator('.v1870-question').nth(1).locator('input[type=radio]').first().check();
  await expect(card.locator('.v1870-question').nth(1).locator('.v1870-check-feedback')).toContainText('Vocabulary reasoning');
@@ -19,8 +19,10 @@ test('HF11 Business and Investor show differentiated second distractors and tail
  const cards=page.locator('#v1850-business-cards .v1850-course-card, #v1850-investor-cards .v1850-course-card');
  await expect(cards).toHaveCount(24);
  await expect(page.locator('.v1870-workbook')).toHaveCount(24);
- const texts=await cards.locator('.v1870-workbook .v1870-question:first-child').allTextContents();
- expect(texts).not.toContain('The outcome is guaranteed and does not need independent verification.');
+ const texts=await cards.locator('.v1870-workbook .v1870-question').allTextContents();
+ expect(texts).toHaveLength(72);
+ expect(texts.join(' ')).not.toContain('The outcome is guaranteed and does not need independent verification.');
+ expect(texts.join(' ')).not.toContain('This definitely proves the future outcome, so no further verification is necessary.');
  const business=page.locator('#v1850-business-cards .v1850-course-card').first();
  await business.locator('.v1870-toggle input').check();
  const answer=business.locator('.v1870-question').first().locator('.v1870-answer').filter({hasText:'The buyer can treat the discount'});
