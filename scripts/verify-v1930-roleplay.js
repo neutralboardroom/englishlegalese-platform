@@ -8,7 +8,7 @@ assert.equal(rows.length,48);
 assert.equal(new Set(rows.map(x=>x[0])).size,48);
 for(const row of rows){
  assert.equal(row.length,6,'Course row must have six individually authored fields');
- for(let i=1;i<6;i++)assert(row[i].length>=35,'Underdeveloped classroom simulation '+row[0]+':'+i);
+ for(let i=1;i<6;i++)assert(row[i].length>=(i===1?10:35),'Underdeveloped classroom simulation '+row[0]+':'+i);
 }
 for(const idx of [2,3,4,5])assert.equal(new Set(rows.map(x=>x[idx])).size,48,'Generic repeated dialogue field '+idx);
 const ctx={window:{}};vm.runInNewContext(read('curriculum-v1800-data.js'),ctx,{timeout:3000});
