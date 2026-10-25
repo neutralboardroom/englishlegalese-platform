@@ -53,7 +53,7 @@ test('v1.84 header/footer and free-resource menu links all lead to separate webp
 });
 test('v1.84 standalone pricing faithfully repeats homepage prices while leaving homepage visible',async({page})=>{
  await page.goto('/pricing/');const p=page.locator('#pricing');await expect(p).toBeVisible();
- for(const rate of ['$12/month','$19/month','$29/month','$24','$79 total','$45','$169 total','From $459'])await expect(p).toContainText(rate);
+ for(const rate of ['$12/month','$19/month','$29/month','$24','$79 total','$45','$169 total','From $499'])await expect(p).toContainText(rate);
  await expect(p).toContainText('Class schedules and enrollment requests are open');
  await expect(page.locator('a[href="/"]')).not.toHaveCount(0);
  await expect(page.locator('.v1840-foot-resources a')).toHaveCount(14);
