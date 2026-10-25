@@ -44,7 +44,7 @@
   if(modules.length!==4||c.units.length!==4||c.vocab.length!==5)return;
   const state=[false,false,false,false],feedbackNodes=[];
   const panel=wb.querySelector('.v1870-lab'),title=E('h5','Four-step writing practice · in this tab only');
-  const intro=E('p','Write answers to the case-specific prompts below. The local self-check looks only for writing structure and selected course vocabulary; it cannot judge legal, business or language accuracy. Use fictional information only. Nothing is stored, submitted or sent.','v1890-boundary');
+  const intro=E('p','Fictional case: '+c.scenario+' Write answers to the case-specific prompts below. The local self-check looks only for writing structure and selected course vocabulary; it cannot judge legal, business or language accuracy. Use fictional information only. Nothing is stored, submitted or sent.','v1890-boundary');
   const snapshot=E('p','Writing drafts reviewed: 0 of 4 · Knowledge checks answered: 0 of 3 · Correct: 0 of 3','v1890-writing-summary');
   snapshot.setAttribute('role','status');snapshot.setAttribute('aria-live','polite');
   const outline=wb.querySelector('.v1870-module-list');
