@@ -40,7 +40,7 @@
    link.addEventListener('click',event=>{
     event.preventDefault();
     target.focus({preventScroll:true});
-    target.scrollIntoView({block:'start',behavior:'instant'});
+    target.scrollIntoView({block:'start',behavior:'auto'});
    });
    li.append(link);list.append(li);liBySection.push(li);
   });
