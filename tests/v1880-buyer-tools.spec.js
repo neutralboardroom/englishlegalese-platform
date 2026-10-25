@@ -1,0 +1,52 @@
+const {test,expect}=require('@playwright/test');
+// All interactions are client-side; do not submit a live inquiry or send provider messages.
+test('employer estimate uses verified 8/16/24/48 group prices and seat tiers',async({page})=>{
+ const posts=[];page.on('request',r=>{if(r.method()==='POST')posts.push(r.url())});
+ await page.goto('/pricing/');const tool=page.locator('#v1880-group-estimator');
+ await expect(tool.getByText('Before discount: $447.00')).toBeVisible();
+ await expect(tool.getByText('Estimated group total: $424.65')).toBeVisible();
+ await tool.getByLabel('Teaching pathway').selectOption('business');
+ await tool.getByLabel('Lessons per employee').selectOption('24');
+ await tool.getByLabel('Number of participating employees (3–999)').fill('12');
+ await expect(tool.getByText('Before discount: $4,188.00')).toBeVisible();
+ await expect(tool.getByText('Employee-seat discount: 15% (estimated saving $628.20)')).toBeVisible();
+ await expect(tool.getByText('Estimated group total: $3,559.80')).toBeVisible();
+ const href=await tool.getByRole('link',{name:'Request an employer quote with these selections'}).getAttribute('href');
+ expect(href).toContain('program=business');expect(href).toContain('package=full24');expect(href).toContain('seats=12');
+ expect(posts).toHaveLength(0);
+ await tool.getByLabel('Number of participating employees (3–999)').fill('1000');
+ await expect(tool).toContainText('whole number of employees between 3 and 999');
+ await expect(tool.getByRole('link',{name:'Request an employer quote with these selections'})).toBeHidden();
+});
+test('validated estimator handoff preselects package and seat count but not identity',async({page})=>{
+ await page.goto('/learn/enroll/?program=business&package=full24&seats=12');
+ const form=page.locator('#v1850-enroll-form');
+ await expect(form.locator('select[name=program]')).toHaveValue('business');
+ await expect(form.locator('select[name=interest]')).toHaveValue('full24');
+ await expect(form.locator('input[name=employer_interest]')).toBeChecked();
+ await expect(form.locator('input[name=employee_seats]')).toHaveValue('12');
+ await expect(form.locator('input[name=organization]')).toHaveValue('');
+ await expect(form.locator('select[name=format] option[value=group]')).toContainText('$349');
+ await page.goto('/learn/enroll/?program=complete&package=full48&seats=22');
+ await expect(page.locator('select[name=interest]')).toHaveValue('full48');
+ await expect(page.locator('select[name=format] option[value=group]')).toContainText('$649');
+ await page.goto('/learn/enroll/?program=complete&package=full24&seats=12');
+ await expect(page.locator('input[name=employer_interest]')).not.toBeChecked();
+});
+test('48 real subject plans remain accessible with local topic search by category',async({page})=>{
+ await page.goto('/learn/complete-programs/');
+ const search=page.locator('#v1880-topic-discovery'),filter=search.getByLabel('Show topic category'),query=search.getByLabel('Find a subject by title, terminology, learning outcome or scenario');
+ await expect(search).toContainText('Showing 48 of 48 topics');
+ await filter.selectOption('investor');await expect(search).toContainText('Showing 8 of 48 topics');
+ await expect(page.locator('#v1850-complete-business-list article:visible')).toHaveCount(8);
+ await filter.selectOption('business');await expect(search).toContainText('Showing 16 of 48 topics');
+ await filter.selectOption('legal');await expect(search).toContainText('Showing 24 of 48 topics');
+ await search.getByRole('button',{name:'Expand visible lesson outlines'}).click();
+ await expect(page.locator('#v1850-complete-legal-list details[open]')).toHaveCount(24);
+ await query.fill('zzzzzznotacourse');
+ await expect(search).toContainText('Showing 0 of 48 topics');
+ await search.getByRole('button',{name:'Clear search and category'}).click();
+ await expect(search).toContainText('Showing 48 of 48 topics');
+ await expect(page.locator('#v1850-complete-legal-list article')).toHaveCount(24);
+ await expect(page.locator('#v1850-complete-business-list article')).toHaveCount(24);
+});

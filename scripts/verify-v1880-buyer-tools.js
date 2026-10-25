@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),rd=p=>fs.readFileSync(p,'utf8');
+const quote=rd('product-v1880-quote-planner.js'),discovery=rd('product-v1880-program-discovery.js'),enroll=rd('product-v1850-enrollment.js');
+const pages=['pricing/index.html','learn/employers/index.html','learn/complete-programs/index.html','learn/enroll/index.html'].map(rd);
+const src=quote+discovery;assert(!/\bfetch\s*\(|XMLHttpRequest|sendMail|sendgrid|resend|mailto:|localStorage|sessionStorage|indexedDB|navigator\.sendBeacon|PaymentRequest|stripe/i.test(src),'HF7 tools must not send/store data, charge, or create email');
+assert(quote.includes('8:149,16:249,24:349,48:649'));
+for(const token of ['seats>=11?15:seats>=6?10:5','Number.isInteger(seats)','new URLSearchParams','Estimate your multi-employee group package'])assert(quote.includes(token),'Estimate safety regression '+token);
+for(const token of ['legal.length!==24||business.length!==24','Showing ','toLocaleLowerCase','Investor English','button'])assert(discovery.includes(token),'Incomplete course navigation '+token);
+for(const s of ['preProgram','prePackage','preSeats','preProgram===\'complete\'&&prePackage===\'full48\'','Organization is deliberately never prefilled'])assert(enroll.includes(s),'Handoff fails '+s);
+assert(pages[0].includes('id="v1880-group-estimator"')&&pages[1].includes('id="v1880-employer-estimate"'));
+assert(pages[2].includes('id="v1880-topic-discovery"')&&pages[3].includes('product-v1850-enrollment.js?v=1.85.0-hf7'));
+assert(rd('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md').includes('EL-RGR-023'));
+assert(rd('governance/ENGLISHLEGALESE_DURABLE_BUILDER_RULES_ADDENDUM_2026-10-24.md').includes('EL-DUR-011'));
+const price=rd('scripts/verify-v1860-prices.js');assert(price.includes('full48:[649,1599]')&&price.includes('eight:[149,319]'),'Do not modify owner-approved prices');
+console.log('PASS HF7: full 48-course subject finder, protected group-seat estimator, validated no-identity handoff, no outbound email/payment/network or browser persistence.');
