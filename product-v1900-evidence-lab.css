@@ -3,7 +3,7 @@
 .v1900-evidence-lab h5{margin:0 0 .65rem;font-size:1.06rem}
 .v1900-limits{font-size:.89rem;line-height:1.55;color:#375e6c}
 .v1900-choice{border:1px solid #bed5da;border-radius:6px;padding:.7rem;margin:.7rem 0;min-width:0}
-.v1900-choice legend{font-weight:700;line-height:1.45}
+.v1900-question{font-weight:700;line-height:1.45}
 .v1900-option{display:flex;gap:.65rem;align-items:flex-start;line-height:1.5;padding:.45rem;cursor:pointer}
 .v1900-option input{flex:none;margin-top:.35rem;accent-color:#155d70}
 .v1900-option:focus-within{outline:2px solid #1b687d;outline-offset:2px}
