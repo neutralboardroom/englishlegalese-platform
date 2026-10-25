@@ -1,7 +1,7 @@
 {
   "name": "englishlegalese-platform",
-  "version": "1.85.1",
-  "description": "EnglishLegalese v1.85.1 guided workbook feedback and public acceptance; v1.85 HF4 — complete 48-topic guided practice workbooks; transparent human-taught/AI/self-study pathways; topic-specific inquiry choices; durable never-email rules.",
+  "version": "1.85.0",
+  "description": "EnglishLegalese v1.85.0 HF5 guided workbook feedback and public acceptance; v1.85 HF4 — complete 48-topic guided practice workbooks; transparent human-taught/AI/self-study pathways; topic-specific inquiry choices; durable never-email rules.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
