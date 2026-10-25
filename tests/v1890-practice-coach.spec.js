@@ -1,0 +1,58 @@
+const {test,expect}=require('@playwright/test');
+// All practice responses are fictional and stay within the page; no actual sending, signup, payment or instructor booking.
+test('48 workbooks contain original four-stage writing practice with clear limits',async({page})=>{
+ await page.goto('/learn/legal-english/');
+ await expect(page.locator('#v1860-legal-catalog .v1870-workbook')).toHaveCount(24);
+ await expect(page.locator('#v1860-legal-catalog .v1890-stage')).toHaveCount(96);
+ await expect(page.locator('#v1860-legal-catalog .v1890-writing-summary')).toHaveCount(24);
+ const a=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await a.locator('.v1870-toggle input').check();
+ await expect(a.locator('.v1890-stage')).toHaveCount(4);
+ await expect(a.locator('.v1890-boundary').first()).toContainText('cannot judge');
+ await expect(a.locator('.v1890-stage-label textarea')).toHaveCount(4);
+ await expect(a.locator('.v1890-word-counter')).toHaveCount(4);
+ await page.goto('/learn/business-english/');
+ await expect(page.locator('#v1850-business-cards .v1890-stage')).toHaveCount(64);
+ await expect(page.locator('#v1850-investor-cards .v1890-stage')).toHaveCount(32);
+ await expect(page.locator('.v1890-writing-summary')).toHaveCount(24);
+});
+test('Self-check detects course-specific vocabulary, structure, revisions and quiz progress without transmission',async({page})=>{
+ const posted=[];page.on('request',r=>{if(r.method()==='POST')posted.push(r.url())});
+ await page.goto('/learn/legal-english/');
+ const a=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await a.locator('.v1870-toggle input').check();
+ const first=a.locator('.v1890-stage').first();
+ await first.getByRole('button',{name:/Check writing structure/}).click();
+ await expect(first.locator('.v1890-stage-feedback')).toContainText('Empty answers cannot be reviewed');
+ const terminology=await first.locator('.v1890-word-counter').textContent();
+ const term=terminology.split('Course terminology cue: ')[1].split(' (')[0];
+ const answer='Fact 1: The fictional team prepared a written agreement for the matter under discussion. Fact 2: The documents show a disputed provision. Assumption: We should verify a missing fact before making a professional recommendation. '+term+' must be used in context.';
+ await first.locator('textarea').fill(answer);
+ await first.getByRole('button',{name:/Check writing structure/}).click();
+ await expect(first.locator('.v1890-stage-feedback')).toContainText('Structure cues found: 4 of 4');
+ await expect(a.locator('.v1890-writing-summary')).toContainText('Writing drafts reviewed: 1 of 4');
+ await a.locator('.v1870-question').first().locator('input[type=radio]').first().check();
+ await expect(a.locator('.v1890-writing-summary')).toContainText('Knowledge checks answered: 1 of 3');
+ await first.locator('textarea').fill('Changed');
+ await expect(a.locator('.v1890-writing-summary')).toContainText('Writing drafts reviewed: 0 of 4');
+ expect(posted).toHaveLength(0);
+ await page.reload();
+ await a.locator('.v1870-toggle input').check();
+ await expect(a.locator('.v1890-stage textarea').first()).toHaveValue('');
+ await expect(a.locator('.v1890-writing-summary')).toContainText('Writing drafts reviewed: 0 of 4');
+});
+test('Investor and Business writing stages prompt distinct curricula and remain usable at narrow viewports',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/learn/business-english/');
+ const b=page.locator('#v1850-business-cards .v1850-course-card').first(),i=page.locator('#v1850-investor-cards .v1850-course-card').first();
+ await b.locator('.v1870-toggle input').check();
+ await i.locator('.v1870-toggle input').check();
+ const t1=await b.locator('.v1890-word-counter').first().textContent(),t2=await i.locator('.v1890-word-counter').first().textContent();
+ expect(t1).not.toEqual(t2);
+ await expect(i.locator('.v1890-stage')).toHaveCount(4);
+ await i.locator('.v1890-stage textarea').first().fill('A fictional market example with insufficient detail.');
+ await expect(i.locator('.v1890-word-counter').first()).toContainText('7 words');
+ await i.locator('.v1890-stage .v1890-check').first().click();
+ await expect(i.locator('.v1890-stage-feedback').first()).toContainText('Consider adding:');
+ await expect(i.locator('.v1890-stage-feedback').first()).toContainText('This does not verify');
+});
