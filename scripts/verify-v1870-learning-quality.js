@@ -40,8 +40,8 @@ for(const page of [L,B]){
 }
 assert(L.includes('All 24 Legal English courses')&&L.includes('human-teacher topic options')&&B.includes('16 Business English')&&B.includes('8 Wall Street'));
 assert(L.includes('instructor availability')&&B.includes('verified staffing'));
-assert(E.includes('one-lesson or four-lesson')&&E.includes('24 Legal English'));
-for(const item of ["select('topic'","One class on a selected topic","Four classes on a selected topic","topic-time-request","Preferred teaching topic"])assert(enrollJS.includes(item),'Real topic-interest form missing '+item);
+assert(E.includes('one-, four- or eight-lesson')&&E.includes('24 Legal English')&&E.includes('/learn/complete-programs/'));
+for(const item of ["select('topic'","1 lesson · topic-specific inquiry","4 lessons · topic-specific inquiry","8-session structured foundation","all 48 topics","topic-time-request","Preferred topic for 1 or 4 lessons"])assert(enrollJS.includes(item),'Real topic/package-interest form missing '+item);
 assert(intake.includes("scheduleId==='topic-time-request'")&&intake.includes("price_usd:249"),'Topic request validation or published schedule group prices wrong');
 assert(intake.includes("format==='private'&&scheduleId!=='private-time-request'"));
 assert(intake.includes("new Pool({connectionString:process.env.ENGLISHLEGALESE_INTAKE_DATABASE_URL"),'Do not use unrelated production database');
