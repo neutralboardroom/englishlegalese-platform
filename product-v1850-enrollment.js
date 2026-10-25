@@ -48,7 +48,21 @@ function update(){
  businessNotice.textContent=employer.checked?('Employer quote requested. '+(n>=8&&format.value==='group'&&discount?'Indicative multi-seat discount: '+discount+'% off eligible group packages; subject to separate cohort, staffing and quote confirmation.':'Multi-seat reductions apply only to group packages of 8+ lessons with at least three employees.')+' Do not enter employee personal details. No payment or booking is made.'):(eight?'Eight-session curriculum uses eight distinct foundation sessions; it does not cover all 24 topics.':long?'A comprehensive pathway covers one instructor-guided meeting per subject topic, with optional independent workbooks. Scheduling is individually confirmed.':'A teacher and schedule must be confirmed before any class is booked.');
 }
 program.addEventListener('change',()=>{availableTopics();update();});
-interest.addEventListener('change',update);format.addEventListener('change',update);employer.addEventListener('change',update);seats.addEventListener('input',update);availableTopics();update();
+
+interest.addEventListener('change',update);format.addEventListener('change',update);employer.addEventListener('change',update);seats.addEventListener('input',update);
+// Only accept nonpersonal, preapproved plan choices from the informational estimator.
+const qs=new URLSearchParams(window.location.search);
+const preProgram=qs.get('program'),prePackage=qs.get('package'),preSeats=qs.get('seats');
+if(['legal','business','complete'].includes(preProgram)&&['eight','extended','full24','full48'].includes(prePackage)&&
+  ((preProgram==='complete'&&prePackage==='full48')||(preProgram!=='complete'&&prePackage!=='full48'))){
+ program.value=preProgram;interest.value=prePackage;
+ const seatCount=Number(preSeats);
+ if(preSeats!==null&&/^\d{1,3}$/.test(preSeats)&&Number.isInteger(seatCount)&&seatCount>=3&&seatCount<=999){
+  employer.checked=true;seats.value=String(seatCount);
+  // Organization is deliberately never prefilled or transmitted by a quote estimate.
+ }
+}
+availableTopics();update();
 const noteLabel=el('label','Learning goals, preferred dates, team needs (optional; no client/employee confidential details)');noteLabel.className='v1850-field';
 const note=el('textarea');note.name='note';note.maxLength=180;note.rows=3;noteLabel.append(note);form.append(noteLabel);
 const honeypot=field('website','Website (leave blank)');honeypot.parentElement.classList.add('v1850-hp');honeypot.required=false;honeypot.tabIndex=-1;

@@ -1,0 +1,14 @@
+/* EnglishLegalese HF7 — responsive, keyboard-first client-only course discovery and quote display. */
+.v1880-planner,.v1880-topic-discovery{border:1px solid #abcbd3;border-radius:10px;padding:clamp(1rem,2.2vw,1.55rem);margin:1.5rem auto;background:#f6fbfd;color:#153645;max-width:1100px}
+.v1880-planner-fields,.v1880-search-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:1rem;margin:1rem 0}
+.v1880-planner label,.v1880-search-bar label{display:block;font-weight:650;line-height:1.4}
+.v1880-planner :is(input,select),.v1880-search-bar :is(input,select){display:block;width:100%;box-sizing:border-box;min-height:44px;padding:.65rem;border:1px solid #668f9b;border-radius:6px;font:inherit;margin-top:.45rem;background:#fff;color:#163846}
+.v1880-planner :is(input,select):focus-visible,.v1880-search-bar :is(input,select):focus-visible,.v1880-actions button:focus-visible,.v1880-quote-link:focus-visible{outline:3px solid #2a6a80;outline-offset:3px}
+.v1880-estimate{border-top:1px solid #bcd8e0;padding-top:.65rem;margin-top:1rem}
+.v1880-estimate p{margin:.4rem 0}.v1880-grand-total{font-size:1.16rem;font-weight:750}.v1880-fine{font-size:.9rem;line-height:1.5}
+.v1880-quote-link{display:inline-block;margin-top:.75rem;text-decoration:underline;text-underline-offset:3px}
+.v1880-actions{display:flex;gap:.65rem;flex-wrap:wrap;margin:.8rem 0}
+.v1880-actions button{font:inherit;border:1px solid #2d6375;border-radius:6px;padding:.55rem .7rem;background:white;color:#134657;cursor:pointer}
+.v1880-match-count{font-weight:650}
+[hidden]{display:none!important}
+@media(max-width:650px){.v1880-planner,.v1880-topic-discovery{padding:.85rem}.v1880-planner-fields,.v1880-search-bar{grid-template-columns:minmax(0,1fr)}}
