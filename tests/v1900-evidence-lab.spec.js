@@ -32,7 +32,7 @@ test('HF9 course-specific evidence differs between Business and Investor on mobi
  await page.goto('/learn/business-english/');
  const b=page.locator('#v1850-business-cards .v1850-course-card').first(),i=page.locator('#v1850-investor-cards .v1850-course-card').first();
  await b.locator('.v1870-toggle input').check();await i.locator('.v1870-toggle input').check();
- const t1=await b.locator('.v1900-option').first().textContent(),t2=await i.locator('.v1900-option').first().textContent();
+ const t1=await b.locator('.v1900-option input[value="correct"]').locator('..').textContent(),t2=await i.locator('.v1900-option input[value="correct"]').locator('..').textContent();
  expect(t1).not.toEqual(t2);
  await expect(i.locator('.v1900-contrast')).toContainText('Follow-up question');
  await expect(i.locator('.v1900-evidence-lab textarea')).toHaveCount(1);
