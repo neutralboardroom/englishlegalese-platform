@@ -30,6 +30,7 @@ test('Business and investor curricula expose 24 complete self-guided workbooks d
  await expect(first.locator('.v1870-question')).toHaveCount(3);
  await expect(first.locator('.v1870-rubric-item')).toHaveCount(4);
  await expect(page.locator('#v1850-business-sessions article')).toHaveCount(16);
+ await expect(page.locator('#v1850-business-cards .v1880-targeted-task, #v1850-investor-cards .v1880-targeted-task')).toHaveCount(96);
 });
 test('Three scenario-specific knowledge checks grade locally, and draft disappears after reload',async({page})=>{
  const posts=[];page.on('request',req=>{if(req.method()==='POST')posts.push(req.url())});
@@ -37,7 +38,9 @@ test('Three scenario-specific knowledge checks grade locally, and draft disappea
  const c=page.locator('#v1860-legal-catalog .v1860-course-card').first();
  await c.locator('.v1870-toggle input').check();
  const quiz=c.locator('.v1870-question');
+ await expect(c.locator('.v1880-progress')).toContainText('0 of 3');
  await quiz.first().locator('input[type=radio]').first().check();
+ await expect(c.locator('.v1880-progress')).toContainText('1 of 3');
  await expect(quiz.first().locator('.v1870-check-feedback')).not.toContainText('Choose one answer');
  await quiz.nth(1).locator('input[type=radio]').nth(1).check();
  await expect(quiz.nth(1).locator('.v1870-check-feedback')).toContainText(/Correct|Review/);
@@ -47,6 +50,7 @@ test('Three scenario-specific knowledge checks grade locally, and draft disappea
  await page.reload();
  await c.locator('.v1870-toggle input').check();
  await expect(c.locator('.v1870-draft-label textarea')).toHaveValue('');
+ await expect(c.locator('.v1880-progress')).toContainText('0 of 3');
 });
 test('Subject-specific group requests allow one/four lesson options without misrepresenting confirmed bookings',async({page})=>{
  let submitted=null;await page.route('**/api/v1850/enroll',route=>{submitted=route.request().postDataJSON();return route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,received:true,reference:'TOPIC-TEST-ONLY'})})});
