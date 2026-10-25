@@ -1,0 +1,56 @@
+const {test,expect}=require('@playwright/test');
+// No outbound messaging, payments or real personal examples.
+test('HF12 preserves the 48 real course workbooks and adds individual two-round dialogues',async({page})=>{
+ await page.goto('/learn/legal-english/');
+ await expect(page.locator('#v1860-legal-catalog .v1930-simulation')).toHaveCount(24);
+ await expect(page.locator('#v1860-legal-catalog .v1870-module')).toHaveCount(96);
+ await expect(page.locator('#v1860-legal-catalog .v1910-path')).toHaveCount(24);
+ const legalIds=await page.locator('.v1930-simulation').evaluateAll(xs=>xs.map(x=>x.dataset.courseId));
+ expect(new Set(legalIds).size).toBe(24);
+ await page.goto('/learn/business-english/');
+ await expect(page.locator('#v1850-business-cards .v1930-simulation')).toHaveCount(16);
+ await expect(page.locator('#v1850-investor-cards .v1930-simulation')).toHaveCount(8);
+ await expect(page.locator('.v1890-stage')).toHaveCount(96);
+ const businessIds=await page.locator('.v1930-simulation').evaluateAll(xs=>xs.map(x=>x.dataset.courseId));
+ expect(new Set(businessIds).size).toBe(24);
+});
+test('HF12 requires the first answer before revealing new facts and can restart without saving',async({page})=>{
+ const posts=[];page.on('request',req=>{if(req.method()==='POST')posts.push(req.url())});
+ await page.goto('/learn/legal-english/');
+ const card=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await card.locator('.v1870-toggle input').check();
+ const s=card.locator('.v1930-simulation');
+ await expect(s.locator('.v1930-round-two')).toBeHidden();
+ await s.locator('.v1930-reveal').click();
+ await expect(s.locator('.v1930-status')).toContainText('Write a Round 1 reply');
+ await s.locator('.v1930-label textarea').first().fill('The notice has not yet been checked, so I would request the original document and confirm the recipient.');
+ await s.locator('.v1930-reveal').click();
+ await expect(s.locator('.v1930-round-two')).toBeVisible();
+ await expect(s.locator('.v1930-round-two')).toContainText('New information');
+ await expect(s.locator('.v1930-reveal')).toBeDisabled();
+ await s.locator('.v1930-label textarea').nth(1).fill('The envelope differs from what we expected. I would request the notice and verify its actual deadline.');
+ await s.locator('.v1930-exemplar summary').click();
+ await expect(s.locator('.v1930-exemplar')).toContainText('Course-specific model expression');
+ await s.locator('.v1930-rubric input').first().check();
+ expect(posts).toHaveLength(0);
+ await s.locator('.v1930-reset').click();
+ await expect(s.locator('.v1930-round-two')).toBeHidden();
+ await expect(s.locator('.v1930-label textarea').first()).toHaveValue('');
+ await expect(s.locator('.v1930-reveal')).toBeEnabled();
+ await page.reload();await card.locator('.v1870-toggle input').check();
+ await expect(card.locator('.v1930-simulation textarea').first()).toHaveValue('');
+});
+test('HF12 Business and Investor simulations have different roleplay facts on mobile',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/learn/business-english/');
+ const business=page.locator('#v1850-business-cards .v1850-course-card').first();
+ const investor=page.locator('#v1850-investor-cards .v1850-course-card').first();
+ await business.locator('.v1870-toggle input').check();await investor.locator('.v1870-toggle input').check();
+ const a=business.locator('.v1930-brief'),b=investor.locator('.v1930-brief');
+ await expect(a).toBeVisible();await expect(b).toBeVisible();
+ expect(await a.textContent()).not.toEqual(await b.textContent());
+ await investor.locator('.v1930-simulation textarea').first().fill('A price movement is a historical fact; it does not predict future returns.');
+ await investor.locator('.v1930-reveal').click();
+ await expect(investor.locator('.v1930-round-two')).toBeVisible();
+ await expect(investor.locator('.v1870-question')).toHaveCount(3);
+});

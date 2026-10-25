@@ -22,7 +22,7 @@ for(const page of ['learn/legal-english/index.html','learn/business-english/inde
  const s=rd(page);for(const token of ['product-v1870-curriculum-workbooks.js','product-v1890-practice-coach.js','product-v1900-evidence-lab.js','product-v1910-workbook-path.js'])assert(s.includes(token),'Protected practice is missing: '+token);
 }
 const workflow=rd('.github/workflows/englishlegalese-v1850-production-acceptance.yml');
-assert(workflow.includes('verify-v1920-answer-depth.js')&&workflow.includes('v1920-answer-depth-production.spec.js')&&workflow.includes(' -lt 108 '),'HF11 complete public gate');
+const gate=workflow.match(/ -lt (\d+) /);assert(workflow.includes('verify-v1920-answer-depth.js')&&workflow.includes('v1920-answer-depth-production.spec.js')&&gate&&Number(gate[1])>=108,'HF11 complete public gate; future releases may increase the minimum');
 for(const conf of ['playwright.config.js','playwright.production.config.js'])assert(rd(conf).includes('v1920-answer-depth-production.spec.js'),'HF11 test discovery '+conf);
 const rules=rd('governance/ENGLISHLEGALESE_DURABLE_BUILDER_RULES_ADDENDUM_2026-10-24.md');
 assert(rules.includes('EL-DUR-011')&&rules.includes('EL-DUR-012'));
