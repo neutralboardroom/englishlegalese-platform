@@ -14,31 +14,39 @@ let token=safeSession('get'),device=safeLocal('get',CONSENT)==='yes',cloud=false
 const lessons=new Map();
 const isHub=!!document.querySelector('[data-el1940-hub]');
 const signInBar=E('section',undefined,'v1940-account');signInBar.setAttribute('aria-label','Save and resume self-paced lessons');
-const heading=E('strong','Your self-paced learning work');
-const blurb=E('p','Pause and resume lessons. Cloud work follows your student account when secure saving is available. Device-only drafts stay in this browser, are not private on a shared device, and may disappear if browser storage is cleared. Never enter confidential client information.');
+const heading=E('strong','Save your progress: create a free student account and sign in');
+const blurb=E('p','To reliably save your lesson answers and resume on another device, create a free student account and stay signed in. Your work is saved to your account only after the server confirms it. Without a signed-in account, optional save on this device is less reliable: it will not sync and may be lost if browser data is cleared. Use fictional information only; do not enter confidential client details.');
 const status=E('p','Checking save options…','v1940-global-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
 const buttons=E('div',undefined,'v1940-buttons');
-const signin=E('button','Sign in for cloud saving');signin.type='button';
+const createAccount=E('button','Create a free student account');createAccount.type='button';
+const signin=E('button','Sign in to my account');signin.type='button';
 const logout=E('button','Sign out');logout.type='button';
 const consent=E('button','Enable saving on this device');consent.type='button';
 const disable=E('button','Clear saved device copies');disable.type='button';
 const hubLink=E('a','My saved lessons','v1940-link');hubLink.href='/learn/my-work/';
-buttons.append(signin,logout,consent,disable,hubLink);
+buttons.append(createAccount,signin,logout,consent,disable,hubLink);
 const login=E('form',undefined,'v1940-login');login.hidden=true;
 const emailLabel=E('label','Account email'),email=E('input');email.type='email';email.autocomplete='email';email.required=true;emailLabel.append(email);
 const passLabel=E('label','Password'),pass=E('input');pass.type='password';pass.autocomplete='current-password';pass.required=true;passLabel.append(pass);
 const go=E('button','Sign in securely');go.type='submit';login.append(emailLabel,passLabel,go);
-signInBar.append(heading,blurb,buttons,login,status);
+const signup=E('form',undefined,'v1940-login');signup.hidden=true;
+const nameLabel=E('label','Full name'),fullName=E('input');fullName.type='text';fullName.autocomplete='name';fullName.maxLength=160;fullName.required=true;nameLabel.append(fullName);
+const newEmailLabel=E('label','Email'),newEmail=E('input');newEmail.type='email';newEmail.autocomplete='email';newEmail.required=true;newEmailLabel.append(newEmail);
+const newPassLabel=E('label','Create a password (12 characters or more)'),newPass=E('input');newPass.type='password';newPass.autocomplete='new-password';newPass.minLength=12;newPass.maxLength=128;newPass.required=true;newPassLabel.append(newPass);
+const create=E('button','Create account and sign in');create.type='submit';
+const signupDisclosure=E('p','Account creation and cloud saving require secure server readiness. If unavailable, this page will NOT claim your answers are backed up.');
+signup.append(nameLabel,newEmailLabel,newPassLabel,create,signupDisclosure);
+signInBar.append(heading,blurb,buttons,signup,login,status);
 const authHeaders=()=>({'Authorization':'Bearer '+token,'Content-Type':'application/json'});
 async function parse(resp){try{return await resp.json()}catch{return{ok:false,error:'Unable to read the server response.'}}}
 function labelMessage(message){status.textContent=message}
 function updateBar(){
- signin.hidden=!!token||!cloud;logout.hidden=!token;
+ createAccount.hidden=!!token||!cloud;signin.hidden=!!token||!cloud;logout.hidden=!token;
  consent.hidden=device;disable.hidden=!device;
- if(token&&cloud)labelMessage('Cloud sign-in active. Lessons save to your account; submissions require an assigned teacher for delivery.');
- else if(device)labelMessage('This-device saving is ON. Your work is not shared across devices and cannot be submitted to a teacher until you sign in.');
- else if(cloud)labelMessage('Sign in for cloud saving, or explicitly choose this-device saving. Work is NOT yet being saved.');
- else labelMessage('Cloud account saving is unavailable. Enable this-device saving to keep drafts here, or export a backup.');
+ if(token&&cloud)labelMessage('Signed in to your student account. Cloud saving is enabled; a saved confirmation will appear after each successful server save. Teacher review requires an assigned teacher.');
+ else if(device)labelMessage('DEVICE-ONLY DRAFTS — not backed up to your account or other devices. Create an account and sign in for reliable cloud saving when available.');
+ else if(cloud)labelMessage('NOT SAVED TO AN ACCOUNT. Create a free student account or sign in before starting. You may explicitly enable temporary device-only drafts.');
+ else labelMessage('ACCOUNT SAVING CURRENTLY UNAVAILABLE. Your lesson is NOT backed up online. You can opt into device-only drafts or export your answers.');
 }
 async function checkCloud(){
  try{const r=await fetch(api+'/capabilities',{cache:'no-store'}),j=await parse(r);cloud=Boolean(r.ok&&j.account_saving_available)}
@@ -53,7 +61,24 @@ async function verifyToken(){
  }catch{token=null;me=null;safeSession('clear');labelMessage('Please sign in again for cloud saving.')}
  updateBar();
 }
-signin.addEventListener('click',()=>{login.hidden=!login.hidden;if(!login.hidden)email.focus()});
+signin.addEventListener('click',()=>{signup.hidden=true;login.hidden=!login.hidden;if(!login.hidden)email.focus()});
+createAccount.addEventListener('click',()=>{login.hidden=true;signup.hidden=!signup.hidden;if(!signup.hidden)fullName.focus()});
+signup.addEventListener('submit',async event=>{
+ event.preventDefault();if(!cloud){labelMessage('Account creation unavailable until secure cloud storage is ready. Your work is NOT backed up.');return;}
+ if(newPass.value.length<12){labelMessage('Choose a password of at least 12 characters.');return;}
+ create.disabled=true;labelMessage('Creating your secure student account…');
+ try{
+  const r=await fetch('/api/v119/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:newEmail.value.trim(),password:newPass.value,full_name:fullName.value.trim(),role:'student'})});
+  const j=await parse(r);
+  if(!r.ok||!j.token||j.user?.role!=='student')throw Error(j.error||'Account registration is not currently available.');
+  token=j.token;me=j.user;safeSession('set',token);
+  signup.reset();signup.hidden=true;updateBar();
+  labelMessage('Account created and signed in. Your answers will be backed up only when you see a successful Saved to your account confirmation.');
+  for(const l of lessons.values())await l.load();
+  if(isHub)await populateHub();
+ }catch(e){labelMessage('ACCOUNT NOT CREATED: '+e.message+'. Do not assume your work is backed up.');}
+ finally{create.disabled=false;newPass.value='';}
+});
 logout.addEventListener('click',()=>{token=null;me=null;safeSession('clear');updateBar();for(const l of lessons.values())l.message('Signed out. Unsaved edits cannot reach your cloud account.')});
 consent.addEventListener('click',()=>{device=true;safeLocal('set',CONSENT,'yes');updateBar();for(const l of lessons.values())l.schedule()});
 disable.addEventListener('click',()=>{
@@ -67,7 +92,7 @@ login.addEventListener('submit',async ev=>{
   const r=await fetch('/api/v119/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:pass.value})});
   const j=await parse(r);
   if(!r.ok||!j.token||j.user?.role!=='student')throw Error(j.error||'Student login unavailable.');
-  token=j.token;me=j.user;safeSession('set',token);pass.value='';login.hidden=true;updateBar();
+  token=j.token;me=j.user;safeSession('set',token);pass.value='';login.hidden=true;signup.hidden=true;updateBar();
   for(const l of lessons.values())await l.load();
   if(isHub)await populateHub();
  }catch(e){labelMessage('Cloud login was not completed: '+e.message+' Existing work remains on this page.')}
@@ -158,11 +183,11 @@ function buildLesson(key,title,root,showInHub=false){
     const j=await parse(r);
     if(!r.ok)throw Error(j.error||'Cloud save failed');
     revision=Number(j.revision);submitted=false;success=true;
-    state.textContent=(pauseRequested?'Paused safely. ':'')+'Cloud saved '+new Date().toLocaleTimeString()+'. Your account can resume this lesson on another device.';
+    state.textContent=(pauseRequested?'Paused safely. ':'')+'Saved to your account at '+new Date().toLocaleTimeString()+'. You can resume on another device.';
    }else if(device){
     success=localSave();
     if(!success)throw Error('Local storage is full or unavailable');
-    state.textContent=(pauseRequested?'Paused. ':'')+'Saved on this device '+new Date().toLocaleTimeString()+'. Cloud sync and teacher submission are not enabled.';
+    state.textContent=(pauseRequested?'Paused. ':'')+'Saved on this device ONLY at '+new Date().toLocaleTimeString()+'. NOT saved to your account; no cross-device sync or teacher submission.';
    }else throw Error('Sign in for cloud saving or explicitly enable this-device saving. Your current answers are still on this page.');
   }catch(e){state.textContent='NOT SAVED: '+e.message+'. Keep the lesson open or export a backup.'}
   finally{busy=false}
