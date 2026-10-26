@@ -7,7 +7,7 @@ for(const label of [
   'password resets and recovery','security notices','class or appointment confirmations',
   'teacher feedback/lesson notifications','Unsolicited outreach and marketing',
   'distinct explicit owner authorization','SPF/DKIM','single-use','stored hashed',
-  'NEVER send real emails','Saved to your account','Saved on this device only',
+  'never send real emails','Saved to your account','Saved on this device only',
   'EL-DUR-011','EL-RGR-023','all future versions'
 ])assert(text.includes(label),'Current durable transactional email policy missing '+label);
 for(const p of [
