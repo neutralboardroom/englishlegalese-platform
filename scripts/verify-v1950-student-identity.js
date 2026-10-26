@@ -42,7 +42,7 @@ assert(client.includes("fetch('/api/v1940/student/auth/logout'"),'Student signou
 const teacherClient=read('product-v1940-teacher-review.js');
 assert(teacherClient.includes("fetch('/api/v1940/teacher/auth/logout'"),'Teacher signout must request server revocation');
 assert(services.includes('session_nonce: user.metadata?.session_version || null'),'Login sessions must be bound to password version');
-assert(services.indexOf('if (require_verified_student)') < services.indexOf('await this.storeSession(user, token, req)'), 'Verification must happen before session creation');
+assert(services.indexOf('if (require_verified_student)') < services.indexOf('await this.storeSession(user, token, req, jti)'), 'Verification must happen before session creation');
 assert(services.includes('if (expected_role && user.role !== expected_role)'), 'Wrong-role login cannot generate a session');
 assert(identity.includes("expected_role:'student',require_verified_student:true")&&identity.includes("expected_role:'teacher'"),'Student and teacher login routes must enforce roles before creating sessions');
 assert(services.includes('current.rows[0]?.nonce || null'),'Authenticated operations must reject old sessions after password reset');
