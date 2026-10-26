@@ -1,0 +1,14 @@
+.v1940-account,.v1940-controls{padding:.8rem;margin:1rem auto;background:#f7fbfc;border:1px solid #acc7d0;border-radius:8px;max-width:1060px;color:#17394b;font-family:inherit;line-height:1.55}
+.v1940-controls{margin:.9rem 0;padding:.7rem}
+.v1940-account p,.v1940-controls p{margin:.4rem 0 .75rem}
+.v1940-buttons{display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0}
+.v1940-buttons button,.v1940-login button,.v1940-buttons a{font:inherit;min-height:40px;padding:.45rem .65rem;border-radius:6px;border:1px solid #31758a;background:#eaf5f8;color:#184b60;cursor:pointer}
+.v1940-login{display:flex;flex-wrap:wrap;align-items:flex-end;gap:.65rem;margin:.8rem 0}
+.v1940-login[hidden],.v1940-buttons [hidden]{display:none!important}
+.v1940-login label{display:flex;flex-direction:column;gap:.25rem}
+.v1940-login input{min-height:36px;border:1px solid #9dbbc4;padding:.2rem}
+.v1940-account :focus-visible,.v1940-controls :focus-visible,.v1940-saved-card :focus-visible{outline:3px solid #176b83;outline-offset:2px}
+.v1940-state,.v1940-global-status{font-size:.93rem;color:#275c70}
+.v1940-saved-card{padding:.8rem;border:1px solid #b5cbd3;border-radius:8px;margin:.8rem 0}
+.v1940-saved-card strong{display:block}
+@media(max-width:600px){.v1940-account,.v1940-controls{padding:.5rem}.v1940-buttons button{flex:1 1 42%}.v1940-login label,.v1940-login input{width:100%}}
