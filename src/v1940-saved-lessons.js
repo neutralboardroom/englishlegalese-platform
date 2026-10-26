@@ -19,7 +19,15 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,auth
  const strict=(req,res,next)=>{
   const bearer=req.get('authorization')||'';
   if(!/^Bearer [^\s]+$/.test(bearer))return res.status(401).json({ok:false,error:'Sign in to save securely.'});
-  return auth(req,res,next);
+  return auth(req,res,async()=>{
+   // Legacy /api/v119 registration can issue a session before verification.
+   // Enforce verified identity at the actual private lesson data boundary too.
+   if(req.user?.role==='student'){
+    try{if(!await identity.verified(req.user.id))return res.status(403).json({ok:false,verification_required:true,error:'Verify your student email before accessing cloud lessons.'});}
+    catch{return res.status(503).json({ok:false,error:'Account verification could not be confirmed.'});}
+   }
+   next();
+  });
  };
  const privateCache=(_req,res,next)=>{res.set('Cache-Control','no-store');res.set('X-Content-Type-Options','nosniff');next()};
  const connected=async()=>{
