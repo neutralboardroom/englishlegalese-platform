@@ -46,7 +46,7 @@ assert(services.indexOf('if (require_verified_student)') < services.indexOf('awa
 assert(services.includes('if (expected_role && user.role !== expected_role)'), 'Wrong-role login cannot generate a session');
 assert(identity.includes("expected_role:'student',require_verified_student:true")&&identity.includes("expected_role:'teacher'"),'Student and teacher login routes must enforce roles before creating sessions');
 assert(services.includes('current.rows[0]?.nonce || null'),'Authenticated operations must reject old sessions after password reset');
-assert(services.includes('passwordHash, configured'),'Recovery must reuse existing password hashing');
+assert(services.includes('passwordHash, sessionDigest, configured')&&backend.includes("const {passwordHash}=require('./productionServices')"),'Recovery must reuse existing password hashing');
 assert(client.includes('Check your email for a verification link')&&client.includes('await redeemAccountLink()'));
 assert(client.includes('request-password-reset')&&client.includes('reset-password'));
 assert(!fs.existsSync('db/migrations/012_student_email_action_tokens.sql'),'Unapproved migration must not auto-run');
