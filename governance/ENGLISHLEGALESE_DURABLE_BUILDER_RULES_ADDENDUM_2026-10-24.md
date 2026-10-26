@@ -1,3 +1,5 @@
+> **CURRENT SUCCESSOR (2026-10-26):** The owner has expressly superseded the blanket no-email aspect of EL-DUR-011 through **EL-DUR-013 / EL-RGR-025** in `governance/ENGLISHLEGALESE_OWNER_TRANSACTIONAL_EMAIL_SUCCESSOR_2026-10-26.md`. Account verification, welcome, password reset, security alerts, genuine class confirmations and essential student/class notices are permitted on real events with security safeguards. **Unsolicited marketing and bulk outreach remain prohibited without separate authorization.** The original wording below is retained as historical evidence and must not override the newer rule. References in EL-DUR-012 to the categorical ban are subject to the same explicit successor.
+
 # EnglishLegalese — Durable Builder Rule Addendum
 **Identifier:** EL-DUR-011
 **Adopted:** 2026-10-24
