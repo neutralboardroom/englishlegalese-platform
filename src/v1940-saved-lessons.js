@@ -69,7 +69,7 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,acco
    const teachers=await db.query([
     'select cs.teacher_user_id from class_sessions cs join users t on t.id=cs.teacher_user_id',
     "where cs.student_user_id=$1 and cs.teacher_user_id is not null and t.role='teacher'",
-    "and cs.status not in ('cancelled','rejected') order by cs.updated_at desc limit 1"
+    "and cs.status in ('scheduled','confirmed','in_progress','completed') order by cs.updated_at desc limit 1"
    ].join(' '),[req.user.id]);
    const teacher=teachers.rows[0]?.teacher_user_id||null;
    const submit=await db.query([
