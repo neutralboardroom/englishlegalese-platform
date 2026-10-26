@@ -20,7 +20,7 @@ assert(!/\b(sendMail|sendEmail|nodemailer|SMTP_HOST|fetch\s*\(|axios\s*\(|email_
 for(const tok of ['localStorage','sessionStorage','device=true','cloud','Pause & save','Resume saved work','Submit for teacher review','teacher_delivery_confirmed','Save now','snapshot(root)','restore(root','schedule=setTimeout','exportBackup','v1890-stage-feedback','scrollIntoView','v1940-controls']){
  assert(client.includes(tok),'Missing practical save/resume '+tok);
 }
-assert(client.includes('Sign in for cloud saving')&&client.includes('saved on this device')===false===false);
+assert(client.includes('Sign in for cloud saving'),'Account login must be available when configured');
 assert(client.includes('saved on this device')||client.includes('Saved on this device'));
 assert(!/\b(sendMail|sendEmail|nodemailer|SMTP_HOST|resend|PaymentRequest)\b/i.test(client+teacher),'No email or payment execution');
 for(const t of ["teacher","Bearer","feedback","assigned","no email"])assert(teacher.toLowerCase().includes(t.toLowerCase()));
