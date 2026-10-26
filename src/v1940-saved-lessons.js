@@ -36,7 +36,7 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,auth
   const name=String(req.body?.full_name||'').trim();
   const password=String(req.body?.password||'');
   if(req.body?.role&&req.body.role!=='student')return res.status(403).json({ok:false,error:'Only student accounts can register here.'});
-  if(!/^[^\\s@]{1,64}@[^\\s@]{1,190}\\.[a-z]{2,40}$/i.test(email)||email.length>254||name.length<2||name.length>160||password.length<12||password.length>128)
+  if(!/^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,40}$/i.test(email)||email.length>254||name.length<2||name.length>160||password.length<12||password.length>128)
     return res.status(400).json({ok:false,error:'Use a valid email, a full name (2–160 characters), and a password of 12–128 characters.'});
   try{
    const account=await services.registerUser({email,password,full_name:name,role:'student'},req);
