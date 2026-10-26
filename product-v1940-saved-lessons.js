@@ -34,7 +34,7 @@ const nameLabel=E('label','Full name'),fullName=E('input');fullName.type='text';
 const newEmailLabel=E('label','Email'),newEmail=E('input');newEmail.type='email';newEmail.autocomplete='email';newEmail.required=true;newEmailLabel.append(newEmail);
 const newPassLabel=E('label','Create a password (12 characters or more)'),newPass=E('input');newPass.type='password';newPass.autocomplete='new-password';newPass.minLength=12;newPass.maxLength=128;newPass.required=true;newPassLabel.append(newPass);
 const create=E('button','Create account and sign in');create.type='submit';
-const signupDisclosure=E('p','Account creation and cloud saving require secure server readiness. If unavailable, this page will NOT claim your answers are backed up.');
+const signupDisclosure=E('p','No email is sent to create this account. Your email is an unverified sign-in ID, not proof of identity. There is no email password-reset service in this version. Keep your password securely. Cloud saving works only after server confirmation.');
 signup.append(nameLabel,newEmailLabel,newPassLabel,create,signupDisclosure);
 signInBar.append(heading,blurb,buttons,signup,login,status);
 const authHeaders=()=>({'Authorization':'Bearer '+token,'Content-Type':'application/json'});
@@ -68,7 +68,7 @@ signup.addEventListener('submit',async event=>{
  if(newPass.value.length<12){labelMessage('Choose a password of at least 12 characters.');return;}
  create.disabled=true;labelMessage('Creating your secure student account…');
  try{
-  const r=await fetch('/api/v119/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:newEmail.value.trim(),password:newPass.value,full_name:fullName.value.trim(),role:'student'})});
+  const r=await fetch('/api/v1940/student/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:newEmail.value.trim(),password:newPass.value,full_name:fullName.value.trim(),role:'student'})});
   const j=await parse(r);
   if(!r.ok||!j.token||j.user?.role!=='student')throw Error(j.error||'Account registration is not currently available.');
   token=j.token;me=j.user;safeSession('set',token);
@@ -89,7 +89,7 @@ disable.addEventListener('click',()=>{
 login.addEventListener('submit',async ev=>{
  ev.preventDefault();go.disabled=true;labelMessage('Checking secure account sign-in…');
  try{
-  const r=await fetch('/api/v119/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:pass.value})});
+  const r=await fetch('/api/v1940/student/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:pass.value})});
   const j=await parse(r);
   if(!r.ok||!j.token||j.user?.role!=='student')throw Error(j.error||'Student login unavailable.');
   token=j.token;me=j.user;safeSession('set',token);pass.value='';login.hidden=true;signup.hidden=true;updateBar();

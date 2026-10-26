@@ -46,7 +46,7 @@ form.addEventListener('submit',async(ev)=>{
  ev.preventDefault();const data=new FormData(form),pass=form.querySelector('input[type=password]');
  say('Checking teacher account…');
  try{
-  const r=await fetch('/api/v119/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:data.get('email'),password:data.get('password')})});
+  const r=await fetch('/api/v1940/teacher/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:data.get('email'),password:data.get('password')})});
   const j=await json(r);if(!r.ok||!j.token||j.user?.role!=='teacher')throw Error('A confirmed teacher account is required.');
   token=j.token;try{sessionStorage.setItem(KEY,token)}catch{};pass.value='';await loadQueue();
  }catch(e){say(e.message)}finally{pass.value=''}

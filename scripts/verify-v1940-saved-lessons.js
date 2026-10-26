@@ -22,7 +22,7 @@ for(const tok of ['localStorage','sessionStorage','device=true','cloud','Pause &
  assert(client.includes(tok),'Missing practical save/resume '+tok);
 }
 assert(client.includes('Sign in to my account'),'Account login must be available when configured');
-assert(client.includes('Create a free student account')&&client.includes('account_registration_available'),'Account creation requires actual server readiness');
+assert(client.includes('Create a free student account')&&client.includes('account_registration_available'),'Account creation requires actual schema readiness');
 assert(client.includes('Saved to your account')&&client.includes('NOT saved to your account'),'Never confuse device drafts and verified account saves');
 assert(client.includes('saved on this device')||client.includes('Saved on this device'));
 assert(client.includes('if(device&&!token)')&&client.includes('Never auto-import potentially different users'),'Do not expose anonymous device drafts to a signed-in student account');
@@ -45,7 +45,10 @@ assert.equal(paths.length,26);
 for(const p of paths){const page=read(p);assert(page.includes('product-v1940-saved-lessons.js?v=1.85.0-hf13')&&page.includes('product-v1940-saved-lessons.css?v=1.85.0-hf13'),'Self-paced saving omitted '+p)}
 for(const p of ['learn/my-work/index.html','learn/teacher-submissions/index.html'])assert(read(p).includes('HF13')||read(p).includes('v1940-'),'Missing dashboard '+p);
 assert(read('server.js').includes("require('./src/v1940-saved-lessons').install"),'Backend is not installed');
-assert(read('server.js').includes('accountRegistrationReady:async()=>readyForAccounts()&&await ledger.ready()'),'Registration availability must match the actual guarded registration service');
+assert(read('server.js').includes('authAbuse});'),'Account registration must reuse the original rate-limiter and must not rely on an email sender');
+for(const t of ["/api/v1940/student/auth/register","/api/v1940/student/auth/login","/api/v1940/teacher/auth/login","email_verified:false","no_email_sent:true","authAbuse.registration","authAbuse.login"])assert(server.includes(t),'Missing isolated email-free accounts safeguard '+t);
+assert(!server.includes('ledger.ready()')&&!server.includes('readyForAccounts'),'Student lesson authentication must not depend on outbound mail readiness');
+assert(client.includes('unverified sign-in ID')&&client.includes('no email password-reset service'),'Student disclosure must not promise verified identity or email resets');
 const workflow=read('.github/workflows/englishlegalese-v1850-production-acceptance.yml');
 const floor=workflow.match(/ -lt (\d+) /);assert(floor&&Number(floor[1])>=138,'HF13 must preserve and increase the 126-case public gate');
 assert(workflow.includes('verify-v1940-saved-lessons.js')&&workflow.includes('v1940-saved-lessons-production.spec.js'));

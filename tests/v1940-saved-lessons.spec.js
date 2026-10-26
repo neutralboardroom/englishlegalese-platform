@@ -60,7 +60,7 @@ test('HF13 teacher review page never exposes student records anonymously',async(
 test('HF13 transparently presents account creation and shows server-confirmed cloud saving only after a successful PUT',async({page})=>{
  let registered=0,saved=0;
  await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,account_saving_available:true,account_registration_available:true})}));
- await page.route('**/api/v119/auth/register',async route=>{
+ await page.route('**/api/v1940/student/auth/register',async route=>{
   registered++;
   const body=route.request().postDataJSON();
   expect(body.role).toBe('student');
