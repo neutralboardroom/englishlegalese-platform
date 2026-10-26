@@ -114,8 +114,8 @@ function buildLesson(key,title,root,showInHub=false){
  const label=E('strong','Save, pause & resume');
  const state=E('p','Not saved yet.','v1940-state');state.setAttribute('role','status');state.setAttribute('aria-live','polite');
  const btn=E('div',undefined,'v1940-buttons');
- const save=E('button','Save now'),pause=E('button','Pause & save'),resume=E('button','Resume saved work'),submit=E('button','Submit for teacher review'),exportBtn=E('button','Export backup');
- for(const b of [save,pause,resume,submit,exportBtn]){b.type='button';btn.append(b)}
+ const save=E('button','Save now'),pause=E('button','Pause & save'),resume=E('button','Resume saved work'),submit=E('button','Submit for teacher review'),feedbackBtn=E('button','Check teacher feedback'),exportBtn=E('button','Export backup');
+ for(const b of [save,pause,resume,submit,feedbackBtn,exportBtn]){b.type='button';btn.append(b)}
  controls.append(label,state,btn);root.prepend(controls);
  let revision=0,busy=false,timer=null,restoring=false,latest=null,submitted=false;
  const l={key,title,root,controls,message:m=>state.textContent=m};
@@ -180,6 +180,16 @@ function buildLesson(key,title,root,showInHub=false){
  pause.addEventListener('click',async()=>{if(await write({pauseRequested:true})){state.textContent+=' You may close this tab and use My saved lessons to resume.';}});
  resume.addEventListener('click',load);
  exportBtn.addEventListener('click',()=>exportBackup(l));
+ feedbackBtn.addEventListener('click',async()=>{
+  if(!token||!cloud){l.message('Teacher feedback requires a signed-in student account.');return}
+  try{
+   const r=await fetch(api+'/'+encodeURIComponent(key)+'/submissions',{headers:{Authorization:'Bearer '+token},cache:'no-store'}),j=await parse(r);
+   if(!r.ok)throw Error(j.error||'Could not load feedback.');
+   const recent=(j.submissions||[])[0];
+   if(!recent){l.message('You have not submitted this lesson for teacher review.');return}
+   l.message(recent.review_status==='reviewed'?'Teacher feedback: '+(recent.teacher_feedback||'No written comments provided.'):(recent.review_status==='awaiting_review'?'Your assigned teacher has not reviewed this submission yet.':'Submission safely recorded but not yet assigned to a teacher. No email was sent.'));
+  }catch(e){l.message('Teacher feedback unavailable: '+e.message)}
+ });
  submit.addEventListener('click',async()=>{
   if(!token||!cloud){l.message('Submission requires a secure signed-in account and live cloud saving. Use Save/Export for now.');return}
   if(!await write()){return}
