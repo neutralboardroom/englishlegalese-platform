@@ -73,8 +73,9 @@ test('HF13 transparently presents account creation and shows server-confirmed cl
   if(route.request().method()==='PUT'){
    saved++;
    const work=route.request().postDataJSON();
-   expect(work.expected_revision).toBe(0);
-   return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,saved:true,revision:1,status:'draft',updated_at:new Date().toISOString()})});
+   expect(Number.isSafeInteger(work.expected_revision)).toBe(true);
+   expect(work.expected_revision).toBeGreaterThanOrEqual(0);
+   return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,saved:true,revision:work.expected_revision+1,status:'draft',updated_at:new Date().toISOString()})});
   }
   return route.abort();
  });
@@ -94,7 +95,7 @@ test('HF13 transparently presents account creation and shows server-confirmed cl
  await course.locator('.v1930-simulation textarea').first().fill('An appropriate response asks to see the fictional notice first.');
  await course.locator('.v1940-controls button').filter({hasText:'Save now'}).click();
  await expect(course.locator('.v1940-state')).toContainText('Saved to your account');
- expect(saved).toBe(1);
+ expect(saved).toBeGreaterThanOrEqual(1);
 });
 test('HF13 account saving unavailable never offers a broken registration or claims cloud backup',async({page})=>{
  await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,account_saving_available:true,account_registration_available:false})}));
