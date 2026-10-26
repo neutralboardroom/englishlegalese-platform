@@ -163,7 +163,7 @@ function buildLesson(key,title,root,showInHub=false){
     const j=await parse(r);
     if(r.ok&&j.lesson){saved=j.lesson;revision=Number(saved.revision)||0;submitted=saved.status==='submitted'}
     else if(r.status!==404){l.message('Cloud resume unavailable: '+(j.error||'Please retry.'));return}
-    else if(device){try{saved=JSON.parse(safeLocal('get',storageKey())||'null')}catch{}}
+    // Never auto-import potentially different users' shared-device drafts into a signed-in account.
    }else if(device){try{saved=JSON.parse(safeLocal('get',storageKey())||'null')}catch{}}
    if(!saved){l.message('No previous saved answer found for this lesson.');return}
    restoring=true;restore(root,saved.answers);restoring=false;
@@ -249,7 +249,7 @@ async function populateHub(){
  const host=document.querySelector('[data-el1940-hub]');if(!host)return;
  host.replaceChildren(E('p','Checking your saved lessons…'));
  const rows=[];
- if(device){
+ if(device&&!token){
   for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(!key?.startsWith(PREFIX))continue;
    try{const w=JSON.parse(safeLocal('get',key));if(w?.path&&w?.key)rows.push({...w,source:'This device'})}catch{}
   }
