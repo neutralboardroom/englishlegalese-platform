@@ -27,6 +27,9 @@ assert(identity.includes("if(req.user?.role==='student')")&&identity.includes('i
 assert(backend.includes("role!=='student'||active.rows[0]?.status!=='active'"),'Inactive/privileged accounts must not redeem student verification');
 assert(identity.includes('registration=available&&await identity.ready()'),'Registration must fail closed before verified sender and migration');
 assert(services.includes('session_nonce: user.metadata?.session_version || null'),'Login sessions must be bound to password version');
+assert(services.indexOf('if (require_verified_student)') < services.indexOf('await this.storeSession(user, token, req)'), 'Verification must happen before session creation');
+assert(services.includes('if (expected_role && user.role !== expected_role)'), 'Wrong-role login cannot generate a session');
+assert(identity.includes("expected_role:'student',require_verified_student:true")&&identity.includes("expected_role:'teacher'"),'Student and teacher login routes must enforce roles before creating sessions');
 assert(services.includes('current.rows[0]?.nonce || null'),'Authenticated operations must reject old sessions after password reset');
 assert(services.includes('passwordHash, configured'),'Recovery must reuse existing password hashing');
 assert(client.includes('Check your email for a verification link')&&client.includes('await redeemAccountLink()'));
