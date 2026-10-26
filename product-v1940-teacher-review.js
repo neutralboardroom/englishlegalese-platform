@@ -51,7 +51,16 @@ form.addEventListener('submit',async(ev)=>{
   token=j.token;try{sessionStorage.setItem(KEY,token)}catch{};pass.value='';await loadQueue();
  }catch(e){say(e.message)}finally{pass.value=''}
 });
-out.addEventListener('click',signout);
+out.addEventListener('click',async()=>{
+ const previous=token;
+ signout();
+ if(!previous){say('Signed out locally.');return;}
+ try{
+  const r=await fetch('/api/v1940/teacher/auth/logout',{method:'POST',headers:{Authorization:'Bearer '+previous},cache:'no-store'});
+  const j=await json(r);
+  say(r.ok&&j.signed_out&&j.session_revoked?'Teacher session securely revoked.':'Signed out locally. Server logout was not confirmed; avoid shared devices until your session expires.');
+ }catch{say('Signed out locally. Server logout was not confirmed; avoid shared devices until your session expires.');}
+});
 feedback.addEventListener('submit',async ev=>{
  ev.preventDefault();if(!activeId||!token)return;
  const value=comments.value.trim();if(value.length<20){say('Please write at least 20 characters of feedback.');return}
