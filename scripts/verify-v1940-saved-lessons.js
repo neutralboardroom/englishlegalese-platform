@@ -26,7 +26,7 @@ assert(client.includes('Create a free student account')&&client.includes('accoun
 assert(client.includes('Saved to your account')&&client.includes('NOT saved to your account'),'Never confuse device drafts and verified account saves');
 assert(client.includes('saved on this device')||client.includes('Saved on this device'));
 assert(client.includes('if(device&&!token)')&&client.includes('Never auto-import potentially different users'),'Do not expose anonymous device drafts to a signed-in student account');
-assert(!/\b(sendMail|sendEmail|nodemailer|SMTP_HOST|resend|PaymentRequest)\b/i.test(client+teacher),'No email or payment execution');
+assert(!/\b(sendMail|sendEmail|nodemailer|SMTP_HOST|PaymentRequest)\b/i.test(client+teacher),'No client-side email or payment execution');
 for(const t of ["teacher","Bearer","feedback","assigned","no email"])assert(teacher.toLowerCase().includes(t.toLowerCase()));
 const paths=[
  'learn/legal-english/index.html','learn/business-english/index.html',
@@ -45,10 +45,10 @@ assert.equal(paths.length,26);
 for(const p of paths){const page=read(p);assert(page.includes('product-v1940-saved-lessons.js?v=1.85.0-hf13')&&page.includes('product-v1940-saved-lessons.css?v=1.85.0-hf13'),'Self-paced saving omitted '+p)}
 for(const p of ['learn/my-work/index.html','learn/teacher-submissions/index.html'])assert(read(p).includes('HF13')||read(p).includes('v1940-'),'Missing dashboard '+p);
 assert(read('server.js').includes("require('./src/v1940-saved-lessons').install"),'Backend is not installed');
-assert(read('server.js').includes('authAbuse});'),'Account registration must reuse the original rate-limiter and must not rely on an email sender');
-for(const t of ["/api/v1940/student/auth/register","/api/v1940/student/auth/login","/api/v1940/teacher/auth/login","email_verified:false","no_email_sent:true","authAbuse.registration","authAbuse.login"])assert(server.includes(t),'Missing isolated email-free accounts safeguard '+t);
+assert(read('server.js').includes('authAbuse});'),'Account registration must reuse the original auth rate limiter');
+for(const t of ["./v1950-student-account-identity","/api/v1940/student/auth/login","/api/v1940/teacher/auth/login","email_verified:true","authAbuse.login","identity.verified(account.user.id)"])assert(server.includes(t),'Missing verified account safeguard '+t);
 assert(!server.includes('ledger.ready()')&&!server.includes('readyForAccounts'),'Student lesson authentication must not depend on outbound mail readiness');
-assert(client.includes('unverified sign-in ID')&&client.includes('no email password-reset service'),'Student disclosure must not promise verified identity or email resets');
+for(const t of ['one-use verification link','resend-verification','request-password-reset','reset-password','await redeemAccountLink()'])assert(client.includes(t),'Missing authentic student email workflow '+t);
 const workflow=read('.github/workflows/englishlegalese-v1850-production-acceptance.yml');
 const floor=workflow.match(/ -lt (\d+) /);assert(floor&&Number(floor[1])>=138,'HF13 must preserve and increase the 126-case public gate');
 assert(workflow.includes('verify-v1940-saved-lessons.js')&&workflow.includes('v1940-saved-lessons-production.spec.js'));
@@ -56,4 +56,4 @@ for(const p of ['playwright.config.js','playwright.production.config.js'])assert
 assert(read('package.json').includes('node scripts/verify-v1940-saved-lessons.js'));
 const rules=read('governance/ENGLISHLEGALESE_DURABLE_BUILDER_RULES_ADDENDUM_2026-10-24.md');
 assert(rules.includes('EL-DUR-011')&&rules.includes('EL-DUR-012'));
-console.log('PASS HF13: 48 workbooks and 24 self-paced pages, consent-first local drafts, fail-closed account cloud saves, owner-only revision guards, teacher-linked private submissions, never-email preserved.');
+console.log('PASS HF15: 48 workbooks and 24 self-paced pages, secure account verification and recovery UI, consent-first local drafts, authenticated cloud saves, teacher-linked private submissions; no unsolicited email.');
