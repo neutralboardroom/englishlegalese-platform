@@ -234,3 +234,44 @@ test('HF15.4 teacher confirms global sign out and does not remove assigned stude
  await expect(page.locator('#v1940-teacher-queue')).toContainText('Sign in to load your assigned submissions');
  expect(revoked).toBe(1);
 });
+
+test('HF15.5 student downloads only a confirmed complete private cloud backup',async({page})=>{
+ let exports=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fixture.student.cloud","email_verified":true,"user":{"id":"student-fixture","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"lessons":[]}'}));
+ await page.route('**/api/v1940/account/export',route=>{
+  exports++;expect(route.request().headers().authorization).toBe('Bearer fixture.student.cloud');
+  return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,complete:true,schema_version:1,format:'EnglishLegalese student cloud backup',saved_lessons:[{lesson_key:'workbook:fixture',answers:{fictional:'saved'}}],submissions:[{teacher_feedback:'Fictional feedback'}]})});
+ });
+ await page.goto('/learn/my-work/');
+ await expect(page.getByRole('button',{name:'Download my cloud backup'})).toBeHidden();
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const form=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await form.locator('input[autocomplete="email"]').fill('student@example.test');
+ await form.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await form.getByRole('button',{name:'Sign in securely'}).click();
+ page.on('dialog',dialog=>dialog.accept());
+ const downloadPromise=page.waitForEvent('download');
+ await page.getByRole('button',{name:'Download my cloud backup'}).click();
+ const download=await downloadPromise;
+ expect(download.suggestedFilename()).toMatch(/^englishlegalese-cloud-backup-\d{4}-\d{2}-\d{2}\.json$/);
+ await expect(page.locator('.v1940-global-status')).toContainText('Complete account backup downloaded');
+ expect(exports).toBe(1);
+});
+test('HF15.5 refuses a server-truncated backup without a false download success',async({page})=>{
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fixture.student.cloud","email_verified":true,"user":{"id":"student-fixture","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"lessons":[]}'}));
+ await page.route('**/api/v1940/account/export',route=>route.fulfill({status:413,contentType:'application/json',body:'{"ok":false,"code":"ACCOUNT_BACKUP_LIMIT","error":"No partial backup was produced."}'}));
+ await page.goto('/learn/my-work/');
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const form=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await form.locator('input[autocomplete="email"]').fill('student@example.test');
+ await form.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await form.getByRole('button',{name:'Sign in securely'}).click();
+ page.on('dialog',dialog=>dialog.accept());
+ await page.getByRole('button',{name:'Download my cloud backup'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('ACCOUNT BACKUP NOT DOWNLOADED');
+ await expect(page.locator('.v1940-global-status')).toContainText('No partial backup was produced.');
+});
