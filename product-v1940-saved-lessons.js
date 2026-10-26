@@ -24,10 +24,11 @@ const resend=E('button','Resend verification email');resend.type='button';
 const forgot=E('button','Forgot password?');forgot.type='button';
 const logout=E('button','Sign out');logout.type='button';
 const logoutAll=E('button','Sign out on all devices');logoutAll.type='button';
+const cloudBackup=E('button','Download my cloud backup');cloudBackup.type='button';
 const consent=E('button','Enable saving on this device');consent.type='button';
 const disable=E('button','Clear saved device copies');disable.type='button';
 const hubLink=E('a','My saved lessons','v1940-link');hubLink.href='/learn/my-work/';
-buttons.append(createAccount,signin,resend,forgot,logout,logoutAll,consent,disable,hubLink);
+buttons.append(createAccount,signin,resend,forgot,logout,logoutAll,cloudBackup,consent,disable,hubLink);
 const login=E('form',undefined,'v1940-login');login.hidden=true;
 const emailLabel=E('label','Account email'),email=E('input');email.type='email';email.autocomplete='email';email.required=true;emailLabel.append(email);
 const passLabel=E('label','Password'),pass=E('input');pass.type='password';pass.autocomplete='current-password';pass.required=true;passLabel.append(pass);
@@ -52,7 +53,7 @@ const authHeaders=()=>({'Authorization':'Bearer '+token,'Content-Type':'applicat
 async function parse(resp){try{return await resp.json()}catch{return{ok:false,error:'Unable to read the server response.'}}}
 function labelMessage(message){status.textContent=message}
 function updateBar(){
- createAccount.hidden=!!token||!cloud||!registrationReady;signin.hidden=!!token||!cloud;resend.hidden=!!token||!registrationReady;forgot.hidden=!!token||!registrationReady;logout.hidden=!token;logoutAll.hidden=!token;
+ createAccount.hidden=!!token||!cloud||!registrationReady;signin.hidden=!!token||!cloud;resend.hidden=!!token||!registrationReady;forgot.hidden=!!token||!registrationReady;logout.hidden=!token;logoutAll.hidden=!token;cloudBackup.hidden=!token||!cloud;
  consent.hidden=device;disable.hidden=!device;
  if(token&&cloud)labelMessage('Signed in to your student account. Cloud saving is enabled; a saved confirmation will appear after each successful server save. Teacher review requires an assigned teacher.');
  else if(device)labelMessage('DEVICE-ONLY DRAFTS — not backed up to your account or other devices. Create an account and sign in for reliable cloud saving when available.');
@@ -100,6 +101,26 @@ logout.addEventListener('click',async()=>{
   labelMessage(r.ok&&j.signed_out&&j.session_revoked?'Signed out securely. This session was revoked on the server.':'Signed out of this browser, but server logout was not confirmed. Avoid using this device until your session expires.');
  }catch{labelMessage('Signed out of this browser. Server logout could not be confirmed; avoid using a shared device until the session expires.');}
  finally{logout.disabled=false;}
+});
+// Private, user-initiated download of ALL account saves and teacher feedback.
+// Never auto-download, email, store export contents in web storage, or call a server export "complete" unless confirmed.
+cloudBackup.addEventListener('click',async()=>{
+ if(!token||!cloud){labelMessage('Sign in to your student account to download a cloud backup.');return;}
+ if(!confirm('Download a private JSON backup of your saved lessons, submitted work and teacher feedback to this device? Keep the file secure. No email will be sent.'))return;
+ cloudBackup.disabled=true;
+ try{
+  const r=await fetch('/api/v1940/account/export',{headers:authHeaders(),cache:'no-store'});
+  const j=await parse(r);
+  if(!r.ok||j.ok!==true||j.complete!==true||!Array.isArray(j.saved_lessons)||!Array.isArray(j.submissions))
+   throw Error(j.error||'Server did not confirm a complete account backup.');
+  const blob=new Blob([JSON.stringify(j,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=E('a');
+  a.href=url;a.download='englishlegalese-cloud-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+  labelMessage('Complete account backup downloaded to this device: '+j.saved_lessons.length+' lessons and '+j.submissions.length+' submissions. Keep the private file secure. No email was sent.');
+ }catch(e){labelMessage('ACCOUNT BACKUP NOT DOWNLOADED: '+e.message+' Your cloud work remains unchanged.');}
+ finally{cloudBackup.disabled=false;}
 });
 logoutAll.addEventListener('click',async()=>{
  if(!token)return;
