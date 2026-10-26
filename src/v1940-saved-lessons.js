@@ -89,6 +89,27 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,auth
   const registration=available&&await identity.ready();
   res.json({ok:true,account_saving_available:available,account_registration_available:registration,requires_login:true,verified_email_required:true,transactional_email_available:registration,marketing_email_enabled:false,teacher_delivery_requires_linked_teacher:true,device_drafts_optional:true});
  });
+ // Student-initiated, authenticated FULL cloud backup. Never email or sync its content.
+ // Explicitly refuse oversized accounts instead of silently returning incomplete exports.
+ app.get('/api/v1940/account/export',ready,strict,requireRoles('student'),async(req,res)=>{
+  try{
+   const [work,submissions]=await Promise.all([
+    store.pool.query('SELECT lesson_key,lesson_title,origin_path,answers,status,revision,updated_at,submitted_at FROM self_paced_lesson_work WHERE user_id=$1 ORDER BY updated_at DESC LIMIT 201',[req.user.id]),
+    store.pool.query('SELECT id,lesson_key,lesson_title,revision,answers,review_status,created_at,teacher_feedback,reviewed_at FROM self_paced_lesson_submissions WHERE user_id=$1 ORDER BY created_at DESC LIMIT 201',[req.user.id])
+   ]);
+   if(work.rows.length>200||submissions.rows.length>200){
+    return res.status(413).json({ok:false,code:'ACCOUNT_BACKUP_LIMIT',error:'This account has more than 200 saved lessons or submissions. A complete one-file backup is unavailable; use lesson-by-lesson exports. No partial backup was produced.'});
+   }
+   const payload={ok:true,format:'EnglishLegalese student cloud backup',schema_version:1,exported_at:new Date().toISOString(),complete:true,
+    saved_lessons:work.rows,submissions:submissions.rows,privacy:'Private export requested by the signed-in student. Store this file securely. It may contain lesson responses and teacher feedback. No email is sent.'};
+   if(Buffer.byteLength(JSON.stringify(payload),'utf8')>8*1024*1024){
+    return res.status(413).json({ok:false,code:'ACCOUNT_BACKUP_TOO_LARGE',error:'Your complete backup exceeds 8 MB. No partial backup was produced. Export lessons individually.'});
+   }
+   res.set('Cache-Control','no-store, private');
+   res.set('X-Content-Type-Options','nosniff');
+   return res.json(payload);
+  }catch{return res.status(503).json({ok:false,error:'Your account backup could not be created. Your cloud work remains unchanged. Try again later.'});}
+ });
  app.get('/api/v1940/lessons',ready,strict,async(req,res)=>{
   try{const q=await store.pool.query('select lesson_key,lesson_title,origin_path,status,revision,updated_at,submitted_at from self_paced_lesson_work where user_id=$1 order by updated_at desc limit 100',[req.user.id]);res.json({ok:true,lessons:q.rows});}
   catch{return res.status(503).json({ok:false,error:'Could not load saved lessons.'});}
