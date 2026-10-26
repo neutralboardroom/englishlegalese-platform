@@ -6,7 +6,7 @@
 const SESSION='el1940.student.session',CONSENT='el1940.device.optin',PREFIX='el1940.lesson.';
 const api='/api/v1940/lessons';
 const page=location.pathname;
-if(!/^\/learn\/[a-z0-9-/]+\/?$/.test(page))return;
+if(!/^\/learn\/[a-z0-9/-]+\/?$/.test(page))return;
 const E=(tag,text,cls)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(cls)el.className=cls;return el};
 const safeLocal=(op,key,value)=>{try{return op==='get'?localStorage.getItem(key):op==='set'?localStorage.setItem(key,value):localStorage.removeItem(key)}catch{return null}};
 const safeSession=(op,value)=>{try{return op==='get'?sessionStorage.getItem(SESSION):op==='set'?sessionStorage.setItem(SESSION,value):sessionStorage.removeItem(SESSION)}catch{return null}};
