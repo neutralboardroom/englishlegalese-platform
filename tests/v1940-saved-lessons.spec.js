@@ -141,7 +141,7 @@ test('HF15 password recovery link uses one mocked request and never claims login
   return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"password_reset":true}'});
  });
  await page.goto('/learn/my-work/#reset='+secret);
- const reset=page.locator('form.v1940-login').filter({has:page.locator('input[autocomplete="new-password"]')});
+ const reset=page.locator('form.v1940-login').filter({has:page.locator('button').filter({hasText:'Reset password'})});
  await expect(reset).toBeVisible();
  await reset.locator('input').fill('LongerStrongPass2026!');
  await reset.getByRole('button',{name:'Reset password'}).click();
