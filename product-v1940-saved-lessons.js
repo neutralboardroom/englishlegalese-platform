@@ -10,7 +10,7 @@ if(!/^\/learn\/[a-z0-9/-]+\/?$/.test(page))return;
 const E=(tag,text,cls)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(cls)el.className=cls;return el};
 const safeLocal=(op,key,value)=>{try{return op==='get'?localStorage.getItem(key):op==='set'?localStorage.setItem(key,value):localStorage.removeItem(key)}catch{return null}};
 const safeSession=(op,value)=>{try{return op==='get'?sessionStorage.getItem(SESSION):op==='set'?sessionStorage.setItem(SESSION,value):sessionStorage.removeItem(SESSION)}catch{return null}};
-let token=safeSession('get'),device=safeLocal('get',CONSENT)==='yes',cloud=false,me=null;
+let token=safeSession('get'),device=safeLocal('get',CONSENT)==='yes',cloud=false,registrationReady=false,me=null;
 const lessons=new Map();
 const isHub=!!document.querySelector('[data-el1940-hub]');
 const signInBar=E('section',undefined,'v1940-account');signInBar.setAttribute('aria-label','Save and resume self-paced lessons');
@@ -41,16 +41,16 @@ const authHeaders=()=>({'Authorization':'Bearer '+token,'Content-Type':'applicat
 async function parse(resp){try{return await resp.json()}catch{return{ok:false,error:'Unable to read the server response.'}}}
 function labelMessage(message){status.textContent=message}
 function updateBar(){
- createAccount.hidden=!!token||!cloud;signin.hidden=!!token||!cloud;logout.hidden=!token;
+ createAccount.hidden=!!token||!cloud||!registrationReady;signin.hidden=!!token||!cloud;logout.hidden=!token;
  consent.hidden=device;disable.hidden=!device;
  if(token&&cloud)labelMessage('Signed in to your student account. Cloud saving is enabled; a saved confirmation will appear after each successful server save. Teacher review requires an assigned teacher.');
  else if(device)labelMessage('DEVICE-ONLY DRAFTS — not backed up to your account or other devices. Create an account and sign in for reliable cloud saving when available.');
- else if(cloud)labelMessage('NOT SAVED TO AN ACCOUNT. Create a free student account or sign in before starting. You may explicitly enable temporary device-only drafts.');
+ else if(cloud)labelMessage(registrationReady?'NOT SAVED TO AN ACCOUNT. Create a free student account or sign in before starting. You may explicitly enable temporary device-only drafts.':'NOT SAVED TO AN ACCOUNT. New student registrations are currently unavailable; existing students may sign in. Use temporary device-only drafts if needed.');
  else labelMessage('ACCOUNT SAVING CURRENTLY UNAVAILABLE. Your lesson is NOT backed up online. You can opt into device-only drafts or export your answers.');
 }
 async function checkCloud(){
- try{const r=await fetch(api+'/capabilities',{cache:'no-store'}),j=await parse(r);cloud=Boolean(r.ok&&j.account_saving_available)}
- catch{cloud=false}
+ try{const r=await fetch(api+'/capabilities',{cache:'no-store'}),j=await parse(r);cloud=Boolean(r.ok&&j.account_saving_available);registrationReady=cloud&&Boolean(j.account_registration_available)}
+ catch{cloud=false;registrationReady=false}
  updateBar();
 }
 async function verifyToken(){
@@ -64,7 +64,7 @@ async function verifyToken(){
 signin.addEventListener('click',()=>{signup.hidden=true;login.hidden=!login.hidden;if(!login.hidden)email.focus()});
 createAccount.addEventListener('click',()=>{login.hidden=true;signup.hidden=!signup.hidden;if(!signup.hidden)fullName.focus()});
 signup.addEventListener('submit',async event=>{
- event.preventDefault();if(!cloud){labelMessage('Account creation unavailable until secure cloud storage is ready. Your work is NOT backed up.');return;}
+ event.preventDefault();if(!cloud||!registrationReady){labelMessage('Account creation is currently unavailable. Your work is NOT backed up online.');return;}
  if(newPass.value.length<12){labelMessage('Choose a password of at least 12 characters.');return;}
  create.disabled=true;labelMessage('Creating your secure student account…');
  try{
@@ -80,7 +80,7 @@ signup.addEventListener('submit',async event=>{
  finally{create.disabled=false;newPass.value='';}
 });
 logout.addEventListener('click',()=>{token=null;me=null;safeSession('clear');updateBar();for(const l of lessons.values())l.message('Signed out. Unsaved edits cannot reach your cloud account.')});
-consent.addEventListener('click',()=>{device=true;safeLocal('set',CONSENT,'yes');updateBar();for(const l of lessons.values())l.schedule()});
+consent.addEventListener('click',()=>{device=true;safeLocal('set',CONSENT,'yes');updateBar()});
 disable.addEventListener('click',()=>{
  if(!confirm('Remove all HF13 draft copies saved on this browser? Cloud account copies are not deleted.'))return;
  for(let i=localStorage.length-1;i>=0;i--){const key=localStorage.key(i);if(key&&key.startsWith(PREFIX))safeLocal('remove',key)}
@@ -163,6 +163,7 @@ function buildLesson(key,title,root,showInHub=false){
     const j=await parse(r);
     if(r.ok&&j.lesson){saved=j.lesson;revision=Number(saved.revision)||0;submitted=saved.status==='submitted'}
     else if(r.status!==404){l.message('Cloud resume unavailable: '+(j.error||'Please retry.'));return}
+    else if(device){try{saved=JSON.parse(safeLocal('get',storageKey())||'null')}catch{}}
    }else if(device){try{saved=JSON.parse(safeLocal('get',storageKey())||'null')}catch{}}
    if(!saved){l.message('No previous saved answer found for this lesson.');return}
    restoring=true;restore(root,saved.answers);restoring=false;
