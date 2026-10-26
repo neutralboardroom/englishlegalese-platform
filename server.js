@@ -225,6 +225,8 @@ app.post('/api/v119/stripe/webhook', express.raw({ type: 'application/json' }), 
 });
 
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
+/* HF13: self-paced student cloud saves, teacher-linked submissions, no email/notifications. */
+require('./src/v1940-saved-lessons').install(app,{store:persistentStore,services:productionServices,authMiddleware,requireRoles,configured,accountLoginReady:()=>readyForAccounts(),accountRegistrationReady:async()=>readyForAccounts()&&await ledger.ready()});
 require('./src/v1850-public-intake').install(app);
 
 app.get('/api/video-providers', (req, res) => {

@@ -47,7 +47,7 @@
   textarea.setAttribute('aria-label','Fictional evidence-based rewrite for '+c.title);
   textarea.placeholder='What is known: … What needs checking: …';
   label.append(textarea);lab.append(label,
-   mk('p','This rewrite stays in the current browser tab and disappears on reload. Review it against the example and discuss professional accuracy with a confirmed teacher if available.','v1900-limits'));
+   mk('p','Without enabling save, this rewrite disappears on reload. With cloud or device saving, it can be resumed. Review it against the example and discuss professional accuracy with a confirmed teacher if available.','v1900-limits'));
   list.insertBefore(lab,list.querySelector('.v1870-module'));
  }
 })();

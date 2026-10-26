@@ -50,19 +50,21 @@ jobs:
         run: node scripts/verify-v1920-answer-depth.js
       - name: Verify HF12 48 original roleplay dialogues and browser-only revisions
         run: node scripts/verify-v1930-roleplay.js
+      - name: Verify HF13 authenticated pause, cloud save and assigned teacher reviews
+        run: node scripts/verify-v1940-saved-lessons.js
       - name: Fail closed unless HF4 workbooks and topic inquiries are collected on all devices
         shell: bash
         run: |
           set -euo pipefail
-          collected="$(npx playwright test tests/v1870-production.spec.js tests/v1850-packages-production.spec.js tests/v1880-buyer-tools-production.spec.js tests/v1890-practice-coach-production.spec.js tests/v1900-evidence-lab-production.spec.js tests/v1910-workbook-path-production.spec.js tests/v1920-answer-depth-production.spec.js tests/v1930-roleplay-production.spec.js --config=playwright.production.config.js --list)"
+          collected="$(npx playwright test tests/v1870-production.spec.js tests/v1850-packages-production.spec.js tests/v1880-buyer-tools-production.spec.js tests/v1890-practice-coach-production.spec.js tests/v1900-evidence-lab-production.spec.js tests/v1910-workbook-path-production.spec.js tests/v1920-answer-depth-production.spec.js tests/v1930-roleplay-production.spec.js tests/v1940-saved-lessons-production.spec.js --config=playwright.production.config.js --list)"
           printf '%s\n' "$collected"
           count="$(printf '%s\n' "$collected" | sed -n 's/.*Total: \([0-9][0-9]*\) tests in .*/\1/p' | tail -1)"
-          if [[ -z "$count" || "$count" -lt 126 ]]; then
-            echo "BLOCK: v1870 HF4 requires at least 126 independent public test cases across apex/www, desktop/tablet/mobile; collected ${count:-0}" >&2
+          if [[ -z "$count" || "$count" -lt 138 ]]; then
+            echo "BLOCK: v1870 HF4 requires at least 138 independent public test cases across apex/www, desktop/tablet/mobile; collected ${count:-0}" >&2
             exit 1
           fi
       - name: Run v1.85.0 pages, legal/business nav, workbooks and topic inquiries on both public hosts
-        run: npx playwright test tests/v1850-production.spec.js tests/v1850-followthrough-production.spec.js tests/v1860-production.spec.js tests/v1870-production.spec.js tests/v1880-buyer-tools-production.spec.js tests/v1890-practice-coach-production.spec.js tests/v1900-evidence-lab-production.spec.js tests/v1910-workbook-path-production.spec.js tests/v1920-answer-depth-production.spec.js tests/v1930-roleplay-production.spec.js --config=playwright.production.config.js
+        run: npx playwright test tests/v1850-production.spec.js tests/v1850-followthrough-production.spec.js tests/v1860-production.spec.js tests/v1870-production.spec.js tests/v1880-buyer-tools-production.spec.js tests/v1890-practice-coach-production.spec.js tests/v1900-evidence-lab-production.spec.js tests/v1910-workbook-path-production.spec.js tests/v1920-answer-depth-production.spec.js tests/v1930-roleplay-production.spec.js tests/v1940-saved-lessons-production.spec.js --config=playwright.production.config.js
       - name: Preserve evidence
         if: always()
         uses: actions/upload-artifact@v4
