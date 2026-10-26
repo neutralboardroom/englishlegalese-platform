@@ -14,7 +14,7 @@ function validate(input){
  if(Buffer.byteLength(json,'utf8')>LIMIT)return{error:'Saved answers exceed the 64 KB per-lesson limit. Export a backup first.'};
  return{key,title,path,json,revision:input.expected_revision};
 }
-function install(app,{store,services,authMiddleware,requireRoles,configured}){
+function install(app,{store,services,authMiddleware,requireRoles,configured,accountRegistrationReady=async()=>false}){
  const auth=authMiddleware(services);
  const strict=(req,res,next)=>{
   const bearer=req.get('authorization')||'';
@@ -30,7 +30,9 @@ function install(app,{store,services,authMiddleware,requireRoles,configured}){
  async function ready(req,res,next){if(!await connected())return res.status(503).json({ok:false,error:'Secure cloud saving requires a verified PostgreSQL connection, active account security and an applied migration.'});next()}
  app.use('/api/v1940/',privateCache);
  app.get('/api/v1940/lessons/capabilities',async(req,res)=>{
-  res.json({ok:true,account_saving_available:await connected(),requires_login:true,no_outbound_email:true,teacher_delivery_requires_linked_teacher:true,device_drafts_optional:true});
+  const available=await connected();
+  const registration=available&&Boolean(await accountRegistrationReady().catch(()=>false));
+  res.json({ok:true,account_saving_available:available,account_registration_available:registration,requires_login:true,no_outbound_email:true,teacher_delivery_requires_linked_teacher:true,device_drafts_optional:true});
  });
  app.get('/api/v1940/lessons',ready,strict,async(req,res)=>{
   try{const q=await store.pool.query('select lesson_key,lesson_title,origin_path,status,revision,updated_at,submitted_at from self_paced_lesson_work where user_id=$1 order by updated_at desc limit 100',[req.user.id]);res.json({ok:true,lessons:q.rows});}
