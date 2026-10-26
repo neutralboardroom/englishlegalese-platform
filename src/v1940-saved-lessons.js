@@ -80,14 +80,30 @@ function install(app,{store,services,authMiddleware,requireRoles,configured}){
   }catch{await db.query('rollback').catch(()=>{});return res.status(503).json({ok:false,error:'Submission was not recorded; the draft remains saved.'});}
   finally{db.release();}
  });
+ app.get('/api/v1940/lessons/:key/submissions',ready,strict,requireRoles('student'),async(req,res)=>{
+  if(!KEY.test(req.params.key))return res.status(400).json({ok:false,error:'Invalid lesson key.'});
+  try{
+   const q=await store.pool.query('select id,revision,created_at,review_status,teacher_feedback,reviewed_at from self_paced_lesson_submissions where user_id=$1 and lesson_key=$2 order by created_at desc limit 20',[req.user.id,req.params.key]);
+   res.json({ok:true,submissions:q.rows});
+  }catch{return res.status(503).json({ok:false,error:'Submission history is unavailable.'});}
+ });
  app.get('/api/v1940/teacher/submissions',ready,strict,requireRoles('teacher'),async(req,res)=>{
   try{const q=await store.pool.query('select id,lesson_key,lesson_title,created_at,review_status from self_paced_lesson_submissions where assigned_teacher_user_id=$1 order by created_at desc limit 100',[req.user.id]);res.json({ok:true,submissions:q.rows});}
   catch{return res.status(503).json({ok:false,error:'Could not load teacher queue.'});}
  });
  app.get('/api/v1940/teacher/submissions/:id',ready,strict,requireRoles('teacher'),async(req,res)=>{
   if(!/^[1-9]\d{0,18}$/.test(req.params.id))return res.status(400).json({ok:false,error:'Invalid submission.'});
-  try{const q=await store.pool.query('select id,lesson_key,lesson_title,answers,created_at,review_status from self_paced_lesson_submissions where id=$1 and assigned_teacher_user_id=$2',[req.params.id,req.user.id]);return q.rows.length?res.json({ok:true,submission:q.rows[0]}):res.status(404).json({ok:false,error:'Submission unavailable.'});}
+  try{const q=await store.pool.query('select id,lesson_key,lesson_title,answers,created_at,review_status,teacher_feedback,reviewed_at from self_paced_lesson_submissions where id=$1 and assigned_teacher_user_id=$2',[req.params.id,req.user.id]);return q.rows.length?res.json({ok:true,submission:q.rows[0]}):res.status(404).json({ok:false,error:'Submission unavailable.'});}
   catch{return res.status(503).json({ok:false,error:'Could not load submission.'});}
+ });
+ app.post('/api/v1940/teacher/submissions/:id/review',ready,strict,requireRoles('teacher'),async(req,res)=>{
+  if(!/^[1-9]\d{0,18}$/.test(req.params.id))return res.status(400).json({ok:false,error:'Invalid submission.'});
+  const feedback=String(req.body?.feedback||'').trim();
+  if(feedback.length<20||feedback.length>5000)return res.status(400).json({ok:false,error:'Feedback must be 20–5000 characters.'});
+  try{
+   const q=await store.pool.query("update self_paced_lesson_submissions set teacher_feedback=$3,review_status='reviewed',reviewed_at=now() where id=$1 and assigned_teacher_user_id=$2 and review_status='awaiting_review' returning id,review_status,reviewed_at",[req.params.id,req.user.id,feedback]);
+   return q.rows.length?res.json({ok:true,review:q.rows[0],no_email_sent:true}):res.status(404).json({ok:false,error:'Submission not assigned to this teacher or already reviewed.'});
+  }catch{return res.status(503).json({ok:false,error:'Review was not recorded.'});}
  });
 }
 module.exports={install,validate,KEY,PATH,LIMIT};
