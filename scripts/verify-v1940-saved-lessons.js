@@ -25,6 +25,7 @@ assert(client.includes('Sign in to my account'),'Account login must be available
 assert(client.includes('Create a free student account')&&client.includes('account_registration_available'),'Account creation requires actual server readiness');
 assert(client.includes('Saved to your account')&&client.includes('NOT saved to your account'),'Never confuse device drafts and verified account saves');
 assert(client.includes('saved on this device')||client.includes('Saved on this device'));
+assert(client.includes('if(device&&!token)')&&client.includes('Never auto-import potentially different users'),'Do not expose anonymous device drafts to a signed-in student account');
 assert(!/\b(sendMail|sendEmail|nodemailer|SMTP_HOST|resend|PaymentRequest)\b/i.test(client+teacher),'No email or payment execution');
 for(const t of ["teacher","Bearer","feedback","assigned","no email"])assert(teacher.toLowerCase().includes(t.toLowerCase()));
 const paths=[
