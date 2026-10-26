@@ -52,6 +52,8 @@ jobs:
         run: node scripts/verify-v1930-roleplay.js
       - name: Verify HF13 authenticated pause, cloud save and assigned teacher reviews
         run: node scripts/verify-v1940-saved-lessons.js
+      - name: Verify EL-DUR-013 and EL-RGR-025 current owner-approved transactional email policy
+        run: node scripts/verify-v1950-transactional-email-policy.js
       - name: Fail closed unless HF4 workbooks and topic inquiries are collected on all devices
         shell: bash
         run: |
