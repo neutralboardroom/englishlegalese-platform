@@ -1,6 +1,6 @@
 'use strict';
 /* HF13 — account-owned durable lessons, safe optimistic updates, teacher-linked submissions.
-   Never send emails or notifications, activate payment or use development JSON in production. HF14 supports student-only registration without email verification. */
+   HF15 permits only explicit, verified transactional account email; no marketing or speculative class notifications. Never activate payments or use development JSON in production. */
 const KEY=/^(?:workbook:[a-z0-9-]{3,65}|page:[a-z0-9-]{3,100})$/;
 const PATH=/^\/learn\/[a-z0-9/-]{2,150}\/?$/;
 const LIMIT=65536;
@@ -29,27 +29,13 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,auth
  };
  async function ready(req,res,next){if(!await connected())return res.status(503).json({ok:false,error:'Secure cloud saving requires a verified PostgreSQL connection, active account security and an applied migration.'});next()}
  app.use('/api/v1940/',privateCache);
- app.post('/api/v1940/student/auth/register',authAbuse.registration,ready,async(req,res)=>{
-  /* Registration does not require, test, configure, or deliver emails.
-     Email is an unverified sign-in identifier only; it confers no teacher or employer identity. */
-  const email=String(req.body?.email||'').trim().toLowerCase();
-  const name=String(req.body?.full_name||'').trim();
-  const password=String(req.body?.password||'');
-  if(req.body?.role&&req.body.role!=='student')return res.status(403).json({ok:false,error:'Only student accounts can register here.'});
-  if(!/^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,40}$/i.test(email)||email.length>254||name.length<2||name.length>160||password.length<12||password.length>128)
-    return res.status(400).json({ok:false,error:'Use a valid email, a full name (2–160 characters), and a password of 12–128 characters.'});
-  try{
-   const account=await services.registerUser({email,password,full_name:name,role:'student'},req);
-   return res.status(201).json({ok:true,token:account.token,user:account.user,email_verified:false,no_email_sent:true,password_reset_by_email_available:false});
-  }catch(e){
-   const exists=/already registered/i.test(String(e.message||''));return res.status(exists?409:400).json({ok:false,error:exists?'That sign-in email is already in use.':'Could not create this account. Please check your details.'});
-  }
- });
+ const identity=require('./v1950-student-account-identity').install(app,{store,services,authAbuse});
  app.post('/api/v1940/student/auth/login',authAbuse.login,ready,async(req,res)=>{
   try{
    const account=await services.loginUser({email:req.body?.email,password:req.body?.password},req);
    if(account.user?.role!=='student')return res.status(403).json({ok:false,error:'Use a student account to access saved lessons.'});
-   return res.json({ok:true,token:account.token,user:account.user,no_email_sent:true});
+   if(!await identity.verified(account.user.id))return res.status(403).json({ok:false,verification_required:true,error:'Please verify your email address before signing in. Use resend verification if needed.'});
+   return res.json({ok:true,token:account.token,user:account.user,email_verified:true});
   }catch{return res.status(401).json({ok:false,error:'Invalid sign-in details.'});}
  });
  app.post('/api/v1940/teacher/auth/login',authAbuse.login,ready,async(req,res)=>{
@@ -61,8 +47,8 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,auth
  });
  app.get('/api/v1940/lessons/capabilities',async(req,res)=>{
   const available=await connected();
-  const registration=available;
-  res.json({ok:true,account_saving_available:available,account_registration_available:registration,requires_login:true,no_outbound_email:true,teacher_delivery_requires_linked_teacher:true,device_drafts_optional:true});
+  const registration=available&&await identity.ready();
+  res.json({ok:true,account_saving_available:available,account_registration_available:registration,requires_login:true,verified_email_required:true,transactional_email_available:registration,marketing_email_enabled:false,teacher_delivery_requires_linked_teacher:true,device_drafts_optional:true});
  });
  app.get('/api/v1940/lessons',ready,strict,async(req,res)=>{
   try{const q=await store.pool.query('select lesson_key,lesson_title,origin_path,status,revision,updated_at,submitted_at from self_paced_lesson_work where user_id=$1 order by updated_at desc limit 100',[req.user.id]);res.json({ok:true,lessons:q.rows});}
