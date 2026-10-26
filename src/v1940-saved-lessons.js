@@ -2,7 +2,7 @@
 /* HF13 — account-owned durable lessons, safe optimistic updates, teacher-linked submissions.
    Never send emails or notifications, create accounts, activate payment or use development JSON in production. */
 const KEY=/^(?:workbook:[a-z0-9-]{3,65}|page:[a-z0-9-]{3,100})$/;
-const PATH=/^\/learn\/[a-z0-9-/]{2,150}\/?$/;
+const PATH=/^\/learn\/[a-z0-9/-]{2,150}\/?$/;
 const LIMIT=65536;
 function validate(input){
  const key=String(input.key||''),title=String(input.title||'').trim().slice(0,150),path=String(input.path||'');
