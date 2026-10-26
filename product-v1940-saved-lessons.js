@@ -80,6 +80,8 @@ function snapshot(root){
     roundTwo:[...root.querySelectorAll('.v1930-round-two')].map(node=>!node.hidden),
     modelOpen:[...root.querySelectorAll('.v1930-exemplar')].map(node=>!node.hidden),
     openDetails:[...root.querySelectorAll('details')].map(node=>node.open),
+    reviewedStages:[...root.querySelectorAll('.v1890-stage-feedback')].map(n=>n.textContent.startsWith('Structure cues found:')),
+    evidenceReviewed:[...root.querySelectorAll('.v1900-feedback')].map(n=>n.textContent.includes('Review')||n.textContent.includes('Evidence')),
     lastIndex:Math.max(0,arr.indexOf(document.activeElement)),captured_at:new Date().toISOString()
  };
 }
@@ -98,6 +100,7 @@ function restore(root,snap){
  if(Array.isArray(snap.modelOpen))root.querySelectorAll('.v1930-exemplar').forEach((node,i)=>{
   if(snap.modelOpen[i]&&node.hidden){const button=root.querySelectorAll('.v1930-model')[i];if(button)button.click()}
  });
+ if(Array.isArray(snap.reviewedStages))root.querySelectorAll('.v1890-check').forEach((node,i)=>{if(snap.reviewedStages[i])node.click()});
  if(Array.isArray(snap.openDetails))root.querySelectorAll('details').forEach((node,i)=>{node.open=Boolean(snap.openDetails[i])});
 }
 function exportBackup(l){
@@ -139,6 +142,7 @@ function buildLesson(key,title,root,showInHub=false){
    if(!saved){l.message('No previous saved answer found for this lesson.');return}
    restoring=true;restore(root,saved.answers);restoring=false;
    if(root.closest('.v1870-workbook')){const toggle=root.closest('.v1870-workbook').querySelector('.v1870-toggle input');if(toggle)toggle.checked=true}
+   if(new URLSearchParams(location.search).get('resume')===key){root.scrollIntoView({block:'start',behavior:'instant'});}
    l.message('Resumed '+(saved.updated_at?new Date(saved.updated_at).toLocaleString():'saved work')+'. '+(submitted?'A prior version was submitted; edits create a new draft.':'Continue where you left off.'));
   }finally{restoring=false;busy=false}
  }
