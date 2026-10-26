@@ -117,3 +117,36 @@ test('HF13 account saving unavailable never offers a broken registration or clai
  await course.locator('.v1940-controls button').filter({hasText:'Save now'}).click();
  await expect(course.locator('.v1940-state')).toContainText('NOT saved to your account');
 });
+
+
+test('HF15 one-use verification link is redeemed through the account endpoint without exposing its token in navigation',async({page})=>{
+ const secret='a'.repeat(64);let redeems=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,account_saving_available:true,account_registration_available:true})}));
+ await page.route('**/api/v1940/student/auth/verify',route=>{
+  redeems++;expect(route.request().method()).toBe('POST');
+  expect(route.request().postDataJSON()).toEqual({token:secret});
+  return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"verified":true}'});
+ });
+ await page.goto('/learn/my-work/#verify='+secret);
+ await expect(page.locator('.v1940-global-status')).toContainText('Email verified. Please sign in.');
+ await expect.poll(()=>page.evaluate(()=>location.hash)).toBe('');
+ expect(redeems).toBe(1);
+});
+test('HF15 password recovery link uses one mocked request and never claims login without a new sign-in',async({page})=>{
+ const secret='b'.repeat(64);let changes=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,account_saving_available:true,account_registration_available:true})}));
+ await page.route('**/api/v1940/student/auth/reset-password',route=>{
+  changes++;const body=route.request().postDataJSON();
+  expect(body.token).toBe(secret);expect(body.new_password).toBe('LongerStrongPass2026!');
+  return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"password_reset":true}'});
+ });
+ await page.goto('/learn/my-work/#reset='+secret);
+ const reset=page.locator('form.v1940-login').filter({has:page.locator('input[autocomplete="new-password"]')});
+ await expect(reset).toBeVisible();
+ await reset.locator('input').fill('LongerStrongPass2026!');
+ await reset.getByRole('button',{name:'Reset password'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('Please sign in again.');
+ await expect.poll(()=>page.evaluate(()=>location.hash)).toBe('');
+ expect(changes).toBe(1);
+ await expect(page.locator('.v1940-account')).not.toContainText('Signed in to your student account');
+});
