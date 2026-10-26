@@ -193,3 +193,44 @@ test('HF15.2 teacher sign-out revokes only that teacher session and hides the pr
  expect(logouts).toBe(1);
  await expect.poll(()=>page.evaluate(()=>sessionStorage.getItem('el1940.teacher.session'))).toBeNull();
 });
+
+
+test('HF15.4 student confirms global sign out and retains work without claiming unsaved progress was backed up',async({page})=>{
+ let revoked=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fictional.student.token","email_verified":true,"user":{"id":"student","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"lessons":[]}'}));
+ await page.route('**/api/v1940/student/auth/logout-everywhere',route=>{
+  revoked++;expect(route.request().headers().authorization).toBe('Bearer fictional.student.token');
+  return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"signed_out_everywhere":true,"lessons_preserved":true}'});
+ });
+ page.on('dialog',dialog=>dialog.accept());
+ await page.goto('/learn/my-work/');
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const form=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await form.locator('input[autocomplete="email"]').fill('student@example.test');
+ await form.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await form.getByRole('button',{name:'Sign in securely'}).click();
+ await page.getByRole('button',{name:'Sign out on all devices'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('Signed out on all devices.');
+ expect(revoked).toBe(1);
+ await expect(page.getByRole('button',{name:'Sign in to my account'})).toBeVisible();
+});
+test('HF15.4 teacher confirms global sign out and does not remove assigned student work',async({page})=>{
+ let revoked=0;
+ await page.route('**/api/v1940/teacher/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fictional.teacher.token","user":{"id":"teacher","role":"teacher"}}'}));
+ await page.route('**/api/v1940/teacher/submissions',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"submissions":[]}'}));
+ await page.route('**/api/v1940/teacher/auth/logout-everywhere',route=>{
+  revoked++;expect(route.request().headers().authorization).toBe('Bearer fictional.teacher.token');
+  return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"signed_out_everywhere":true,"lessons_preserved":true}'});
+ });
+ page.on('dialog',dialog=>dialog.accept());
+ await page.goto('/learn/teacher-submissions/');
+ await page.locator('#v1940-teacher-login input[name="email"]').fill('teacher@example.test');
+ await page.locator('#v1940-teacher-login input[name="password"]').fill('StrongPassword2026!');
+ await page.locator('#v1940-teacher-login button').click();
+ await page.getByRole('button',{name:'Sign out on all devices'}).click();
+ await expect(page.locator('#v1940-teacher-status')).toContainText('Signed out securely on every device');
+ await expect(page.locator('#v1940-teacher-queue')).toContainText('Sign in to load your assigned submissions');
+ expect(revoked).toBe(1);
+});
