@@ -68,6 +68,7 @@ test('HF13 transparently presents account creation and shows server-confirmed cl
   await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,token:'test.mock.token',user:{id:'student123',role:'student',email:body.email}})});
  });
  await page.route('**/api/v1940/lessons/*',async route=>{
+  if(route.request().url().endsWith('/capabilities'))return route.fallback();
   if(route.request().method()==='GET')return route.fulfill({status:404,contentType:'application/json',body:'{"ok":false,"error":"No existing save"}'});
   if(route.request().method()==='PUT'){
    saved++;
