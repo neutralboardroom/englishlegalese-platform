@@ -96,7 +96,10 @@ function install(app,{store,services,authAbuse,now=()=>Date.now()}){
    const t=await client.query("UPDATE student_email_action_tokens SET consumed_at=now() WHERE token_hash=$1 AND purpose='verify' AND consumed_at IS NULL AND expires_at>now() RETURNING user_id",[hash('verify',token)]);
    if(t.rows.length!==1){await client.query('ROLLBACK');return res.status(400).json({ok:false,error:'Invalid, expired or previously used verification link.'});}
    const id=t.rows[0].user_id;
-   await client.query("UPDATE users SET metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{email_verified}','true'::jsonb,true),updated_at=now() WHERE id=$1 AND role='student' AND status='active'",[id]);
+   const active=await client.query("SELECT role,status FROM users WHERE id=$1 FOR UPDATE",[id]);
+   if(active.rows[0]?.role!=='student'||active.rows[0]?.status!=='active')throw Error('Inactive account');
+   const marked=await client.query("UPDATE users SET metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{email_verified}','true'::jsonb,true),updated_at=now() WHERE id=$1 AND role='student' AND status='active' RETURNING id",[id]);
+   if(marked.rows.length!==1)throw Error('Student verification not recorded');
    await client.query("INSERT INTO ai_trial_email_verifications(user_id,token_hash,verified_at) VALUES($1,NULL,now()) ON CONFLICT(user_id) DO UPDATE SET verified_at=coalesce(ai_trial_email_verifications.verified_at,excluded.verified_at),token_hash=NULL",[id]);
    await client.query("UPDATE student_email_action_tokens SET consumed_at=now() WHERE user_id=$1 AND purpose='verify' AND consumed_at IS NULL",[id]);
    await client.query('COMMIT');
