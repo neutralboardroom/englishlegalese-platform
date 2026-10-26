@@ -40,15 +40,15 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,auth
  const identity=require('./v1950-student-account-identity').install(app,{store,services,authAbuse});
  app.post('/api/v1940/student/auth/login',authAbuse.login,ready,async(req,res)=>{
   try{
-   const account=await services.loginUser({email:req.body?.email,password:req.body?.password},req);
+   const account=await services.loginUser({email:req.body?.email,password:req.body?.password,expected_role:'student',require_verified_student:true},req);
    if(account.user?.role!=='student')return res.status(403).json({ok:false,error:'Use a student account to access saved lessons.'});
    if(!await identity.verified(account.user.id))return res.status(403).json({ok:false,verification_required:true,error:'Please verify your email address before signing in. Use resend verification if needed.'});
    return res.json({ok:true,token:account.token,user:account.user,email_verified:true});
-  }catch{return res.status(401).json({ok:false,error:'Invalid sign-in details.'});}
+  }catch(e){return /Email verification required/.test(String(e?.message||''))?res.status(403).json({ok:false,verification_required:true,error:'Please verify your email address before signing in. Use resend verification if needed.'}):res.status(401).json({ok:false,error:'Invalid sign-in details.'});}
  });
  app.post('/api/v1940/teacher/auth/login',authAbuse.login,ready,async(req,res)=>{
   try{
-   const account=await services.loginUser({email:req.body?.email,password:req.body?.password},req);
+   const account=await services.loginUser({email:req.body?.email,password:req.body?.password,expected_role:'teacher'},req);
    if(account.user?.role!=='teacher')return res.status(403).json({ok:false,error:'An approved teacher account is required.'});
    return res.json({ok:true,token:account.token,user:account.user,no_email_sent:true});
   }catch{return res.status(401).json({ok:false,error:'Invalid sign-in details.'});}
