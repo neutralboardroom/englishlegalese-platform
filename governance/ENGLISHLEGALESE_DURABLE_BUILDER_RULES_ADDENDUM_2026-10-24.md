@@ -1,4 +1,7 @@
 # EnglishLegalese — Durable Builder Rule Addendum
+
+> **CURRENT POLICY NOTICE — 2026-10-26 (owner-authorized successor):** The absolute ban on all application emails below is **historical as to genuine runtime transactional emails**. Read it alongside **EL-DUR-013 / EL-RGR-025**, now the controlling durable policy at `governance/ENGLISHLEGALESE_DURABLE_TRANSACTIONAL_EMAIL_POLICY_2026-10-26.md`. Essential account verification, password recovery, security and genuine class/feedback notifications are permitted after proper operational safeguards. **Builder/CI email sends and unsolicited marketing/outreach remain prohibited**. This notice preserves the original directive as evidence instead of deleting it.
+
 **Identifier:** EL-DUR-011
 **Adopted:** 2026-10-24
 **Authority:** Direct owner instruction. Also protected by owner Roger Rule EL-RGR-023.
