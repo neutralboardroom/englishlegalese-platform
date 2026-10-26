@@ -63,6 +63,27 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,auth
  };
  app.post('/api/v1940/student/auth/logout',ready,strict,requireRoles('student'),logout);
  app.post('/api/v1940/teacher/auth/logout',ready,strict,requireRoles('teacher'),logout);
+ // Student and teacher account security control. An all-device signout rotates
+ // the session version AND revokes all persisted sessions atomically.
+ // It does not erase homework, saved lessons or teacher reviews.
+ const logoutEverywhere=async(req,res)=>{
+  const client=await store.pool.connect();
+  try{
+   await client.query('BEGIN');
+   const account=await client.query("SELECT role,status FROM users WHERE id=$1 FOR UPDATE",[req.user.id]);
+   if(account.rows[0]?.status!=='active'||account.rows[0]?.role!==req.user.role)throw Error('Account unavailable');
+   const nonce=require('node:crypto').randomBytes(24).toString('hex');
+   await client.query("UPDATE users SET metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{session_version}',to_jsonb($2::text),true),updated_at=now() WHERE id=$1",[req.user.id,nonce]);
+   await client.query("UPDATE user_sessions SET revoked_at=now() WHERE user_id=$1 AND revoked_at IS NULL",[req.user.id]);
+   await client.query('COMMIT');
+   return res.json({ok:true,signed_out_everywhere:true,lessons_preserved:true});
+  }catch{
+   await client.query('ROLLBACK').catch(()=>{});
+   return res.status(503).json({ok:false,error:'All-device sign out could not be confirmed. Your local session can still be cleared.'});
+  }finally{client.release();}
+ };
+ app.post('/api/v1940/student/auth/logout-everywhere',ready,strict,requireRoles('student'),logoutEverywhere);
+ app.post('/api/v1940/teacher/auth/logout-everywhere',ready,strict,requireRoles('teacher'),logoutEverywhere);
  app.get('/api/v1940/lessons/capabilities',async(req,res)=>{
   const available=await connected();
   const registration=available&&await identity.ready();
