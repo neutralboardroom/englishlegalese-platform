@@ -95,9 +95,9 @@ function install(app,{store,services,authAbuse,now=()=>Date.now()}){
    }
    // Do not re-register, reveal membership, issue session or send password guidance for an existing verified address.
    if(user&&!await verified(user.id)){
-    const result=await issue(user,'verify',req);
-    // Do not disclose account existence via email provider errors. Missing email? Offer resend after a minute.
-    if(result.deliveryFailed)res.set('Retry-After','60');
+    // Keep identical public status and headers whether an email was delivered or not.
+    // Never expose account membership or provider delivery details at registration.
+    await issue(user,'verify',req);
    }
    return res.status(202).json({ok:true,verification_required:true,message:'If this is a new or unverified account, check your email for a verification link. If none arrives, use resend verification after a minute. Sign in after verification.'});
   }catch{return res.status(503).json({ok:false,error:'Account creation is temporarily unavailable.'});}
