@@ -57,7 +57,7 @@ test('HF13 teacher review page never exposes student records anonymously',async(
  await expect(page.locator('[data-el1940-hub]')).toContainText('No saved lessons');
 });
 
-test('HF13 transparently presents account creation and shows server-confirmed cloud saving only after a successful PUT',async({page})=>{
+test('HF15 requires email verification and explicit login before server-confirmed cloud saving after a successful PUT',async({page})=>{
  let registered=0,saved=0;
  await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,account_saving_available:true,account_registration_available:true})}));
  await page.route('**/api/v1940/student/auth/register',async route=>{
@@ -65,8 +65,9 @@ test('HF13 transparently presents account creation and shows server-confirmed cl
   const body=route.request().postDataJSON();
   expect(body.role).toBe('student');
   expect(body.password.length).toBeGreaterThanOrEqual(12);
-  await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,token:'test.mock.token',user:{id:'student123',role:'student',email:body.email}})});
+  await route.fulfill({status:202,contentType:'application/json',body:JSON.stringify({ok:true,verification_required:true})});
  });
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,token:'test.mock.token',email_verified:true,user:{id:'student123',role:'student',email:'student@example.test'}})}));
  await page.route('**/api/v1940/lessons/*',async route=>{
   if(route.request().url().endsWith('/capabilities'))return route.fallback();
   if(route.request().method()==='GET')return route.fulfill({status:404,contentType:'application/json',body:'{"ok":false,"error":"No existing save"}'});
@@ -83,13 +84,19 @@ test('HF13 transparently presents account creation and shows server-confirmed cl
  await expect(page.locator('.v1940-account')).toContainText('create a free student account');
  await expect(page.locator('.v1940-global-status')).toContainText('NOT SAVED TO AN ACCOUNT');
  await page.locator('.v1940-account button').filter({hasText:'Create a free student account'}).click();
- const signUp=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="new-password"]')});
+ const signUp=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="name"]')});
  await signUp.locator('input[autocomplete="name"]').fill('Fictional Learner');
  await signUp.locator('input[autocomplete="email"]').fill('student@example.test');
  await signUp.locator('input[autocomplete="new-password"]').fill('StrongPassword2026!');
- await signUp.getByRole('button',{name:'Create account and sign in'}).click();
- await expect(page.locator('.v1940-global-status')).toContainText('Account created and signed in');
+ await signUp.getByRole('button',{name:'Create account and send verification link'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('Check your email for a verification link');
  expect(registered).toBe(1);
+ await page.locator('.v1940-account button').filter({hasText:'Sign in to my account'}).click();
+ const signIn=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await signIn.locator('input[autocomplete="email"]').fill('student@example.test');
+ await signIn.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await signIn.getByRole('button',{name:'Sign in securely'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('Signed in to your student account');
  const course=page.locator('#v1860-legal-catalog .v1860-course-card').first();
  await course.locator('.v1870-toggle input').check();
  await course.locator('.v1930-simulation textarea').first().fill('An appropriate response asks to see the fictional notice first.');
