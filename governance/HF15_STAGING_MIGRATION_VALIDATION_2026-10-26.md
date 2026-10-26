@@ -16,6 +16,11 @@
 - Production counts at validation time: users=0, password_credentials=0, lesson_work=0, lesson_submissions=0; `to_regclass('public.student_email_action_tokens')` was NULL, meaning **no HF15 production migration**.
 - The staged schema is valid. Token replay, expiry, browser security, provider delivery and session logout still require full qualification; staging schema validation alone is not production acceptance.
 
+## Resend provider verification (read-only check)
+- Resend listed `mail.englishlegalese.com` as `verified` with `Sending: enabled` (2026-10-26).
+- Tracking of email opens/clicks is disabled; receiving is disabled. This is appropriate for account action links, not a claim of delivery success.
+- **Still unverified:** whether the Render service has valid `RESEND_API_KEY` and `RESEND_FROM_EMAIL` environment settings and whether live event-triggered delivery works. No real outbound test messages were sent.
+
 ## Restrictions and next gates
 1. Leave production Neon branch unchanged until **separate approval** of HF15 SQL application after staging security/browser qualification.
 2. Verify the Render HTTPS sender configuration without exposing secret values; no actual emails from CI/testing. No unsolicited marketing.
