@@ -56,3 +56,55 @@ test('HF13 teacher review page never exposes student records anonymously',async(
  await page.goto('/learn/my-work/');
  await expect(page.locator('[data-el1940-hub]')).toContainText('No saved lessons');
 });
+
+test('HF13 transparently presents account creation and shows server-confirmed cloud saving only after a successful PUT',async({page})=>{
+ let registered=0,saved=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,account_saving_available:true,account_registration_available:true})}));
+ await page.route('**/api/v119/auth/register',async route=>{
+  registered++;
+  const body=route.request().postDataJSON();
+  expect(body.role).toBe('student');
+  expect(body.password.length).toBeGreaterThanOrEqual(12);
+  await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,token:'test.mock.token',user:{id:'student123',role:'student',email:body.email}})});
+ });
+ await page.route('**/api/v1940/lessons/*',async route=>{
+  if(route.request().method()==='GET')return route.fulfill({status:404,contentType:'application/json',body:'{"ok":false,"error":"No existing save"}'});
+  if(route.request().method()==='PUT'){
+   saved++;
+   const work=route.request().postDataJSON();
+   expect(work.expected_revision).toBe(0);
+   return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,saved:true,revision:1,status:'draft',updated_at:new Date().toISOString()})});
+  }
+  return route.abort();
+ });
+ await page.goto('/learn/legal-english/');
+ await expect(page.locator('.v1940-account')).toContainText('create a free student account');
+ await expect(page.locator('.v1940-global-status')).toContainText('NOT SAVED TO AN ACCOUNT');
+ await page.locator('.v1940-account button').filter({hasText:'Create a free student account'}).click();
+ const signUp=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="new-password"]')});
+ await signUp.locator('input[autocomplete="name"]').fill('Fictional Learner');
+ await signUp.locator('input[autocomplete="email"]').fill('student@example.test');
+ await signUp.locator('input[autocomplete="new-password"]').fill('StrongPassword2026!');
+ await signUp.getByRole('button',{name:'Create account and sign in'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('Account created and signed in');
+ expect(registered).toBe(1);
+ const course=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await course.locator('.v1870-toggle input').check();
+ await course.locator('.v1930-simulation textarea').first().fill('An appropriate response asks to see the fictional notice first.');
+ await course.locator('.v1940-controls button').filter({hasText:'Save now'}).click();
+ await expect(course.locator('.v1940-state')).toContainText('Saved to your account');
+ expect(saved).toBe(1);
+});
+test('HF13 account saving unavailable never offers a broken registration or claims cloud backup',async({page})=>{
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,account_saving_available:true,account_registration_available:false})}));
+ await page.goto('/learn/legal-english/');
+ await expect(page.locator('.v1940-account')).toContainText('New student registrations are currently unavailable');
+ await expect(page.locator('.v1940-account button').filter({hasText:'Create a free student account'})).toBeHidden();
+ await expect(page.locator('.v1940-account button').filter({hasText:'Sign in to my account'})).toBeVisible();
+ await page.locator('.v1940-account button').filter({hasText:'Enable saving on this device'}).click();
+ const course=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await course.locator('.v1870-toggle input').check();
+ await course.locator('.v1930-simulation textarea').first().fill('Only a local fictional draft.');
+ await course.locator('.v1940-controls button').filter({hasText:'Save now'}).click();
+ await expect(course.locator('.v1940-state')).toContainText('NOT saved to your account');
+});
