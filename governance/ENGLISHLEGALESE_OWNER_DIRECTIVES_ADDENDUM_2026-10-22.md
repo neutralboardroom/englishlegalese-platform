@@ -1,3 +1,5 @@
+> **CURRENT SUCCESSOR (2026-10-26):** EL-RGR-025 / EL-DUR-013 (see `governance/ENGLISHLEGALESE_OWNER_TRANSACTIONAL_EMAIL_SUCCESSOR_2026-10-26.md`) expressly supersedes only EL-RGR-023's absolute prohibition of legitimate transactional account/class email. **Necessary event-triggered verification, welcome, recovery, security and actual class-operation notices are allowed.** No unsolicited marketing, bulk outreach, or build/test-generated external sends are authorized. EL-RGR-023 and related wording in EL-RGR-024 below are retained as historical instructions, not as grounds to forbid these approved transactional emails.
+
 # EnglishLegalese — Permanent owner directives addendum (22 October 2026)
 Status: ACTIVE · OWNER-AUTHORIZED · PERMANENT · NO-DRIFT
 Authority: New explicit owner instructions (2026-10-22). Additive to canonical `governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md`; no original Roger Rule or 10 durable rules amended, deleted, renumbered or weakened. This addendum must be inspected by every future builder, fork, release, rollback and test gate.
