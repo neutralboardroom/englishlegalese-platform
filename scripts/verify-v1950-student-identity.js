@@ -1,0 +1,36 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const {hash,senderSafe,mailText,normal}=require('../src/v1950-student-account-identity');
+const read=p=>fs.readFileSync(p,'utf8');
+const one='a'.repeat(64),two='b'.repeat(64);
+assert.equal(normal('  STUDENT@EXAMPLE.ORG '),'student@example.org');
+assert.match(hash('verify',one),/^[a-f0-9]{64}$/);
+assert.notEqual(hash('verify',one),hash('verify',two));
+assert.notEqual(hash('verify',one),hash('reset',one),'Token hashes must be purpose bound');
+assert.equal(senderSafe({}),false,'Must fail closed without service credentials');
+assert.equal(senderSafe({RESEND_API_KEY:'x',RESEND_FROM_EMAIL:'test@wrong-domain.example',SESSION_SECRET:'a'.repeat(32)}),false);
+assert.equal(senderSafe({RESEND_API_KEY:'x',RESEND_FROM_EMAIL:'EnglishLegalese <noreply@mail.englishlegalese.com>',SESSION_SECRET:'a'.repeat(32)}),true);
+assert.match(mailText('verify',one),new RegExp('/learn/my-work/#verify='+one));
+assert.match(mailText('reset',two),new RegExp('/learn/my-work/#reset='+two));
+const backend=read('src/v1950-student-account-identity.js');
+const identity=read('src/v1940-saved-lessons.js');
+const client=read('product-v1940-saved-lessons.js');
+const services=read('src/productionServices.js');
+const migration=read('db/staged/012_student_email_action_tokens__REQUIRES_APPROVAL.sql');
+for(const expected of ['crypto.randomBytes(32)','student_email_action_tokens','token_hash=$1','consumed_at IS NULL','expires_at>now()','purpose=\'verify\'','purpose=\'reset\'','session_version','user_sessions SET revoked_at','authAbuse.registration','authAbuse.login','marketing_enabled:false']){
+ assert(backend.includes(expected),'Missing transactional identity safety gate: '+expected);
+}
+for(const route of ['register','resend-verification','verify','request-password-reset','reset-password'])assert(backend.includes('/api/v1940/student/auth/'+route));
+assert(identity.includes('identity.verified(account.user.id)'),'Unverified accounts must not sign in for saving');
+assert(identity.includes('registration=available&&await identity.ready()'),'Registration must fail closed before verified sender and migration');
+assert(services.includes('session_nonce: user.metadata?.session_version || null'),'Login sessions must be bound to password version');
+assert(services.includes('current.rows[0]?.nonce || null'),'Authenticated operations must reject old sessions after password reset');
+assert(services.includes('passwordHash, configured'),'Recovery must reuse existing password hashing');
+assert(client.includes('Check your email for a verification link')&&client.includes('await redeemAccountLink()'));
+assert(client.includes('request-password-reset')&&client.includes('reset-password'));
+assert(!fs.existsSync('db/migrations/012_student_email_action_tokens.sql'),'Unapproved migration must not auto-run');
+assert(!/\bdrop\s+table\b|\btruncate\b|\bdelete\s+from\s+users\b/i.test(migration));
+assert(migration.includes('CREATE TABLE IF NOT EXISTS student_email_action_tokens'));
+assert(read('governance/ENGLISHLEGALESE_OWNER_TRANSACTIONAL_EMAIL_SUCCESSOR_2026-10-26.md').includes('EL-RGR-025'));
+console.log('PASS HF15 source/security: hashed purpose-separated one-use expiring tokens, verified transactional sender, revocable sessions, safe migration staging; NO LIVE EMAILS SENT.');
