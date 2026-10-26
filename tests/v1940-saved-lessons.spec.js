@@ -150,3 +150,46 @@ test('HF15 password recovery link uses one mocked request and never claims login
  expect(changes).toBe(1);
  await expect(page.locator('.v1940-account')).not.toContainText('Signed in to your student account');
 });
+
+
+test('HF15.2 student sign-out revokes the current bearer token server-side and clears the local session',async({page})=>{
+ let requests=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,account_saving_available:true,account_registration_available:true})}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,token:'mock.account.session',email_verified:true,user:{id:'student-test',role:'student'}})}));
+ await page.route('**/api/v1940/lessons',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"lessons":[]}'}));
+ await page.route('**/api/v1940/student/auth/logout',route=>{
+  requests++;expect(route.request().method()).toBe('POST');
+  expect(route.request().headers().authorization).toBe('Bearer mock.account.session');
+  return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"signed_out":true,"session_revoked":true}'});
+ });
+ await page.goto('/learn/my-work/');
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const signIn=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await signIn.locator('input[autocomplete="email"]').fill('student@example.test');
+ await signIn.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await signIn.getByRole('button',{name:'Sign in securely'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('Signed in to your student account');
+ await page.getByRole('button',{name:'Sign out',exact:true}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('This session was revoked on the server.');
+ expect(requests).toBe(1);
+ await expect.poll(()=>page.evaluate(()=>sessionStorage.getItem('el1940.student.session'))).toBeNull();
+});
+test('HF15.2 teacher sign-out revokes only that teacher session and hides the private queue',async({page})=>{
+ let logouts=0;
+ await page.route('**/api/v1940/teacher/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,token:'mock.teacher.session',user:{id:'teacher-test',role:'teacher'}})}));
+ await page.route('**/api/v1940/teacher/submissions',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"submissions":[]}'}));
+ await page.route('**/api/v1940/teacher/auth/logout',route=>{
+  logouts++;expect(route.request().headers().authorization).toBe('Bearer mock.teacher.session');
+  return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"signed_out":true,"session_revoked":true}'});
+ });
+ await page.goto('/learn/teacher-submissions/');
+ await page.locator('#v1940-teacher-login input[name="email"]').fill('teacher@example.test');
+ await page.locator('#v1940-teacher-login input[name="password"]').fill('StrongPassword2026!');
+ await page.locator('#v1940-teacher-login button').click();
+ await expect(page.locator('#v1940-teacher-signout')).toBeVisible();
+ await page.locator('#v1940-teacher-signout').click();
+ await expect(page.locator('#v1940-teacher-status')).toContainText('Teacher session securely revoked');
+ await expect(page.locator('#v1940-teacher-queue')).toContainText('Sign in to load your assigned submissions');
+ expect(logouts).toBe(1);
+ await expect.poll(()=>page.evaluate(()=>sessionStorage.getItem('el1940.teacher.session'))).toBeNull();
+});
