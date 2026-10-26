@@ -26,3 +26,7 @@ create table if not exists self_paced_lesson_submissions (
 );
 create index if not exists idx_self_paced_teacher on self_paced_lesson_submissions(assigned_teacher_user_id,created_at desc);
 create index if not exists idx_self_paced_student_sub on self_paced_lesson_submissions(user_id,created_at desc);
+
+-- Feedback remains private to the student and the explicitly linked teacher.
+alter table self_paced_lesson_submissions add column if not exists teacher_feedback text;
+alter table self_paced_lesson_submissions add column if not exists reviewed_at timestamptz;
