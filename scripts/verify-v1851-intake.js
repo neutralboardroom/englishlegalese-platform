@@ -35,7 +35,8 @@ const durable=fs.readFileSync('governance/ENGLISHLEGALESE_DURABLE_BUILDER_RULES_
 assert(durable.includes('EL-DUR-011')&&durable.includes('EL-DUR-001…010'),'Ten original durable rules and historical ban must remain');
 assert(durable.includes('CURRENT SUCCESSOR (2026-10-26)'),'Owner-approved successor notice must be visible');
 const emailRule=fs.readFileSync('governance/ENGLISHLEGALESE_OWNER_TRANSACTIONAL_EMAIL_SUCCESSOR_2026-10-26.md','utf8');
-for(const phrase of ['EL-RGR-025','EL-DUR-013','account verification','password-reset','security-alert','genuine class booking confirmation','Unsolicited marketing','mocked transports','three']) assert(emailRule.includes(phrase),'Transactional email successor or delivery restrictions missing: '+phrase);
+for(const phrase of ['EL-RGR-025','EL-DUR-013','account verification','password-reset','security-alert','genuine class booking confirmation','mocked transports','three']) assert(emailRule.includes(phrase),'Transactional email successor or delivery restrictions missing: '+phrase);
+assert(/unsolicited marketing/i.test(emailRule),'Unsolicited marketing must remain authorization-gated');
 assert(emailRule.includes('superseding the categorical email prohibition'),'Only the explicit owner may authorize this successor');
 assert(!cli.includes('sendResendEmail'),'Builder CLI must not send emails');
 const doc=fs.readFileSync('docs/ENGLISHLEGALESE_PRIVATE_INTAKE_TRIAGE_V1851_2026-10-24.md','utf8');
