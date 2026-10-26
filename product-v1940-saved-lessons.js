@@ -1,6 +1,6 @@
 /* HF13 — transparent save, pause, resume and real teacher-linked submission for self-paced lessons.
  * Cloud save is account-based and requires available PostgreSQL; fallback is opt-in on THIS device.
- * Never store passwords or file inputs, send mail, trigger payment or invent teacher review.
+ * Genuine transactional account messages are server-triggered only; never send marketing, trigger payments or invent teacher reviews.
  */
 (()=>{'use strict';
 const SESSION='el1940.student.session',CONSENT='el1940.device.optin',PREFIX='el1940.lesson.';
@@ -14,17 +14,19 @@ let token=safeSession('get'),device=safeLocal('get',CONSENT)==='yes',cloud=false
 const lessons=new Map();
 const isHub=!!document.querySelector('[data-el1940-hub]');
 const signInBar=E('section',undefined,'v1940-account');signInBar.setAttribute('aria-label','Save and resume self-paced lessons');
-const heading=E('strong','Save your progress: create a free student account and sign in');
+const heading=E('strong','Save your progress: verify your email and sign in');
 const blurb=E('p','To reliably save your lesson answers and resume on another device, create a free student account and stay signed in. Your work is saved to your account only after the server confirms it. Device-only drafts are a less reliable, optional fallback without a signed-in account: they stay in this browser, are NOT backed up to your account, will not sync to other devices, and may be lost if browser data is cleared. Use fictional information only; do not enter confidential client details.');
 const status=E('p','Checking save options…','v1940-global-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
 const buttons=E('div',undefined,'v1940-buttons');
 const createAccount=E('button','Create a free student account');createAccount.type='button';
 const signin=E('button','Sign in to my account');signin.type='button';
+const resend=E('button','Resend verification email');resend.type='button';
+const forgot=E('button','Forgot password?');forgot.type='button';
 const logout=E('button','Sign out');logout.type='button';
 const consent=E('button','Enable saving on this device');consent.type='button';
 const disable=E('button','Clear saved device copies');disable.type='button';
 const hubLink=E('a','My saved lessons','v1940-link');hubLink.href='/learn/my-work/';
-buttons.append(createAccount,signin,logout,consent,disable,hubLink);
+buttons.append(createAccount,signin,resend,forgot,logout,consent,disable,hubLink);
 const login=E('form',undefined,'v1940-login');login.hidden=true;
 const emailLabel=E('label','Account email'),email=E('input');email.type='email';email.autocomplete='email';email.required=true;emailLabel.append(email);
 const passLabel=E('label','Password'),pass=E('input');pass.type='password';pass.autocomplete='current-password';pass.required=true;passLabel.append(pass);
@@ -33,15 +35,23 @@ const signup=E('form',undefined,'v1940-login');signup.hidden=true;
 const nameLabel=E('label','Full name'),fullName=E('input');fullName.type='text';fullName.autocomplete='name';fullName.maxLength=160;fullName.required=true;nameLabel.append(fullName);
 const newEmailLabel=E('label','Email'),newEmail=E('input');newEmail.type='email';newEmail.autocomplete='email';newEmail.required=true;newEmailLabel.append(newEmail);
 const newPassLabel=E('label','Create a password (12 characters or more)'),newPass=E('input');newPass.type='password';newPass.autocomplete='new-password';newPass.minLength=12;newPass.maxLength=128;newPass.required=true;newPassLabel.append(newPass);
-const create=E('button','Create account and sign in');create.type='submit';
-const signupDisclosure=E('p','No email is sent to create this account. Your email is an unverified sign-in ID, not proof of identity. There is no email password-reset service in this version. Keep your password securely. Cloud saving works only after server confirmation.');
+const create=E('button','Create account and send verification link');create.type='submit';
+const signupDisclosure=E('p','Check your email for the one-use verification link, then sign in. Only required account emails are sent. No marketing. Your lessons are saved to your account only after the server confirms a save.');
 signup.append(nameLabel,newEmailLabel,newPassLabel,create,signupDisclosure);
-signInBar.append(heading,blurb,buttons,signup,login,status);
+const securityForm=E('form',undefined,'v1940-login');securityForm.hidden=true;
+const securityEmailLabel=E('label','Student email'),securityEmail=E('input');securityEmail.type='email';securityEmail.required=true;securityEmail.autocomplete='email';securityEmailLabel.append(securityEmail);
+const securitySend=E('button','Send password reset link');securitySend.type='submit';
+securityForm.append(securityEmailLabel,securitySend);
+const resetForm=E('form',undefined,'v1940-login');resetForm.hidden=true;
+const resetLabel=E('label','New password (12–128 characters)'),resetPassword=E('input');resetPassword.type='password';resetPassword.minLength=12;resetPassword.maxLength=128;resetPassword.required=true;resetPassword.autocomplete='new-password';resetLabel.append(resetPassword);
+const resetSave=E('button','Reset password');resetSave.type='submit';resetForm.append(resetLabel,resetSave);
+let resetToken=null;
+signInBar.append(heading,blurb,buttons,signup,login,securityForm,resetForm,status);
 const authHeaders=()=>({'Authorization':'Bearer '+token,'Content-Type':'application/json'});
 async function parse(resp){try{return await resp.json()}catch{return{ok:false,error:'Unable to read the server response.'}}}
 function labelMessage(message){status.textContent=message}
 function updateBar(){
- createAccount.hidden=!!token||!cloud||!registrationReady;signin.hidden=!!token||!cloud;logout.hidden=!token;
+ createAccount.hidden=!!token||!cloud||!registrationReady;signin.hidden=!!token||!cloud;resend.hidden=!!token||!registrationReady;forgot.hidden=!!token||!registrationReady;logout.hidden=!token;
  consent.hidden=device;disable.hidden=!device;
  if(token&&cloud)labelMessage('Signed in to your student account. Cloud saving is enabled; a saved confirmation will appear after each successful server save. Teacher review requires an assigned teacher.');
  else if(device)labelMessage('DEVICE-ONLY DRAFTS — not backed up to your account or other devices. Create an account and sign in for reliable cloud saving when available.');
@@ -61,8 +71,8 @@ async function verifyToken(){
  }catch{token=null;me=null;safeSession('clear');labelMessage('Please sign in again for cloud saving.')}
  updateBar();
 }
-signin.addEventListener('click',()=>{signup.hidden=true;login.hidden=!login.hidden;if(!login.hidden)email.focus()});
-createAccount.addEventListener('click',()=>{login.hidden=true;signup.hidden=!signup.hidden;if(!signup.hidden)fullName.focus()});
+signin.addEventListener('click',()=>{signup.hidden=true;securityForm.hidden=true;login.hidden=!login.hidden;if(!login.hidden)email.focus()});
+createAccount.addEventListener('click',()=>{login.hidden=true;securityForm.hidden=true;signup.hidden=!signup.hidden;if(!signup.hidden)fullName.focus()});
 signup.addEventListener('submit',async event=>{
  event.preventDefault();if(!cloud||!registrationReady){labelMessage('Account creation is currently unavailable. Your work is NOT backed up online.');return;}
  if(newPass.value.length<12){labelMessage('Choose a password of at least 12 characters.');return;}
@@ -70,12 +80,9 @@ signup.addEventListener('submit',async event=>{
  try{
   const r=await fetch('/api/v1940/student/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:newEmail.value.trim(),password:newPass.value,full_name:fullName.value.trim(),role:'student'})});
   const j=await parse(r);
-  if(!r.ok||!j.token||j.user?.role!=='student')throw Error(j.error||'Account registration is not currently available.');
-  token=j.token;me=j.user;safeSession('set',token);
+  if(!r.ok||!j.verification_required)throw Error(j.error||'Account registration unavailable.');
   signup.reset();signup.hidden=true;updateBar();
-  labelMessage('Account created and signed in. Your answers will be backed up only when you see a successful Saved to your account confirmation.');
-  for(const l of lessons.values())await l.load();
-  if(isHub)await populateHub();
+  labelMessage('Check your email for a verification link, then sign in. No lesson is backed up until a cloud save is confirmed.');
  }catch(e){labelMessage('ACCOUNT NOT CREATED: '+e.message+'. Do not assume your work is backed up.');}
  finally{create.disabled=false;newPass.value='';}
 });
@@ -91,13 +98,41 @@ login.addEventListener('submit',async ev=>{
  try{
   const r=await fetch('/api/v1940/student/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:pass.value})});
   const j=await parse(r);
-  if(!r.ok||!j.token||j.user?.role!=='student')throw Error(j.error||'Student login unavailable.');
+  if(!r.ok||!j.token||j.user?.role!=='student'||j.email_verified!==true)throw Error(j.error||'Email not verified or student login unavailable.');
   token=j.token;me=j.user;safeSession('set',token);pass.value='';login.hidden=true;signup.hidden=true;updateBar();
   for(const l of lessons.values())await l.load();
   if(isHub)await populateHub();
  }catch(e){labelMessage('Cloud login was not completed: '+e.message+' Existing work remains on this page.')}
  finally{go.disabled=false;pass.value='';}
 });
+const securityPost=(path,body)=>fetch('/api/v1940/student/auth/'+path,{method:'POST',headers:{'Content-Type':'application/json'},cache:'no-store',body:JSON.stringify(body)});
+resend.addEventListener('click',async()=>{
+ const address=prompt('Student email address for verification:');if(address===null)return;
+ resend.disabled=true;try{const r=await securityPost('resend-verification',{email:address}),j=await parse(r);labelMessage(j.message||j.error||'Please retry.');}catch{labelMessage('Verification request unavailable.');}finally{resend.disabled=false;}
+});
+forgot.addEventListener('click',()=>{login.hidden=true;signup.hidden=true;securityForm.hidden=!securityForm.hidden;if(!securityForm.hidden)securityEmail.focus()});
+securityForm.addEventListener('submit',async e=>{
+ e.preventDefault();securitySend.disabled=true;
+ try{const r=await securityPost('request-password-reset',{email:securityEmail.value}),j=await parse(r);labelMessage(j.message||j.error||'Reset request unavailable.');if(r.ok){securityForm.reset();securityForm.hidden=true;}}
+ catch{labelMessage('Reset request unavailable.');}finally{securitySend.disabled=false;}
+});
+resetForm.addEventListener('submit',async e=>{
+ e.preventDefault();if(!resetToken)return;
+ resetSave.disabled=true;
+ try{const r=await securityPost('reset-password',{token:resetToken,new_password:resetPassword.value}),j=await parse(r);
+  if(!r.ok)throw Error(j.error||'Expired reset link.');
+  resetToken=null;resetForm.hidden=true;resetForm.reset();token=null;me=null;safeSession('clear');updateBar();
+  labelMessage('Password changed and old sessions signed out. Please sign in again.');
+ }catch(err){labelMessage('Password reset failed: '+err.message);}finally{resetSave.disabled=false;resetPassword.value='';}
+});
+async function redeemAccountLink(){
+ const m=/^#(verify|reset)=([a-f0-9]{64})$/.exec(location.hash);if(!m)return;
+ history.replaceState(null,'',location.pathname+location.search);
+ if(m[1]==='reset'){resetToken=m[2];resetForm.hidden=false;signup.hidden=true;login.hidden=true;labelMessage('Choose a new password. This one-use link expires after 15 minutes.');return;}
+ try{const r=await securityPost('verify',{token:m[2]}),j=await parse(r);
+  labelMessage(r.ok?'Email verified. Please sign in.':j.error||'Verification failed. Request a new link.');}
+ catch{labelMessage('Verification unavailable. Request a fresh link.');}
+}
 function fields(root){return [...root.querySelectorAll('input,textarea,select')].filter(n=>!n.closest('.v1940-account,.v1940-controls')&&!['password','email','file','hidden','submit','button','reset'].includes(n.type)&&!n.disabled)}
 function snapshot(root){
  const arr=fields(root);
@@ -273,7 +308,7 @@ function mount(){
  const main=document.querySelector('main');if(!main)return;
  main.prepend(signInBar);
  discover();
- checkCloud().then(async()=>{await verifyToken();
+ checkCloud().then(async()=>{await redeemAccountLink();await verifyToken();
   for(const l of lessons.values())if((token&&cloud)||device)await l.load();
   if(isHub)await populateHub();
  });
