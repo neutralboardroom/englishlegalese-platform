@@ -43,20 +43,38 @@ function install(app,{store,services,authAbuse,now=()=>Date.now()}){
   return q.rows[0]?.verified===true;
  }
  async function issue(user,purpose,req){
-  if(!user||user.role!=='student')return {issued:false};
-  // Durable account-specific throttling across instances, plus IP middleware on request routes.
-  const recent=await store.pool.query("SELECT count(*)::int AS n, max(created_at) AS latest FROM student_email_action_tokens WHERE user_id=$1 AND purpose=$2 AND created_at>now()-interval '1 hour'",[user.id,purpose]);
-  const n=Number(recent.rows[0]?.n||0),last=recent.rows[0]?.latest;
-  if(n>=3||(last&&now()-new Date(last).getTime()<60000))return {issued:false,throttled:true};
-  const token=crypto.randomBytes(32).toString('hex');
-  const ttl=purpose==='verify'?1800000:900000;
-  const record=await store.pool.query("INSERT INTO student_email_action_tokens(user_id,purpose,token_hash,expires_at) VALUES($1,$2,$3,$4) RETURNING id",[user.id,purpose,hash(purpose,token),new Date(now()+ttl).toISOString()]);
-  // Outbound delivery only on explicit registration, resend, or reset request.
-  // ProductionServices records a provider message ID and delivery status without storing the secret link.
+  if(!user||user.role!=='student'||!['verify','reset'].includes(purpose))return {issued:false};
+  // Transactional, cross-instance account throttling. A per-user/purpose transaction lock
+  // serializes eligibility + token insertion; ordinary in-memory/IP-only limits are insufficient.
+  const client=await store.pool.connect();
+  let recordId,token;
+  try{
+   await client.query('BEGIN');
+   const lockKey=crypto.createHash('sha256').update(user.id+':'+purpose).digest().readInt32BE(0);
+   await client.query('SELECT pg_advisory_xact_lock($1::int,$2::int)',[1950026,lockKey]);
+   const recent=await client.query("SELECT count(*)::int AS n, max(created_at) AS latest FROM student_email_action_tokens WHERE user_id=$1 AND purpose=$2 AND created_at>now()-interval '1 hour'",[user.id,purpose]);
+   const n=Number(recent.rows[0]?.n||0),last=recent.rows[0]?.latest;
+   if(n>=3||(last&&now()-new Date(last).getTime()<60000)){
+    await client.query('COMMIT');
+    return {issued:false,throttled:true};
+   }
+   token=crypto.randomBytes(32).toString('hex');
+   const ttl=purpose==='verify'?1800000:900000;
+   const record=await client.query("INSERT INTO student_email_action_tokens(user_id,purpose,token_hash,expires_at) VALUES($1,$2,$3,$4) RETURNING id",[user.id,purpose,hash(purpose,token),new Date(now()+ttl).toISOString()]);
+   recordId=record.rows[0].id;
+   await client.query('COMMIT');
+  }catch(error){
+   await client.query('ROLLBACK').catch(()=>{});
+   throw error; // fail closed: no outbound mail if token reservation is not durable
+  }finally{client.release();}
+  // Provider calls must not hold a transaction lock. Only genuine user requests arrive here.
+  // An acknowledged send remains an acknowledged send even if the optional tracking update fails.
   try{
    const result=await services.sendEmail({to:user.email,subject:purpose==='verify'?'Verify your EnglishLegalese student email':'Reset your EnglishLegalese student password',text:mailText(purpose,token),template:'account_'+purpose},req);
-   if(result.status!=='sent')throw Error('Delivery not acknowledged');
-   await store.pool.query("UPDATE student_email_action_tokens SET provider_message_id=$2 WHERE id=$1",[record.rows[0].id,result.provider_message_id||null]);
+   if(result.status!=='sent')return {issued:false,deliveryFailed:true};
+   try{
+    await store.pool.query("UPDATE student_email_action_tokens SET provider_message_id=$2 WHERE id=$1",[recordId,result.provider_message_id||null]);
+   }catch{/* Delivery has already been acknowledged; retain sender's separate status/audit evidence. */}
    return {issued:true};
   }catch{return {issued:false,deliveryFailed:true};}
  }
@@ -78,9 +96,10 @@ function install(app,{store,services,authAbuse,now=()=>Date.now()}){
    // Do not re-register, reveal membership, issue session or send password guidance for an existing verified address.
    if(user&&!await verified(user.id)){
     const result=await issue(user,'verify',req);
-    if(result.deliveryFailed)return res.status(503).json({ok:false,error:'Account saved, but verification delivery could not be confirmed. Use resend verification after a minute.'});
+    // Do not disclose account existence via email provider errors. Missing email? Offer resend after a minute.
+    if(result.deliveryFailed)res.set('Retry-After','60');
    }
-   return res.status(202).json({ok:true,verification_required:true,message:'If this is a new or unverified account, check your email for a verification link. Sign in after verification.'});
+   return res.status(202).json({ok:true,verification_required:true,message:'If this is a new or unverified account, check your email for a verification link. If none arrives, use resend verification after a minute. Sign in after verification.'});
   }catch{return res.status(503).json({ok:false,error:'Account creation is temporarily unavailable.'});}
  });
  app.post('/api/v1940/student/auth/resend-verification',authAbuse.registration,requireReady,async(req,res)=>{
