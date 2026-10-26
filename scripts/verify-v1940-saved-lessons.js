@@ -17,6 +17,7 @@ assert(!/drop table|truncate|delete from|delete cascade|reset sequence/i.test(sq
 for(const tok of ['create table if not exists self_paced_lesson_work','unique(user_id,lesson_key,revision)','assigned_teacher_user_id','references users(id) on delete restrict','review_status'])assert(sql.includes(tok));
 for(const tok of ["req.user.id","authMiddleware(services)","Bearer","strict","where user_id=$1","revision=$6","res.status(409)","store.mode()!=='postgres'","review_status='awaiting_review'","assigned_teacher_user_id=$2","no_email_sent:true"]){assert(server.includes(tok),'Missing protected server behavior '+tok)}
 assert(!/\b(sendMail|sendEmail|nodemailer|SMTP_HOST|fetch\s*\(|axios\s*\(|email_notifications|transactionalEmail)\b/i.test(server),'No email or external calls from the backend');
+assert(server.includes("cs.status in ('scheduled','confirmed','in_progress','completed')"),'Never route unconfirmed class requests to a teacher');
 for(const tok of ['localStorage','sessionStorage','device=true','cloud','Pause & save','Resume saved work','Submit for teacher review','teacher_delivery_confirmed','Save now','snapshot(root)','restore(root','timer=setTimeout','exportBackup','v1890-stage-feedback','scrollIntoView','v1940-controls']){
  assert(client.includes(tok),'Missing practical save/resume '+tok);
 }
