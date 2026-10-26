@@ -22,7 +22,7 @@ for(const c of courses){
  const wrap=E('section',undefined,'v1930-simulation');wrap.setAttribute('aria-label','Two-round professional dialogue for '+c.title);
  wrap.dataset.courseId=c.id;
  wrap.append(E('h6','Two-round professional dialogue · '+c.title),
-  E('p','Fictional workplace language practice: rehearse a first response, handle a new complication, then revise. Nothing is sent, stored or graded. No teacher is booked by this activity.','v1930-boundary'));
+  E('p','Fictional workplace language practice: rehearse a first response, handle a new complication, then revise. Saving is optional; you can explicitly submit to a linked teacher when signed in. No emails are sent or teacher bookings made by this activity.','v1930-boundary'));
  const intro=E('div',undefined,'v1930-brief');
  intro.append(E('p','Your role: '+data[1]),E('p','Original situation: '+c.scenario),
   E('p','Counterpart says: “'+data[2]+'”'));

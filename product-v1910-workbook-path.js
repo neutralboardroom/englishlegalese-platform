@@ -47,7 +47,7 @@
   nav.append(list);
   const status=mk('p','Activities attempted: 0 of 7 · Not a mastery score.','v1910-status');
   status.setAttribute('role','status');status.setAttribute('aria-live','polite');
-  nav.append(status,mk('p','This activity count is local to this page and disappears on reload. Selecting an answer or checking writing structure does not establish professional correctness.','v1910-hint'));
+  nav.append(status,mk('p','This activity count is recalculated from saved answers after resuming; without saving, it disappears on reload. Selecting an answer or checking writing structure does not establish professional correctness.','v1910-hint'));
   panel.insertBefore(nav,outline);
   const stageAttempted=module=>Boolean(module.querySelector('.v1890-stage-feedback')?.textContent.startsWith('Structure cues found:'));
   const progress=()=>{

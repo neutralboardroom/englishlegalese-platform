@@ -36,7 +36,7 @@ function appendWorkbook(card,c,kind){
  const label=E('label',undefined,'v1870-toggle');
  const toggle=E('input');toggle.type='checkbox';toggle.setAttribute('aria-label','Open detailed workbook for '+c.title);
  label.append(toggle,E('span','Open four guided lessons, worked example, three knowledge checks and assignment'));
- const panel=E('div',undefined,'v1870-lab');panel.append(E('p','Self-guided workbook · Not an AI chat or a booked teacher session. Work stays on this page and is not submitted.','v1870-disclaimer'));
+ const panel=E('div',undefined,'v1870-lab');panel.append(E('p','Self-guided workbook · Not an AI chat or a booked teacher session. Your answers remain private unless you explicitly save or submit them using the student controls.','v1870-disclaimer'));
  const outline=E('div',undefined,'v1870-module-list');outline.append(E('h5','Four guided lesson activities'));
  const acts=[
   ['Analyze this case',unit=>'Read this fictional case: '+c.scenario+' For "'+unit+'", identify two known facts and one assumption that needs checking. Explain "'+c.vocab[0][0]+'" in the situation ('+c.vocab[0][1]+').'],
@@ -94,7 +94,7 @@ function appendWorkbook(card,c,kind){
  const assignment=E('div',undefined,'v1870-assignment');
  assignment.append(E('h5','Practical assignment and feedback rubric'),para('Assignment:',c.homework));
  const draftLabel=E('label',undefined,'v1870-draft-label');
- draftLabel.append(E('span','Draft a short fictional practice response (optional; stays only in this browser tab).'));
+ draftLabel.append(E('span','Draft a short fictional practice response (optional; saved only after you enable cloud or device saving).'));
  const draft=E('textarea');draft.rows=4;draft.maxLength=1800;draft.placeholder='Write your practice answer using fictional details only. Do not enter client or employer confidential information.';draftLabel.append(draft);
  assignment.append(draftLabel);
  const rubric=E('div',undefined,'v1870-rubric');rubric.append(E('h6','Check your own work before a teacher reviews it'));
