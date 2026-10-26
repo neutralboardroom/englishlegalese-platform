@@ -23,10 +23,11 @@ const signin=E('button','Sign in to my account');signin.type='button';
 const resend=E('button','Resend verification email');resend.type='button';
 const forgot=E('button','Forgot password?');forgot.type='button';
 const logout=E('button','Sign out');logout.type='button';
+const logoutAll=E('button','Sign out on all devices');logoutAll.type='button';
 const consent=E('button','Enable saving on this device');consent.type='button';
 const disable=E('button','Clear saved device copies');disable.type='button';
 const hubLink=E('a','My saved lessons','v1940-link');hubLink.href='/learn/my-work/';
-buttons.append(createAccount,signin,resend,forgot,logout,consent,disable,hubLink);
+buttons.append(createAccount,signin,resend,forgot,logout,logoutAll,consent,disable,hubLink);
 const login=E('form',undefined,'v1940-login');login.hidden=true;
 const emailLabel=E('label','Account email'),email=E('input');email.type='email';email.autocomplete='email';email.required=true;emailLabel.append(email);
 const passLabel=E('label','Password'),pass=E('input');pass.type='password';pass.autocomplete='current-password';pass.required=true;passLabel.append(pass);
@@ -51,7 +52,7 @@ const authHeaders=()=>({'Authorization':'Bearer '+token,'Content-Type':'applicat
 async function parse(resp){try{return await resp.json()}catch{return{ok:false,error:'Unable to read the server response.'}}}
 function labelMessage(message){status.textContent=message}
 function updateBar(){
- createAccount.hidden=!!token||!cloud||!registrationReady;signin.hidden=!!token||!cloud;resend.hidden=!!token||!registrationReady;forgot.hidden=!!token||!registrationReady;logout.hidden=!token;
+ createAccount.hidden=!!token||!cloud||!registrationReady;signin.hidden=!!token||!cloud;resend.hidden=!!token||!registrationReady;forgot.hidden=!!token||!registrationReady;logout.hidden=!token;logoutAll.hidden=!token;
  consent.hidden=device;disable.hidden=!device;
  if(token&&cloud)labelMessage('Signed in to your student account. Cloud saving is enabled; a saved confirmation will appear after each successful server save. Teacher review requires an assigned teacher.');
  else if(device)labelMessage('DEVICE-ONLY DRAFTS — not backed up to your account or other devices. Create an account and sign in for reliable cloud saving when available.');
@@ -99,6 +100,20 @@ logout.addEventListener('click',async()=>{
   labelMessage(r.ok&&j.signed_out&&j.session_revoked?'Signed out securely. This session was revoked on the server.':'Signed out of this browser, but server logout was not confirmed. Avoid using this device until your session expires.');
  }catch{labelMessage('Signed out of this browser. Server logout could not be confirmed; avoid using a shared device until the session expires.');}
  finally{logout.disabled=false;}
+});
+logoutAll.addEventListener('click',async()=>{
+ if(!token)return;
+ if(!confirm('Sign out your account on every device? Your saved lessons and teacher submissions will remain stored.'))return;
+ const previous=token;logoutAll.disabled=true;
+ try{
+  const r=await fetch('/api/v1940/student/auth/logout-everywhere',{method:'POST',headers:{Authorization:'Bearer '+previous},cache:'no-store'});
+  const j=await parse(r);
+  if(!r.ok||j.signed_out_everywhere!==true)throw Error(j.error||'All-device sign out was not confirmed.');
+  token=null;me=null;safeSession('clear');updateBar();
+  for(const lesson of lessons.values())lesson.message('Signed out on all devices. Account-saved lessons remain available after a new sign-in.');
+  labelMessage('Signed out on all devices. Your existing cloud-saved lessons are preserved. Sign in again when ready.');
+ }catch(e){labelMessage('All-device sign out not confirmed: '+e.message+' Use local Sign out to clear this browser.');}
+ finally{logoutAll.disabled=false;}
 });
 consent.addEventListener('click',()=>{device=true;safeLocal('set',CONSENT,'yes');updateBar()});
 disable.addEventListener('click',()=>{
