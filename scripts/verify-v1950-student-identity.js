@@ -23,6 +23,8 @@ for(const expected of ['crypto.randomBytes(32)','student_email_action_tokens','t
 }
 for(const route of ['register','resend-verification','verify','request-password-reset','reset-password'])assert(backend.includes('/api/v1940/student/auth/'+route));
 assert(identity.includes('identity.verified(account.user.id)'),'Unverified accounts must not sign in for saving');
+assert(identity.includes("if(req.user?.role==='student')")&&identity.includes('if(!await identity.verified(req.user.id))'),'Legacy-issued sessions must not access unverified private lessons');
+assert(backend.includes("role!=='student'||active.rows[0]?.status!=='active'"),'Inactive/privileged accounts must not redeem student verification');
 assert(identity.includes('registration=available&&await identity.ready()'),'Registration must fail closed before verified sender and migration');
 assert(services.includes('session_nonce: user.metadata?.session_version || null'),'Login sessions must be bound to password version');
 assert(services.includes('current.rows[0]?.nonce || null'),'Authenticated operations must reject old sessions after password reset');
