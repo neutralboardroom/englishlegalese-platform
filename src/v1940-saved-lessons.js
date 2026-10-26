@@ -20,8 +20,10 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,auth
   const bearer=req.get('authorization')||'';
   if(!/^Bearer [^\s]+$/.test(bearer))return res.status(401).json({ok:false,error:'Sign in to save securely.'});
   return auth(req,res,async()=>{
-   // Legacy /api/v119 registration can issue a session before verification.
-   // Enforce verified identity at the actual private lesson data boundary too.
+   // All private lesson and teacher-review requests require revocable, stored sessions.
+   // Legacy register-issued tokens have no database session and cannot access private work.
+   if(!req.authSessionKey)return res.status(401).json({ok:false,error:'Sign in again to enable secure session-backed saving.'});
+   // Enforce verified email identity at the actual private lesson data boundary too.
    if(req.user?.role==='student'){
     try{if(!await identity.verified(req.user.id))return res.status(403).json({ok:false,verification_required:true,error:'Verify your student email before accessing cloud lessons.'});}
     catch{return res.status(503).json({ok:false,error:'Account verification could not be confirmed.'});}
@@ -53,6 +55,14 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,auth
    return res.json({ok:true,token:account.token,user:account.user,no_email_sent:true});
   }catch{return res.status(401).json({ok:false,error:'Invalid sign-in details.'});}
  });
+ const logout=async(req,res)=>{
+  try{
+   const q=await store.pool.query("UPDATE user_sessions SET revoked_at=now() WHERE user_id=$1 AND token_preview=$2 AND revoked_at IS NULL RETURNING id",[req.user.id,req.authSessionKey]);
+   return res.json({ok:true,signed_out:true,session_revoked:q.rows.length>0});
+  }catch{return res.status(503).json({ok:false,error:'Server logout could not be confirmed. Clear your local session and try again.'});}
+ };
+ app.post('/api/v1940/student/auth/logout',ready,strict,requireRoles('student'),logout);
+ app.post('/api/v1940/teacher/auth/logout',ready,strict,requireRoles('teacher'),logout);
  app.get('/api/v1940/lessons/capabilities',async(req,res)=>{
   const available=await connected();
   const registration=available&&await identity.ready();
