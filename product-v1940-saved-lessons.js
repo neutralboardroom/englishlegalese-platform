@@ -86,7 +86,20 @@ signup.addEventListener('submit',async event=>{
  }catch(e){labelMessage('ACCOUNT NOT CREATED: '+e.message+'. Do not assume your work is backed up.');}
  finally{create.disabled=false;newPass.value='';}
 });
-logout.addEventListener('click',()=>{token=null;me=null;safeSession('clear');updateBar();for(const l of lessons.values())l.message('Signed out. Unsaved edits cannot reach your cloud account.')});
+logout.addEventListener('click',async()=>{
+ if(!token)return;
+ const previous=token;
+ logout.disabled=true;
+ // Clear local credentials immediately; then revoke the specific server session.
+ token=null;me=null;safeSession('clear');updateBar();
+ for(const l of lessons.values())l.message('Signed out locally. Unsaved edits cannot reach your account.');
+ try{
+  const r=await fetch('/api/v1940/student/auth/logout',{method:'POST',headers:{Authorization:'Bearer '+previous},cache:'no-store'});
+  const j=await parse(r);
+  labelMessage(r.ok&&j.signed_out&&j.session_revoked?'Signed out securely. This session was revoked on the server.':'Signed out of this browser, but server logout was not confirmed. Avoid using this device until your session expires.');
+ }catch{labelMessage('Signed out of this browser. Server logout could not be confirmed; avoid using a shared device until the session expires.');}
+ finally{logout.disabled=false;}
+});
 consent.addEventListener('click',()=>{device=true;safeLocal('set',CONSENT,'yes');updateBar()});
 disable.addEventListener('click',()=>{
  if(!confirm('Remove all HF13 draft copies saved on this browser? Cloud account copies are not deleted.'))return;
