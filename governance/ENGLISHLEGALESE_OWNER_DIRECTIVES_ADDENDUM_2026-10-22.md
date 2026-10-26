@@ -1,4 +1,7 @@
 # EnglishLegalese — Permanent owner directives addendum (22 October 2026)
+
+> **CURRENT POLICY NOTICE — 2026-10-26 (owner-authorized successor):** The absolute ban on all application emails below is **historical as to genuine runtime transactional emails**. Read it alongside **EL-DUR-013 / EL-RGR-025**, now the controlling durable policy at `governance/ENGLISHLEGALESE_DURABLE_TRANSACTIONAL_EMAIL_POLICY_2026-10-26.md`. Essential account verification, password recovery, security and genuine class/feedback notifications are permitted after proper operational safeguards. **Builder/CI email sends and unsolicited marketing/outreach remain prohibited**. This notice preserves the original directive as evidence instead of deleting it.
+
 Status: ACTIVE · OWNER-AUTHORIZED · PERMANENT · NO-DRIFT
 Authority: New explicit owner instructions (2026-10-22). Additive to canonical `governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md`; no original Roger Rule or 10 durable rules amended, deleted, renumbered or weakened. This addendum must be inspected by every future builder, fork, release, rollback and test gate.
 
