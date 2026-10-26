@@ -156,7 +156,7 @@ class ProductionServices {
       cred = user ? store.password_credentials.find(c => c.user_id === user.id) : null;
     }
     if (!user || !cred || !verifyPassword(password, cred.password_hash)) throw new Error('Invalid login.');
-    const token = signToken({ sub: user.id, email: user.email, role: user.role });
+    const token = signToken({ sub: user.id, email: user.email, role: user.role, session_nonce: user.metadata?.session_version || null });
     await this.storeSession(user, token, req);
     await this.audit('auth.user_logged_in', { user_id: user.id, actor_email: email, role: user.role, entity_type: 'user', entity_id: user.id }, req);
     return { user: publicUser(user), token };
@@ -407,7 +407,15 @@ function authMiddleware(services) {
     const payload = verifyToken(token);
     if (!payload) return res.status(401).json({ ok: false, error: 'Authentication required.' });
     const user = await services.getUserById(payload.sub);
-    if (!user) return res.status(401).json({ ok: false, error: 'User not found.' });
+    if (!user || user.status !== 'active') return res.status(401).json({ ok: false, error: 'Account unavailable.' });
+    // Reject all earlier signed bearer tokens after a successful password reset.
+    if (services.mode() === 'postgres') {
+      try {
+        const current = await services.query("SELECT metadata->>'session_version' AS nonce FROM users WHERE id=$1", [payload.sub]);
+        if ((current.rows[0]?.nonce || null) !== (payload.session_nonce || null))
+          return res.status(401).json({ ok:false, error:'Session expired. Please sign in again.' });
+      } catch { return res.status(503).json({ok:false,error:'Account security check unavailable.'}); }
+    }
     req.user = user;
     next();
   };
@@ -419,4 +427,4 @@ function requireRoles(...roles) {
   };
 }
 
-module.exports = { ProductionServices, authMiddleware, requireRoles, verifyToken, configured, ROLE_PERMISSIONS, ROLES, SERVICE_DATA_PATH };
+module.exports = { ProductionServices, authMiddleware, requireRoles, verifyToken, passwordHash, configured, ROLE_PERMISSIONS, ROLES, SERVICE_DATA_PATH };
