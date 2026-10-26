@@ -15,7 +15,7 @@ const lessons=new Map();
 const isHub=!!document.querySelector('[data-el1940-hub]');
 const signInBar=E('section',undefined,'v1940-account');signInBar.setAttribute('aria-label','Save and resume self-paced lessons');
 const heading=E('strong','Save your progress: create a free student account and sign in');
-const blurb=E('p','To reliably save your lesson answers and resume on another device, create a free student account and stay signed in. Your work is saved to your account only after the server confirms it. Without a signed-in account, optional save on this device is less reliable: it will not sync and may be lost if browser data is cleared. Use fictional information only; do not enter confidential client details.');
+const blurb=E('p','To reliably save your lesson answers and resume on another device, create a free student account and stay signed in. Your work is saved to your account only after the server confirms it. Device-only drafts are a less reliable, optional fallback without a signed-in account: they stay in this browser, are NOT backed up to your account, will not sync to other devices, and may be lost if browser data is cleared. Use fictional information only; do not enter confidential client details.');
 const status=E('p','Checking save options…','v1940-global-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
 const buttons=E('div',undefined,'v1940-buttons');
 const createAccount=E('button','Create a free student account');createAccount.type='button';
