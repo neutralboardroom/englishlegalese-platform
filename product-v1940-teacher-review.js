@@ -6,6 +6,7 @@ if(!form||!queue)return;
 const detail=document.getElementById('v1940-teacher-detail'),answers=document.getElementById('v1940-teacher-answers');
 const feedback=document.getElementById('v1940-teacher-feedback'),comments=document.getElementById('v1940-teacher-comments');
 const status=document.getElementById('v1940-teacher-status'),out=document.getElementById('v1940-teacher-signout');
+const outAll=document.createElement('button');outAll.type='button';outAll.textContent='Sign out on all devices';out.after(outAll);outAll.hidden=true;
 const E=(t,s)=>{const n=document.createElement(t);if(s!==undefined)n.textContent=s;return n};
 const KEY='el1940.teacher.session';
 let token=null,activeId=null;
@@ -13,7 +14,7 @@ try{token=sessionStorage.getItem(KEY)}catch{}
 const auth=()=>({'Authorization':'Bearer '+token});
 async function json(response){try{return await response.json()}catch{return{ok:false,error:'Unreadable server response.'}}}
 function say(s){status.textContent=s}
-function signout(){token=null;activeId=null;try{sessionStorage.removeItem(KEY)}catch{};out.hidden=true;form.hidden=false;detail.hidden=true;queue.replaceChildren(E('p','Sign in to load your assigned submissions.'))}
+function signout(){token=null;activeId=null;try{sessionStorage.removeItem(KEY)}catch{};out.hidden=true;outAll.hidden=true;form.hidden=false;detail.hidden=true;queue.replaceChildren(E('p','Sign in to load your assigned submissions.'))}
 async function loadQueue(){
  if(!token){signout();return}
  try{
@@ -26,7 +27,7 @@ async function loadQueue(){
    const btn=E('button','Open submission');btn.type='button';btn.addEventListener('click',()=>openOne(item.id));
    row.className='v1940-saved-card';row.append(title,p,btn);queue.append(row);
   }
-  out.hidden=false;form.hidden=true;say('Your assigned teacher queue is loaded. Student answers are kept private.');
+  out.hidden=false;outAll.hidden=false;form.hidden=true;say('Your assigned teacher queue is loaded. Student answers are kept private.');
  }catch(e){say(e.message);if(/sign in|authentication|session/i.test(e.message))signout()}
 }
 async function openOne(id){
@@ -60,6 +61,18 @@ out.addEventListener('click',async()=>{
   const j=await json(r);
   say(r.ok&&j.signed_out&&j.session_revoked?'Teacher session securely revoked.':'Signed out locally. Server logout was not confirmed; avoid shared devices until your session expires.');
  }catch{say('Signed out locally. Server logout was not confirmed; avoid shared devices until your session expires.');}
+});
+outAll.addEventListener('click',async()=>{
+ if(!token||!confirm('Sign this teacher account out on every device? Existing student submissions and reviews will remain saved.'))return;
+ const previous=token;outAll.disabled=true;
+ try{
+  const r=await fetch('/api/v1940/teacher/auth/logout-everywhere',{method:'POST',headers:{Authorization:'Bearer '+previous},cache:'no-store'});
+  const j=await json(r);
+  if(!r.ok||j.signed_out_everywhere!==true)throw Error(j.error||'All-device sign out unconfirmed');
+  signout();
+  say('Signed out securely on every device. Student work and teacher feedback are preserved.');
+ }catch(e){say('All-device sign out could not be confirmed: '+e.message);}
+ finally{outAll.disabled=false;}
 });
 feedback.addEventListener('submit',async ev=>{
  ev.preventDefault();if(!activeId||!token)return;
