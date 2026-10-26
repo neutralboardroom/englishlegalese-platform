@@ -141,7 +141,7 @@ class ProductionServices {
     return { user: publicUser(user), token: signToken({ sub: user.id, email, role }) };
   }
 
-  async loginUser({ email, password }, req = null) {
+  async loginUser({ email, password, expected_role = null, require_verified_student = false }, req = null) {
     email = String(email || '').trim().toLowerCase();
     let user, cred;
     if (this.mode() === 'postgres') {
@@ -156,6 +156,13 @@ class ProductionServices {
       cred = user ? store.password_credentials.find(c => c.user_id === user.id) : null;
     }
     if (!user || !cred || !verifyPassword(password, cred.password_hash)) throw new Error('Invalid login.');
+    // Do not create an authentication session when an HF15 student/teacher login is rejected.
+    if (expected_role && user.role !== expected_role) throw new Error('Invalid login.');
+    if (require_verified_student) {
+      if (user.role !== 'student' || user.status !== 'active' || this.mode() !== 'postgres') throw new Error('Invalid login.');
+      const proof = await this.query("SELECT (coalesce(metadata->>'email_verified','false')='true' OR EXISTS (SELECT 1 FROM ai_trial_email_verifications WHERE user_id=$1 AND verified_at IS NOT NULL)) AS verified FROM users WHERE id=$1",[user.id]);
+      if (proof.rows[0]?.verified !== true) throw new Error('Email verification required.');
+    }
     const token = signToken({ sub: user.id, email: user.email, role: user.role, session_nonce: user.metadata?.session_version || null });
     await this.storeSession(user, token, req);
     await this.audit('auth.user_logged_in', { user_id: user.id, actor_email: email, role: user.role, entity_type: 'user', entity_id: user.id }, req);
