@@ -48,7 +48,7 @@ function install(app,{store,services,authMiddleware,requireRoles,configured}){
     'insert into self_paced_lesson_work(user_id,lesson_key,lesson_title,origin_path,answers,revision)',
     'select $1,$2,$3,$4,$5::jsonb,1 where $6=0',
     'on conflict(user_id,lesson_key) do update set lesson_title=excluded.lesson_title,',
-    'origin_path=excluded.origin_path,answers=excluded.answers,status=\\'draft\\',submitted_at=null,',
+    "origin_path=excluded.origin_path,answers=excluded.answers,status='draft',submitted_at=null,",
     'revision=self_paced_lesson_work.revision+1,updated_at=now()',
     'where self_paced_lesson_work.revision=$6 returning revision,status,updated_at'
    ].join(' ');
@@ -66,8 +66,8 @@ function install(app,{store,services,authMiddleware,requireRoles,configured}){
    if(!work||work.revision!==req.body.expected_revision||work.status!=='draft'){await db.query('rollback');return res.status(409).json({ok:false,error:'Save the current draft or reload before submitting again.'});}
    const teachers=await db.query([
     'select cs.teacher_user_id from class_sessions cs join users t on t.id=cs.teacher_user_id',
-    'where cs.student_user_id=$1 and cs.teacher_user_id is not null and t.role=\\'teacher\\'',
-    'and cs.status not in (\\'cancelled\\',\\'rejected\\') order by cs.updated_at desc limit 1'
+    "where cs.student_user_id=$1 and cs.teacher_user_id is not null and t.role='teacher'",
+    "and cs.status not in ('cancelled','rejected') order by cs.updated_at desc limit 1"
    ].join(' '),[req.user.id]);
    const teacher=teachers.rows[0]?.teacher_user_id||null;
    const submit=await db.query([
