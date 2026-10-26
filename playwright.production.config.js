@@ -2,7 +2,7 @@ const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: './tests',
-  testMatch: ['v1590-production.spec.js', 'v1740-production.spec.js', 'v1750-production.spec.js', 'v1760-production.spec.js', 'v1770-production.spec.js', 'v1780-production.spec.js', 'v1790-production.spec.js', 'v1800-production.spec.js', 'v1810-production.spec.js', 'v1820-production.spec.js', 'v1830-production.spec.js', 'v1840-production.spec.js', 'v1850-production.spec.js', 'v1850-followthrough-production.spec.js', 'v1860-production.spec.js', 'v1870-production.spec.js', 'v1850-packages-production.spec.js', 'v1880-buyer-tools-production.spec.js', 'v1890-practice-coach-production.spec.js', 'v1900-evidence-lab-production.spec.js', 'v1910-workbook-path-production.spec.js', 'v1920-answer-depth-production.spec.js', 'v1930-roleplay-production.spec.js'],
+  testMatch: ['v1590-production.spec.js', 'v1740-production.spec.js', 'v1750-production.spec.js', 'v1760-production.spec.js', 'v1770-production.spec.js', 'v1780-production.spec.js', 'v1790-production.spec.js', 'v1800-production.spec.js', 'v1810-production.spec.js', 'v1820-production.spec.js', 'v1830-production.spec.js', 'v1840-production.spec.js', 'v1850-production.spec.js', 'v1850-followthrough-production.spec.js', 'v1860-production.spec.js', 'v1870-production.spec.js', 'v1850-packages-production.spec.js', 'v1880-buyer-tools-production.spec.js', 'v1890-practice-coach-production.spec.js', 'v1900-evidence-lab-production.spec.js', 'v1910-workbook-path-production.spec.js', 'v1920-answer-depth-production.spec.js', 'v1930-roleplay-production.spec.js', 'v1940-saved-lessons-production.spec.js'],
   timeout: 30000,
   expect: { timeout: 10000 },
   retries: 1,
