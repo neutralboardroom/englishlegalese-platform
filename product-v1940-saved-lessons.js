@@ -312,6 +312,7 @@ function buildLesson(key,title,root,showInHub=false){
  async function load(){
   if(busy)return;
   busy=true;
+  const loadVersion=editVersion;
   try{
    let saved=null;
    if(token&&cloud){
@@ -322,6 +323,8 @@ function buildLesson(key,title,root,showInHub=false){
     // Never auto-import potentially different users' shared-device drafts into a signed-in account.
    }else if(device){try{saved=JSON.parse(safeLocal('get',storageKey())||'null')}catch{}}
    if(!saved){l.message('No previous saved answer found for this lesson.');return}
+   // A cloud read is not allowed to overwrite fields edited while the GET was in flight.
+   if(editVersion!==loadVersion){revision=0;submitted=false;l.message('Cloud resume cancelled because you edited while it loaded. Your typed responses remain on this page, but they are NOT SAVED. Export a backup before reloading the latest cloud version.');return;}
    restoring=true;restore(root,saved.answers);restoring=false;
    if(root.closest('.v1870-workbook')){const toggle=root.closest('.v1870-workbook').querySelector('.v1870-toggle input');if(toggle)toggle.checked=true}
    if(new URLSearchParams(location.search).get('resume')===key){root.scrollIntoView({block:'start',behavior:'instant'});}
