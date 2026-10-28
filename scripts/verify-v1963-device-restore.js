@@ -40,5 +40,5 @@ assert(js.includes('if(token||!isHub)'),'Must sign out for device-only recovery'
 assert(js.includes('file.size>8*1024*1024'),'Cap source file at 8MB');
 assert(js.includes('No email or upload occurred.'),'Disclose device-only processing');
 assert(!snippet.includes('fetch(')&&!snippet.includes('XMLHttpRequest'),'Validation is offline');
-assert(fs.readFileSync('learn/my-work/index.html','utf8').includes('product-v1940-saved-lessons.js?v=1.85.3-hf17'),'Student dashboard must load fresh recovery');
+assert(fs.readFileSync('learn/my-work/index.html','utf8').includes('product-v1940-saved-lessons.js?v=1.85.4-hf18'),'Student dashboard must load fresh recovery');
 console.log('PASS HF15.6 offline parser: V13 and HF13 backups, identity-free device restore, 10 malformed/oversized/unsafe input rejection cases, no cloud merge or email.');

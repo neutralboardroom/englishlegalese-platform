@@ -110,9 +110,21 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,auth
    return res.json(payload);
   }catch{return res.status(503).json({ok:false,error:'Your account backup could not be created. Your cloud work remains unchanged. Try again later.'});}
  });
+ // HF18: paginate *private metadata only*, keeping the established account and
+ // revocable-session protections. Every page remains scoped to the signed-in user.
  app.get('/api/v1940/lessons',ready,strict,async(req,res)=>{
-  try{const q=await store.pool.query('select lesson_key,lesson_title,origin_path,status,revision,updated_at,submitted_at from self_paced_lesson_work where user_id=$1 order by updated_at desc limit 100',[req.user.id]);res.json({ok:true,lessons:q.rows});}
-  catch{return res.status(503).json({ok:false,error:'Could not load saved lessons.'});}
+  const raw=req.query?.offset;
+  if(raw!==undefined&&(typeof raw!=='string'||!/^(0|[1-9]\d{0,4})$/.test(raw)||Number(raw)>10000))
+   return res.status(400).json({ok:false,error:'Invalid saved-lesson page offset.'});
+  const offset=raw===undefined?0:Number(raw);
+  try{
+   const q=await store.pool.query(
+    'select lesson_key,lesson_title,origin_path,status,revision,updated_at,submitted_at from self_paced_lesson_work where user_id=$1 order by updated_at desc,lesson_key asc limit 101 offset $2',
+    [req.user.id,offset]
+   );
+   const more=q.rows.length>100;
+   return res.json({ok:true,lessons:q.rows.slice(0,100),has_more:more,next_offset:more?offset+100:null});
+  }catch{return res.status(503).json({ok:false,error:'Could not load saved lessons.'});}
  });
  app.get('/api/v1940/lessons/:key',ready,strict,async(req,res)=>{
   if(!KEY.test(req.params.key))return res.status(400).json({ok:false,error:'Invalid lesson key.'});

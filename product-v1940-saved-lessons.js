@@ -426,7 +426,7 @@ function discover(){
 // HF17 study report pure helper BEGIN
 // A metadata-only snapshot of the authenticated account list or opt-in device list.
 // Deliberately excludes answers, email, passwords, tokens, teacher feedback and grades.
-function studyReport(rows,source){
+function studyReport(rows,source,listingComplete=true){
  const clean=value=>String(value==null?'':value).replace(/[\u0000-\u001f\u007f]/g,' ').trim().slice(0,180);
  const drafts=rows.filter(w=>w.status!=='submitted').length;
  const lines=[
@@ -436,7 +436,8 @@ function studyReport(rows,source){
   'Drafts: '+drafts+'; submitted for teacher review: '+(rows.length-drafts),
   'This is an on-demand dashboard snapshot, NOT a full lesson backup.',
   'Only lesson titles, draft/submission status and dates are included; no lesson answers or feedback.',
-  'The cloud list may show only the 100 most recently updated lessons.',
+  'Listing coverage: '+(listingComplete?'All pages returned by the server at the time of this request.':'PARTIAL — some records could not be listed; use account backup for a complete export.'),
+  'The server list may change if lessons are saved on another device during retrieval. The dashboard stops after 1,000 entries.',
   'Keep this file private. No email or upload was sent by this download.',
   ''
  ];
@@ -454,7 +455,7 @@ async function populateHub(){
  const host=document.querySelector('[data-el1940-hub]');if(!host)return;
  const currentSequence=++hubRequestSequence,currentToken=token;
  host.replaceChildren(E('p','Checking your saved lessons…'));
- const rows=[];let loadingError='';
+ const rows=[];let loadingError='',listingComplete=true;
  // Device-only work is intentionally shown only while signed out, never merged
  // into a different student's cloud account on a shared browser.
  if(device&&!token){
@@ -462,17 +463,40 @@ async function populateHub(){
    for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(!key?.startsWith(PREFIX))continue;
     try{const w=JSON.parse(safeLocal('get',key));if(w?.path&&w?.key)rows.push({...w,status:'draft',source:'This device'})}catch{}
    }
-  }catch{loadingError='Device storage cannot be accessed. Existing drafts may still be in this browser.';}
+  }catch{listingComplete=false;loadingError='Device storage cannot be accessed. Existing drafts may still be in this browser.';}
  }
  if(token&&cloud){
+  // Fetch one explicitly authorized 100-record page at a time. Never merge
+  // browser-only drafts into a signed-in account, or request another user's data.
+  const seen=new Set();let offset=0,finished=false;
   try{
-   const r=await fetch(api,{headers:{Authorization:'Bearer '+token},cache:'no-store'}),j=await parse(r);
-   if(currentSequence!==hubRequestSequence||token!==currentToken)return;
-   if(!r.ok||!Array.isArray(j.lessons))throw Error(j.error||'The server did not return a saved lesson list.');
-   for(const w of j.lessons)rows.push({key:w.lesson_key,title:w.lesson_title,path:w.origin_path,updated_at:w.updated_at,status:w.status,source:'Cloud account'});
-   if(j.lessons.length>=100)loadingError='Showing the 100 most recently updated cloud lessons. Older lessons may not appear here; your account data is not deleted.';
-  }catch(e){if(currentSequence!==hubRequestSequence||token!==currentToken)return;loadingError='Your cloud lesson list could not be loaded: '+e.message+' Do not assume that you have no saved lessons.';}
- }else if(token&&!cloud)loadingError='Account saving is temporarily unavailable. No cloud records have been deleted.';
+   for(let pageNumber=0;pageNumber<10;pageNumber++){
+    const url=offset===0?api:api+'?offset='+offset;
+    const r=await fetch(url,{headers:{Authorization:'Bearer '+token},cache:'no-store'}),j=await parse(r);
+    if(currentSequence!==hubRequestSequence||token!==currentToken)return;
+    if(!r.ok||!Array.isArray(j.lessons)||j.lessons.length>100)throw Error(j.error||'The server did not return a valid saved-lesson page.');
+    for(const w of j.lessons){
+     if(typeof w.lesson_key!=='string')continue;
+     if(seen.has(w.lesson_key)){listingComplete=false;loadingError='The saved list changed while loading. Review your cloud backup for a complete account copy.';continue;}
+     seen.add(w.lesson_key);
+     rows.push({key:w.lesson_key,title:w.lesson_title,path:w.origin_path,updated_at:w.updated_at,status:w.status,source:'Cloud account'});
+    }
+    if(j.has_more===false){finished=true;break;}
+    // Older mock/legacy responses have no pagination contract.
+    if(j.has_more!==true){
+     finished=j.lessons.length<100;
+     if(!finished)loadingError='The cloud server did not confirm whether older lessons exist. This listing may be incomplete; saved work is unchanged.';
+     break;
+    }
+    if(j.lessons.length!==100||j.next_offset!==offset+100)throw Error('The server returned inconsistent pagination; the list may be incomplete.');
+    if(pageNumber===9){loadingError='Showing up to 1,000 cloud lessons. Further saves may exist; use your complete account backup.';break;}
+    offset=j.next_offset;
+   }
+   if(!finished)listingComplete=false;
+  }catch(e){if(currentSequence!==hubRequestSequence||token!==currentToken)return;
+   listingComplete=false;loadingError='Your cloud lesson list could not be fully loaded: '+e.message+' Previously saved work has NOT been deleted.';
+  }
+ }else if(token&&!cloud){listingComplete=false;loadingError='Account saving is temporarily unavailable. No cloud records have been deleted.';}
  // Only allow routes to real learning pages, even for untrusted/corrupt browser storage.
  const valid=rows.filter(w=>typeof w.key==='string'&&/^(?:workbook|page):[a-z0-9-]+$/.test(w.key)&&typeof w.path==='string'&&/^\/learn\/[a-z0-9/-]+\/?$/.test(w.path)&&!w.path.includes('//'));
  valid.sort((x,y)=>(Date.parse(y.updated_at)||0)-(Date.parse(x.updated_at)||0));
@@ -511,7 +535,7 @@ async function populateHub(){
  exportProgress.type='button';
  exportProgress.addEventListener('click',()=>{
   if(!confirm('Download a private text summary of the lessons shown on this device? This is not a full backup. It contains lesson titles, statuses and dates but no answers, and should be kept private.'))return;
-  const report=studyReport(valid,token&&cloud?'Cloud account':'This device');
+  const report=studyReport(valid,token&&cloud?'Cloud account':'This device',listingComplete);
   const url=URL.createObjectURL(new Blob([report],{type:'text/plain;charset=utf-8'}));
   const anchor=E('a');anchor.href=url;anchor.download='englishlegalese-study-overview-'+new Date().toISOString().slice(0,10)+'.txt';
   document.body.append(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
@@ -523,7 +547,7 @@ async function populateHub(){
   const filtered=valid.filter(w=>(filter==='all'||(filter==='submitted'?w.status==='submitted':w.status!=='submitted'))&&(String(w.title||w.key).toLocaleLowerCase().includes(term)));
   list.replaceChildren();
   const drafts=valid.filter(w=>w.status!=='submitted').length,submitted=valid.length-drafts;
-  summary.textContent='Showing '+filtered.length+' of '+valid.length+' saved lessons ('+drafts+' drafts, '+submitted+' submitted). '+(token&&cloud?'Cloud account records only.':'This browser only — not backed up to an account.');
+  summary.textContent='Showing '+filtered.length+' of '+valid.length+' saved lessons ('+drafts+' drafts, '+submitted+' submitted). '+(token&&cloud?'Cloud account records only.':'This browser only — not backed up to an account.')+(listingComplete?'':' LIST MAY BE INCOMPLETE.');
   if(!filtered.length){list.append(E('p','No lessons match these filters. Your saved work has not been deleted.'));return;}
   for(const w of filtered){
    const card=E('article',undefined,'v1940-saved-card'),h=E('strong',String(w.title||w.key).slice(0,160));
