@@ -63,4 +63,5 @@ assert(client.includes('if(editVersion!==loadVersion)'), 'Delayed cloud resume m
 assert(client.includes('if(loadConflict){state.textContent=')&&client.includes('loadConflict=true;clearTimeout(timer)'), 'An interrupted cloud restore must block future cloud writes until the latest version is reloaded');
 assert(client.includes('if(token===saveSession'), 'Never replay in-flight saves into a different signed-in account');
 for(const marker of ['Search saved lessons','Filter saved lessons by status','Do not assume that you have no saved lessons','Cloud account records only'])assert(client.includes(marker),'HF16 saved-work dashboard is missing '+marker);
+assert(client.includes('currentSequence!==hubRequestSequence||token!==currentToken')&&client.includes('if(isHub)populateHub();'), 'HF16 must clear former-account dashboard and reject stale list fetches after sign-out');
 console.log('PASS HF15: 48 workbooks and 24 self-paced pages, secure account verification and recovery UI, consent-first local drafts, authenticated cloud saves, teacher-linked private submissions; no unsolicited email.');
