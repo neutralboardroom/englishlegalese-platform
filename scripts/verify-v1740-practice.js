@@ -1,6 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
+const pkg=require('../package.json');
 const src=fs.readFileSync('product-v1740.js','utf8');
 const css=fs.readFileSync('product-v1740.css','utf8');
 const html=fs.readFileSync('index.html','utf8');
