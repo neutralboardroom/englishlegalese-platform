@@ -12,3 +12,13 @@
 .v1940-saved-card{padding:.8rem;border:1px solid #b5cbd3;border-radius:8px;margin:.8rem 0}
 .v1940-saved-card strong{display:block}
 @media(max-width:600px){.v1940-account,.v1940-controls{padding:.5rem}.v1940-buttons button{flex:1 1 42%}.v1940-login label,.v1940-login input{width:100%}}
+
+/* HF16: compact, accessible saved-work search and status filters on every screen. */
+.v1940-hub-toolbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:.85rem;margin:.85rem 0}
+.v1940-hub-toolbar label{display:flex;flex-direction:column;flex:1 1 225px;gap:.2rem;font-weight:600;color:#17394b}
+.v1940-hub-toolbar input,.v1940-hub-toolbar select{width:100%;min-height:42px;border:1px solid #779ba8;border-radius:6px;padding:.5rem;background:#fff;color:#17394b;font:inherit}
+.v1940-hub-toolbar :focus-visible{outline:3px solid #176b83;outline-offset:2px}
+.v1940-hub-summary{font-weight:600;margin:.5rem 0}
+.v1940-list-warning{border-left:4px solid #6b8791;padding:.65rem .8rem;background:#f1f7f9;color:#24434d}
+.v1940-hub-list .v1940-saved-card{margin:.5rem 0}
+@media(max-width:600px){.v1940-hub-toolbar{gap:.55rem}.v1940-hub-toolbar label{flex:1 1 100%}}

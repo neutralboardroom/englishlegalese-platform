@@ -1,8 +1,9 @@
 const {test,expect}=require('@playwright/test');
+const releaseVersion=require('../package.json').version;
 for(const host of ['https://englishlegalese.com','https://www.englishlegalese.com']){
  test('Navigation and 32 real teaching plans are public on '+host,async({page})=>{
   const res=await page.goto(host+'/');expect(res.status()).toBeLessThan(400);
-  expect(res.headers()['x-englishlegalese-release']).toBe('1.85.0');
+  expect(res.headers()['x-englishlegalese-release']).toBe(releaseVersion);
   const titles=(await page.locator('#mainNav > a').allTextContents()).map(x=>x.trim());
   expect(titles.indexOf('Business English')).toBe(titles.indexOf('Legal English')+1);
   await page.goto(host+'/learn/legal-english/');await expect(page.getByRole('heading',{name:'Legal English courses, practice and live classes'})).toBeVisible();await page.goto(host+'/learn/classroom-programs/');

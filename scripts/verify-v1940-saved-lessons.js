@@ -42,9 +42,9 @@ const paths=[
  'learn/business-resources/investor-earnings/index.html','learn/business-resources/investor-markets/index.html'
 ];
 assert.equal(paths.length,26);
-for(const p of paths){const page=read(p);assert(page.includes('product-v1940-saved-lessons.js?v=1.85.1-hf15-8')&&page.includes('product-v1940-saved-lessons.css?v=1.85.0-hf13'),'Self-paced saving omitted '+p)}
+for(const p of paths){const page=read(p);assert(page.includes('product-v1940-saved-lessons.js?v=1.85.2-hf16')&&page.includes('product-v1940-saved-lessons.css?v=1.85.2-hf16'),'Self-paced saving omitted '+p)}
 for(const p of ['learn/my-work/index.html','learn/teacher-submissions/index.html'])assert(read(p).includes('v1940-'),'Missing dashboard '+p);
-assert(read('learn/my-work/index.html').includes('product-v1940-saved-lessons.js?v=1.85.1-hf15-8'),'Account dashboard must load the current script');
+assert(read('learn/my-work/index.html').includes('product-v1940-saved-lessons.js?v=1.85.2-hf16'),'Account dashboard must load the current script');
 assert(read('learn/teacher-submissions/index.html').includes('product-v1940-teacher-review.js?v=1.85.1-hf15'),'Teacher dashboard must load the current script');
 assert(read('server.js').includes("require('./src/v1940-saved-lessons').install"),'Backend is not installed');
 assert(read('server.js').includes('authAbuse});'),'Account registration must reuse the original auth rate limiter');
@@ -62,4 +62,6 @@ assert(client.includes('editVersion++')&&client.includes('if(success&&editVersio
 assert(client.includes('if(editVersion!==loadVersion)'), 'Delayed cloud resume must not overwrite edits typed during GET');
 assert(client.includes('if(loadConflict){state.textContent=')&&client.includes('loadConflict=true;clearTimeout(timer)'), 'An interrupted cloud restore must block future cloud writes until the latest version is reloaded');
 assert(client.includes('if(token===saveSession'), 'Never replay in-flight saves into a different signed-in account');
+for(const marker of ['Search saved lessons','Filter saved lessons by status','Do not assume that you have no saved lessons','Cloud account records only'])assert(client.includes(marker),'HF16 saved-work dashboard is missing '+marker);
+assert(client.includes('currentSequence!==hubRequestSequence||token!==currentToken')&&client.includes('if(isHub)populateHub();'), 'HF16 must clear former-account dashboard and reject stale list fetches after sign-out');
 console.log('PASS HF15: 48 workbooks and 24 self-paced pages, secure account verification and recovery UI, consent-first local drafts, authenticated cloud saves, teacher-linked private submissions; no unsolicited email.');

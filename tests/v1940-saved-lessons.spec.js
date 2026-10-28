@@ -420,3 +420,90 @@ test('HF15.7 delayed cloud resume cannot overwrite answers typed while the GET w
  await expect(wb.locator('.v1940-state')).toContainText('cloud resume was interrupted');
  expect(writes).toBe(0);
 });
+
+
+test('HF16 saved-work search and status filters preserve device drafts without network uploads',async({page})=>{
+ let mutations=0;
+ page.on('request',request=>{if(['POST','PUT','DELETE'].includes(request.method())&&request.url().includes('/api/v1940/'))mutations++;});
+ await page.goto('/learn/my-work/');
+ await page.evaluate(()=>{
+  localStorage.setItem('el1940.device.optin','yes');
+  for(const [id,title] of [['workbook:fictional-one','Client Interviewing'],['workbook:fictional-two','Negotiation Notes']])
+   localStorage.setItem('el1940.lesson.'+id,JSON.stringify({key:id,title,path:'/learn/legal-english/',answers:{fields:[]},updated_at:'2026-10-29T00:00:00Z'}));
+ });
+ await page.reload();
+ const hub=page.locator('[data-el1940-hub]');
+ await expect(hub.locator('.v1940-saved-card')).toHaveCount(2);
+ await expect(hub.locator('.v1940-hub-summary')).toContainText('2 drafts, 0 submitted');
+ await expect(hub.locator('.v1940-hub-summary')).toContainText('This browser only');
+ await hub.getByRole('searchbox',{name:'Search saved lessons'}).fill('negotiation');
+ await expect(hub.locator('.v1940-saved-card')).toHaveCount(1);
+ await expect(hub).toContainText('Negotiation Notes');
+ await hub.getByRole('combobox',{name:'Filter saved lessons by status'}).selectOption('submitted');
+ await expect(hub.locator('.v1940-saved-card')).toHaveCount(0);
+ await expect(hub).toContainText('Your saved work has not been deleted');
+ await hub.getByRole('combobox',{name:'Filter saved lessons by status'}).selectOption('all');
+ await hub.getByRole('searchbox',{name:'Search saved lessons'}).fill('');
+ await expect(hub.locator('.v1940-saved-card')).toHaveCount(2);
+ expect(mutations).toBe(0);
+ expect(await page.evaluate(()=>localStorage.getItem('el1940.lesson.workbook:fictional-one'))).toContain('Client Interviewing');
+});
+test('HF16 a failed private cloud list reports an error instead of falsely claiming there is no saved work',async({page})=>{
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v119/auth/me',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"user":{"id":"private-student","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons',route=>route.fulfill({status:503,contentType:'application/json',body:'{"ok":false,"error":"Temporary database outage"}'}));
+ await page.goto('/learn/my-work/');
+ await page.evaluate(()=>sessionStorage.setItem('el1940.student.session','mock-private-student'));
+ await page.reload();
+ const hub=page.locator('[data-el1940-hub]');
+ await expect(hub.locator('.v1940-list-warning')).toContainText('Temporary database outage');
+ await expect(hub).toContainText('Do not assume that you have no saved lessons');
+ await expect(hub).not.toContainText('No saved lessons are available yet');
+});
+test('HF16 authenticated student can filter draft and submitted cloud lessons; unsafe resume links are suppressed',async({page})=>{
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v119/auth/me',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"user":{"id":"private-student","role":"student"}}'}));
+ const data={ok:true,lessons:[
+  {lesson_key:'workbook:submitted-one',lesson_title:'Submitted legal example',origin_path:'/learn/legal-english/',status:'submitted',updated_at:'2026-10-29T00:00:00Z'},
+  {lesson_key:'page:draft-one',lesson_title:'Draft business example',origin_path:'/learn/business-english/',status:'draft',updated_at:'2026-10-28T00:00:00Z'},
+  {lesson_key:'page:unsafe',lesson_title:'Unsafe route',origin_path:'https://untrusted.test/',status:'draft',updated_at:'2026-10-27T00:00:00Z'}
+ ]};
+ await page.route('**/api/v1940/lessons',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(data)}));
+ await page.goto('/learn/my-work/');
+ await page.evaluate(()=>sessionStorage.setItem('el1940.student.session','mock-private-student'));
+ await page.reload();
+ const hub=page.locator('[data-el1940-hub]');
+ await expect(hub.locator('.v1940-saved-card')).toHaveCount(2);
+ await expect(hub.locator('.v1940-hub-summary')).toContainText('1 drafts, 1 submitted');
+ await expect(hub.locator('.v1940-hub-summary')).toContainText('Cloud account records only');
+ await hub.getByRole('combobox',{name:'Filter saved lessons by status'}).selectOption('submitted');
+ await expect(hub.locator('.v1940-saved-card')).toHaveCount(1);
+ await expect(hub).toContainText('Submitted legal example');
+ await expect(hub).not.toContainText('Unsafe route');
+ await hub.getByRole('combobox',{name:'Filter saved lessons by status'}).selectOption('draft');
+ await expect(hub).toContainText('Draft business example');
+ await expect(hub.locator('.v1940-saved-card')).toHaveCount(1);
+});
+
+
+test('HF16 logout clears cloud lessons and rejects a delayed previous-account list',async({page})=>{
+ let releaseList;const gate=new Promise(resolve=>{releaseList=resolve;});let started=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v119/auth/me',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"user":{"id":"former-student","role":"student"}}'}));
+ await page.route('**/api/v1940/student/auth/logout',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"signed_out":true,"session_revoked":true}'}));
+ await page.route('**/api/v1940/lessons',async route=>{
+  started++;await gate;
+  return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,lessons:[{lesson_key:'workbook:former-account',lesson_title:'Private lesson of the signed-out account',origin_path:'/learn/legal-english/',status:'draft',updated_at:'2026-10-29T00:00:00Z'}]})});
+ });
+ await page.goto('/learn/my-work/');
+ await page.evaluate(()=>sessionStorage.setItem('el1940.student.session','mock-token-former-student'));
+ await page.reload();
+ await expect.poll(()=>started).toBe(1);
+ await page.getByRole('button',{name:'Sign out',exact:true}).click();
+ await expect(page.getByRole('button',{name:'Sign in to my account'})).toBeVisible();
+ await expect(page.locator('[data-el1940-hub]')).not.toContainText('Private lesson of the signed-out account');
+ releaseList();
+ await page.waitForTimeout(300);
+ await expect(page.locator('[data-el1940-hub]')).not.toContainText('Private lesson of the signed-out account');
+ expect(await page.evaluate(()=>sessionStorage.getItem('el1940.student.session'))).toBeNull();
+});
