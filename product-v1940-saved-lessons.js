@@ -127,7 +127,7 @@ cloudBackup.addEventListener('click',async()=>{
 // HF15.6: explicit device-only backup recovery. No upload, email, account merge, or overwrite.
 // Keep all existing local drafts, refuse malformed/oversized files before touching storage.
 const RESTORE_KEY=/^(?:workbook:[a-z0-9-]{3,65}|page:[a-z0-9-]{3,100})$/;
-const RESTORE_PATH=/^\\/learn\\/[a-z0-9/-]{2,150}\\/?$/;
+const RESTORE_PATH=/^\/learn\/[a-z0-9/-]{2,150}\/?$/;
 function parseRestorableBackup(raw){
  if(!raw||typeof raw!=='object'||Array.isArray(raw))throw Error('Invalid EnglishLegalese backup file.');
  let items;
