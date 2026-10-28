@@ -275,3 +275,46 @@ test('HF15.5 refuses a server-truncated backup without a false download success'
  await expect(page.locator('.v1940-global-status')).toContainText('ACCOUNT BACKUP NOT DOWNLOADED');
  await expect(page.locator('.v1940-global-status')).toContainText('No partial backup was produced.');
 });
+
+
+test('HF15.6 restores a V13 complete cloud backup to device-only drafts without uploading or merging accounts',async({page})=>{
+ let uploads=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":false,"account_registration_available":false}'}));
+ await page.route('**/api/v1940/account/export',route=>{uploads++;return route.abort();});
+ await page.route('**/api/v1940/lessons/*',route=>{uploads++;return route.abort();});
+ await page.goto('/learn/my-work/');
+ await expect(page.getByRole('button',{name:'Restore backup to this device'})).toBeVisible();
+ page.on('dialog',d=>d.accept());
+ const backup={ok:true,format:'EnglishLegalese student cloud backup',schema_version:1,complete:true,exported_at:'2026-10-26T12:00:00Z',submissions:[{teacher_feedback:'Fictional teacher notes remain only in downloaded file'}],
+  saved_lessons:[{lesson_key:'workbook:example-01',lesson_title:'Example legal English exercise',origin_path:'/learn/legal-english/',answers:{fields:[{i:0,t:'TEXTAREA',kind:'textarea',name:'example',value:'Fictional restored response'}]},status:'draft',revision:4,updated_at:'2026-10-26T12:00:00Z'}]};
+ await page.getByLabel('Restore backup file').setInputFiles({name:'englishlegalese-cloud-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+ await expect(page.locator('.v1940-global-status')).toContainText('Restored 1 DEVICE-ONLY drafts');
+ await expect(page.locator('.v1940-global-status')).toContainText('NOT saved to any account');
+ await expect(page.locator('[data-el1940-hub]')).toContainText('Example legal English exercise');
+ const state=await page.evaluate(()=>({record:JSON.parse(localStorage.getItem('el1940.lesson.workbook:example-01')),consent:localStorage.getItem('el1940.device.optin')}));
+ expect(state.consent).toBe('yes');
+ expect(state.record.answers.fields[0].value).toBe('Fictional restored response');
+ expect(state.record).not.toHaveProperty('teacher_feedback');
+ expect(uploads).toBe(0);
+});
+test('HF15.6 recovery never overwrites an existing device draft',async({page})=>{
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":false,"account_registration_available":false}'}));
+ await page.goto('/learn/my-work/');
+ await page.evaluate(()=>{
+  localStorage.setItem('el1940.lesson.workbook:example-01',JSON.stringify({key:'workbook:example-01',title:'Existing private draft',path:'/learn/legal-english/',answers:{fields:[]},updated_at:'2026-10-25T12:00:00Z'}));
+  localStorage.setItem('el1940.device.optin','yes');
+ });
+ page.on('dialog',d=>d.accept());
+ const backup={format:'EnglishLegalese student cloud backup',schema_version:1,complete:true,submissions:[],saved_lessons:[{lesson_key:'workbook:example-01',lesson_title:'Imported old draft',origin_path:'/learn/legal-english/',answers:{fields:[]},updated_at:'2026-10-26T12:00:00Z'}]};
+ await page.getByLabel('Restore backup file').setInputFiles({name:'backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+ await expect(page.locator('.v1940-global-status')).toContainText('Restored 0 DEVICE-ONLY drafts; skipped 1 existing drafts');
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('el1940.lesson.workbook:example-01')).title)).toBe('Existing private draft');
+});
+test('HF15.6 rejects malformed or unsafe import without changing device storage',async({page})=>{
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":false,"account_registration_available":false}'}));
+ await page.goto('/learn/my-work/');
+ const poisoned={format:'EnglishLegalese student cloud backup',schema_version:1,complete:true,submissions:[],saved_lessons:[{lesson_key:'workbook:example-01',lesson_title:'Invalid draft',origin_path:'https://external.invalid/',answers:{fields:[{i:0,t:'TEXTAREA',kind:'textarea',name:'text',value:'bad'}]},updated_at:'2026-10-26T12:00:00Z'}]};
+ await page.getByLabel('Restore backup file').setInputFiles({name:'unsafe.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(poisoned))});
+ await expect(page.locator('.v1940-global-status')).toContainText('BACKUP NOT RESTORED');
+ expect(await page.evaluate(()=>localStorage.getItem('el1940.lesson.workbook:example-01'))).toBeNull();
+});
