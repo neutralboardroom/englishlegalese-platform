@@ -281,7 +281,7 @@ test('HF15.6 restores a V13 complete cloud backup to device-only drafts without 
  let uploads=0;
  await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":false,"account_registration_available":false}'}));
  await page.route('**/api/v1940/account/export',route=>{uploads++;return route.abort();});
- await page.route('**/api/v1940/lessons/*',route=>{if(route.request().method()!=='GET'||!route.request().url().endsWith('/capabilities'))uploads++;return route.abort();});
+ await page.route('**/api/v1940/lessons/*',route=>{if(route.request().url().endsWith('/capabilities'))return route.fallback();if(route.request().method()!=='GET')uploads++;return route.abort();});
  await page.goto('/learn/my-work/');
  await expect(page.getByRole('button',{name:'Restore backup to this device'})).toBeVisible();
  page.on('dialog',d=>d.accept());
