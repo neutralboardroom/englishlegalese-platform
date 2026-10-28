@@ -484,3 +484,26 @@ test('HF16 authenticated student can filter draft and submitted cloud lessons; u
  await expect(hub).toContainText('Draft business example');
  await expect(hub.locator('.v1940-saved-card')).toHaveCount(1);
 });
+
+
+test('HF16 logout clears cloud lessons and rejects a delayed previous-account list',async({page})=>{
+ let releaseList;const gate=new Promise(resolve=>{releaseList=resolve;});let started=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v119/auth/me',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"user":{"id":"former-student","role":"student"}}'}));
+ await page.route('**/api/v1940/student/auth/logout',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"signed_out":true,"session_revoked":true}'}));
+ await page.route('**/api/v1940/lessons',async route=>{
+  started++;await gate;
+  return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,lessons:[{lesson_key:'workbook:former-account',lesson_title:'Private lesson of the signed-out account',origin_path:'/learn/legal-english/',status:'draft',updated_at:'2026-10-29T00:00:00Z'}]})});
+ });
+ await page.goto('/learn/my-work/');
+ await page.evaluate(()=>sessionStorage.setItem('el1940.student.session','mock-token-former-student'));
+ await page.reload();
+ await expect.poll(()=>started).toBe(1);
+ await page.getByRole('button',{name:'Sign out',exact:true}).click();
+ await expect(page.getByRole('button',{name:'Sign in to my account'})).toBeVisible();
+ await expect(page.locator('[data-el1940-hub]')).not.toContainText('Private lesson of the signed-out account');
+ releaseList();
+ await page.waitForTimeout(300);
+ await expect(page.locator('[data-el1940-hub]')).not.toContainText('Private lesson of the signed-out account');
+ expect(await page.evaluate(()=>sessionStorage.getItem('el1940.student.session'))).toBeNull();
+});
