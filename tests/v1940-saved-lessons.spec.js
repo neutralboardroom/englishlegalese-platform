@@ -325,6 +325,7 @@ test('HF15.7 an edit made while the first cloud save is in flight is saved in a 
  await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
  await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fixture.save.session","email_verified":true,"user":{"id":"student","role":"student"}}'}));
  await page.route('**/api/v1940/lessons/*',async route=>{
+  if(route.request().url().endsWith('/capabilities'))return route.fallback();
   if(route.request().method()==='GET')return route.fulfill({status:404,contentType:'application/json',body:'{"ok":false,"error":"No previous save"}'});
   if(route.request().method()==='PUT'){
    const snapshot=route.request().postDataJSON();writes.push(snapshot);
@@ -360,6 +361,7 @@ test('HF15.7 a revision conflict never triggers a blind automatic overwrite of n
  await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
  await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fixture.save.session","email_verified":true,"user":{"id":"student","role":"student"}}'}));
  await page.route('**/api/v1940/lessons/*',async route=>{
+  if(route.request().url().endsWith('/capabilities'))return route.fallback();
   if(route.request().method()==='GET')return route.fulfill({status:404,contentType:'application/json',body:'{"ok":false,"error":"No previous save"}'});
   if(route.request().method()==='PUT'){writes.push(route.request().postDataJSON());await gate;return route.fulfill({status:409,contentType:'application/json',body:'{"ok":false,"conflict":true,"error":"Another device changed this lesson"}'});}
   return route.abort();
@@ -390,6 +392,7 @@ test('HF15.7 delayed cloud resume cannot overwrite answers typed while the GET w
  await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
  await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fictional.session","email_verified":true,"user":{"id":"student","role":"student"}}'}));
  await page.route('**/api/v1940/lessons/*',async route=>{
+  if(route.request().url().endsWith('/capabilities'))return route.fallback();
   if(route.request().method()==='PUT'){writes++;return route.fulfill({status:409,contentType:'application/json',body:'{"ok":false,"conflict":true}'});}
   if(route.request().method()==='GET'){
    reads++;if(reads===1){await gate;return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,lesson:{revision:4,status:'draft',updated_at:new Date().toISOString(),answers:{fields:[{i:0,t:'TEXTAREA',kind:'textarea',name:'',value:'OLD CLOUD VALUE'}]}}})});}
@@ -411,5 +414,9 @@ test('HF15.7 delayed cloud resume cannot overwrite answers typed while the GET w
  releaseLoad();
  await expect(wb.locator('.v1940-state')).toContainText('Cloud resume cancelled');
  await expect(input).toHaveValue('NEW LOCAL ANSWER MUST SURVIVE');
+ await page.waitForTimeout(1600);
+ expect(writes).toBe(0);
+ await wb.locator('.v1940-controls button').filter({hasText:'Save now'}).click();
+ await expect(wb.locator('.v1940-state')).toContainText('Cloud resume was interrupted');
  expect(writes).toBe(0);
 });
