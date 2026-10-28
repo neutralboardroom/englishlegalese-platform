@@ -1,6 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
+const pkg=require('../package.json');
 const src=fs.readFileSync('product-v1740.js','utf8');
 const css=fs.readFileSync('product-v1740.css','utf8');
 const html=fs.readFileSync('index.html','utf8');
@@ -10,7 +11,7 @@ assert(html.includes('href="/learn/professional-message/"'));
 assert(require('node:fs').existsSync('learn/professional-message/index.html'),'Existing message builder now has its own working dedicated page');
 assert(html.includes('product-v1740.js?v=1.74.0'));
 assert(html.includes('product-v1740.css?v=1.74.0'));
-assert(html.includes('name="englishlegalese-release" content="1.85.0"'));
+assert(html.includes('name="englishlegalese-release" content="'+pkg.version+'"'));
 assert(src.includes("section.id='professional-message-builder'"));
 assert(src.includes('englishLegaleseApplyView'));
 assert(src.includes('draft.textContent=lines.join'));

@@ -1,7 +1,7 @@
 const {test,expect}=require('@playwright/test');
 test('v1.85 homepage retains original Legal English hero but links to Business English',async({page})=>{
  await page.goto('/');await page.locator('body.v1590-ready').waitFor();
- await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content','1.85.0');
+ await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content',require('../package.json').version);
  await expect(page.locator('.hero h1')).toContainText('Legal English with AI-supported practice and live online classes with human teachers');
  await expect(page.locator('.site-footer')).toContainText('Legal English and Business English');
  await expect(page.locator('#mainNav a[href="/learn/business-english/"]')).toHaveCount(1);
