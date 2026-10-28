@@ -7,7 +7,7 @@ const browser=read('tests/v1750-browser.spec.js'),prod=read('tests/v1750-product
 const pkg=JSON.parse(read('package.json'));
 const reg=read('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md');
 const nvil=read('NEXT_VERSION_IMPROVEMENT_LIST.md');
-assert.ok(['1.85.0','1.85.1'].includes(pkg.version));
+assert.ok(['1.85.0','1.85.1','1.85.2'].includes(pkg.version));
 assert(html.includes('name="englishlegalese-release" content="1.85.0"'));
 assert(html.includes('product-v1750.js?v=1.75.0')&&html.includes('product-v1750.css?v=1.75.0'));
 assert(html.includes('href="/learn/listening-clarification/"'));
