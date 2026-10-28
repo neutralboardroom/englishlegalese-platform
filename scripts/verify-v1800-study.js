@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs'),assert=require('node:assert/strict'),get=x=>fs.readFileSync(x,'utf8');
 const pkg=JSON.parse(get('package.json')),html=get('index.html'),js=get('product-v1800.js'),css=get('product-v1800.css'),rules=get('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md');
-assert.ok(['1.85.0','1.85.1','1.85.2'].includes(pkg.version));assert(html.includes('name="englishlegalese-release" content="1.85.0"'));
+assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3'].includes(pkg.version));assert(html.includes('name="englishlegalese-release" content="'+pkg.version+'"'));
 for(const s of ['product-v1800.js?v=1.80.0','product-v1800.css?v=1.80.0','product-v1790.js?v=1.79.0','product-v1780.js?v=1.78.0'])assert(html.includes(s),'Preserve '+s);
 for(const s of ['v1800-study-planner','Download my private study plan','Clear all six plans','500 characters remaining','plans.forEach','plans[selected()]','No enrollment','SELF-REPORTED ONLY'])assert(js.includes(s),'Private study planner '+s);
 for(const term of ['fetch(', 'XMLHttpRequest','sendBeacon(','localStorage','sessionStorage','indexedDB','getUserMedia','PaymentRequest'])assert(!js.includes(term),'Planner may not transmit/store privately: '+term);

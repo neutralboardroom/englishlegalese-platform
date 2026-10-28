@@ -10,7 +10,7 @@ assert(html.includes('href="/learn/professional-message/"'));
 assert(require('node:fs').existsSync('learn/professional-message/index.html'),'Existing message builder now has its own working dedicated page');
 assert(html.includes('product-v1740.js?v=1.74.0'));
 assert(html.includes('product-v1740.css?v=1.74.0'));
-assert(html.includes('name="englishlegalese-release" content="1.85.0"'));
+assert(html.includes('name="englishlegalese-release" content="'+pkg.version+'"'));
 assert(src.includes("section.id='professional-message-builder'"));
 assert(src.includes('englishLegaleseApplyView'));
 assert(src.includes('draft.textContent=lines.join'));
