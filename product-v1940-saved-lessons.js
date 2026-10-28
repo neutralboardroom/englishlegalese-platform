@@ -297,6 +297,7 @@ function buildLesson(key,title,root,showInHub=false){
  for(const b of [save,pause,resume,submit,feedbackBtn,exportBtn]){b.type='button';btn.append(b)}
  controls.append(label,state,btn);root.prepend(controls);
  let revision=0,busy=false,timer=null,restoring=false,latest=null,submitted=false;
+ let loadConflict=false; // An interrupted cloud restore must not write with an unknown revision.
  // Every user edit increments this even while a remote save is running.
  let editVersion=0;
  const l={key,title,root,controls,message:m=>state.textContent=m};
@@ -324,7 +325,8 @@ function buildLesson(key,title,root,showInHub=false){
    }else if(device){try{saved=JSON.parse(safeLocal('get',storageKey())||'null')}catch{}}
    if(!saved){l.message('No previous saved answer found for this lesson.');return}
    // A cloud read is not allowed to overwrite fields edited while the GET was in flight.
-   if(editVersion!==loadVersion){revision=0;submitted=false;l.message('Cloud resume cancelled because you edited while it loaded. Your typed responses remain on this page, but they are NOT SAVED. Export a backup before reloading the latest cloud version.');return;}
+   if(editVersion!==loadVersion){loadConflict=true;clearTimeout(timer);l.message('Cloud resume cancelled because you edited while it loaded. Your typed responses remain on this page, but they are NOT SAVED. Export a backup before reloading the latest cloud version.');return;}
+   loadConflict=false;
    restoring=true;restore(root,saved.answers);restoring=false;
    if(root.closest('.v1870-workbook')){const toggle=root.closest('.v1870-workbook').querySelector('.v1870-toggle input');if(toggle)toggle.checked=true}
    if(new URLSearchParams(location.search).get('resume')===key){root.scrollIntoView({block:'start',behavior:'instant'});}
@@ -332,6 +334,7 @@ function buildLesson(key,title,root,showInHub=false){
   }finally{restoring=false;busy=false}
  }
  async function write({pauseRequested=false}={}){
+  if(loadConflict){state.textContent='NOT SAVED: Cloud resume was interrupted by typing. Export a backup before refreshing or resuming to avoid overwriting another device. No automatic cloud write was attempted.';return false;}
   if(busy){state.textContent='A save is still in progress. Keep this lesson open until the latest changes are confirmed.';return false;}
   busy=true;clearTimeout(timer);
   state.textContent='Saving…';
@@ -367,7 +370,8 @@ function buildLesson(key,title,root,showInHub=false){
  function schedule(){
   if(restoring)return;
   editVersion++;
-  if(!token&&!device){state.textContent='Changes are NOT SAVED. Sign in or enable saving on this device.';return;}
+  if(!token&&!device){state.textContent='Not saved yet. Changes are NOT SAVED. Sign in or enable saving on this device.';return;}
+  if(loadConflict){state.textContent='NOT SAVED: cloud resume was interrupted. Export a backup; automatic cloud saves are blocked until you reload the latest version.';return;}
   if(busy){state.textContent='New edits made during a save are NOT SAVED yet. Another save will follow.';return;}
   clearTimeout(timer);state.textContent='Unsaved changes — autosaving shortly…';
   timer=setTimeout(()=>{write()},1250);
