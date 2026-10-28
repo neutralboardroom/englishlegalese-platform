@@ -423,6 +423,32 @@ function discover(){
   buildLesson('page:'+slug,title,root);
  }
 }
+// HF17 study report pure helper BEGIN
+// A metadata-only snapshot of the authenticated account list or opt-in device list.
+// Deliberately excludes answers, email, passwords, tokens, teacher feedback and grades.
+function studyReport(rows,source){
+ const clean=value=>String(value==null?'':value).replace(/[\u0000-\u001f\u007f]/g,' ').trim().slice(0,180);
+ const drafts=rows.filter(w=>w.status!=='submitted').length;
+ const lines=[
+  'EnglishLegalese — private study overview',
+  'Source: '+clean(source),
+  'Saved lessons shown: '+rows.length,
+  'Drafts: '+drafts+'; submitted for teacher review: '+(rows.length-drafts),
+  'This is an on-demand dashboard snapshot, NOT a full lesson backup.',
+  'Only lesson titles, draft/submission status and dates are included; no lesson answers or feedback.',
+  'The cloud list may show only the 100 most recently updated lessons.',
+  'Keep this file private. No email or upload was sent by this download.',
+  ''
+ ];
+ for(const w of rows){
+  const date=Date.parse(w.updated_at);
+  const when=Number.isFinite(date)?new Date(date).toISOString():'Date unavailable';
+  lines.push((w.status==='submitted'?'SUBMITTED':'DRAFT')+' | '+clean(w.title||w.key)+' | '+when);
+ }
+ return lines.join('\n')+'\n';
+}
+// HF17 study report pure helper END
+
 let hubRequestSequence=0;
 async function populateHub(){
  const host=document.querySelector('[data-el1940-hub]');if(!host)return;
@@ -468,7 +494,30 @@ async function populateHub(){
  statusLabel.append(choice);toolbar.append(searchLabel,statusLabel);
  const summary=E('p',undefined,'v1940-hub-summary');summary.setAttribute('role','status');summary.setAttribute('aria-live','polite');
  const list=E('div',undefined,'v1940-hub-list');
- host.append(toolbar,summary,list);
+ const studyActions=E('section',undefined,'v1940-study-actions');
+ studyActions.setAttribute('aria-label','Your private study overview');
+ const studyHeading=E('strong','Your study overview');
+ const draftCount=valid.filter(w=>w.status!=='submitted').length;
+ const submittedCount=valid.length-draftCount;
+ const overview=E('p',draftCount+' drafts to continue · '+submittedCount+' submitted for teacher review. This is activity, not a grade or course-completion certificate.');
+ studyActions.append(studyHeading,overview);
+ const nextDraft=valid.find(w=>w.status!=='submitted');
+ if(nextDraft){
+  const nextLink=E('a','Continue my most recent draft');
+  nextLink.href=nextDraft.path+(nextDraft.path.includes('?')?'&':'?')+'resume='+encodeURIComponent(nextDraft.key);
+  studyActions.append(nextLink);
+ }else studyActions.append(E('p','No drafts are shown. Submitted work may still be awaiting teacher feedback.'));
+ const exportProgress=E('button','Download study overview (.txt)');
+ exportProgress.type='button';
+ exportProgress.addEventListener('click',()=>{
+  if(!confirm('Download a private text summary of the lessons shown on this device? This is not a full backup. It contains lesson titles, statuses and dates but no answers, and should be kept private.'))return;
+  const report=studyReport(valid,token&&cloud?'Cloud account':'This device');
+  const url=URL.createObjectURL(new Blob([report],{type:'text/plain;charset=utf-8'}));
+  const anchor=E('a');anchor.href=url;anchor.download='englishlegalese-study-overview-'+new Date().toISOString().slice(0,10)+'.txt';
+  document.body.append(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+ });
+ studyActions.append(exportProgress,E('p','For a complete copy of actual saved answers and teacher feedback, use Download my cloud backup while signed in. This overview never sends an email.'));
+ host.append(studyActions,toolbar,summary,list);
  function render(){
   const term=search.value.trim().toLocaleLowerCase(),filter=choice.value;
   const filtered=valid.filter(w=>(filter==='all'||(filter==='submitted'?w.status==='submitted':w.status!=='submitted'))&&(String(w.title||w.key).toLocaleLowerCase().includes(term)));
