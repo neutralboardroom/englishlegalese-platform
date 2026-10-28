@@ -417,6 +417,6 @@ test('HF15.7 delayed cloud resume cannot overwrite answers typed while the GET w
  await page.waitForTimeout(1600);
  expect(writes).toBe(0);
  await wb.locator('.v1940-controls button').filter({hasText:'Save now'}).click();
- await expect(wb.locator('.v1940-state')).toContainText('Cloud resume was interrupted');
+ await expect(wb.locator('.v1940-state')).toContainText('cloud resume was interrupted');
  expect(writes).toBe(0);
 });
