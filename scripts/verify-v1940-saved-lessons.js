@@ -60,5 +60,6 @@ const rules=read('governance/ENGLISHLEGALESE_DURABLE_BUILDER_RULES_ADDENDUM_2026
 assert(rules.includes('EL-DUR-011')&&rules.includes('EL-DUR-012'));
 assert(client.includes('editVersion++')&&client.includes('if(success&&editVersion!==capturedVersion)'), 'No edits made during an in-flight save may be falsely confirmed or dropped');
 assert(client.includes('if(editVersion!==loadVersion)'), 'Delayed cloud resume must not overwrite edits typed during GET');
+assert(client.includes('if(loadConflict){state.textContent=')&&client.includes('loadConflict=true;clearTimeout(timer)'), 'An interrupted cloud restore must block future cloud writes until the latest version is reloaded');
 assert(client.includes('if(token===saveSession'), 'Never replay in-flight saves into a different signed-in account');
 console.log('PASS HF15: 48 workbooks and 24 self-paced pages, secure account verification and recovery UI, consent-first local drafts, authenticated cloud saves, teacher-linked private submissions; no unsolicited email.');
