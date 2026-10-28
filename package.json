@@ -1,7 +1,7 @@
 {
   "name": "englishlegalese-platform",
-  "version": "1.85.1",
-  "description": "EnglishLegalese v1.85.1 HF15.6 candidate: verified student identity, transactional-only email, revocable sessions, complete cloud backup and user-confirmed device-only backup restore.",
+  "version": "1.85.2",
+  "description": "EnglishLegalese 1.85.2: verified student accounts, secure cloud lessons and searchable, status-filtered private progress dashboard; transactional account email only.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
