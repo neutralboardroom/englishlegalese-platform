@@ -494,7 +494,7 @@ async function populateHub(){
    }
    if(!finished)listingComplete=false;
   }catch(e){if(currentSequence!==hubRequestSequence||token!==currentToken)return;
-   listingComplete=false;loadingError='Your cloud lesson list could not be fully loaded: '+e.message+' Previously saved work has NOT been deleted.';
+   listingComplete=false;loadingError='Your cloud lesson list could not be fully loaded: '+e.message+' Previously saved work has NOT been deleted. Do not assume that you have no saved lessons.';
   }
  }else if(token&&!cloud){listingComplete=false;loadingError='Account saving is temporarily unavailable. No cloud records have been deleted.';}
  // Only allow routes to real learning pages, even for untrusted/corrupt browser storage.
