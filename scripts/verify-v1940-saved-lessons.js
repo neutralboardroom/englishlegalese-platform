@@ -42,9 +42,9 @@ const paths=[
  'learn/business-resources/investor-earnings/index.html','learn/business-resources/investor-markets/index.html'
 ];
 assert.equal(paths.length,26);
-for(const p of paths){const page=read(p);assert(page.includes('product-v1940-saved-lessons.js?v=1.85.1-hf15-6')&&page.includes('product-v1940-saved-lessons.css?v=1.85.0-hf13'),'Self-paced saving omitted '+p)}
+for(const p of paths){const page=read(p);assert(page.includes('product-v1940-saved-lessons.js?v=1.85.1-hf15-7')&&page.includes('product-v1940-saved-lessons.css?v=1.85.0-hf13'),'Self-paced saving omitted '+p)}
 for(const p of ['learn/my-work/index.html','learn/teacher-submissions/index.html'])assert(read(p).includes('v1940-'),'Missing dashboard '+p);
-assert(read('learn/my-work/index.html').includes('product-v1940-saved-lessons.js?v=1.85.1-hf15-6'),'Account dashboard must load the current script');
+assert(read('learn/my-work/index.html').includes('product-v1940-saved-lessons.js?v=1.85.1-hf15-7'),'Account dashboard must load the current script');
 assert(read('learn/teacher-submissions/index.html').includes('product-v1940-teacher-review.js?v=1.85.1-hf15'),'Teacher dashboard must load the current script');
 assert(read('server.js').includes("require('./src/v1940-saved-lessons').install"),'Backend is not installed');
 assert(read('server.js').includes('authAbuse});'),'Account registration must reuse the original auth rate limiter');
@@ -58,4 +58,6 @@ for(const p of ['playwright.config.js','playwright.production.config.js'])assert
 assert(read('package.json').includes('node scripts/verify-v1940-saved-lessons.js'));
 const rules=read('governance/ENGLISHLEGALESE_DURABLE_BUILDER_RULES_ADDENDUM_2026-10-24.md');
 assert(rules.includes('EL-DUR-011')&&rules.includes('EL-DUR-012'));
+assert(client.includes('editVersion++')&&client.includes('if(success&&editVersion!==capturedVersion)'), 'No edits made during an in-flight save may be falsely confirmed or dropped');
+assert(client.includes('if(token===saveSession'), 'Never replay in-flight saves into a different signed-in account');
 console.log('PASS HF15: 48 workbooks and 24 self-paced pages, secure account verification and recovery UI, consent-first local drafts, authenticated cloud saves, teacher-linked private submissions; no unsolicited email.');
