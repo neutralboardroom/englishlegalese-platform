@@ -26,9 +26,9 @@ test('HF18 loads 125 account-owned lessons from two private pages and exports me
  await expect(hub.locator('.v1940-saved-card')).toHaveCount(125);
  await expect(hub.locator('.v1940-hub-summary')).toContainText('125 saved lessons');
  expect(requests.some(x=>x.includes('?offset=100'))).toBe(true);
- await hub.getByRole('textbox',{name:'Search saved lessons'}).fill('exercise 124');
+ await hub.getByRole('searchbox',{name:'Search saved lessons'}).fill('exercise 124');
  await expect(hub.locator('.v1940-saved-card')).toHaveCount(1);
- await hub.getByRole('textbox',{name:'Search saved lessons'}).fill('');
+ await hub.getByRole('searchbox',{name:'Search saved lessons'}).fill('');
  page.once('dialog',d=>d.accept());
  const [dl]=await Promise.all([page.waitForEvent('download'),hub.getByRole('button',{name:'Download study overview (.txt)'}).click()]);
  const text=fs.readFileSync(await dl.path(),'utf8');
