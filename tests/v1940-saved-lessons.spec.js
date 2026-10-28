@@ -383,3 +383,33 @@ test('HF15.7 a revision conflict never triggers a blind automatic overwrite of n
  expect(writes).toHaveLength(1);
  await expect(input).toHaveValue('Newer answer still in browser');
 });
+
+
+test('HF15.7 delayed cloud resume cannot overwrite answers typed while the GET was pending',async({page})=>{
+ let releaseLoad;const gate=new Promise(resolve=>{releaseLoad=resolve;});let reads=0,writes=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fictional.session","email_verified":true,"user":{"id":"student","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons/*',async route=>{
+  if(route.request().method()==='PUT'){writes++;return route.fulfill({status:409,contentType:'application/json',body:'{"ok":false,"conflict":true}'});}
+  if(route.request().method()==='GET'){
+   reads++;if(reads===1){await gate;return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,lesson:{revision:4,status:'draft',updated_at:new Date().toISOString(),answers:{fields:[{i:0,t:'TEXTAREA',kind:'textarea',name:'',value:'OLD CLOUD VALUE'}]}}})});}
+   return route.fulfill({status:404,contentType:'application/json',body:'{"ok":false,"error":"No prior save"}'});
+  }
+  return route.abort();
+ });
+ await page.goto('/learn/legal-english/');
+ const wb=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await wb.locator('.v1870-toggle input').check();
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const form=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await form.locator('input[autocomplete="email"]').fill('student@example.test');
+ await form.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await form.getByRole('button',{name:'Sign in securely'}).click();
+ await expect.poll(()=>reads).toBe(1);
+ const input=wb.locator('.v1930-simulation textarea').first();
+ await input.fill('NEW LOCAL ANSWER MUST SURVIVE');
+ releaseLoad();
+ await expect(wb.locator('.v1940-state')).toContainText('Cloud resume cancelled');
+ await expect(input).toHaveValue('NEW LOCAL ANSWER MUST SURVIVE');
+ expect(writes).toBe(0);
+});
