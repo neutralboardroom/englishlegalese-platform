@@ -318,3 +318,68 @@ test('HF15.6 rejects malformed or unsafe import without changing device storage'
  await expect(page.locator('.v1940-global-status')).toContainText('BACKUP NOT RESTORED');
  expect(await page.evaluate(()=>localStorage.getItem('el1940.lesson.workbook:example-01'))).toBeNull();
 });
+
+
+test('HF15.7 an edit made while the first cloud save is in flight is saved in a second PUT',async({page})=>{
+ const writes=[];let resolveFirst;const firstGate=new Promise(resolve=>{resolveFirst=resolve;});
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fixture.save.session","email_verified":true,"user":{"id":"student","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons/*',async route=>{
+  if(route.request().method()==='GET')return route.fulfill({status:404,contentType:'application/json',body:'{"ok":false,"error":"No previous save"}'});
+  if(route.request().method()==='PUT'){
+   const snapshot=route.request().postDataJSON();writes.push(snapshot);
+   if(writes.length===1)await firstGate;
+   return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,saved:true,revision:snapshot.expected_revision+1,status:'draft',updated_at:new Date().toISOString()})});
+  }
+  return route.abort();
+ });
+ await page.goto('/learn/legal-english/');
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const signIn=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await signIn.locator('input[autocomplete="email"]').fill('student@example.test');
+ await signIn.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await signIn.getByRole('button',{name:'Sign in securely'}).click();
+ const first=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await first.locator('.v1870-toggle input').check();
+ const input=first.locator('.v1930-simulation textarea').first();
+ await input.fill('FIRST fictional answer');
+ await first.locator('.v1940-controls button').filter({hasText:'Save now'}).click();
+ await expect.poll(()=>writes.length).toBe(1);
+ await input.fill('SECOND fictional answer typed while the first save is pending');
+ await expect(first.locator('.v1940-state')).toContainText('NOT SAVED yet');
+ resolveFirst();
+ await expect.poll(()=>writes.length,{timeout:10000}).toBe(2);
+ await expect(first.locator('.v1940-state')).toContainText('Saved to your account');
+ expect(writes[0].expected_revision).toBe(0);
+ expect(writes[1].expected_revision).toBe(1);
+ expect(JSON.stringify(writes[0].answers)).toContain('FIRST fictional answer');
+ expect(JSON.stringify(writes[1].answers)).toContain('SECOND fictional answer');
+});
+test('HF15.7 a revision conflict never triggers a blind automatic overwrite of newer in-flight edits',async({page})=>{
+ const writes=[];let release;const gate=new Promise(resolve=>{release=resolve;});
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fixture.save.session","email_verified":true,"user":{"id":"student","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons/*',async route=>{
+  if(route.request().method()==='GET')return route.fulfill({status:404,contentType:'application/json',body:'{"ok":false,"error":"No previous save"}'});
+  if(route.request().method()==='PUT'){writes.push(route.request().postDataJSON());await gate;return route.fulfill({status:409,contentType:'application/json',body:'{"ok":false,"conflict":true,"error":"Another device changed this lesson"}'});}
+  return route.abort();
+ });
+ await page.goto('/learn/legal-english/');
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const form=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await form.locator('input[autocomplete="email"]').fill('student@example.test');
+ await form.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await form.getByRole('button',{name:'Sign in securely'}).click();
+ const first=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await first.locator('.v1870-toggle input').check();
+ const input=first.locator('.v1930-simulation textarea').first();
+ await input.fill('First draft from this tab');
+ await first.locator('.v1940-controls button').filter({hasText:'Save now'}).click();
+ await expect.poll(()=>writes.length).toBe(1);
+ await input.fill('Newer answer still in browser');
+ release();
+ await expect(first.locator('.v1940-state')).toContainText('NOT SAVED');
+ await page.waitForTimeout(1500);
+ expect(writes).toHaveLength(1);
+ await expect(input).toHaveValue('Newer answer still in browser');
+});
