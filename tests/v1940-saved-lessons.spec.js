@@ -57,16 +57,17 @@ test('HF13 teacher review page never exposes student records anonymously',async(
  await expect(page.locator('[data-el1940-hub]')).toContainText('No saved lessons');
 });
 
-test('HF13 transparently presents account creation and shows server-confirmed cloud saving only after a successful PUT',async({page})=>{
+test('HF15 requires email verification and explicit login before server-confirmed cloud saving after a successful PUT',async({page})=>{
  let registered=0,saved=0;
  await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,account_saving_available:true,account_registration_available:true})}));
- await page.route('**/api/v119/auth/register',async route=>{
+ await page.route('**/api/v1940/student/auth/register',async route=>{
   registered++;
   const body=route.request().postDataJSON();
   expect(body.role).toBe('student');
   expect(body.password.length).toBeGreaterThanOrEqual(12);
-  await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,token:'test.mock.token',user:{id:'student123',role:'student',email:body.email}})});
+  await route.fulfill({status:202,contentType:'application/json',body:JSON.stringify({ok:true,verification_required:true})});
  });
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,token:'test.mock.token',email_verified:true,user:{id:'student123',role:'student',email:'student@example.test'}})}));
  await page.route('**/api/v1940/lessons/*',async route=>{
   if(route.request().url().endsWith('/capabilities'))return route.fallback();
   if(route.request().method()==='GET')return route.fulfill({status:404,contentType:'application/json',body:'{"ok":false,"error":"No existing save"}'});
@@ -83,13 +84,19 @@ test('HF13 transparently presents account creation and shows server-confirmed cl
  await expect(page.locator('.v1940-account')).toContainText('create a free student account');
  await expect(page.locator('.v1940-global-status')).toContainText('NOT SAVED TO AN ACCOUNT');
  await page.locator('.v1940-account button').filter({hasText:'Create a free student account'}).click();
- const signUp=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="new-password"]')});
+ const signUp=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="name"]')});
  await signUp.locator('input[autocomplete="name"]').fill('Fictional Learner');
  await signUp.locator('input[autocomplete="email"]').fill('student@example.test');
  await signUp.locator('input[autocomplete="new-password"]').fill('StrongPassword2026!');
- await signUp.getByRole('button',{name:'Create account and sign in'}).click();
- await expect(page.locator('.v1940-global-status')).toContainText('Account created and signed in');
+ await signUp.getByRole('button',{name:'Create account and send verification link'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('Check your email for a verification link');
  expect(registered).toBe(1);
+ await page.locator('.v1940-account button').filter({hasText:'Sign in to my account'}).click();
+ const signIn=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await signIn.locator('input[autocomplete="email"]').fill('student@example.test');
+ await signIn.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await signIn.getByRole('button',{name:'Sign in securely'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('Signed in to your student account');
  const course=page.locator('#v1860-legal-catalog .v1860-course-card').first();
  await course.locator('.v1870-toggle input').check();
  await course.locator('.v1930-simulation textarea').first().fill('An appropriate response asks to see the fictional notice first.');
@@ -109,4 +116,307 @@ test('HF13 account saving unavailable never offers a broken registration or clai
  await course.locator('.v1930-simulation textarea').first().fill('Only a local fictional draft.');
  await course.locator('.v1940-controls button').filter({hasText:'Save now'}).click();
  await expect(course.locator('.v1940-state')).toContainText('NOT saved to your account');
+});
+
+
+test('HF15 one-use verification link is redeemed through the account endpoint without exposing its token in navigation',async({page})=>{
+ const secret='a'.repeat(64);let redeems=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,account_saving_available:true,account_registration_available:true})}));
+ await page.route('**/api/v1940/student/auth/verify',route=>{
+  redeems++;expect(route.request().method()).toBe('POST');
+  expect(route.request().postDataJSON()).toEqual({token:secret});
+  return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"verified":true}'});
+ });
+ await page.goto('/learn/my-work/#verify='+secret);
+ await expect(page.locator('.v1940-global-status')).toContainText('Email verified. Please sign in.');
+ await expect.poll(()=>page.evaluate(()=>location.hash)).toBe('');
+ expect(redeems).toBe(1);
+});
+test('HF15 password recovery link uses one mocked request and never claims login without a new sign-in',async({page})=>{
+ const secret='b'.repeat(64);let changes=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,account_saving_available:true,account_registration_available:true})}));
+ await page.route('**/api/v1940/student/auth/reset-password',route=>{
+  changes++;const body=route.request().postDataJSON();
+  expect(body.token).toBe(secret);expect(body.new_password).toBe('LongerStrongPass2026!');
+  return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"password_reset":true}'});
+ });
+ await page.goto('/learn/my-work/#reset='+secret);
+ const reset=page.locator('form.v1940-login').filter({has:page.locator('button').filter({hasText:'Reset password'})});
+ await expect(reset).toBeVisible();
+ await reset.locator('input').fill('LongerStrongPass2026!');
+ await reset.getByRole('button',{name:'Reset password'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('Please sign in again.');
+ await expect.poll(()=>page.evaluate(()=>location.hash)).toBe('');
+ expect(changes).toBe(1);
+ await expect(page.locator('.v1940-account')).not.toContainText('Signed in to your student account');
+});
+
+
+test('HF15.2 student sign-out revokes the current bearer token server-side and clears the local session',async({page})=>{
+ let requests=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,account_saving_available:true,account_registration_available:true})}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,token:'mock.account.session',email_verified:true,user:{id:'student-test',role:'student'}})}));
+ await page.route('**/api/v1940/lessons',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"lessons":[]}'}));
+ await page.route('**/api/v1940/student/auth/logout',route=>{
+  requests++;expect(route.request().method()).toBe('POST');
+  expect(route.request().headers().authorization).toBe('Bearer mock.account.session');
+  return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"signed_out":true,"session_revoked":true}'});
+ });
+ await page.goto('/learn/my-work/');
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const signIn=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await signIn.locator('input[autocomplete="email"]').fill('student@example.test');
+ await signIn.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await signIn.getByRole('button',{name:'Sign in securely'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('Signed in to your student account');
+ await page.getByRole('button',{name:'Sign out',exact:true}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('This session was revoked on the server.');
+ expect(requests).toBe(1);
+ await expect.poll(()=>page.evaluate(()=>sessionStorage.getItem('el1940.student.session'))).toBeNull();
+});
+test('HF15.2 teacher sign-out revokes only that teacher session and hides the private queue',async({page})=>{
+ let logouts=0;
+ await page.route('**/api/v1940/teacher/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,token:'mock.teacher.session',user:{id:'teacher-test',role:'teacher'}})}));
+ await page.route('**/api/v1940/teacher/submissions',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"submissions":[]}'}));
+ await page.route('**/api/v1940/teacher/auth/logout',route=>{
+  logouts++;expect(route.request().headers().authorization).toBe('Bearer mock.teacher.session');
+  return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"signed_out":true,"session_revoked":true}'});
+ });
+ await page.goto('/learn/teacher-submissions/');
+ await page.locator('#v1940-teacher-login input[name="email"]').fill('teacher@example.test');
+ await page.locator('#v1940-teacher-login input[name="password"]').fill('StrongPassword2026!');
+ await page.locator('#v1940-teacher-login button').click();
+ await expect(page.locator('#v1940-teacher-signout')).toBeVisible();
+ await page.locator('#v1940-teacher-signout').click();
+ await expect(page.locator('#v1940-teacher-status')).toContainText('Teacher session securely revoked');
+ await expect(page.locator('#v1940-teacher-queue')).toContainText('Sign in to load your assigned submissions');
+ expect(logouts).toBe(1);
+ await expect.poll(()=>page.evaluate(()=>sessionStorage.getItem('el1940.teacher.session'))).toBeNull();
+});
+
+
+test('HF15.4 student confirms global sign out and retains work without claiming unsaved progress was backed up',async({page})=>{
+ let revoked=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fictional.student.token","email_verified":true,"user":{"id":"student","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"lessons":[]}'}));
+ await page.route('**/api/v1940/student/auth/logout-everywhere',route=>{
+  revoked++;expect(route.request().headers().authorization).toBe('Bearer fictional.student.token');
+  return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"signed_out_everywhere":true,"lessons_preserved":true}'});
+ });
+ page.on('dialog',dialog=>dialog.accept());
+ await page.goto('/learn/my-work/');
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const form=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await form.locator('input[autocomplete="email"]').fill('student@example.test');
+ await form.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await form.getByRole('button',{name:'Sign in securely'}).click();
+ await page.getByRole('button',{name:'Sign out on all devices'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('Signed out on all devices.');
+ expect(revoked).toBe(1);
+ await expect(page.getByRole('button',{name:'Sign in to my account'})).toBeVisible();
+});
+test('HF15.4 teacher confirms global sign out and does not remove assigned student work',async({page})=>{
+ let revoked=0;
+ await page.route('**/api/v1940/teacher/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fictional.teacher.token","user":{"id":"teacher","role":"teacher"}}'}));
+ await page.route('**/api/v1940/teacher/submissions',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"submissions":[]}'}));
+ await page.route('**/api/v1940/teacher/auth/logout-everywhere',route=>{
+  revoked++;expect(route.request().headers().authorization).toBe('Bearer fictional.teacher.token');
+  return route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"signed_out_everywhere":true,"lessons_preserved":true}'});
+ });
+ page.on('dialog',dialog=>dialog.accept());
+ await page.goto('/learn/teacher-submissions/');
+ await page.locator('#v1940-teacher-login input[name="email"]').fill('teacher@example.test');
+ await page.locator('#v1940-teacher-login input[name="password"]').fill('StrongPassword2026!');
+ await page.locator('#v1940-teacher-login button').click();
+ await page.getByRole('button',{name:'Sign out on all devices'}).click();
+ await expect(page.locator('#v1940-teacher-status')).toContainText('Signed out securely on every device');
+ await expect(page.locator('#v1940-teacher-queue')).toContainText('Sign in to load your assigned submissions');
+ expect(revoked).toBe(1);
+});
+
+test('HF15.5 student downloads only a confirmed complete private cloud backup',async({page})=>{
+ let exports=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fixture.student.cloud","email_verified":true,"user":{"id":"student-fixture","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"lessons":[]}'}));
+ await page.route('**/api/v1940/account/export',route=>{
+  exports++;expect(route.request().headers().authorization).toBe('Bearer fixture.student.cloud');
+  return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,complete:true,schema_version:1,format:'EnglishLegalese student cloud backup',saved_lessons:[{lesson_key:'workbook:fixture',answers:{fictional:'saved'}}],submissions:[{teacher_feedback:'Fictional feedback'}]})});
+ });
+ await page.goto('/learn/my-work/');
+ await expect(page.getByRole('button',{name:'Download my cloud backup'})).toBeHidden();
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const form=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await form.locator('input[autocomplete="email"]').fill('student@example.test');
+ await form.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await form.getByRole('button',{name:'Sign in securely'}).click();
+ page.on('dialog',dialog=>dialog.accept());
+ const downloadPromise=page.waitForEvent('download');
+ await page.getByRole('button',{name:'Download my cloud backup'}).click();
+ const download=await downloadPromise;
+ expect(download.suggestedFilename()).toMatch(/^englishlegalese-cloud-backup-\d{4}-\d{2}-\d{2}\.json$/);
+ await expect(page.locator('.v1940-global-status')).toContainText('Complete account backup downloaded');
+ expect(exports).toBe(1);
+});
+test('HF15.5 refuses a server-truncated backup without a false download success',async({page})=>{
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fixture.student.cloud","email_verified":true,"user":{"id":"student-fixture","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"lessons":[]}'}));
+ await page.route('**/api/v1940/account/export',route=>route.fulfill({status:413,contentType:'application/json',body:'{"ok":false,"code":"ACCOUNT_BACKUP_LIMIT","error":"No partial backup was produced."}'}));
+ await page.goto('/learn/my-work/');
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const form=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await form.locator('input[autocomplete="email"]').fill('student@example.test');
+ await form.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await form.getByRole('button',{name:'Sign in securely'}).click();
+ page.on('dialog',dialog=>dialog.accept());
+ await page.getByRole('button',{name:'Download my cloud backup'}).click();
+ await expect(page.locator('.v1940-global-status')).toContainText('ACCOUNT BACKUP NOT DOWNLOADED');
+ await expect(page.locator('.v1940-global-status')).toContainText('No partial backup was produced.');
+});
+
+
+test('HF15.6 restores a V13 complete cloud backup to device-only drafts without uploading or merging accounts',async({page})=>{
+ let uploads=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":false,"account_registration_available":false}'}));
+ await page.route('**/api/v1940/account/export',route=>{uploads++;return route.abort();});
+ await page.route('**/api/v1940/lessons/*',route=>{if(route.request().url().endsWith('/capabilities'))return route.fallback();if(route.request().method()!=='GET')uploads++;return route.abort();});
+ await page.goto('/learn/my-work/');
+ await expect(page.getByRole('button',{name:'Restore backup to this device'})).toBeVisible();
+ page.on('dialog',d=>d.accept());
+ const backup={ok:true,format:'EnglishLegalese student cloud backup',schema_version:1,complete:true,exported_at:'2026-10-26T12:00:00Z',submissions:[{teacher_feedback:'Fictional teacher notes remain only in downloaded file'}],
+  saved_lessons:[{lesson_key:'workbook:example-01',lesson_title:'Example legal English exercise',origin_path:'/learn/legal-english/',answers:{fields:[{i:0,t:'TEXTAREA',kind:'textarea',name:'example',value:'Fictional restored response'}]},status:'draft',revision:4,updated_at:'2026-10-26T12:00:00Z'}]};
+ await page.getByLabel('Restore backup file').setInputFiles({name:'englishlegalese-cloud-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+ await expect(page.locator('.v1940-global-status')).toContainText('Restored 1 DEVICE-ONLY drafts');
+ await expect(page.locator('.v1940-global-status')).toContainText('NOT saved to any account');
+ await expect(page.locator('[data-el1940-hub]')).toContainText('Example legal English exercise');
+ const state=await page.evaluate(()=>({record:JSON.parse(localStorage.getItem('el1940.lesson.workbook:example-01')),consent:localStorage.getItem('el1940.device.optin')}));
+ expect(state.consent).toBe('yes');
+ expect(state.record.answers.fields[0].value).toBe('Fictional restored response');
+ expect(state.record).not.toHaveProperty('teacher_feedback');
+ expect(uploads).toBe(0);
+});
+test('HF15.6 recovery never overwrites an existing device draft',async({page})=>{
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":false,"account_registration_available":false}'}));
+ await page.goto('/learn/my-work/');
+ await page.evaluate(()=>{
+  localStorage.setItem('el1940.lesson.workbook:example-01',JSON.stringify({key:'workbook:example-01',title:'Existing private draft',path:'/learn/legal-english/',answers:{fields:[]},updated_at:'2026-10-25T12:00:00Z'}));
+  localStorage.setItem('el1940.device.optin','yes');
+ });
+ page.on('dialog',d=>d.accept());
+ const backup={format:'EnglishLegalese student cloud backup',schema_version:1,complete:true,submissions:[],saved_lessons:[{lesson_key:'workbook:example-01',lesson_title:'Imported old draft',origin_path:'/learn/legal-english/',answers:{fields:[]},updated_at:'2026-10-26T12:00:00Z'}]};
+ await page.getByLabel('Restore backup file').setInputFiles({name:'backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+ await expect(page.locator('.v1940-global-status')).toContainText('Restored 0 DEVICE-ONLY drafts; skipped 1 existing drafts');
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('el1940.lesson.workbook:example-01')).title)).toBe('Existing private draft');
+});
+test('HF15.6 rejects malformed or unsafe import without changing device storage',async({page})=>{
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":false,"account_registration_available":false}'}));
+ await page.goto('/learn/my-work/');
+ const poisoned={format:'EnglishLegalese student cloud backup',schema_version:1,complete:true,submissions:[],saved_lessons:[{lesson_key:'workbook:example-01',lesson_title:'Invalid draft',origin_path:'https://external.invalid/',answers:{fields:[{i:0,t:'TEXTAREA',kind:'textarea',name:'text',value:'bad'}]},updated_at:'2026-10-26T12:00:00Z'}]};
+ await page.getByLabel('Restore backup file').setInputFiles({name:'unsafe.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(poisoned))});
+ await expect(page.locator('.v1940-global-status')).toContainText('BACKUP NOT RESTORED');
+ expect(await page.evaluate(()=>localStorage.getItem('el1940.lesson.workbook:example-01'))).toBeNull();
+});
+
+
+test('HF15.7 an edit made while the first cloud save is in flight is saved in a second PUT',async({page})=>{
+ const writes=[];let resolveFirst;const firstGate=new Promise(resolve=>{resolveFirst=resolve;});
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fixture.save.session","email_verified":true,"user":{"id":"student","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons/*',async route=>{
+  if(route.request().url().endsWith('/capabilities'))return route.fallback();
+  if(route.request().method()==='GET')return route.fulfill({status:404,contentType:'application/json',body:'{"ok":false,"error":"No previous save"}'});
+  if(route.request().method()==='PUT'){
+   const snapshot=route.request().postDataJSON();writes.push(snapshot);
+   if(writes.length===1)await firstGate;
+   return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,saved:true,revision:snapshot.expected_revision+1,status:'draft',updated_at:new Date().toISOString()})});
+  }
+  return route.abort();
+ });
+ await page.goto('/learn/legal-english/');
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const signIn=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await signIn.locator('input[autocomplete="email"]').fill('student@example.test');
+ await signIn.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await signIn.getByRole('button',{name:'Sign in securely'}).click();
+ const first=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await first.locator('.v1870-toggle input').check();
+ const input=first.locator('.v1930-simulation textarea').first();
+ await input.fill('FIRST fictional answer');
+ await first.locator('.v1940-controls button').filter({hasText:'Save now'}).click();
+ await expect.poll(()=>writes.length).toBe(1);
+ await input.fill('SECOND fictional answer typed while the first save is pending');
+ await expect(first.locator('.v1940-state')).toContainText('NOT SAVED yet');
+ resolveFirst();
+ await expect.poll(()=>writes.length,{timeout:10000}).toBe(2);
+ await expect(first.locator('.v1940-state')).toContainText('Saved to your account');
+ expect(writes[0].expected_revision).toBe(0);
+ expect(writes[1].expected_revision).toBe(1);
+ expect(JSON.stringify(writes[0].answers)).toContain('FIRST fictional answer');
+ expect(JSON.stringify(writes[1].answers)).toContain('SECOND fictional answer');
+});
+test('HF15.7 a revision conflict never triggers a blind automatic overwrite of newer in-flight edits',async({page})=>{
+ const writes=[];let release;const gate=new Promise(resolve=>{release=resolve;});
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fixture.save.session","email_verified":true,"user":{"id":"student","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons/*',async route=>{
+  if(route.request().url().endsWith('/capabilities'))return route.fallback();
+  if(route.request().method()==='GET')return route.fulfill({status:404,contentType:'application/json',body:'{"ok":false,"error":"No previous save"}'});
+  if(route.request().method()==='PUT'){writes.push(route.request().postDataJSON());await gate;return route.fulfill({status:409,contentType:'application/json',body:'{"ok":false,"conflict":true,"error":"Another device changed this lesson"}'});}
+  return route.abort();
+ });
+ await page.goto('/learn/legal-english/');
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const form=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await form.locator('input[autocomplete="email"]').fill('student@example.test');
+ await form.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await form.getByRole('button',{name:'Sign in securely'}).click();
+ const first=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await first.locator('.v1870-toggle input').check();
+ const input=first.locator('.v1930-simulation textarea').first();
+ await input.fill('First draft from this tab');
+ await first.locator('.v1940-controls button').filter({hasText:'Save now'}).click();
+ await expect.poll(()=>writes.length).toBe(1);
+ await input.fill('Newer answer still in browser');
+ release();
+ await expect(first.locator('.v1940-state')).toContainText('NOT SAVED');
+ await page.waitForTimeout(1500);
+ expect(writes).toHaveLength(1);
+ await expect(input).toHaveValue('Newer answer still in browser');
+});
+
+
+test('HF15.7 delayed cloud resume cannot overwrite answers typed while the GET was pending',async({page})=>{
+ let releaseLoad;const gate=new Promise(resolve=>{releaseLoad=resolve;});let reads=0,writes=0;
+ await page.route('**/api/v1940/lessons/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"account_saving_available":true,"account_registration_available":true}'}));
+ await page.route('**/api/v1940/student/auth/login',route=>route.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"fictional.session","email_verified":true,"user":{"id":"student","role":"student"}}'}));
+ await page.route('**/api/v1940/lessons/*',async route=>{
+  if(route.request().url().endsWith('/capabilities'))return route.fallback();
+  if(route.request().method()==='PUT'){writes++;return route.fulfill({status:409,contentType:'application/json',body:'{"ok":false,"conflict":true}'});}
+  if(route.request().method()==='GET'){
+   reads++;if(reads===1){await gate;return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,lesson:{revision:4,status:'draft',updated_at:new Date().toISOString(),answers:{fields:[{i:0,t:'TEXTAREA',kind:'textarea',name:'',value:'OLD CLOUD VALUE'}]}}})});}
+   return route.fulfill({status:404,contentType:'application/json',body:'{"ok":false,"error":"No prior save"}'});
+  }
+  return route.abort();
+ });
+ await page.goto('/learn/legal-english/');
+ const wb=page.locator('#v1860-legal-catalog .v1860-course-card').first();
+ await wb.locator('.v1870-toggle input').check();
+ await page.getByRole('button',{name:'Sign in to my account'}).click();
+ const form=page.locator('.v1940-account form').filter({has:page.locator('input[autocomplete="current-password"]')});
+ await form.locator('input[autocomplete="email"]').fill('student@example.test');
+ await form.locator('input[autocomplete="current-password"]').fill('StrongPassword2026!');
+ await form.getByRole('button',{name:'Sign in securely'}).click();
+ await expect.poll(()=>reads).toBe(1);
+ const input=wb.locator('.v1930-simulation textarea').first();
+ await input.fill('NEW LOCAL ANSWER MUST SURVIVE');
+ releaseLoad();
+ await expect(wb.locator('.v1940-state')).toContainText('Cloud resume cancelled');
+ await expect(input).toHaveValue('NEW LOCAL ANSWER MUST SURVIVE');
+ await page.waitForTimeout(1600);
+ expect(writes).toBe(0);
+ await wb.locator('.v1940-controls button').filter({hasText:'Save now'}).click();
+ await expect(wb.locator('.v1940-state')).toContainText('cloud resume was interrupted');
+ expect(writes).toBe(0);
 });

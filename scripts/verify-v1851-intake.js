@@ -32,6 +32,8 @@ assert(sql.includes('BEGIN;')&&sql.includes('COMMIT;'));
 const rules=fs.readFileSync('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md','utf8');
 assert(rules.includes('EL-RGR-023')&&rules.includes('NEVER sends emails'),'No-email builder directive must remain');
 const durable=fs.readFileSync('governance/ENGLISHLEGALESE_DURABLE_BUILDER_RULES_ADDENDUM_2026-10-24.md','utf8');
+const currentEmailPolicy=fs.readFileSync('governance/ENGLISHLEGALESE_DURABLE_TRANSACTIONAL_EMAIL_POLICY_2026-10-26.md','utf8');
+assert(currentEmailPolicy.includes('EL-DUR-013')&&currentEmailPolicy.includes('EL-RGR-025')&&currentEmailPolicy.includes('distinct explicit owner authorization'),'Latest owner-approved email policy must override former application-wide ban');
 for(const phrase of ['EL-DUR-011','NEVER send emails','EL-RGR-023','fail-closed','separate explicit authorization']) assert(durable.includes(phrase),'Durable builder rule missing: '+phrase);
 assert(durable.includes('EL-DUR-001…010'),'Ten original durable rules must remain');
 assert(!cli.includes('sendResendEmail'),'Builder CLI must not send emails');

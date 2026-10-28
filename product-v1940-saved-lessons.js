@@ -1,6 +1,6 @@
 /* HF13 — transparent save, pause, resume and real teacher-linked submission for self-paced lessons.
  * Cloud save is account-based and requires available PostgreSQL; fallback is opt-in on THIS device.
- * Never store passwords or file inputs, send mail, trigger payment or invent teacher review.
+ * Genuine transactional account messages are server-triggered only; never send marketing, trigger payments or invent teacher reviews.
  */
 (()=>{'use strict';
 const SESSION='el1940.student.session',CONSENT='el1940.device.optin',PREFIX='el1940.lesson.';
@@ -14,17 +14,23 @@ let token=safeSession('get'),device=safeLocal('get',CONSENT)==='yes',cloud=false
 const lessons=new Map();
 const isHub=!!document.querySelector('[data-el1940-hub]');
 const signInBar=E('section',undefined,'v1940-account');signInBar.setAttribute('aria-label','Save and resume self-paced lessons');
-const heading=E('strong','Save your progress: create a free student account and sign in');
+const heading=E('strong','Save your progress: verify your email and sign in');
 const blurb=E('p','To reliably save your lesson answers and resume on another device, create a free student account and stay signed in. Your work is saved to your account only after the server confirms it. Device-only drafts are a less reliable, optional fallback without a signed-in account: they stay in this browser, are NOT backed up to your account, will not sync to other devices, and may be lost if browser data is cleared. Use fictional information only; do not enter confidential client details.');
 const status=E('p','Checking save options…','v1940-global-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
 const buttons=E('div',undefined,'v1940-buttons');
 const createAccount=E('button','Create a free student account');createAccount.type='button';
 const signin=E('button','Sign in to my account');signin.type='button';
+const resend=E('button','Resend verification email');resend.type='button';
+const forgot=E('button','Forgot password?');forgot.type='button';
 const logout=E('button','Sign out');logout.type='button';
+const logoutAll=E('button','Sign out on all devices');logoutAll.type='button';
+const cloudBackup=E('button','Download my cloud backup');cloudBackup.type='button';
+const restoreDevice=E('button','Restore backup to this device');restoreDevice.type='button';
+const restoreFile=E('input');restoreFile.type='file';restoreFile.accept='.json,application/json';restoreFile.hidden=true;restoreFile.setAttribute('aria-label','Restore backup file');
 const consent=E('button','Enable saving on this device');consent.type='button';
 const disable=E('button','Clear saved device copies');disable.type='button';
 const hubLink=E('a','My saved lessons','v1940-link');hubLink.href='/learn/my-work/';
-buttons.append(createAccount,signin,logout,consent,disable,hubLink);
+buttons.append(createAccount,signin,resend,forgot,logout,logoutAll,cloudBackup,restoreDevice,consent,disable,hubLink);
 const login=E('form',undefined,'v1940-login');login.hidden=true;
 const emailLabel=E('label','Account email'),email=E('input');email.type='email';email.autocomplete='email';email.required=true;emailLabel.append(email);
 const passLabel=E('label','Password'),pass=E('input');pass.type='password';pass.autocomplete='current-password';pass.required=true;passLabel.append(pass);
@@ -33,15 +39,23 @@ const signup=E('form',undefined,'v1940-login');signup.hidden=true;
 const nameLabel=E('label','Full name'),fullName=E('input');fullName.type='text';fullName.autocomplete='name';fullName.maxLength=160;fullName.required=true;nameLabel.append(fullName);
 const newEmailLabel=E('label','Email'),newEmail=E('input');newEmail.type='email';newEmail.autocomplete='email';newEmail.required=true;newEmailLabel.append(newEmail);
 const newPassLabel=E('label','Create a password (12 characters or more)'),newPass=E('input');newPass.type='password';newPass.autocomplete='new-password';newPass.minLength=12;newPass.maxLength=128;newPass.required=true;newPassLabel.append(newPass);
-const create=E('button','Create account and sign in');create.type='submit';
-const signupDisclosure=E('p','Account creation and cloud saving require secure server readiness. If unavailable, this page will NOT claim your answers are backed up.');
+const create=E('button','Create account and send verification link');create.type='submit';
+const signupDisclosure=E('p','Check your email for the one-use verification link, then sign in. Only required account emails are sent. No marketing. Your lessons are saved to your account only after the server confirms a save.');
 signup.append(nameLabel,newEmailLabel,newPassLabel,create,signupDisclosure);
-signInBar.append(heading,blurb,buttons,signup,login,status);
+const securityForm=E('form',undefined,'v1940-login');securityForm.hidden=true;
+const securityEmailLabel=E('label','Student email'),securityEmail=E('input');securityEmail.type='email';securityEmail.required=true;securityEmail.autocomplete='email';securityEmailLabel.append(securityEmail);
+const securitySend=E('button','Send password reset link');securitySend.type='submit';
+securityForm.append(securityEmailLabel,securitySend);
+const resetForm=E('form',undefined,'v1940-login');resetForm.hidden=true;
+const resetLabel=E('label','New password (12–128 characters)'),resetPassword=E('input');resetPassword.type='password';resetPassword.minLength=12;resetPassword.maxLength=128;resetPassword.required=true;resetPassword.autocomplete='new-password';resetLabel.append(resetPassword);
+const resetSave=E('button','Reset password');resetSave.type='submit';resetForm.append(resetLabel,resetSave);
+let resetToken=null;
+signInBar.append(heading,blurb,buttons,signup,login,securityForm,resetForm,status,restoreFile);
 const authHeaders=()=>({'Authorization':'Bearer '+token,'Content-Type':'application/json'});
 async function parse(resp){try{return await resp.json()}catch{return{ok:false,error:'Unable to read the server response.'}}}
 function labelMessage(message){status.textContent=message}
 function updateBar(){
- createAccount.hidden=!!token||!cloud||!registrationReady;signin.hidden=!!token||!cloud;logout.hidden=!token;
+ createAccount.hidden=!!token||!cloud||!registrationReady;signin.hidden=!!token||!cloud;resend.hidden=!!token||!registrationReady;forgot.hidden=!!token||!registrationReady;logout.hidden=!token;logoutAll.hidden=!token;cloudBackup.hidden=!token||!cloud;restoreDevice.hidden=!isHub||!!token;
  consent.hidden=device;disable.hidden=!device;
  if(token&&cloud)labelMessage('Signed in to your student account. Cloud saving is enabled; a saved confirmation will appear after each successful server save. Teacher review requires an assigned teacher.');
  else if(device)labelMessage('DEVICE-ONLY DRAFTS — not backed up to your account or other devices. Create an account and sign in for reliable cloud saving when available.');
@@ -61,25 +75,137 @@ async function verifyToken(){
  }catch{token=null;me=null;safeSession('clear');labelMessage('Please sign in again for cloud saving.')}
  updateBar();
 }
-signin.addEventListener('click',()=>{signup.hidden=true;login.hidden=!login.hidden;if(!login.hidden)email.focus()});
-createAccount.addEventListener('click',()=>{login.hidden=true;signup.hidden=!signup.hidden;if(!signup.hidden)fullName.focus()});
+signin.addEventListener('click',()=>{signup.hidden=true;securityForm.hidden=true;login.hidden=!login.hidden;if(!login.hidden)email.focus()});
+createAccount.addEventListener('click',()=>{login.hidden=true;securityForm.hidden=true;signup.hidden=!signup.hidden;if(!signup.hidden)fullName.focus()});
 signup.addEventListener('submit',async event=>{
  event.preventDefault();if(!cloud||!registrationReady){labelMessage('Account creation is currently unavailable. Your work is NOT backed up online.');return;}
  if(newPass.value.length<12){labelMessage('Choose a password of at least 12 characters.');return;}
  create.disabled=true;labelMessage('Creating your secure student account…');
  try{
-  const r=await fetch('/api/v119/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:newEmail.value.trim(),password:newPass.value,full_name:fullName.value.trim(),role:'student'})});
+  const r=await fetch('/api/v1940/student/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:newEmail.value.trim(),password:newPass.value,full_name:fullName.value.trim(),role:'student'})});
   const j=await parse(r);
-  if(!r.ok||!j.token||j.user?.role!=='student')throw Error(j.error||'Account registration is not currently available.');
-  token=j.token;me=j.user;safeSession('set',token);
+  if(!r.ok||!j.verification_required)throw Error(j.error||'Account registration unavailable.');
   signup.reset();signup.hidden=true;updateBar();
-  labelMessage('Account created and signed in. Your answers will be backed up only when you see a successful Saved to your account confirmation.');
-  for(const l of lessons.values())await l.load();
-  if(isHub)await populateHub();
+  labelMessage('Check your email for a verification link, then sign in. No lesson is backed up until a cloud save is confirmed.');
  }catch(e){labelMessage('ACCOUNT NOT CREATED: '+e.message+'. Do not assume your work is backed up.');}
  finally{create.disabled=false;newPass.value='';}
 });
-logout.addEventListener('click',()=>{token=null;me=null;safeSession('clear');updateBar();for(const l of lessons.values())l.message('Signed out. Unsaved edits cannot reach your cloud account.')});
+logout.addEventListener('click',async()=>{
+ if(!token)return;
+ const previous=token;
+ logout.disabled=true;
+ // Clear local credentials immediately; then revoke the specific server session.
+ token=null;me=null;safeSession('clear');updateBar();
+ for(const l of lessons.values())l.message('Signed out locally. Unsaved edits cannot reach your account.');
+ try{
+  const r=await fetch('/api/v1940/student/auth/logout',{method:'POST',headers:{Authorization:'Bearer '+previous},cache:'no-store'});
+  const j=await parse(r);
+  labelMessage(r.ok&&j.signed_out&&j.session_revoked?'Signed out securely. This session was revoked on the server.':'Signed out of this browser, but server logout was not confirmed. Avoid using this device until your session expires.');
+ }catch{labelMessage('Signed out of this browser. Server logout could not be confirmed; avoid using a shared device until the session expires.');}
+ finally{logout.disabled=false;}
+});
+// Private, user-initiated download of ALL account saves and teacher feedback.
+// Never auto-download, email, store export contents in web storage, or call a server export "complete" unless confirmed.
+cloudBackup.addEventListener('click',async()=>{
+ if(!token||!cloud){labelMessage('Sign in to your student account to download a cloud backup.');return;}
+ if(!confirm('Download a private JSON backup of your saved lessons, submitted work and teacher feedback to this device? Keep the file secure. No email will be sent.'))return;
+ cloudBackup.disabled=true;
+ try{
+  const r=await fetch('/api/v1940/account/export',{headers:authHeaders(),cache:'no-store'});
+  const j=await parse(r);
+  if(!r.ok||j.ok!==true||j.complete!==true||!Array.isArray(j.saved_lessons)||!Array.isArray(j.submissions))
+   throw Error(j.error||'Server did not confirm a complete account backup.');
+  const blob=new Blob([JSON.stringify(j,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=E('a');
+  a.href=url;a.download='englishlegalese-cloud-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+  labelMessage('Complete account backup downloaded to this device: '+j.saved_lessons.length+' lessons and '+j.submissions.length+' submissions. Keep the private file secure. No email was sent.');
+ }catch(e){labelMessage('ACCOUNT BACKUP NOT DOWNLOADED: '+e.message+' Your cloud work remains unchanged.');}
+ finally{cloudBackup.disabled=false;}
+});
+// HF15.6: explicit device-only backup recovery. No upload, email, account merge, or overwrite.
+// Keep all existing local drafts, refuse malformed/oversized files before touching storage.
+const RESTORE_KEY=/^(?:workbook:[a-z0-9-]{3,65}|page:[a-z0-9-]{3,100})$/;
+const RESTORE_PATH=/^\/learn\/[a-z0-9/-]{2,150}\/?$/;
+function parseRestorableBackup(raw){
+ if(!raw||typeof raw!=='object'||Array.isArray(raw))throw Error('Invalid EnglishLegalese backup file.');
+ let items;
+ if(raw.format==='EnglishLegalese student cloud backup'){
+  if(raw.schema_version!==1||raw.complete!==true||!Array.isArray(raw.saved_lessons)||!Array.isArray(raw.submissions)||raw.saved_lessons.length>200)
+   throw Error('A confirmed complete V13 cloud backup is required.');
+  items=raw.saved_lessons.map(x=>({key:x?.lesson_key,title:x?.lesson_title,path:x?.origin_path,answers:x?.answers,updated_at:x?.updated_at}));
+ }else if(raw.format==='EnglishLegalese HF13 self-paced lesson backup'){
+  items=[{key:raw.lesson,title:raw.title,path:raw.path,answers:raw.answers,updated_at:raw.exported_at}];
+ }else throw Error('Unrecognized EnglishLegalese lesson-backup format.');
+ const seen=new Set();
+ return items.map(x=>{
+  if(typeof x.key!=='string'||!RESTORE_KEY.test(x.key)||seen.has(x.key))throw Error('Backup contains invalid or duplicate lesson identifiers.');
+  seen.add(x.key);
+  if(typeof x.path!=='string'||!RESTORE_PATH.test(x.path)||x.path.includes('//')||typeof x.title!=='string'||!x.title.trim()||x.title.length>150)
+   throw Error('Backup contains invalid lesson titles or paths.');
+  const a=x.answers;
+  if(!a||typeof a!=='object'||Array.isArray(a)||!Array.isArray(a.fields)||a.fields.length>500)
+   throw Error('Backup has invalid lesson answers.');
+  const fields=a.fields.map(v=>{
+   if(!v||!Number.isSafeInteger(v.i)||v.i<0||v.i>500||!['INPUT','TEXTAREA','SELECT'].includes(v.t)||typeof v.kind!=='string'||v.kind.length>32||typeof v.name!=='string'||v.name.length>160||!(typeof v.value==='string'||typeof v.value==='boolean')||String(v.value).length>10000)
+    throw Error('Backup has unsupported response fields.');
+   return {i:v.i,t:v.t,kind:v.kind,name:v.name,value:v.value};
+  });
+  const flags={};for(const flag of ['roundTwo','modelOpen','openDetails','reviewedStages','evidenceReviewed']){
+   if(a[flag]!==undefined){if(!Array.isArray(a[flag])||a[flag].length>500||a[flag].some(v=>typeof v!=='boolean'))throw Error('Backup contains invalid lesson-state flags.');flags[flag]=a[flag];}
+  }
+  const answers={fields,...flags};
+  const stamp=typeof x.updated_at==='string'&&!Number.isNaN(Date.parse(x.updated_at))?x.updated_at:new Date().toISOString();
+  const row={key:x.key,title:x.title.trim(),path:x.path,answers,updated_at:stamp};
+  const encoded=JSON.stringify(row);
+  if(encoded.length>65536||new Blob([encoded]).size>65536)throw Error('A lesson exceeds the device-only 64 KB limit.');
+  return {key:row.key,data:encoded};
+ });
+}
+restoreDevice.addEventListener('click',()=>{
+ if(!isHub||token){labelMessage('Sign out before restoring a private backup to this device. No cloud data is changed.');return;}
+ restoreFile.value='';restoreFile.click();
+});
+restoreFile.addEventListener('change',async()=>{
+ const file=restoreFile.files?.[0];if(!file)return;
+ restoreDevice.disabled=true;
+ try{
+  if(token||!isHub)throw Error('Sign out before using a device-only backup.');
+  if(file.size>8*1024*1024)throw Error('Backup files must not exceed 8 MB.');
+  const entries=parseRestorableBackup(JSON.parse(await file.text()));
+  if(!entries.length){labelMessage('This complete backup has no saved lesson drafts to restore. No device data was changed.');return;}
+  if(!confirm('Restore '+entries.length+' lesson draft(s) to this browser ONLY? Existing device drafts will be skipped, never overwritten. Cloud accounts and submitted teacher reviews will not be changed. The backup file is not uploaded.'))return;
+  if(token)throw Error('Account state changed; sign out before importing.');
+  const staged=[],added=[];let skipped=0;
+  try{
+   for(const item of entries){
+    if(localStorage.getItem(PREFIX+item.key)!==null){skipped++;continue;}
+    staged.push(item);
+   }
+   for(const item of staged){localStorage.setItem(PREFIX+item.key,item.data);added.push(item.key);}
+   if(staged.length){localStorage.setItem(CONSENT,'yes');device=true;}
+  }catch(e){for(const key of added){try{localStorage.removeItem(PREFIX+key)}catch{}}
+   throw Error('Device storage is unavailable or full; new imports were rolled back. Existing drafts remain unchanged.');}
+  updateBar();await populateHub();
+  labelMessage('Restored '+added.length+' DEVICE-ONLY drafts; skipped '+skipped+' existing drafts. NOT saved to any account. Submitted work and teacher feedback remain in your original backup file, not imported. No email or upload occurred.');
+ }catch(e){labelMessage('BACKUP NOT RESTORED: '+e.message+' Existing device and cloud work were not intentionally replaced.');}
+ finally{restoreDevice.disabled=false;restoreFile.value='';}
+});
+logoutAll.addEventListener('click',async()=>{
+ if(!token)return;
+ if(!confirm('Sign out your account on every device? Your saved lessons and teacher submissions will remain stored.'))return;
+ const previous=token;logoutAll.disabled=true;
+ try{
+  const r=await fetch('/api/v1940/student/auth/logout-everywhere',{method:'POST',headers:{Authorization:'Bearer '+previous},cache:'no-store'});
+  const j=await parse(r);
+  if(!r.ok||j.signed_out_everywhere!==true)throw Error(j.error||'All-device sign out was not confirmed.');
+  token=null;me=null;safeSession('clear');updateBar();
+  for(const lesson of lessons.values())lesson.message('Signed out on all devices. Account-saved lessons remain available after a new sign-in.');
+  labelMessage('Signed out on all devices. Your existing cloud-saved lessons are preserved. Sign in again when ready.');
+ }catch(e){labelMessage('All-device sign out not confirmed: '+e.message+' Use local Sign out to clear this browser.');}
+ finally{logoutAll.disabled=false;}
+});
 consent.addEventListener('click',()=>{device=true;safeLocal('set',CONSENT,'yes');updateBar()});
 disable.addEventListener('click',()=>{
  if(!confirm('Remove all HF13 draft copies saved on this browser? Cloud account copies are not deleted.'))return;
@@ -89,15 +215,43 @@ disable.addEventListener('click',()=>{
 login.addEventListener('submit',async ev=>{
  ev.preventDefault();go.disabled=true;labelMessage('Checking secure account sign-in…');
  try{
-  const r=await fetch('/api/v119/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:pass.value})});
+  const r=await fetch('/api/v1940/student/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:pass.value})});
   const j=await parse(r);
-  if(!r.ok||!j.token||j.user?.role!=='student')throw Error(j.error||'Student login unavailable.');
+  if(!r.ok||!j.token||j.user?.role!=='student'||j.email_verified!==true)throw Error(j.error||'Email not verified or student login unavailable.');
   token=j.token;me=j.user;safeSession('set',token);pass.value='';login.hidden=true;signup.hidden=true;updateBar();
   for(const l of lessons.values())await l.load();
   if(isHub)await populateHub();
  }catch(e){labelMessage('Cloud login was not completed: '+e.message+' Existing work remains on this page.')}
  finally{go.disabled=false;pass.value='';}
 });
+const securityPost=(path,body)=>fetch('/api/v1940/student/auth/'+path,{method:'POST',headers:{'Content-Type':'application/json'},cache:'no-store',body:JSON.stringify(body)});
+resend.addEventListener('click',async()=>{
+ const address=prompt('Student email address for verification:');if(address===null)return;
+ resend.disabled=true;try{const r=await securityPost('resend-verification',{email:address}),j=await parse(r);labelMessage(j.message||j.error||'Please retry.');}catch{labelMessage('Verification request unavailable.');}finally{resend.disabled=false;}
+});
+forgot.addEventListener('click',()=>{login.hidden=true;signup.hidden=true;securityForm.hidden=!securityForm.hidden;if(!securityForm.hidden)securityEmail.focus()});
+securityForm.addEventListener('submit',async e=>{
+ e.preventDefault();securitySend.disabled=true;
+ try{const r=await securityPost('request-password-reset',{email:securityEmail.value}),j=await parse(r);labelMessage(j.message||j.error||'Reset request unavailable.');if(r.ok){securityForm.reset();securityForm.hidden=true;}}
+ catch{labelMessage('Reset request unavailable.');}finally{securitySend.disabled=false;}
+});
+resetForm.addEventListener('submit',async e=>{
+ e.preventDefault();if(!resetToken)return;
+ resetSave.disabled=true;
+ try{const r=await securityPost('reset-password',{token:resetToken,new_password:resetPassword.value}),j=await parse(r);
+  if(!r.ok)throw Error(j.error||'Expired reset link.');
+  resetToken=null;resetForm.hidden=true;resetForm.reset();token=null;me=null;safeSession('clear');updateBar();
+  labelMessage('Password changed and old sessions signed out. Please sign in again.');
+ }catch(err){labelMessage('Password reset failed: '+err.message);}finally{resetSave.disabled=false;resetPassword.value='';}
+});
+async function redeemAccountLink(){
+ const m=/^#(verify|reset)=([a-f0-9]{64})$/.exec(location.hash);if(!m)return;
+ history.replaceState(null,'',location.pathname+location.search);
+ if(m[1]==='reset'){resetToken=m[2];resetForm.hidden=false;signup.hidden=true;login.hidden=true;labelMessage('Choose a new password. This one-use link expires after 15 minutes.');return;}
+ try{const r=await securityPost('verify',{token:m[2]}),j=await parse(r);
+  labelMessage(r.ok?'Email verified. Please sign in.':j.error||'Verification failed. Request a new link.');}
+ catch{labelMessage('Verification unavailable. Request a fresh link.');}
+}
 function fields(root){return [...root.querySelectorAll('input,textarea,select')].filter(n=>!n.closest('.v1940-account,.v1940-controls')&&!['password','email','file','hidden','submit','button','reset'].includes(n.type)&&!n.disabled)}
 function snapshot(root){
  const arr=fields(root);
@@ -143,6 +297,9 @@ function buildLesson(key,title,root,showInHub=false){
  for(const b of [save,pause,resume,submit,feedbackBtn,exportBtn]){b.type='button';btn.append(b)}
  controls.append(label,state,btn);root.prepend(controls);
  let revision=0,busy=false,timer=null,restoring=false,latest=null,submitted=false;
+ let loadConflict=false; // An interrupted cloud restore must not write with an unknown revision.
+ // Every user edit increments this even while a remote save is running.
+ let editVersion=0;
  const l={key,title,root,controls,message:m=>state.textContent=m};
  lessons.set(key,l);
  function storageKey(){return PREFIX+key}
@@ -156,6 +313,7 @@ function buildLesson(key,title,root,showInHub=false){
  async function load(){
   if(busy)return;
   busy=true;
+  const loadVersion=editVersion;
   try{
    let saved=null;
    if(token&&cloud){
@@ -166,6 +324,9 @@ function buildLesson(key,title,root,showInHub=false){
     // Never auto-import potentially different users' shared-device drafts into a signed-in account.
    }else if(device){try{saved=JSON.parse(safeLocal('get',storageKey())||'null')}catch{}}
    if(!saved){l.message('No previous saved answer found for this lesson.');return}
+   // A cloud read is not allowed to overwrite fields edited while the GET was in flight.
+   if(editVersion!==loadVersion){loadConflict=true;clearTimeout(timer);l.message('Cloud resume cancelled because you edited while it loaded. Your typed responses remain on this page, but they are NOT SAVED. Export a backup before reloading the latest cloud version.');return;}
+   loadConflict=false;
    restoring=true;restore(root,saved.answers);restoring=false;
    if(root.closest('.v1870-workbook')){const toggle=root.closest('.v1870-workbook').querySelector('.v1870-toggle input');if(toggle)toggle.checked=true}
    if(new URLSearchParams(location.search).get('resume')===key){root.scrollIntoView({block:'start',behavior:'instant'});}
@@ -173,9 +334,12 @@ function buildLesson(key,title,root,showInHub=false){
   }finally{restoring=false;busy=false}
  }
  async function write({pauseRequested=false}={}){
-  if(busy)return false;
+  if(loadConflict){state.textContent='NOT SAVED: Cloud resume was interrupted by typing. Export a backup before refreshing or resuming to avoid overwriting another device. No automatic cloud write was attempted.';return false;}
+  if(busy){state.textContent='A save is still in progress. Keep this lesson open until the latest changes are confirmed.';return false;}
   busy=true;clearTimeout(timer);
   state.textContent='Saving…';
+  const capturedVersion=editVersion;
+  const saveSession=token;
   const answers=snapshot(root);
   let success=false;
   try{
@@ -191,12 +355,24 @@ function buildLesson(key,title,root,showInHub=false){
     state.textContent=(pauseRequested?'Paused. ':'')+'Saved on this device ONLY at '+new Date().toLocaleTimeString()+'. NOT saved to your account; no cross-device sync or teacher submission.';
    }else throw Error('Sign in for cloud saving or explicitly enable this-device saving. Your current answers are still on this page.');
   }catch(e){state.textContent='NOT SAVED: '+e.message+'. Keep the lesson open or export a backup.'}
-  finally{busy=false}
-  return success;
+  finally{
+   busy=false;
+   // A completed request only confirms the snapshot captured before that request.
+   // Never declare in-flight edits saved or submit that older snapshot for review.
+   if(success&&editVersion!==capturedVersion){
+    state.textContent='Newer edits are NOT SAVED yet — saving them next. Keep this lesson open.';
+    clearTimeout(timer);
+    if(token===saveSession&&((token&&cloud)||device))timer=setTimeout(()=>{write()},1250);
+   }
+  }
+  return success&&editVersion===capturedVersion;
  }
  function schedule(){
-  if(restoring||busy)return;
-  if(!token&&!device)return;
+  if(restoring)return;
+  editVersion++;
+  if(!token&&!device){state.textContent='Not saved yet. Changes are NOT SAVED. Sign in or enable saving on this device.';return;}
+  if(loadConflict){state.textContent='NOT SAVED: cloud resume was interrupted. Export a backup; automatic cloud saves are blocked until you reload the latest version.';return;}
+  if(busy){state.textContent='New edits made during a save are NOT SAVED yet. Another save will follow.';return;}
   clearTimeout(timer);state.textContent='Unsaved changes — autosaving shortly…';
   timer=setTimeout(()=>{write()},1250);
  }
@@ -273,7 +449,7 @@ function mount(){
  const main=document.querySelector('main');if(!main)return;
  main.prepend(signInBar);
  discover();
- checkCloud().then(async()=>{await verifyToken();
+ checkCloud().then(async()=>{await redeemAccountLink();await verifyToken();
   for(const l of lessons.values())if((token&&cloud)||device)await l.load();
   if(isHub)await populateHub();
  });

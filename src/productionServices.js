@@ -55,6 +55,10 @@ function verifyPassword(password, stored) {
   return crypto.timingSafeEqual(Buffer.from(actual, 'hex'), Buffer.from(expected, 'hex'));
 }
 
+function sessionDigest(jti) {
+  if(!/^[a-f0-9]{48}$/.test(String(jti||'')))return null;
+  return crypto.createHash('sha256').update('EL-STUDENT-SESSION:'+jti).digest('hex');
+}
 function signToken(payload) {
   const secret = process.env.SESSION_SECRET || process.env.JWT_SECRET;
   if(!secret||secret.length<32)throw new Error('Secure session secret is required.');
@@ -141,7 +145,7 @@ class ProductionServices {
     return { user: publicUser(user), token: signToken({ sub: user.id, email, role }) };
   }
 
-  async loginUser({ email, password }, req = null) {
+  async loginUser({ email, password, expected_role = null, require_verified_student = false }, req = null) {
     email = String(email || '').trim().toLowerCase();
     let user, cred;
     if (this.mode() === 'postgres') {
@@ -156,14 +160,23 @@ class ProductionServices {
       cred = user ? store.password_credentials.find(c => c.user_id === user.id) : null;
     }
     if (!user || !cred || !verifyPassword(password, cred.password_hash)) throw new Error('Invalid login.');
-    const token = signToken({ sub: user.id, email: user.email, role: user.role });
-    await this.storeSession(user, token, req);
+    // Do not create an authentication session when an HF15 student/teacher login is rejected.
+    if (expected_role && user.role !== expected_role) throw new Error('Invalid login.');
+    if (require_verified_student) {
+      if (user.role !== 'student' || user.status !== 'active' || this.mode() !== 'postgres') throw new Error('Invalid login.');
+      const proof = await this.query("SELECT (coalesce(metadata->>'email_verified','false')='true' OR EXISTS (SELECT 1 FROM ai_trial_email_verifications WHERE user_id=$1 AND verified_at IS NOT NULL)) AS verified FROM users WHERE id=$1",[user.id]);
+      if (proof.rows[0]?.verified !== true) throw new Error('Email verification required.');
+    }
+    const jti = crypto.randomBytes(24).toString('hex');
+    const token = signToken({ sub: user.id, email: user.email, role: user.role, session_nonce: user.metadata?.session_version || null, jti });
+    await this.storeSession(user, token, req, jti);
     await this.audit('auth.user_logged_in', { user_id: user.id, actor_email: email, role: user.role, entity_type: 'user', entity_id: user.id }, req);
     return { user: publicUser(user), token };
   }
 
-  async storeSession(user, token, req) {
-    const session = { id: id('EL-SESS'), user_id: user.id, token_preview: token.slice(0, 18), ip_address: req?.ip || null, user_agent: req?.get?.('user-agent') || null, created_at: nowIso(), expires_at: new Date(Date.now() + Number(process.env.SESSION_TTL_SECONDS || 604800)*1000).toISOString() };
+  async storeSession(user, token, req, jti = null) {
+    // A digest (not a reversible bearer-token preview) identifies revocable HF15+ sessions.
+    const session = { id: id('EL-SESS'), user_id: user.id, token_preview: sessionDigest(jti) || token.slice(0, 18), ip_address: req?.ip || null, user_agent: req?.get?.('user-agent') || null, created_at: nowIso(), expires_at: new Date(Date.now() + Number(process.env.SESSION_TTL_SECONDS || 604800)*1000).toISOString() };
     if (this.mode() === 'postgres') await this.query('insert into user_sessions (id,user_id,token_preview,ip_address,user_agent,created_at,expires_at) values ($1,$2,$3,$4,$5,$6,$7)', [session.id, session.user_id, session.token_preview, session.ip_address, session.user_agent, session.created_at, session.expires_at]);
     else { const store = getLocalStore(); store.user_sessions.push(session); setLocalStore(store); }
   }
@@ -407,7 +420,24 @@ function authMiddleware(services) {
     const payload = verifyToken(token);
     if (!payload) return res.status(401).json({ ok: false, error: 'Authentication required.' });
     const user = await services.getUserById(payload.sub);
-    if (!user) return res.status(401).json({ ok: false, error: 'User not found.' });
+    if (!user || user.status !== 'active') return res.status(401).json({ ok: false, error: 'Account unavailable.' });
+    // Reject all earlier signed bearer tokens after a successful password reset.
+    if (services.mode() === 'postgres') {
+      try {
+        const current = await services.query("SELECT metadata->>'session_version' AS nonce FROM users WHERE id=$1", [payload.sub]);
+        if ((current.rows[0]?.nonce || null) !== (payload.session_nonce || null))
+          return res.status(401).json({ ok:false, error:'Session expired. Please sign in again.' });
+      } catch { return res.status(503).json({ok:false,error:'Account security check unavailable.'}); }
+    }
+    if(payload.jti){
+      const key=sessionDigest(payload.jti);
+      if(!key || services.mode() !== 'postgres')return res.status(401).json({ok:false,error:'Invalid account session.'});
+      try{
+        const active=await services.query("SELECT 1 FROM user_sessions WHERE user_id=$1 AND token_preview=$2 AND revoked_at IS NULL AND expires_at>now() LIMIT 1",[user.id,key]);
+        if(active.rows.length!==1)return res.status(401).json({ok:false,error:'Session expired or signed out. Please sign in again.'});
+      }catch{return res.status(503).json({ok:false,error:'Session security temporarily unavailable.'});}
+      req.authSessionKey=key;
+    }
     req.user = user;
     next();
   };
@@ -419,4 +449,4 @@ function requireRoles(...roles) {
   };
 }
 
-module.exports = { ProductionServices, authMiddleware, requireRoles, verifyToken, configured, ROLE_PERMISSIONS, ROLES, SERVICE_DATA_PATH };
+module.exports = { ProductionServices, authMiddleware, requireRoles, verifyToken, passwordHash, sessionDigest, configured, ROLE_PERMISSIONS, ROLES, SERVICE_DATA_PATH };

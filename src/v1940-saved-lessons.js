@@ -1,6 +1,6 @@
 'use strict';
 /* HF13 — account-owned durable lessons, safe optimistic updates, teacher-linked submissions.
-   Never send emails or notifications, create accounts, activate payment or use development JSON in production. */
+   HF15 permits only explicit, verified transactional account email; no marketing or speculative class notifications. Never activate payments or use development JSON in production. */
 const KEY=/^(?:workbook:[a-z0-9-]{3,65}|page:[a-z0-9-]{3,100})$/;
 const PATH=/^\/learn\/[a-z0-9/-]{2,150}\/?$/;
 const LIMIT=65536;
@@ -14,25 +14,101 @@ function validate(input){
  if(Buffer.byteLength(json,'utf8')>LIMIT)return{error:'Saved answers exceed the 64 KB per-lesson limit. Export a backup first.'};
  return{key,title,path,json,revision:input.expected_revision};
 }
-function install(app,{store,services,authMiddleware,requireRoles,configured,accountLoginReady=()=>false,accountRegistrationReady=async()=>false}){
+function install(app,{store,services,authMiddleware,requireRoles,configured,authAbuse}){
  const auth=authMiddleware(services);
  const strict=(req,res,next)=>{
   const bearer=req.get('authorization')||'';
   if(!/^Bearer [^\s]+$/.test(bearer))return res.status(401).json({ok:false,error:'Sign in to save securely.'});
-  return auth(req,res,next);
+  return auth(req,res,async()=>{
+   // All private lesson and teacher-review requests require revocable, stored sessions.
+   // Legacy register-issued tokens have no database session and cannot access private work.
+   if(!req.authSessionKey)return res.status(401).json({ok:false,error:'Sign in again to enable secure session-backed saving.'});
+   // Enforce verified email identity at the actual private lesson data boundary too.
+   if(req.user?.role==='student'){
+    try{if(!await identity.verified(req.user.id))return res.status(403).json({ok:false,verification_required:true,error:'Verify your student email before accessing cloud lessons.'});}
+    catch{return res.status(503).json({ok:false,error:'Account verification could not be confirmed.'});}
+   }
+   next();
+  });
  };
  const privateCache=(_req,res,next)=>{res.set('Cache-Control','no-store');res.set('X-Content-Type-Options','nosniff');next()};
  const connected=async()=>{
   if(store.mode()!=='postgres'||!store.pool||!configured().auth_secret)return false;
-  try{const q=await store.pool.query("select to_regclass('public.self_paced_lesson_work') is not null as work, to_regclass('public.self_paced_lesson_submissions') is not null as submits");return!!(q.rows[0]?.work&&q.rows[0]?.submits);}
+  try{const q=await store.pool.query("select to_regclass('public.self_paced_lesson_work') is not null as work, to_regclass('public.self_paced_lesson_submissions') is not null as submits, to_regclass('public.users') is not null as users, to_regclass('public.password_credentials') is not null as creds, to_regclass('public.user_sessions') is not null as sessions");return!!(q.rows[0]?.work&&q.rows[0]?.submits&&q.rows[0]?.users&&q.rows[0]?.creds&&q.rows[0]?.sessions);}
   catch{return false;}
  };
  async function ready(req,res,next){if(!await connected())return res.status(503).json({ok:false,error:'Secure cloud saving requires a verified PostgreSQL connection, active account security and an applied migration.'});next()}
  app.use('/api/v1940/',privateCache);
+ const identity=require('./v1950-student-account-identity').install(app,{store,services,authAbuse});
+ app.post('/api/v1940/student/auth/login',authAbuse.login,ready,async(req,res)=>{
+  try{
+   const account=await services.loginUser({email:req.body?.email,password:req.body?.password,expected_role:'student',require_verified_student:true},req);
+   if(account.user?.role!=='student')return res.status(403).json({ok:false,error:'Use a student account to access saved lessons.'});
+   if(!await identity.verified(account.user.id))return res.status(403).json({ok:false,verification_required:true,error:'Please verify your email address before signing in. Use resend verification if needed.'});
+   return res.json({ok:true,token:account.token,user:account.user,email_verified:true});
+  }catch(e){return /Email verification required/.test(String(e?.message||''))?res.status(403).json({ok:false,verification_required:true,error:'Please verify your email address before signing in. Use resend verification if needed.'}):res.status(401).json({ok:false,error:'Invalid sign-in details.'});}
+ });
+ app.post('/api/v1940/teacher/auth/login',authAbuse.login,ready,async(req,res)=>{
+  try{
+   const account=await services.loginUser({email:req.body?.email,password:req.body?.password,expected_role:'teacher'},req);
+   if(account.user?.role!=='teacher')return res.status(403).json({ok:false,error:'An approved teacher account is required.'});
+   return res.json({ok:true,token:account.token,user:account.user,no_email_sent:true});
+  }catch{return res.status(401).json({ok:false,error:'Invalid sign-in details.'});}
+ });
+ const logout=async(req,res)=>{
+  try{
+   const q=await store.pool.query("UPDATE user_sessions SET revoked_at=now() WHERE user_id=$1 AND token_preview=$2 AND revoked_at IS NULL RETURNING id",[req.user.id,req.authSessionKey]);
+   return res.json({ok:true,signed_out:true,session_revoked:q.rows.length>0});
+  }catch{return res.status(503).json({ok:false,error:'Server logout could not be confirmed. Clear your local session and try again.'});}
+ };
+ app.post('/api/v1940/student/auth/logout',ready,strict,requireRoles('student'),logout);
+ app.post('/api/v1940/teacher/auth/logout',ready,strict,requireRoles('teacher'),logout);
+ // Student and teacher account security control. An all-device signout rotates
+ // the session version AND revokes all persisted sessions atomically.
+ // It does not erase homework, saved lessons or teacher reviews.
+ const logoutEverywhere=async(req,res)=>{
+  const client=await store.pool.connect();
+  try{
+   await client.query('BEGIN');
+   const account=await client.query("SELECT role,status FROM users WHERE id=$1 FOR UPDATE",[req.user.id]);
+   if(account.rows[0]?.status!=='active'||account.rows[0]?.role!==req.user.role)throw Error('Account unavailable');
+   const nonce=require('node:crypto').randomBytes(24).toString('hex');
+   await client.query("UPDATE users SET metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{session_version}',to_jsonb($2::text),true),updated_at=now() WHERE id=$1",[req.user.id,nonce]);
+   await client.query("UPDATE user_sessions SET revoked_at=now() WHERE user_id=$1 AND revoked_at IS NULL",[req.user.id]);
+   await client.query('COMMIT');
+   return res.json({ok:true,signed_out_everywhere:true,lessons_preserved:true});
+  }catch{
+   await client.query('ROLLBACK').catch(()=>{});
+   return res.status(503).json({ok:false,error:'All-device sign out could not be confirmed. Your local session can still be cleared.'});
+  }finally{client.release();}
+ };
+ app.post('/api/v1940/student/auth/logout-everywhere',ready,strict,requireRoles('student'),logoutEverywhere);
+ app.post('/api/v1940/teacher/auth/logout-everywhere',ready,strict,requireRoles('teacher'),logoutEverywhere);
  app.get('/api/v1940/lessons/capabilities',async(req,res)=>{
-  const available=await connected()&&Boolean(accountLoginReady());
-  const registration=available&&Boolean(await accountRegistrationReady().catch(()=>false));
-  res.json({ok:true,account_saving_available:available,account_registration_available:registration,requires_login:true,no_outbound_email:true,teacher_delivery_requires_linked_teacher:true,device_drafts_optional:true});
+  const available=await connected();
+  const registration=available&&await identity.ready();
+  res.json({ok:true,account_saving_available:available,account_registration_available:registration,requires_login:true,verified_email_required:true,transactional_email_available:registration,marketing_email_enabled:false,teacher_delivery_requires_linked_teacher:true,device_drafts_optional:true});
+ });
+ // Student-initiated, authenticated FULL cloud backup. Never email or sync its content.
+ // Explicitly refuse oversized accounts instead of silently returning incomplete exports.
+ app.get('/api/v1940/account/export',ready,strict,requireRoles('student'),async(req,res)=>{
+  try{
+   const [work,submissions]=await Promise.all([
+    store.pool.query('SELECT lesson_key,lesson_title,origin_path,answers,status,revision,updated_at,submitted_at FROM self_paced_lesson_work WHERE user_id=$1 ORDER BY updated_at DESC LIMIT 201',[req.user.id]),
+    store.pool.query('SELECT id,lesson_key,lesson_title,revision,answers,review_status,created_at,teacher_feedback,reviewed_at FROM self_paced_lesson_submissions WHERE user_id=$1 ORDER BY created_at DESC LIMIT 201',[req.user.id])
+   ]);
+   if(work.rows.length>200||submissions.rows.length>200){
+    return res.status(413).json({ok:false,code:'ACCOUNT_BACKUP_LIMIT',error:'This account has more than 200 saved lessons or submissions. A complete one-file backup is unavailable; use lesson-by-lesson exports. No partial backup was produced.'});
+   }
+   const payload={ok:true,format:'EnglishLegalese student cloud backup',schema_version:1,exported_at:new Date().toISOString(),complete:true,
+    saved_lessons:work.rows,submissions:submissions.rows,privacy:'Private export requested by the signed-in student. Store this file securely. It may contain lesson responses and teacher feedback. No email is sent.'};
+   if(Buffer.byteLength(JSON.stringify(payload),'utf8')>8*1024*1024){
+    return res.status(413).json({ok:false,code:'ACCOUNT_BACKUP_TOO_LARGE',error:'Your complete backup exceeds 8 MB. No partial backup was produced. Export lessons individually.'});
+   }
+   res.set('Cache-Control','no-store, private');
+   res.set('X-Content-Type-Options','nosniff');
+   return res.json(payload);
+  }catch{return res.status(503).json({ok:false,error:'Your account backup could not be created. Your cloud work remains unchanged. Try again later.'});}
  });
  app.get('/api/v1940/lessons',ready,strict,async(req,res)=>{
   try{const q=await store.pool.query('select lesson_key,lesson_title,origin_path,status,revision,updated_at,submitted_at from self_paced_lesson_work where user_id=$1 order by updated_at desc limit 100',[req.user.id]);res.json({ok:true,lessons:q.rows});}
