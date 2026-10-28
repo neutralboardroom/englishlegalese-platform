@@ -96,6 +96,7 @@ logout.addEventListener('click',async()=>{
  logout.disabled=true;
  // Clear local credentials immediately; then revoke the specific server session.
  token=null;me=null;safeSession('clear');updateBar();
+ if(isHub)populateHub();
  for(const l of lessons.values())l.message('Signed out locally. Unsaved edits cannot reach your account.');
  try{
   const r=await fetch('/api/v1940/student/auth/logout',{method:'POST',headers:{Authorization:'Bearer '+previous},cache:'no-store'});
@@ -201,6 +202,7 @@ logoutAll.addEventListener('click',async()=>{
   const j=await parse(r);
   if(!r.ok||j.signed_out_everywhere!==true)throw Error(j.error||'All-device sign out was not confirmed.');
   token=null;me=null;safeSession('clear');updateBar();
+  if(isHub)populateHub();
   for(const lesson of lessons.values())lesson.message('Signed out on all devices. Account-saved lessons remain available after a new sign-in.');
   labelMessage('Signed out on all devices. Your existing cloud-saved lessons are preserved. Sign in again when ready.');
  }catch(e){labelMessage('All-device sign out not confirmed: '+e.message+' Use local Sign out to clear this browser.');}
@@ -421,8 +423,10 @@ function discover(){
   buildLesson('page:'+slug,title,root);
  }
 }
+let hubRequestSequence=0;
 async function populateHub(){
  const host=document.querySelector('[data-el1940-hub]');if(!host)return;
+ const currentSequence=++hubRequestSequence,currentToken=token;
  host.replaceChildren(E('p','Checking your saved lessons…'));
  const rows=[];let loadingError='';
  // Device-only work is intentionally shown only while signed out, never merged
@@ -437,14 +441,16 @@ async function populateHub(){
  if(token&&cloud){
   try{
    const r=await fetch(api,{headers:{Authorization:'Bearer '+token},cache:'no-store'}),j=await parse(r);
+   if(currentSequence!==hubRequestSequence||token!==currentToken)return;
    if(!r.ok||!Array.isArray(j.lessons))throw Error(j.error||'The server did not return a saved lesson list.');
    for(const w of j.lessons)rows.push({key:w.lesson_key,title:w.lesson_title,path:w.origin_path,updated_at:w.updated_at,status:w.status,source:'Cloud account'});
    if(j.lessons.length>=100)loadingError='Showing the 100 most recently updated cloud lessons. Older lessons may not appear here; your account data is not deleted.';
-  }catch(e){loadingError='Your cloud lesson list could not be loaded: '+e.message+' Do not assume that you have no saved lessons.';}
+  }catch(e){if(currentSequence!==hubRequestSequence||token!==currentToken)return;loadingError='Your cloud lesson list could not be loaded: '+e.message+' Do not assume that you have no saved lessons.';}
  }else if(token&&!cloud)loadingError='Account saving is temporarily unavailable. No cloud records have been deleted.';
  // Only allow routes to real learning pages, even for untrusted/corrupt browser storage.
  const valid=rows.filter(w=>typeof w.key==='string'&&/^(?:workbook|page):[a-z0-9-]+$/.test(w.key)&&typeof w.path==='string'&&/^\/learn\/[a-z0-9/-]+\/?$/.test(w.path)&&!w.path.includes('//'));
  valid.sort((x,y)=>(Date.parse(y.updated_at)||0)-(Date.parse(x.updated_at)||0));
+ if(currentSequence!==hubRequestSequence||token!==currentToken)return;
  host.replaceChildren();
  if(loadingError){const note=E('p',loadingError,'v1940-list-warning');note.setAttribute('role','status');host.append(note);}
  if(!valid.length){
