@@ -42,9 +42,9 @@ const paths=[
  'learn/business-resources/investor-earnings/index.html','learn/business-resources/investor-markets/index.html'
 ];
 assert.equal(paths.length,26);
-for(const p of paths){const page=read(p);assert(page.includes('product-v1940-saved-lessons.js?v=1.85.1-hf15-5')&&page.includes('product-v1940-saved-lessons.css?v=1.85.0-hf13'),'Self-paced saving omitted '+p)}
+for(const p of paths){const page=read(p);assert(page.includes('product-v1940-saved-lessons.js?v=1.85.1-hf15-6')&&page.includes('product-v1940-saved-lessons.css?v=1.85.0-hf13'),'Self-paced saving omitted '+p)}
 for(const p of ['learn/my-work/index.html','learn/teacher-submissions/index.html'])assert(read(p).includes('v1940-'),'Missing dashboard '+p);
-assert(read('learn/my-work/index.html').includes('product-v1940-saved-lessons.js?v=1.85.1-hf15-5'),'Account dashboard must load the current script');
+assert(read('learn/my-work/index.html').includes('product-v1940-saved-lessons.js?v=1.85.1-hf15-6'),'Account dashboard must load the current script');
 assert(read('learn/teacher-submissions/index.html').includes('product-v1940-teacher-review.js?v=1.85.1-hf15'),'Teacher dashboard must load the current script');
 assert(read('server.js').includes("require('./src/v1940-saved-lessons').install"),'Backend is not installed');
 assert(read('server.js').includes('authAbuse});'),'Account registration must reuse the original auth rate limiter');
