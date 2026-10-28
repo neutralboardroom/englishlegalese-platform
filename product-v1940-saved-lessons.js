@@ -424,26 +424,64 @@ function discover(){
 async function populateHub(){
  const host=document.querySelector('[data-el1940-hub]');if(!host)return;
  host.replaceChildren(E('p','Checking your saved lessons…'));
- const rows=[];
+ const rows=[];let loadingError='';
+ // Device-only work is intentionally shown only while signed out, never merged
+ // into a different student's cloud account on a shared browser.
  if(device&&!token){
-  for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(!key?.startsWith(PREFIX))continue;
-   try{const w=JSON.parse(safeLocal('get',key));if(w?.path&&w?.key)rows.push({...w,source:'This device'})}catch{}
-  }
+  try{
+   for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(!key?.startsWith(PREFIX))continue;
+    try{const w=JSON.parse(safeLocal('get',key));if(w?.path&&w?.key)rows.push({...w,status:'draft',source:'This device'})}catch{}
+   }
+  }catch{loadingError='Device storage cannot be accessed. Existing drafts may still be in this browser.';}
  }
  if(token&&cloud){
-  try{const r=await fetch(api,{headers:{Authorization:'Bearer '+token},cache:'no-store'}),j=await parse(r);
-   if(r.ok)for(const w of j.lessons||[])rows.push({key:w.lesson_key,title:w.lesson_title,path:w.origin_path,updated_at:w.updated_at,status:w.status,source:'Cloud account'});
-   else host.append(E('p','Cloud list unavailable: '+(j.error||'Please retry.')));
-  }catch{host.append(E('p','Cloud list currently unavailable.'))}
- }
+  try{
+   const r=await fetch(api,{headers:{Authorization:'Bearer '+token},cache:'no-store'}),j=await parse(r);
+   if(!r.ok||!Array.isArray(j.lessons))throw Error(j.error||'The server did not return a saved lesson list.');
+   for(const w of j.lessons)rows.push({key:w.lesson_key,title:w.lesson_title,path:w.origin_path,updated_at:w.updated_at,status:w.status,source:'Cloud account'});
+   if(j.lessons.length>=100)loadingError='Showing the 100 most recently updated cloud lessons. Older lessons may not appear here; your account data is not deleted.';
+  }catch(e){loadingError='Your cloud lesson list could not be loaded: '+e.message+' Do not assume that you have no saved lessons.';}
+ }else if(token&&!cloud)loadingError='Account saving is temporarily unavailable. No cloud records have been deleted.';
+ // Only allow routes to real learning pages, even for untrusted/corrupt browser storage.
+ const valid=rows.filter(w=>typeof w.key==='string'&&/^(?:workbook|page):[a-z0-9-]+$/.test(w.key)&&typeof w.path==='string'&&/^\/learn\/[a-z0-9/-]+\/?$/.test(w.path)&&!w.path.includes('//'));
+ valid.sort((x,y)=>(Date.parse(y.updated_at)||0)-(Date.parse(x.updated_at)||0));
  host.replaceChildren();
- if(!rows.length)host.append(E('p','No saved lessons are available yet. Open a self-paced exercise, enable a saving method, and select Pause & save.'));
- for(const w of rows){
-  const card=E('article',undefined,'v1940-saved-card'),h=E('strong',w.title||w.key),meta=E('p',w.source+' · '+(w.status||'draft')+' · '+new Date(w.updated_at).toLocaleString());
-  const link=E('a','Resume this lesson');
-  link.href=w.path+(w.path.includes('?')?'&':'?')+'resume='+encodeURIComponent(w.key);
-  card.append(h,meta,link);host.append(card);
+ if(loadingError){const note=E('p',loadingError,'v1940-list-warning');note.setAttribute('role','status');host.append(note);}
+ if(!valid.length){
+  if(!loadingError)host.append(E('p','No saved lessons are available yet. Open a self-paced exercise, enable a saving method, and select Pause & save.'));
+  return;
  }
+ const toolbar=E('div',undefined,'v1940-hub-toolbar');
+ const searchLabel=E('label','Search saved lessons');
+ const search=E('input');search.type='search';search.placeholder='Search lesson title';search.setAttribute('aria-label','Search saved lessons');searchLabel.append(search);
+ const statusLabel=E('label','Show lesson status');
+ const choice=E('select');choice.setAttribute('aria-label','Filter saved lessons by status');
+ for(const [value,label] of [['all','All lessons'],['draft','Drafts'],['submitted','Submitted for review']]){
+  const option=E('option',label);option.value=value;choice.append(option);
+ }
+ statusLabel.append(choice);toolbar.append(searchLabel,statusLabel);
+ const summary=E('p',undefined,'v1940-hub-summary');summary.setAttribute('role','status');summary.setAttribute('aria-live','polite');
+ const list=E('div',undefined,'v1940-hub-list');
+ host.append(toolbar,summary,list);
+ function render(){
+  const term=search.value.trim().toLocaleLowerCase(),filter=choice.value;
+  const filtered=valid.filter(w=>(filter==='all'||(filter==='submitted'?w.status==='submitted':w.status!=='submitted'))&&(String(w.title||w.key).toLocaleLowerCase().includes(term)));
+  list.replaceChildren();
+  const drafts=valid.filter(w=>w.status!=='submitted').length,submitted=valid.length-drafts;
+  summary.textContent='Showing '+filtered.length+' of '+valid.length+' saved lessons ('+drafts+' drafts, '+submitted+' submitted). '+(token&&cloud?'Cloud account records only.':'This browser only — not backed up to an account.');
+  if(!filtered.length){list.append(E('p','No lessons match these filters. Your saved work has not been deleted.'));return;}
+  for(const w of filtered){
+   const card=E('article',undefined,'v1940-saved-card'),h=E('strong',String(w.title||w.key).slice(0,160));
+   const time=Date.parse(w.updated_at),when=Number.isFinite(time)?new Date(time).toLocaleString():'Save date unavailable';
+   const meta=E('p',w.source+' · '+(w.status==='submitted'?'submitted':'draft')+' · '+when);
+   const link=E('a','Resume this lesson');
+   link.href=w.path+(w.path.includes('?')?'&':'?')+'resume='+encodeURIComponent(w.key);
+   card.append(h,meta,link);list.append(card);
+  }
+ }
+ search.addEventListener('input',render);
+ choice.addEventListener('change',render);
+ render();
 }
 function mount(){
  const main=document.querySelector('main');if(!main)return;
