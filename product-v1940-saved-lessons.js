@@ -297,6 +297,8 @@ function buildLesson(key,title,root,showInHub=false){
  for(const b of [save,pause,resume,submit,feedbackBtn,exportBtn]){b.type='button';btn.append(b)}
  controls.append(label,state,btn);root.prepend(controls);
  let revision=0,busy=false,timer=null,restoring=false,latest=null,submitted=false;
+ // Every user edit increments this even while a remote save is running.
+ let editVersion=0;
  const l={key,title,root,controls,message:m=>state.textContent=m};
  lessons.set(key,l);
  function storageKey(){return PREFIX+key}
@@ -327,9 +329,11 @@ function buildLesson(key,title,root,showInHub=false){
   }finally{restoring=false;busy=false}
  }
  async function write({pauseRequested=false}={}){
-  if(busy)return false;
+  if(busy){state.textContent='A save is still in progress. Keep this lesson open until the latest changes are confirmed.';return false;}
   busy=true;clearTimeout(timer);
   state.textContent='Saving…';
+  const capturedVersion=editVersion;
+  const saveSession=token;
   const answers=snapshot(root);
   let success=false;
   try{
@@ -345,12 +349,23 @@ function buildLesson(key,title,root,showInHub=false){
     state.textContent=(pauseRequested?'Paused. ':'')+'Saved on this device ONLY at '+new Date().toLocaleTimeString()+'. NOT saved to your account; no cross-device sync or teacher submission.';
    }else throw Error('Sign in for cloud saving or explicitly enable this-device saving. Your current answers are still on this page.');
   }catch(e){state.textContent='NOT SAVED: '+e.message+'. Keep the lesson open or export a backup.'}
-  finally{busy=false}
-  return success;
+  finally{
+   busy=false;
+   // A completed request only confirms the snapshot captured before that request.
+   // Never declare in-flight edits saved or submit that older snapshot for review.
+   if(success&&editVersion!==capturedVersion){
+    state.textContent='Newer edits are NOT SAVED yet — saving them next. Keep this lesson open.';
+    clearTimeout(timer);
+    if(token===saveSession&&((token&&cloud)||device))timer=setTimeout(()=>{write()},1250);
+   }
+  }
+  return success&&editVersion===capturedVersion;
  }
  function schedule(){
-  if(restoring||busy)return;
-  if(!token&&!device)return;
+  if(restoring)return;
+  editVersion++;
+  if(!token&&!device){state.textContent='Changes are NOT SAVED. Sign in or enable saving on this device.';return;}
+  if(busy){state.textContent='New edits made during a save are NOT SAVED yet. Another save will follow.';return;}
   clearTimeout(timer);state.textContent='Unsaved changes — autosaving shortly…';
   timer=setTimeout(()=>{write()},1250);
  }
