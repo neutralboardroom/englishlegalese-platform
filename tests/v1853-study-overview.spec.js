@@ -13,7 +13,7 @@ test('HF17 device-only dashboard offers private next-step and metadata-only stud
  await page.goto('/learn/my-work/');
  const hub=page.locator('[data-el1940-hub]');
  await expect(hub.getByText('Your study overview')).toBeVisible();
- await expect(hub.getByText(/1 drafts to continue/)).toBeVisible();
+ await expect(hub.getByText(/1 draft to continue/)).toBeVisible();
  const next=hub.getByRole('link',{name:'Continue my most recent draft'});
  await expect(next).toHaveAttribute('href',/resume=workbook%3Aclass-01/);
  page.once('dialog',dialog=>dialog.accept());

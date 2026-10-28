@@ -499,7 +499,7 @@ async function populateHub(){
  const studyHeading=E('strong','Your study overview');
  const draftCount=valid.filter(w=>w.status!=='submitted').length;
  const submittedCount=valid.length-draftCount;
- const overview=E('p',draftCount+' drafts to continue · '+submittedCount+' submitted for teacher review. This is activity, not a grade or course-completion certificate.');
+ const overview=E('p',draftCount+' '+(draftCount===1?'draft':'drafts')+' to continue · '+submittedCount+' submitted for teacher review. This is activity, not a grade or course-completion certificate.');
  studyActions.append(studyHeading,overview);
  const nextDraft=valid.find(w=>w.status!=='submitted');
  if(nextDraft){
