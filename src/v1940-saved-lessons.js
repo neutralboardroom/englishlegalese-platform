@@ -115,7 +115,7 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,auth
  // Each page is an independent snapshot; never claim cross-page consistency.
  app.get('/api/v1940/account/export-part',ready,strict,requireRoles('student'),async(req,res)=>{
   const raw=req.query?.offset;
-  if(raw!==undefined&&(typeof raw!=='string'||!/^(0|[1-9]\\d{0,4})$/.test(raw)||Number(raw)>10000||Number(raw)%25!==0))
+  if(raw!==undefined&&(typeof raw!=='string'||!/^(0|[1-9]\d{0,4})$/.test(raw)||Number(raw)>10000||Number(raw)%25!==0))
    return res.status(400).json({ok:false,error:'Invalid account backup part offset.'});
   const offset=raw===undefined?0:Number(raw);
   try{
