@@ -624,6 +624,51 @@ async function populateHub(){
    const link=E('a','Resume this lesson');
    link.href=w.path+(w.path.includes('?')?'&':'?')+'resume='+encodeURIComponent(w.key);
    card.append(h,meta,link);list.append(card);
+   // HF21: student-initiated, authenticated lookup of actual teacher records.
+   // Do not cache feedback on a shared device or invent a review/teacher assignment.
+   if(w.status==='submitted'&&currentToken&&cloud){
+    const review=E('button','Check submission & teacher feedback','v1940-review-button');
+    review.type='button';
+    review.setAttribute('aria-label','Check submission and teacher feedback for '+String(w.title||w.key).slice(0,100));
+    const feedback=E('div',undefined,'v1940-review-result');
+    feedback.setAttribute('role','status');feedback.setAttribute('aria-live','polite');
+    card.append(review,feedback);
+    review.addEventListener('click',async()=>{
+     if(!token||token!==currentToken||hubRequestSequence!==currentSequence){
+      feedback.textContent='Student session has changed. Please sign in again.';return;
+     }
+     review.disabled=true;
+     feedback.replaceChildren(E('p','Checking your latest recorded submission…'));
+     try{
+      const r=await fetch(api+'/'+encodeURIComponent(w.key)+'/submissions',{
+       headers:{Authorization:'Bearer '+currentToken},cache:'no-store'
+      });
+      const j=await parse(r);
+      if(!token||token!==currentToken||hubRequestSequence!==currentSequence||!card.isConnected)return;
+      if(!r.ok||j.ok!==true||!Array.isArray(j.submissions))
+       throw Error(j.error||'Teacher submission history could not be confirmed.');
+      feedback.replaceChildren();
+      const latest=j.submissions[0];
+      if(!latest){
+       feedback.append(E('p','No submission history was returned. The lesson listing may be out of date; reopen the lesson to check its status.'));
+      }else if(latest.review_status==='reviewed'){
+       feedback.append(E('strong','Reviewed by your assigned teacher'));
+       const dated=Date.parse(latest.reviewed_at);
+       if(Number.isFinite(dated))feedback.append(E('p','Review recorded: '+new Date(dated).toLocaleString()));
+       feedback.append(E('p',typeof latest.teacher_feedback==='string'&&latest.teacher_feedback.trim()
+        ?latest.teacher_feedback:'Your teacher marked this submission reviewed, but no written feedback was included.'));
+      }else if(latest.review_status==='awaiting_review'){
+       feedback.append(E('p','Submitted to your assigned teacher; feedback has not been recorded yet. No automatic email was sent.'));
+      }else{
+       feedback.append(E('p','Submission recorded. Teacher assignment or review has not been confirmed. No automatic email was sent.'));
+      }
+     }catch(e){
+      if(!token||token!==currentToken||hubRequestSequence!==currentSequence||!card.isConnected)return;
+      feedback.replaceChildren(E('p','Feedback could not be loaded: '+e.message+' Your submission has not been deleted.'));
+     }finally{review.disabled=false;}
+    });
+   }
+
   }
  }
  previous.addEventListener('click',()=>{if(viewPage>0){viewPage--;render();}});
