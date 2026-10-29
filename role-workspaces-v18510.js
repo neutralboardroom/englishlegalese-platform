@@ -39,73 +39,53 @@ function renderOwner(data){
   const a=E('a',label);a.href=url;a.style.marginRight='1rem';links.append(a);
  }output.append(links);
 }
-function enrollmentTools(organization,people){
- const area=E('section');area.className='v1940-enrollment-tools';
- area.append(E('h2','Request classes for verified employees'));
- area.append(E('p','Select existing employees, a separate Legal English or Business English course, and a lesson package. Requests are reviewed individually; employees must accept their invitations. No payment is charged, no class seat is reserved and no email is sent automatically.'));
- const form=E('form');form.className='v1940-employer-enroll-form';
- const roster=E('fieldset');roster.append(E('legend','Select verified employees'));
- const rosterList=E('div');rosterList.className='v1940-enroll-roster';
- if(!people.length)rosterList.append(E('p','No linked student accounts exist for this organization. Ask the EnglishLegalese team to complete staff-reviewed employee onboarding.'));
- for(const p of people){
-  const label=E('label');const box=E('input');box.type='checkbox';box.name='employee';box.value=p.id;
-  label.append(box,E('span',p.name));rosterList.append(label);
- }
- roster.append(rosterList);form.append(roster);
- const field=(caption,items)=>{const label=E('label',caption),select=E('select');for(const [value,title] of items){const option=E('option',title);option.value=value;select.append(option)}label.append(select);form.append(label);return select};
- const program=field('Separate specialist course',[['legal','Legal English'],['business','Business English'],['complete','All 48 topics (both course subjects, but separate certification tracks)']]);
- const lessons=field('Lessons per employee',[['8','8 lessons'],['16','16 lessons'],['24','24 lessons'],['48','48 lessons']]);
- const format=field('Instruction format',[['group','Small-group instruction (3+ selected employees)'],['private','Private instruction']]);
- const notesLabel=E('label','Scheduling and training requests (no private student information)'),notes=E('textarea');
- notes.maxLength=400;notes.rows=3;notesLabel.append(notes);form.append(notesLabel);
- const agree=E('label'),ack=E('input');ack.type='checkbox';ack.required=true;
- agree.append(ack,E('span',' I understand employees must accept participation, scheduling and price are not confirmed, and no payment is taken here.'));form.append(agree);
- const send=E('button','Submit employer class request');send.type='submit';
- const result=E('p');result.setAttribute('role','status');result.setAttribute('aria-live','polite');
- form.append(send,result);
- const requestsBox=E('section');requestsBox.className='v1940-employer-requests';
- requestsBox.append(E('h3','My recent employer class requests'));
- const requestStatus=E('div');requestStatus.setAttribute('role','status');
- const review=E('button','Refresh my class requests');review.type='button';
- requestsBox.append(review,requestStatus);
- async function loadRequests(){
-  if(!token||!area.isConnected)return;
-  const t=token,seq=epoch;
-  requestStatus.replaceChildren(E('p','Checking requests…'));
-  try{
-   const r=await fetch('/api/v18510/employer/enrollments?organization_id='+encodeURIComponent(organization.id),{headers:auth(t),cache:'no-store'});
-   const j=await parse(r);if(token!==t||epoch!==seq||!area.isConnected)return;
-   if(!r.ok||!j.ok||!Array.isArray(j.requests))throw Error(j.error||'Status unavailable.');
-   requestStatus.replaceChildren();
-   if(!j.requests.length)requestStatus.append(E('p','No employer class requests have been saved for this account and company.'));
-   for(const request of j.requests){
-    const entry=E('p','Request '+request.reference+' · '+request.program+' · '+request.package+' · '+request.employees+' employee(s) · '+request.status+' · '+request.payment_status);
-    requestStatus.append(entry);
-   }
-   if(j.requests.length===30)requestStatus.append(E('p','Only the 30 latest requests are shown.'));
-  }catch(error){if(token===t&&epoch===seq&&area.isConnected)requestStatus.replaceChildren(E('p','Cannot verify request status: '+error.message))}
- }
- review.addEventListener('click',loadRequests);
- area.append(requestsBox);
- queueMicrotask(loadRequests);
- const pricing=E('p','Current published indicative lesson price per employee will be calculated on the server. Group volume discount applies to eligible packages; taxes, teacher and availability are confirmed separately. Live checkout is disabled.');
- area.append(form,pricing);
- function sync(){if(program.value==='complete'){lessons.value='48';lessons.disabled=true}else{lessons.disabled=false;if(lessons.value==='48')lessons.value='24'}}
- program.addEventListener('change',sync);sync();
- form.addEventListener('submit',async e=>{
-  e.preventDefault();
-  if(!token||!form.reportValidity())return;
-  const ids=[...rosterList.querySelectorAll('input:checked')].map(x=>x.value);
-  if(!ids.length){result.textContent='Select at least one verified employee.';return}
-  if(format.value==='group'&&ids.length<3){result.textContent='Group training requires at least three employees; select private training for fewer.';return}
-  if(!confirm('Submit an employer request for '+ids.length+' employee(s)? No enrollment, email or payment occurs until staff review and employee acceptance.'))return;
-  const t=token,seq=epoch;send.disabled=true;result.textContent='Saving employer request…';
-  try{
-   const r=await fetch('/api/v18510/employer/enroll',{method:'POST',headers:{...auth(t),'Content-Type':'application/json'},cache:'no-store',body:JSON.stringify({organization_id:organization.id,employee_ids:ids,program:program.value,lessons:Number(lessons.value),format:format.value,notes:notes.value,employee_acceptance_required:ack.checked})});
-   const j=await parse(r);
-   if(token!==t||seq!==epoch||!area.isConnected)return;
-   if(!r.ok||!j.ok)throw Error(j.error||'Request was not recorded.');
-   result.textContent='Request recorded: '+j.reference+'. Estimated price: 
+
+async function mountEmployerBooking(org){
+ // Employees may be selected only from the currently verified company roster.
+ // This submits a staff-review request, never creates users or charges cards.
+ const currentToken=token,sequence=epoch;
+ const section=E('section');section.className='v1940-employer-booking';
+ section.append(E('h3','Enroll employees in a training package'));
+ section.append(E('p','Select existing, verified company learners and request Legal English, Business English or an appropriate professional training package. Teacher, class time and seats require confirmation. No payment is taken by this form.'));
+ const message=E('p','Checking your authorized employee roster…');message.setAttribute('role','status');message.setAttribute('aria-live','polite');
+ section.append(message);output.append(section);
+ try{
+  const r=await fetch('/api/v18510/employer/roster?organization_id='+encodeURIComponent(org.id),{headers:auth(currentToken),cache:'no-store'});
+  const j=await parse(r);
+  if(token!==currentToken||epoch!==sequence||!section.isConnected)return;
+  if(!r.ok||j.ok!==true||!Array.isArray(j.employees))throw Error(j.error||'No verified employee roster is available.');
+  const roster=j.employees;
+  section.append(E('p','Verified company learners returned: '+roster.length+(j.truncated?' (showing first 100; ask staff about additional employees)':'')+'. Company staff must arrange new learner accounts and consent before adding anyone who is not already linked.'));
+  if(!roster.length){message.textContent='No active company learners available for enrollment. Request verified student account setup before selecting seats.';return}
+  const form=E('form');form.className='v1940-enrollment-form';
+  const heading=E('h4','Choose employees');form.append(heading);
+  const choices=E('div');choices.className='v1940-employee-options';
+  const selected=new Map();
+  for(const person of roster){
+   const label=E('label'),check=E('input');check.type='checkbox';check.value=person.id;check.name='employee';
+   selected.set(person.id,check);label.append(check,E('span',person.name));choices.append(label);
+  }
+  form.append(choices);
+  const makeSelect=(name,options)=>{
+   const label=E('label',name),select=E('select');
+   for(const [value,title]of options){const opt=E('option',title);opt.value=value;select.append(opt)}
+   label.append(select);form.append(label);return select;
+  };
+  const program=makeSelect('Choose training track',[['legal','Legal English'],['business','Business English'],['investor','Investor & Business English'],['complete','Combined 48-topic Professional English']]);
+  const sessions=makeSelect('Choose lessons per employee',[['8','8 lessons'],['16','16 lessons'],['24','24-topic subject pathway'],['48','Combined 48-topic complete pathway']]);
+  const whenLabel=E('label','Preferred timetable or time zone (optional, no employee personal information)');
+  const when=E('input');when.type='text';when.maxLength=150;when.placeholder='e.g., weekday evenings, Singapore time';whenLabel.append(when);form.append(whenLabel);
+  const estimate=E('p');estimate.className='v1940-enrollment-estimate';form.append(estimate);
+  const button=E('button','Submit employee class enrollment request');button.type='submit';
+  form.append(button);
+  const feedback=E('p');feedback.setAttribute('role','status');feedback.setAttribute('aria-live','polite');form.append(feedback);
+  function revise(){
+   if(program.value==='complete'){sessions.value='48';sessions.disabled=true}
+   else{sessions.disabled=false;if(sessions.value==='48')sessions.value='24';if(program.value==='investor'&&sessions.value==='24')sessions.value='16'}
+   const n=[...selected.values()].filter(c=>c.checked).length,price={8:149,16:249,24:349,48:649}[Number(sessions.value)];
+   const discount=n>=11?15:n>=6?10:n>=3?5:0;
+   const total=n*price*(100-discount)/100;
+   estimate.textContent=n+' selected learners · '+sessions.value+' lessons each · '+(discount?discount+'% volume discount · ':'no volume discount · ')+'indicative total 
  output.append(E('h2','Employee progress and results'),E('p',data.notice||'Only published privacy-safe progress reports are displayed.'));
  const orgs=data.organizations||[];
  if(!orgs.length){output.append(E('p','No verified employer organization is assigned to this account. Contact the platform owner for manual verification.'));return}
@@ -115,8 +95,8 @@ function enrollmentTools(organization,people){
  choose.value=data.organization?.id||orgs[0].id;
  choose.addEventListener('change',()=>{selection=choose.value;load()});
  label.append(choose);output.append(label);
+ mountEmployerBooking(data.organization);
  const people=data.employees||[];
- output.append(enrollmentTools(data.organization,data.enrollment_candidates||[]));
  const published=people.filter(x=>x.has_published_report).length;
  output.append(E('p',people.length+' consented employees shown · '+published+' with published progress reports. Missing metrics are not zero and do not imply a failed assessment.'));
  if(data.truncated)output.append(E('p','Results are limited to the first 100 consented members; this is not a complete roster.'));
@@ -193,12 +173,145 @@ if(token){
  }).catch(()=>{clear();notice('Session could not be verified. Sign in again.')});
 }else clear();
 })();
-+Number(j.estimated_total_usd).toFixed(2)+' before final confirmation. No payment taken or class reserved. Staff review and employee acceptance required.';
-   loadRequests();
-  }catch(err){if(token===t&&seq===epoch)result.textContent='Request NOT confirmed: '+err.message}
-  finally{send.disabled=false}
- });
- return area;
++total.toFixed(2)+' USD. This is not an invoice, booking confirmation or charge.';
+   button.disabled=n===0;
+  }
+  choices.addEventListener('change',revise);program.addEventListener('change',revise);sessions.addEventListener('change',revise);revise();
+  let pendingId=null;
+  form.addEventListener('submit',async ev=>{
+   ev.preventDefault();
+   if(token!==currentToken||epoch!==sequence){feedback.textContent='Your employer session has changed. Reload before requesting enrollment.';return}
+   const ids=[...selected].filter(([,c])=>c.checked).map(([id])=>id);
+   if(!ids.length){feedback.textContent='Select at least one current company learner.';return}
+   if(!pendingId)pendingId=crypto.randomUUID();
+   button.disabled=true;feedback.textContent='Saving the enrollment request for staff review…';
+   try{
+    const rr=await fetch('/api/v18510/employer/enrollment-requests',{method:'POST',headers:{...auth(currentToken),'Content-Type':'application/json'},body:JSON.stringify({
+     organization_id:org.id,program:program.value,package_sessions:Number(sessions.value),employee_user_ids:ids,
+     preferred_time_window:when.value.trim(),client_request_id:pendingId
+    }),cache:'no-store'});
+    const result=await parse(rr);
+    if(token!==currentToken||epoch!==sequence)return;
+    if(!rr.ok||result.ok!==true)throw Error(result.error||'Enrollment could not be recorded.');
+    feedback.textContent='Request recorded: '+result.reference+'. '+result.notice+' You can review it with staff. This is not a paid enrollment.';
+    pendingId=null;
+    loadEnrollmentRequests(org,section,currentToken,sequence);
+   }catch(e){if(token===currentToken&&epoch===sequence)feedback.textContent='Request NOT confirmed: '+e.message+' Do not assume seats were booked or paid.'}
+   finally{if(token===currentToken&&epoch===sequence)revise()}
+  });
+  message.textContent='Select eligible employees and request course seats. No payment or unapproved account access is possible here.';
+  section.append(form);
+  const checkout=E('p','Secure card checkout is not yet activated. Payment may be arranged only after verified class availability, an approved invoice/quote, and tested payment processing. No charges are made by these requests.');
+  checkout.className='v1940-enrollment-payment';section.append(checkout);
+  loadEnrollmentRequests(org,section,currentToken,sequence);
+ }catch(e){if(token===currentToken&&epoch===sequence&&section.isConnected)message.textContent='Employer roster unavailable: '+e.message+' No private employee records were shown.'}
+}
+async function loadEnrollmentRequests(org,section,currentToken,sequence){
+ if(token!==currentToken||epoch!==sequence||!section.isConnected)return;
+ let history=section.querySelector('.v1940-employer-history');
+ if(!history){history=E('div');history.className='v1940-employer-history';section.append(history)}
+ history.replaceChildren(E('p','Checking existing team enrollment requests…'));
+ try{
+  const r=await fetch('/api/v18510/employer/enrollment-requests?organization_id='+encodeURIComponent(org.id),{headers:auth(currentToken),cache:'no-store'});
+  const j=await parse(r);
+  if(token!==currentToken||epoch!==sequence||!history.isConnected)return;
+  if(!r.ok||j.ok!==true||!Array.isArray(j.requests))throw Error(j.error||'Request history not available.');
+  history.replaceChildren(E('h4','Recent submitted enrollment requests'));
+  if(!j.requests.length){history.append(E('p','No confirmed request records yet.'));return}
+  const ul=E('ul');
+  for(const q of j.requests){
+   const cost=typeof q.estimated_total_cents==='number'?(q.estimated_total_cents/100).toFixed(2):'unavailable';
+   const li=E('li',q.program+' · '+q.package_sessions+' lessons · '+q.employee_count+' learners · estimated 
+ output.append(E('h2','Employee progress and results'),E('p',data.notice||'Only published privacy-safe progress reports are displayed.'));
+ const orgs=data.organizations||[];
+ if(!orgs.length){output.append(E('p','No verified employer organization is assigned to this account. Contact the platform owner for manual verification.'));return}
+ const label=E('label','Choose a verified company');
+ const choose=E('select');choose.setAttribute('aria-label','Choose your verified organization');
+ for(const org of orgs){const o=E('option',org.name);o.value=org.id;choose.append(o)}
+ choose.value=data.organization?.id||orgs[0].id;
+ choose.addEventListener('change',()=>{selection=choose.value;load()});
+ label.append(choose);output.append(label);
+ const people=data.employees||[];
+ const published=people.filter(x=>x.has_published_report).length;
+ output.append(E('p',people.length+' consented employees shown · '+published+' with published progress reports. Missing metrics are not zero and do not imply a failed assessment.'));
+ if(data.truncated)output.append(E('p','Results are limited to the first 100 consented members; this is not a complete roster.'));
+ if(!people.length)return;
+ const wrap=E('div');wrap.style.overflowX='auto';
+ const table=E('table');table.className='v1940-employer-report';
+ const header=E('tr');
+ for(const item of ['Employee','Reported','Completion','Attendance','Result','Milestones','Level'])header.append(E('th',item));
+ const thead=E('thead');thead.append(header);table.append(thead);
+ const tbody=E('tbody');
+ for(const p of people){
+  const tr=E('tr');const date=Date.parse(p.reported_at);
+  for(const v of [p.name,p.has_published_report?(Number.isFinite(date)?new Date(date).toLocaleDateString():'Published; date unavailable'):'Not published',
+   percent(p.completion_percent),percent(p.attendance_percent),percent(p.score_percent),
+   p.milestones_completed??'Not reported',p.level||'Not reported'])tr.append(cell(v));
+  tbody.append(tr);
+ }table.append(tbody);wrap.append(table);output.append(wrap);
+ const exportBtn=E('button','Download these consented, published results (CSV)');
+ exportBtn.type='button';exportBtn.className='v1940-export';
+ exportBtn.addEventListener('click',()=>{
+  if(!token||!confirm('Download a PRIVATE report of the currently displayed consented employee progress? Keep it confidential. This file includes employee names and approved results; no private answers or teacher comments.'))return;
+  const q=v=>'"'+String(v==null?'':v).replaceAll('"','""').replace(/^[=+@-]/,'\u0027')+'"';
+  const lines=[['Employee','Published','Reported at','Completion percent','Attendance percent','Score percent','Milestones completed','Level'].map(q).join(',')];
+  for(const p of people)lines.push([p.name,p.has_published_report,p.reported_at||'',p.completion_percent??'',p.attendance_percent??'',p.score_percent??'',p.milestones_completed??'',p.level||''].map(q).join(','));
+  const url=URL.createObjectURL(new Blob([lines.join('\r\n')+'\r\n'],{type:'text/csv;charset=utf-8'}));
+  const a=E('a');a.href=url;a.download='englishlegalese-private-employer-progress-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+ });output.append(exportBtn);
+}
+async function load(){
+ if(!token){clear();return}
+ const t=token,seq=++epoch;
+ output.replaceChildren(E('p','Checking verified, private dashboard data…'));
+ refresh.disabled=true;
+ try{
+  const endpoint=role==='owner'?'/api/v18510/owner/overview':'/api/v18510/employer/progress'+(selection?'?organization_id='+encodeURIComponent(selection):'');
+  const r=await fetch(endpoint,{headers:auth(t),cache:'no-store'}),j=await parse(r);
+  if(token!==t||seq!==epoch)return;
+  if(!r.ok||j.ok!==true)throw Error(j.error||'Dashboard data unavailable.');
+  output.replaceChildren();if(role==='owner')renderOwner(j);else renderEmployer(j);
+  notice('Private '+(role==='owner'?'owner/admin operations':'employer progress')+' data loaded. Refresh for current records.');
+ }catch(e){
+  if(token!==t||seq!==epoch)return;
+  output.replaceChildren(E('p','Dashboard data could not be verified: '+e.message+' No information has been invented.'));
+  notice('Dashboard unavailable. Account or reporting setup may require attention.');
+ }finally{if(token===t&&seq===epoch)refresh.disabled=false}
+}
+form.addEventListener('submit',async ev=>{
+ ev.preventDefault();const values=new FormData(form);const pass=form.querySelector('input[type=password]'),seq=++epoch;
+ notice('Checking account credentials…');
+ try{
+  const r=await fetch('/api/v119/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:values.get('email'),password:values.get('password'),expected_role:role==='owner'?(values.get('account_role')==='admin'?'admin':'owner'):'employer'})});
+  const j=await parse(r);
+  if(seq!==epoch)return;
+  if(!r.ok||!j.token||!(role==='owner'?['owner','admin'].includes(j.user?.role):j.user?.role==='employer'))throw Error('An authorized '+role+' account is required.');
+  token=j.token;try{sessionStorage.setItem(key,token)}catch{}
+  form.hidden=true;logout.hidden=false;actions.hidden=false;notice('Signed in.');await load();
+ }catch(e){if(seq===epoch)notice('Login unavailable: '+e.message)}
+ finally{pass.value=''}
+});
+logout.addEventListener('click',async()=>{
+ const t=token;clear();
+ if(!t){notice('Signed out locally.');return}
+ try{const r=await fetch('/api/v18510/workspace/logout',{method:'POST',headers:auth(t),cache:'no-store'}),j=await parse(r);
+  notice(r.ok&&j.session_revoked?'Signed out and server session revoked.':'Signed out locally. Server session revocation was not confirmed; avoid shared devices.');
+ }catch{notice('Signed out locally. Server session revocation was not confirmed; avoid shared devices.')}
+});
+refresh.addEventListener('click',load);
+if(token){
+ fetch('/api/v119/auth/me',{headers:auth(token),cache:'no-store'}).then(async r=>{
+  const j=await parse(r);if(!token)return;
+  if(!r.ok||!(role==='owner'?['owner','admin'].includes(j.user?.role):j.user?.role==='employer')){clear();notice('Session expired or account role changed. Sign in again.');return}
+  form.hidden=true;logout.hidden=false;actions.hidden=false;load();
+ }).catch(()=>{clear();notice('Session could not be verified. Sign in again.')});
+}else clear();
+})();
++cost+' USD · staff review: '+q.staff_status+' · payment: '+q.payment_status);
+   ul.append(li);
+  }history.append(ul);
+ }catch(e){if(token===currentToken&&epoch===sequence&&history.isConnected)history.replaceChildren(E('p','Enrollment request history unavailable: '+e.message))}
 }
 
 function renderEmployer(data){

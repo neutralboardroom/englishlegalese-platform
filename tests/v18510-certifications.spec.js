@@ -1,22 +1,26 @@
 'use strict';
 const {test,expect}=require('@playwright/test');
-test('HF24 homepage briefly promotes honest original EnglishLegalese certification pathways',async({page})=>{
+test('HF24 homepage promotes separate proposed certificates without implying award or accreditation',async({page})=>{
  await page.goto('/');
- await expect(page.locator('.v1940-cert-hero')).toBeVisible();
- await expect(page.locator('.v1940-cert-hero')).toContainText('EnglishLegalese-branded');
- await expect(page.locator('.v1940-cert-hero')).toContainText('Certificates are not issued yet');
- await expect(page.getByRole('link',{name:'Certifications',exact:true}).first()).toHaveAttribute('href','/learn/certifications/');
+ await expect(page.locator('.hero-copy')).toContainText('Legal English and Business English certificates');
+ await expect(page.locator('.hero-copy')).toContainText('credentials not yet issued');
+ await expect(page.locator('#mainNav a[href="/learn/certifications/"]')).toHaveCount(1);
 });
-test('HF24 certifications stay distinctly branded with separate legal and business A1–C2 frameworks',async({page})=>{
+for(const [slug,label,prefix]of [['legal','Legal','EL-LEG'],['business','Business','EL-BUS']]){
+ test('HF24 original '+label+' certification page has six separate live-assessed levels and limits',async({page})=>{
+  await page.goto('/learn/'+slug+'-english-certification/');
+  await expect(page.getByRole('heading',{name:label+' English Certification',exact:true})).toBeVisible();
+  for(const level of ['A1','A2','B1','B2','C1','C2']){
+   await expect(page.locator('#'+level.toLowerCase())).toContainText(prefix+'-'+level);
+  }
+  await expect(page.locator('main')).toContainText('The Council of Europe does not endorse');
+  await expect(page.locator('main')).toContainText('no certificate is issued');
+  await expect(page.locator('main')).toContainText('not imply the corresponding level in the other');
+ });
+}
+test('HF24 certification directory offers both independent tracks',async({page})=>{
  await page.goto('/learn/certifications/');
- await expect(page.getByRole('heading',{name:'EnglishLegalese Professional English Certifications'})).toBeVisible();
- await expect(page.getByRole('link',{name:'Explore Legal English certification'})).toHaveAttribute('href','/learn/legal-english-certification/');
- await expect(page.getByRole('link',{name:'Explore Business English certification'})).toHaveAttribute('href','/learn/business-english-certification/');
- for(const [slug,name] of [['legal-english-certification','Legal English'],['business-english-certification','Business English']]){
-  await page.goto('/learn/'+slug+'/');
-  await expect(page.getByRole('heading',{name:name+' Certification',exact:true}).first()).toBeVisible();
-  await expect(page.locator('.v1940-table-scroll tbody tr')).toHaveCount(6);
-  await expect(page.locator('.v1940-cert-page')).toContainText('solely by EnglishLegalese');
-  await expect(page.locator('.v1940-cert-page')).toContainText('No certificate examination or issuance');
- }
+ await expect(page.getByRole('link',{name:/Explore Legal English A1/})).toHaveAttribute('href','/learn/legal-english-certification/');
+ await expect(page.getByRole('link',{name:/Explore Business English A1/})).toHaveAttribute('href','/learn/business-english-certification/');
+ await expect(page.locator('main')).toContainText('not yet activated');
 });
