@@ -5,7 +5,7 @@ const client=fs.readFileSync('product-v1940-saved-lessons.js','utf8');
 const home=fs.readFileSync('index.html','utf8');
 const hub=fs.readFileSync('learn/my-work/index.html','utf8');
 const pkg=require('../package.json');
-assert.equal(pkg.version,'1.85.4');
+assert.equal(pkg.version,'1.85.5');
 for(const required of [
  "app.get('/api/v1940/lessons',ready,strict",
  "from self_paced_lesson_work where user_id=$1 order by updated_at desc,lesson_key asc limit 101 offset $2",
@@ -36,6 +36,6 @@ const partial=sandbox.studyReport([row],'Cloud account',false);
 assert(complete.includes('Listing coverage: All pages returned'));
 assert(partial.includes('Listing coverage: PARTIAL'));
 assert(!partial.includes('SECRET ANSWER'));
-assert(hub.includes('product-v1940-saved-lessons.js?v=1.85.4-hf18'));
-assert(home.includes('name="englishlegalese-release" content="1.85.4"'));
+assert(hub.includes('product-v1940-saved-lessons.js?v=1.85.5-hf19'));
+assert(home.includes('name="englishlegalese-release" content="1.85.5"'));
 console.log('PASS HF18: authenticated paginated read, 1,000-cap, bounded offset, no answers, fail-closed partial report, no migration or email.');

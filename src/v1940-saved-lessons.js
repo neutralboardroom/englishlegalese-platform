@@ -110,6 +110,29 @@ function install(app,{store,services,authMiddleware,requireRoles,configured,auth
    return res.json(payload);
   }catch{return res.status(503).json({ok:false,error:'Your account backup could not be created. Your cloud work remains unchanged. Try again later.'});}
  });
+
+ // HF19: read-only, authenticated numbered backups for accounts over 200 records.
+ // Each page is an independent snapshot; never claim cross-page consistency.
+ app.get('/api/v1940/account/export-part',ready,strict,requireRoles('student'),async(req,res)=>{
+  const raw=req.query?.offset;
+  if(raw!==undefined&&(typeof raw!=='string'||!/^(0|[1-9]\d{0,4})$/.test(raw)||Number(raw)>10000||Number(raw)%25!==0))
+   return res.status(400).json({ok:false,error:'Invalid account backup part offset.'});
+  const offset=raw===undefined?0:Number(raw);
+  try{
+   const [work,submissions]=await Promise.all([
+    store.pool.query('SELECT lesson_key,lesson_title,origin_path,answers,status,revision,updated_at,submitted_at FROM self_paced_lesson_work WHERE user_id=$1 ORDER BY updated_at DESC,lesson_key ASC LIMIT 26 OFFSET $2',[req.user.id,offset]),
+    store.pool.query('SELECT id,lesson_key,lesson_title,revision,answers,review_status,created_at,teacher_feedback,reviewed_at FROM self_paced_lesson_submissions WHERE user_id=$1 ORDER BY created_at DESC,id DESC LIMIT 26 OFFSET $2',[req.user.id,offset])
+   ]);
+   const hasMore=work.rows.length>25||submissions.rows.length>25;
+   const payload={ok:true,format:'EnglishLegalese student cloud backup part',schema_version:1,
+    complete:false,part_only:true,offset,page_size:25,has_more:hasMore,next_offset:hasMore?offset+25:null,
+    exported_at:new Date().toISOString(),saved_lessons:work.rows.slice(0,25),submissions:submissions.rows.slice(0,25),
+    privacy:'Partial private snapshot; collect all numbered parts. Concurrent device saves may shift pagination. No emails or account writes.'};
+   if(Buffer.byteLength(JSON.stringify(payload),'utf8')>8*1024*1024)
+    return res.status(413).json({ok:false,code:'BACKUP_PART_TOO_LARGE',error:'This backup part exceeds 8 MB; export affected lessons individually. No partial file was sent.'});
+   return res.json(payload);
+  }catch{return res.status(503).json({ok:false,error:'Backup part unavailable. Cloud records remain unchanged; retry the same part.'});}
+ });
  // HF18: paginate *private metadata only*, keeping the established account and
  // revocable-session protections. Every page remains scoped to the signed-in user.
  app.get('/api/v1940/lessons',ready,strict,async(req,res)=>{

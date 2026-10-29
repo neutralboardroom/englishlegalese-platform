@@ -25,12 +25,14 @@ const forgot=E('button','Forgot password?');forgot.type='button';
 const logout=E('button','Sign out');logout.type='button';
 const logoutAll=E('button','Sign out on all devices');logoutAll.type='button';
 const cloudBackup=E('button','Download my cloud backup');cloudBackup.type='button';
+const backupPart=E('button','Download backup part 1');backupPart.type='button';
+let backupPartOffset=0,backupPartSession=null;
 const restoreDevice=E('button','Restore backup to this device');restoreDevice.type='button';
 const restoreFile=E('input');restoreFile.type='file';restoreFile.accept='.json,application/json';restoreFile.hidden=true;restoreFile.setAttribute('aria-label','Restore backup file');
 const consent=E('button','Enable saving on this device');consent.type='button';
 const disable=E('button','Clear saved device copies');disable.type='button';
 const hubLink=E('a','My saved lessons','v1940-link');hubLink.href='/learn/my-work/';
-buttons.append(createAccount,signin,resend,forgot,logout,logoutAll,cloudBackup,restoreDevice,consent,disable,hubLink);
+buttons.append(createAccount,signin,resend,forgot,logout,logoutAll,cloudBackup,backupPart,restoreDevice,consent,disable,hubLink);
 const login=E('form',undefined,'v1940-login');login.hidden=true;
 const emailLabel=E('label','Account email'),email=E('input');email.type='email';email.autocomplete='email';email.required=true;emailLabel.append(email);
 const passLabel=E('label','Password'),pass=E('input');pass.type='password';pass.autocomplete='current-password';pass.required=true;passLabel.append(pass);
@@ -55,7 +57,7 @@ const authHeaders=()=>({'Authorization':'Bearer '+token,'Content-Type':'applicat
 async function parse(resp){try{return await resp.json()}catch{return{ok:false,error:'Unable to read the server response.'}}}
 function labelMessage(message){status.textContent=message}
 function updateBar(){
- createAccount.hidden=!!token||!cloud||!registrationReady;signin.hidden=!!token||!cloud;resend.hidden=!!token||!registrationReady;forgot.hidden=!!token||!registrationReady;logout.hidden=!token;logoutAll.hidden=!token;cloudBackup.hidden=!token||!cloud;restoreDevice.hidden=!isHub||!!token;
+ createAccount.hidden=!!token||!cloud||!registrationReady;signin.hidden=!!token||!cloud;resend.hidden=!!token||!registrationReady;forgot.hidden=!!token||!registrationReady;logout.hidden=!token;logoutAll.hidden=!token;cloudBackup.hidden=!token||!cloud;backupPart.hidden=!token||!cloud;restoreDevice.hidden=!isHub||!!token;
  consent.hidden=device;disable.hidden=!device;
  if(token&&cloud)labelMessage('Signed in to your student account. Cloud saving is enabled; a saved confirmation will appear after each successful server save. Teacher review requires an assigned teacher.');
  else if(device)labelMessage('DEVICE-ONLY DRAFTS — not backed up to your account or other devices. Create an account and sign in for reliable cloud saving when available.');
@@ -125,6 +127,39 @@ cloudBackup.addEventListener('click',async()=>{
  }catch(e){labelMessage('ACCOUNT BACKUP NOT DOWNLOADED: '+e.message+' Your cloud work remains unchanged.');}
  finally{cloudBackup.disabled=false;}
 });
+
+ // HF19: one user-confirmed file per click; never trigger unattended bulk downloads.
+ backupPart.addEventListener('click',async()=>{
+  if(!token||!cloud){labelMessage('Sign in to download private account backup parts.');return;}
+  if(!confirm('Download one numbered PRIVATE backup part with lesson answers and teacher feedback? Continue until the last part, and keep every file secure. Changes on other devices may shift pages. No email is sent.'))return;
+  const currentToken=token;
+  if(backupPartSession!==currentToken){backupPartOffset=0;backupPartSession=currentToken;}
+  const offset=backupPartOffset;
+  backupPart.disabled=true;
+  try{
+   const r=await fetch('/api/v1940/account/export-part?offset='+offset,{headers:authHeaders(),cache:'no-store'}),j=await parse(r);
+   if(token!==currentToken)throw Error('Account changed during the download. Start again with part 1.');
+   if(!r.ok||j.ok!==true||j.complete!==false||j.part_only!==true||j.format!=='EnglishLegalese student cloud backup part'
+    ||j.schema_version!==1||j.offset!==offset||j.page_size!==25||!Array.isArray(j.saved_lessons)||!Array.isArray(j.submissions)
+    ||j.saved_lessons.length>25||j.submissions.length>25||typeof j.has_more!=='boolean'
+    ||(j.has_more&&(j.next_offset!==offset+25||j.saved_lessons.length<25&&j.submissions.length<25)))
+    throw Error(j.error||'Server did not confirm a valid backup part.');
+   if(!j.saved_lessons.length&&!j.submissions.length){
+    backupPartOffset=0;backupPart.textContent='Download backup part 1';
+    labelMessage('No account data was returned for this backup part. Existing saved work remains unchanged.');return;
+   }
+   const url=URL.createObjectURL(new Blob([JSON.stringify(j,null,2)],{type:'application/json'})),a=E('a');
+   a.href=url;a.download='englishlegalese-cloud-backup-part-'+(offset/25+1)+'-'+new Date().toISOString().slice(0,10)+'.json';
+   document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+   backupPartOffset=j.has_more?offset+25:0;
+   backupPart.textContent=j.has_more?'Download backup part '+(backupPartOffset/25+1):'Download backup part 1';
+   labelMessage(j.has_more
+    ?'PRIVATE backup part '+(offset/25+1)+' downloaded ('+j.saved_lessons.length+' lessons and '+j.submissions.length+' submissions). Download the next numbered part; do not discard earlier files.'
+    :'Last backup part '+(offset/25+1)+' downloaded ('+j.saved_lessons.length+' lessons and '+j.submissions.length+' submissions). All requested pages returned, but changing records can affect coverage. Keep all numbered files.');
+  }catch(e){labelMessage('BACKUP PART NOT DOWNLOADED: '+e.message+' Retry this same part; your cloud lessons remain unchanged.');}
+  finally{backupPart.disabled=false;}
+ });
+
 // HF15.6: explicit device-only backup recovery. No upload, email, account merge, or overwrite.
 // Keep all existing local drafts, refuse malformed/oversized files before touching storage.
 const RESTORE_KEY=/^(?:workbook:[a-z0-9-]{3,65}|page:[a-z0-9-]{3,100})$/;
@@ -135,6 +170,13 @@ function parseRestorableBackup(raw){
  if(raw.format==='EnglishLegalese student cloud backup'){
   if(raw.schema_version!==1||raw.complete!==true||!Array.isArray(raw.saved_lessons)||!Array.isArray(raw.submissions)||raw.saved_lessons.length>200)
    throw Error('A confirmed complete V13 cloud backup is required.');
+  items=raw.saved_lessons.map(x=>({key:x?.lesson_key,title:x?.lesson_title,path:x?.origin_path,answers:x?.answers,updated_at:x?.updated_at}));
+ }else if(raw.format==='EnglishLegalese student cloud backup part'){
+  if(raw.schema_version!==1||raw.complete!==false||raw.part_only!==true||raw.page_size!==25
+   ||!Number.isSafeInteger(raw.offset)||raw.offset<0||raw.offset>10000||raw.offset%25!==0
+   ||!Array.isArray(raw.saved_lessons)||raw.saved_lessons.length>25||!Array.isArray(raw.submissions)||raw.submissions.length>25
+   ||typeof raw.has_more!=='boolean'||(raw.has_more&&raw.next_offset!==raw.offset+25))
+   throw Error('Invalid private account backup part.');
   items=raw.saved_lessons.map(x=>({key:x?.lesson_key,title:x?.lesson_title,path:x?.origin_path,answers:x?.answers,updated_at:x?.updated_at}));
  }else if(raw.format==='EnglishLegalese HF13 self-paced lesson backup'){
   items=[{key:raw.lesson,title:raw.title,path:raw.path,answers:raw.answers,updated_at:raw.exported_at}];
