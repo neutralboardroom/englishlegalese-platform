@@ -4,7 +4,7 @@ const js=fs.readFileSync('product-v1940-saved-lessons.js','utf8');
 const api=fs.readFileSync('src/v1940-saved-lessons.js','utf8');
 const css=fs.readFileSync('product-v1940-saved-lessons.css','utf8');
 const page=fs.readFileSync('learn/my-work/index.html','utf8');
-assert.equal(require('../package.json').version,'1.85.9');
+assert.equal(require('../package.json').version,'1.85.10');
 const a=js.indexOf('// HF23: Pure, private, bounded');
 const b=js.indexOf('// HF23 private submission report END',a);
 assert(a>0&&b>a);
@@ -27,7 +27,7 @@ for(const must of ["const report=privateSubmissionReport(w.title||w.key,j.submis
 assert(api.includes("app.get('/api/v1940/lessons/:key/submissions',ready,strict,requireRoles('student')"));
 assert(api.includes('where user_id=$1 and lesson_key=$2 order by created_at desc limit 20'));
 assert(css.includes('.v1940-review-export:focus-visible'));
-assert(page.includes('product-v1940-saved-lessons.js?v=1.85.9-hf23'));
+assert(page.includes('product-v1940-saved-lessons.js?v=1.85.10-hf24'));
 assert(page.includes('this is not a full account backup'));
-assert(fs.readFileSync('index.html','utf8').includes('name="englishlegalese-release" content="1.85.9"'));
+assert(fs.readFileSync('index.html','utf8').includes('name="englishlegalese-release" content="1.85.10"'));
 console.log('PASS HF23: private opt-in per-lesson feedback report, review state and date fidelity, no student answers, capped coverage, no emails and revocable-session guards.');

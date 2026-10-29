@@ -702,30 +702,58 @@ async function populateHub(){
       }else{
        feedback.append(E('p','Submission recorded. Teacher assignment or review has not been confirmed. No automatic email was sent.'));
       }
-      // HF22: history is retrieved only for the signed-in student's chosen
-      // lesson. Use plain-text DOM nodes, not HTML or shared-device storage.
+      // HF24: Read-only summary of only the student-owned records returned
+      // by explicit request. Never infer unreturned history or teacher status.
+      const reviewedCount=j.submissions.filter(item=>item?.review_status==='reviewed').length;
+      const awaitingCount=j.submissions.filter(item=>item?.review_status==='awaiting_review').length;
+      const unconfirmedCount=j.submissions.length-reviewedCount-awaitingCount;
+      feedback.append(E('p','Recent records returned: '+j.submissions.length+' · Reviewed: '+reviewedCount+' · Awaiting teacher review: '+awaitingCount+' · Assignment/review unconfirmed: '+unconfirmedCount+'. This covers only up to 20 recent submissions; older submissions may exist.','v1940-review-counts'));
+      // HF24: Reviewed-only presentation filter never changes the server
+      // response, latest status, teacher notes, or private download.
       if(j.submissions.length>1){
+       const previousSubmissions=j.submissions.slice(1);
        const history=E('details',undefined,'v1940-review-history');
-       history.append(E('summary','Earlier submissions ('+(j.submissions.length-1)+' shown, newest first)'));
-       for(const [index,previous] of j.submissions.slice(1).entries()){
-        const entry=E('section',undefined,'v1940-review-entry');
-        entry.append(E('strong','Earlier submission '+(index+1)));
-        const saved=Date.parse(previous?.created_at);
-        if(Number.isFinite(saved))entry.append(E('p','Submitted: '+new Date(saved).toLocaleString()));
-        if(previous?.review_status==='reviewed'){
-         entry.append(E('p','Reviewed by your assigned teacher'));
-         const recorded=Date.parse(previous.reviewed_at);
-         if(Number.isFinite(recorded))entry.append(E('p','Review recorded: '+new Date(recorded).toLocaleString()));
-         entry.append(E('p',typeof previous.teacher_feedback==='string'&&previous.teacher_feedback.trim()
-          ?previous.teacher_feedback:'This submission was marked reviewed without written comments.'));
-        }else if(previous?.review_status==='awaiting_review'){
-         entry.append(E('p','This earlier submission is awaiting feedback from its assigned teacher.'));
-        }else{
-         entry.append(E('p','This earlier submission was recorded; teacher assignment or review was not confirmed.'));
+       history.append(E('summary','Earlier submissions ('+previousSubmissions.length+' returned, newest first)'));
+       const filter=E('button','Show only earlier reviewed submissions','v1940-history-filter');
+       filter.type='button';filter.setAttribute('aria-pressed','false');
+       const filterStatus=E('p',undefined,'v1940-history-status');
+       filterStatus.setAttribute('role','status');filterStatus.setAttribute('aria-live','polite');
+       const previousList=E('div',undefined,'v1940-history-items');
+       let reviewedOnly=false;
+       function renderEarlierHistory(){
+        const shown=reviewedOnly?previousSubmissions.filter(item=>item?.review_status==='reviewed'):previousSubmissions;
+        previousList.replaceChildren();
+        filterStatus.textContent='Showing '+shown.length+' of '+previousSubmissions.length+' earlier returned submissions'+(reviewedOnly?' (reviewed only).':'.');
+        if(!shown.length)previousList.append(E('p','No earlier reviewed submissions were returned among these recent records.'));
+        for(const previous of shown){
+         const entry=E('section',undefined,'v1940-review-entry');
+         entry.append(E('strong','Earlier submission '+(previousSubmissions.indexOf(previous)+1)));
+         const saved=Date.parse(previous?.created_at);
+         if(Number.isFinite(saved))entry.append(E('p','Submitted: '+new Date(saved).toLocaleString()));
+         if(previous?.review_status==='reviewed'){
+          entry.append(E('p','Reviewed by your assigned teacher'));
+          const recorded=Date.parse(previous.reviewed_at);
+          if(Number.isFinite(recorded))entry.append(E('p','Review recorded: '+new Date(recorded).toLocaleString()));
+          entry.append(E('p',typeof previous.teacher_feedback==='string'&&previous.teacher_feedback.trim()
+           ?previous.teacher_feedback:'This submission was marked reviewed without written comments.'));
+         }else if(previous?.review_status==='awaiting_review'){
+          entry.append(E('p','This earlier submission is awaiting feedback from its assigned teacher.'));
+         }else{
+          entry.append(E('p','This earlier submission was recorded; teacher assignment or review was not confirmed.'));
+         }
+         previousList.append(entry);
         }
-        history.append(entry);
        }
+       filter.addEventListener('click',()=>{
+        if(!token||token!==currentToken||hubRequestSequence!==currentSequence||!card.isConnected)return;
+        reviewedOnly=!reviewedOnly;
+        filter.textContent=reviewedOnly?'Show all earlier submissions':'Show only earlier reviewed submissions';
+        filter.setAttribute('aria-pressed',String(reviewedOnly));
+        renderEarlierHistory();
+       });
+       history.append(filter,filterStatus,previousList);
        if(j.submissions.length===20)history.append(E('p','Showing the 20 most recent submissions returned by the server. Older submissions may also exist.'));
+       renderEarlierHistory();
        feedback.append(history);
       }
       // HF23: A second, explicit opt-in for a TEXT-ONLY copy of exactly

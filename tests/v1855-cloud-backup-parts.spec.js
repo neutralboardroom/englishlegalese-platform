@@ -46,5 +46,5 @@ test('HF19 failed part retries same offset and never skips private records',asyn
  await expect(page.getByRole('button',{name:'Download backup part 2'})).toBeVisible();
  page.once('dialog',d=>d.accept());
  await page.getByRole('button',{name:'Download backup part 2'}).click();
- expect(offsets).toEqual([0,25,25]);
+ await expect.poll(()=>offsets,{message:'Retry must request exactly the same failed private backup offset'}).toEqual([0,25,25]);
 });

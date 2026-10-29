@@ -1,0 +1,29 @@
+/* HF24 role workspace navigation and teacher assigned queue */
+.v1940-role-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin:1rem 0}
+.v1940-role-grid article{padding:1rem;border:1px solid #b5cbd3;border-radius:8px;background:#f7fbfc}
+.v1940-role-grid h3{margin:.1rem 0 .6rem}
+.v1940-role-grid a{display:inline-block;margin:.5rem 0;color:#135b75;font-weight:700}
+.v1940-teacher-summary{font-weight:600;color:#17394b;margin:.65rem 0}
+.v1940-teacher-list button{font:inherit;min-height:44px;background:#eaf5f8;color:#184b60;border:1px solid #31758a;border-radius:6px;padding:.45rem .7rem;cursor:pointer}
+.v1940-teacher-list button:focus-visible{outline:3px solid #176b83;outline-offset:2px}
+@media(max-width:600px){.v1940-role-grid{grid-template-columns:1fr}}
+
+/* HF24 genuine role dashboard responsive data layout. */
+[data-el18510-workspace]{padding-bottom:3rem}
+[data-el18510-workspace] #el18510-actions button,[data-el18510-workspace] .v1940-export{font:inherit;min-height:44px;margin:.7rem 0;padding:.5rem .8rem;border:1px solid #31758a;border-radius:6px;background:#eaf5f8;color:#184b60;cursor:pointer}
+[data-el18510-workspace] :focus-visible{outline:3px solid #176b83;outline-offset:2px}
+.v1940-employer-report{width:100%;border-collapse:collapse;margin:1rem 0;font:inherit}
+.v1940-employer-report th,.v1940-employer-report td{border-bottom:1px solid #b5cbd3;padding:.65rem;text-align:left;white-space:nowrap}
+.v1940-employer-report th{background:#edf6f8}
+
+/* HF24 verified employer employee booking request UI, no checkout activation. */
+.v1940-employer-booking{margin:1.4rem 0;padding:1rem;border:1px solid #aac8d2;border-radius:9px;background:#f8fbfc}
+.v1940-enrollment-form{display:grid;gap:.8rem}
+.v1940-enrollment-form>label{display:flex;flex-direction:column;gap:.3rem;font-weight:650}
+.v1940-enrollment-form select,.v1940-enrollment-form input[type=text]{font:inherit;padding:.5rem;border:1px solid #8caab6;border-radius:6px;min-height:42px}
+.v1940-employee-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.45rem}
+.v1940-employee-options label{display:flex;gap:.5rem;align-items:center;border:1px solid #c2d9df;border-radius:6px;padding:.5rem;background:#fff}
+.v1940-enrollment-form button{font:inherit;min-height:44px;padding:.6rem .8rem;border-radius:6px;border:1px solid #31758a;background:#eaf5f8;color:#184b60;cursor:pointer}
+.v1940-enrollment-form button:disabled{opacity:.55;cursor:default}
+.v1940-enrollment-estimate,.v1940-enrollment-payment{font-weight:600;color:#25546a}
+.v1940-employer-history li{margin:.5rem 0}

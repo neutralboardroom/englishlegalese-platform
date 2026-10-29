@@ -1,0 +1,33 @@
+'use strict';
+const {test,expect}=require('@playwright/test');
+test('HF24 verified employer chooses existing employees and requests group seats without charging',async({page})=>{
+ let submitted=null,postCount=0;
+ await page.route('**/api/v119/auth/login',r=>r.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"token":"mock.employer","user":{"role":"employer"}}'}));
+ await page.route('**/api/v18510/employer/progress',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,organizations:[{id:'EL-ORG-fixture',name:'Fictional Employer'}],organization:{id:'EL-ORG-fixture',name:'Fictional Employer'},employees:[],notice:'No published progress report yet.'})}));
+ await page.route('**/api/v18510/employer/roster?**',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,organization_id:'EL-ORG-fixture',employees:[{id:'EL-USER-1',name:'Sample Colleague A'},{id:'EL-USER-2',name:'Sample Colleague B'}],truncated:false})}));
+ await page.route('**/api/v18510/employer/enrollment-requests?**',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,requests:[]})}));
+ await page.route('**/api/v18510/employer/enrollment-requests',async r=>{
+  if(r.request().method()==='POST'){postCount++;submitted=r.request().postDataJSON();
+   await r.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,reference:'mock-pending-request',payment_taken:false,status:'needs_review',notice:'Saved for manual teacher and schedule confirmation. No payment taken.'})});
+  }else await r.fulfill({status:405,body:'{}'});
+ });
+ await page.goto('/learn/employer-dashboard/');
+ await page.locator('#el18510-login input[name=email]').fill('company@example.test');
+ await page.locator('#el18510-login input[name=password]').fill('sample-password');
+ await page.getByRole('button',{name:'Sign in securely'}).click();
+ await expect(page.locator('.v1940-employee-options input')).toHaveCount(2);
+ await page.locator('.v1940-employee-options input').first().check();
+ await page.locator('.v1940-employee-options input').last().check();
+ await page.getByLabel('Choose training track').selectOption('business');
+ await page.getByLabel('Choose lessons per employee').selectOption('16');
+ await expect(page.locator('.v1940-enrollment-estimate')).toContainText('$498.00');
+ await page.getByRole('button',{name:'Submit employee class enrollment request'}).click();
+ await expect(page.locator('.v1940-enrollment-form')).toContainText('Request recorded: mock-pending-request');
+ expect(postCount).toBe(1);
+ expect(submitted.organization_id).toBe('EL-ORG-fixture');
+ expect(submitted.program).toBe('business');
+ expect(submitted.package_sessions).toBe(16);
+ expect(submitted.employee_user_ids).toEqual(['EL-USER-1','EL-USER-2']);
+ expect(submitted.client_request_id).toMatch(/^[0-9a-f-]{36}$/);
+ await expect(page.locator('.v1940-enrollment-payment')).toContainText('Secure card checkout is not yet activated');
+});
