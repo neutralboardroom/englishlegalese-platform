@@ -1,0 +1,14 @@
+/* HF24 certifications: compatible with existing dedicated-page classes. */
+.v1940-cert-page{max-width:1100px;line-height:1.65;padding-bottom:3rem}
+.v1940-cert-page h1{font-family:Georgia,"Times New Roman",serif;color:#123d56;line-height:1.2}
+.v1940-cert-page h2{color:#164d66;margin:1.5rem 0 .75rem}
+.v1940-cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:1rem 0 1.3rem}
+.v1940-cert-grid article{border:1px solid #b4c9d2;border-radius:9px;padding:1rem;background:#f8fbfc}
+.v1940-cert-grid h3{margin:.3rem 0 .7rem}
+.v1940-cert-grid a,.v1940-cert-page a{color:#135d76;text-underline-offset:3px}
+.v1940-table-scroll{overflow-x:auto;margin:1rem 0}
+.v1940-table-scroll table{border-collapse:collapse;width:100%;min-width:640px}
+.v1940-table-scroll th,.v1940-table-scroll td{text-align:left;vertical-align:top;border-bottom:1px solid #c8d7de;padding:.75rem}
+.v1940-table-scroll th{background:#eef5f8;color:#1b455b;font-weight:700}
+.v1940-cert-page :focus-visible{outline:3px solid #176b83;outline-offset:3px}
+@media(max-width:680px){.v1940-cert-grid{grid-template-columns:1fr}}
