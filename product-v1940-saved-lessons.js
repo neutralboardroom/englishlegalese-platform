@@ -480,7 +480,7 @@ function privateSubmissionReport(lessonTitle,submissions){
   'Reported submissions: '+submissions.length+' (newest first)',
   'Generated at: '+new Date().toISOString(),
   'Contains only recorded review states, dates and teacher feedback — never student answers or credentials.',
-  'This is NOT a full account backup. The server returns at most 20 recent submissions per lesson.',
+  'This is NOT a full account backup. The server returns at most 20 recent submissions per lesson, not necessarily all submissions.',
   'Older submissions may exist, particularly if 20 are shown. Records can change after downloading.',
   'Keep this file private. No email, upload or teacher notification was sent.',
   ''
