@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs'),assert=require('node:assert/strict'),read=x=>fs.readFileSync(x,'utf8');
 const pkg=JSON.parse(read('package.json')),html=read('index.html'),pricing=read('product-v1810-pricing.css'),js=read('product-v1810-pricing.js'),policy=read('src/aiCommercePolicy.js'),canonical=read('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md'),owner=read('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md');
-assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3','1.85.4','1.85.5'].includes(pkg.version));
+assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3','1.85.4','1.85.5','1.85.6'].includes(pkg.version));
 assert(html.includes('name="englishlegalese-release" content="'+pkg.version+'"'));
 for(const q of ['product-v1800.js?v=1.80.0','product-v1800-catalog.js?v=1.84.0','product-v1810-pricing.js?v=1.81.0','product-v1810-pricing.css?v=1.81.0'])assert(html.includes(q),'Retain existing versioned assets '+q);
 assert.equal((html.match(/<a href="\/pricing\/">Pricing<\/a>/g)||[]).length,2);
