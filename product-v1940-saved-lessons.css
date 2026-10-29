@@ -23,4 +23,10 @@
 .v1940-hub-summary{font-weight:600;margin:.5rem 0}
 .v1940-list-warning{border-left:4px solid #6b8791;padding:.65rem .8rem;background:#f1f7f9;color:#24434d}
 .v1940-hub-list .v1940-saved-card{margin:.5rem 0}
+.v1940-page-controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:1rem;margin:1.15rem 0}
+.v1940-page-controls button{font:inherit;min-height:44px;padding:.45rem 1rem;color:#184b60;background:#eaf5f8;border:1px solid #31758a;border-radius:7px;cursor:pointer}
+.v1940-page-controls button:disabled{opacity:.55;cursor:default}
+.v1940-page-controls button:focus-visible{outline:3px solid #176b83;outline-offset:2px}
+.v1940-page-counter{font-weight:600;color:#17394b;text-align:center}
+@media(max-width:600px){.v1940-page-controls{gap:.6rem}.v1940-page-controls button{flex:1 1 40%}.v1940-page-counter{order:-1;flex:1 1 100%}}
 @media(max-width:600px){.v1940-hub-toolbar{gap:.55rem}.v1940-hub-toolbar label{flex:1 1 100%}}
