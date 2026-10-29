@@ -1,0 +1,11 @@
+/* HF25 responsive disclosure design for track-specific assessment blueprints. */
+.v18511-assessment{margin-block:2rem;padding:1.25rem;border:1px solid #d5dfe7;border-radius:16px;background:#f8fafc;color:#233344}
+.v18511-assessment h2{margin-top:0}
+.v18511-assessment-levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:.75rem;margin:1rem 0 1.3rem}
+.v18511-assessment-level{min-width:0;background:white;border:1px solid #ccd8e1;border-radius:12px;overflow:hidden}
+.v18511-assessment-level summary{cursor:pointer;padding:.95rem 1rem;line-height:1.5;font-size:1rem;color:#123752}
+.v18511-assessment-level summary:focus-visible{outline:3px solid #2174ad;outline-offset:-3px}
+.v18511-assessment-level summary strong{display:inline-block;min-width:2rem}
+.v18511-assessment-level>div{padding:0 1rem 1rem}
+.v18511-assessment-level p{line-height:1.55}
+@media(max-width:560px){.v18511-assessment{padding:.8rem}.v18511-assessment-levels{grid-template-columns:minmax(0,1fr)}}
