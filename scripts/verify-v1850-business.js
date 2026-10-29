@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('node:vm'),rd=p=>fs.readFileSync(p,'utf8');
 const pkg=JSON.parse(rd('package.json')),home=rd('index.html'),business=rd('learn/business-english/index.html'),pricing=rd('pricing/index.html'),teacher=rd('learn/teach-with-us/index.html'),script=rd('product-v1850-business.js');
-assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3','1.85.4','1.85.5','1.85.6'].includes(pkg.version));assert(home.includes('name="englishlegalese-release" content="'+pkg.version+'"'));
+assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3','1.85.4','1.85.5','1.85.6','1.85.7'].includes(pkg.version));assert(home.includes('name="englishlegalese-release" content="'+pkg.version+'"'));
 const ctx={window:{},document:{getElementById:()=>null}},curriculum=rd('curriculum-v1800-data.js');
 vm.runInNewContext(curriculum,ctx,{timeout:2000});
 const base=ctx.window.ELCURRICULUM_V1800.records;assert.equal(base.length,28);
