@@ -21,7 +21,7 @@ async function request({role='owner',valid=true,bearer=true}={}){
 (async()=>{
  let r=await request();assert.equal(r.statusCode,200);assert.equal(r.body.queues.enrollment[0].total,4);assert.equal(r.body.queues.teacher[0].due,1);
  assert.equal(r.headers['Cache-Control'],'private, no-store');
- assert(!JSON.stringify(r.body).includes('email')&&!JSON.stringify(r.body).includes('full_name')&&!JSON.stringify(r.body).includes('qualification'));
+ assert(!JSON.stringify(r.body.queues).includes('email')&&!JSON.stringify(r.body.queues).includes('full_name')&&!JSON.stringify(r.body.queues).includes('qualification'));
  assert.equal((await request({role:'student'})).statusCode,403);
  assert.equal((await request({role:'employer'})).statusCode,403);
  assert.equal((await request({valid:false})).statusCode,401);

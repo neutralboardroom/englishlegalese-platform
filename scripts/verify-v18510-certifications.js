@@ -9,7 +9,7 @@ const business=read('learn/business-english-certification/index.html');
 assert.equal(require('../package.json').version,'1.85.12');
 for(const [track,doc,prefix]of [['legal',legal,'EL-LEG'],['business',business,'EL-BUS']]){
  assert(doc.includes('EnglishLegalese-issued'));
- assert(doc.includes('name="englishlegalese-release" content="1.85.11"'));
+ assert(doc.includes('name="englishlegalese-release" content="1.85.12"'));
  assert(doc.includes('rel="canonical" href="https://englishlegalese.com/learn/'+track+'-english-certification/"'));
  assert(doc.includes('teacher-supervised')&&doc.includes('CEFR')&&doc.includes('before any credential can be issued'));
  assert(doc.includes('Council of Europe'));
