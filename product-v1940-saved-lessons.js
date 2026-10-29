@@ -557,7 +557,13 @@ async function populateHub(){
  for(const [value,label] of [['all','All lessons'],['draft','Drafts'],['submitted','Submitted for review']]){
   const option=E('option',label);option.value=value;choice.append(option);
  }
- statusLabel.append(choice);toolbar.append(searchLabel,statusLabel);
+ statusLabel.append(choice);
+ const sortLabel=E('label','Sort saved lessons');
+ const sort=E('select');sort.setAttribute('aria-label','Sort saved lessons');
+ for(const [value,label] of [['recent','Most recently saved'],['oldest','Oldest saved first'],['title','Lesson title A–Z']]){
+  const option=E('option',label);option.value=value;sort.append(option);
+ }
+ sortLabel.append(sort);toolbar.append(searchLabel,statusLabel,sortLabel);
  const summary=E('p',undefined,'v1940-hub-summary');summary.setAttribute('role','status');summary.setAttribute('aria-live','polite');
  const list=E('div',undefined,'v1940-hub-list');
  const studyActions=E('section',undefined,'v1940-study-actions');
@@ -583,15 +589,35 @@ async function populateHub(){
   document.body.append(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
  });
  studyActions.append(exportProgress,E('p','For a complete copy of actual saved answers and teacher feedback, use Download my cloud backup while signed in. This overview never sends an email.'));
- host.append(studyActions,toolbar,summary,list);
+ // HF20: pagination is a private presentation concern. Every filter, sort and
+ // metadata-only overview continues to operate on ALL authorized fetched rows.
+ const PAGE_SIZE=25;let viewPage=0;
+ const pageControls=E('nav',undefined,'v1940-page-controls');pageControls.setAttribute('aria-label','Saved lesson pages');
+ const previous=E('button','Previous page');previous.type='button';
+ const next=E('button','Next page');next.type='button';
+ const pageCounter=E('span','Page 1','v1940-page-counter');
+ pageControls.append(previous,pageCounter,next);
+ host.append(studyActions,toolbar,summary,list,pageControls);
  function render(){
   const term=search.value.trim().toLocaleLowerCase(),filter=choice.value;
   const filtered=valid.filter(w=>(filter==='all'||(filter==='submitted'?w.status==='submitted':w.status!=='submitted'))&&(String(w.title||w.key).toLocaleLowerCase().includes(term)));
+  const ordered=filtered.slice().sort((a,b)=>{
+   if(sort.value==='title')return String(a.title||a.key).localeCompare(String(b.title||b.key))||a.key.localeCompare(b.key);
+   const dateA=Date.parse(a.updated_at)||0,dateB=Date.parse(b.updated_at)||0;
+   return (sort.value==='oldest'?dateA-dateB:dateB-dateA)||a.key.localeCompare(b.key);
+  });
   list.replaceChildren();
   const drafts=valid.filter(w=>w.status!=='submitted').length,submitted=valid.length-drafts;
+  const pageCount=Math.ceil(ordered.length/PAGE_SIZE);
+  viewPage=Math.min(viewPage,Math.max(0,pageCount-1));
+  const start=viewPage*PAGE_SIZE;
+  const visible=ordered.slice(start,start+PAGE_SIZE);
+  previous.disabled=viewPage===0;
+  next.disabled=viewPage>=pageCount-1;
+  pageCounter.textContent=pageCount?'Page '+(viewPage+1)+' of '+pageCount+' · lessons '+(start+1)+'–'+(start+visible.length)+' of '+ordered.length+' matching':'No matching pages';
   summary.textContent='Showing '+filtered.length+' of '+valid.length+' saved lessons ('+drafts+' drafts, '+submitted+' submitted). '+(token&&cloud?'Cloud account records only.':'This browser only — not backed up to an account.')+(listingComplete?'':' LIST MAY BE INCOMPLETE.');
   if(!filtered.length){list.append(E('p','No lessons match these filters. Your saved work has not been deleted.'));return;}
-  for(const w of filtered){
+  for(const w of visible){
    const card=E('article',undefined,'v1940-saved-card'),h=E('strong',String(w.title||w.key).slice(0,160));
    const time=Date.parse(w.updated_at),when=Number.isFinite(time)?new Date(time).toLocaleString():'Save date unavailable';
    const meta=E('p',w.source+' · '+(w.status==='submitted'?'submitted':'draft')+' · '+when);
@@ -600,8 +626,11 @@ async function populateHub(){
    card.append(h,meta,link);list.append(card);
   }
  }
- search.addEventListener('input',render);
- choice.addEventListener('change',render);
+ previous.addEventListener('click',()=>{if(viewPage>0){viewPage--;render();}});
+ next.addEventListener('click',()=>{viewPage++;render();});
+ search.addEventListener('input',()=>{viewPage=0;render();});
+ choice.addEventListener('change',()=>{viewPage=0;render();});
+ sort.addEventListener('change',()=>{viewPage=0;render();});
  render();
 }
 function mount(){

@@ -23,7 +23,11 @@ test('HF18 loads 125 account-owned lessons from two private pages and exports me
  const requests=[];page.on('request',r=>{if(r.url().includes('/api/v1940/lessons')&&!r.url().endsWith('/capabilities'))requests.push(r.url())});
  await page.goto('/learn/my-work/');
  const hub=page.locator('[data-el1940-hub]');
- await expect(hub.locator('.v1940-saved-card')).toHaveCount(125);
+ await expect(hub.locator('.v1940-saved-card')).toHaveCount(25);
+ await expect(hub.getByText('Page 1 of 5')).toBeVisible();
+ await hub.getByRole('button',{name:'Next page'}).click();
+ await expect(hub.getByText('Page 2 of 5')).toBeVisible();
+ await expect(hub.locator('.v1940-saved-card')).toHaveCount(25);
  await expect(hub.locator('.v1940-hub-summary')).toContainText('125 saved lessons');
  expect(requests.some(x=>x.includes('?offset=100'))).toBe(true);
  await hub.getByRole('searchbox',{name:'Search saved lessons'}).fill('exercise 124');
@@ -41,7 +45,8 @@ test('HF18 warns when the second private page fails; never claims a full account
  await setup(page,true);
  await page.goto('/learn/my-work/');
  const hub=page.locator('[data-el1940-hub]');
- await expect(hub.locator('.v1940-saved-card')).toHaveCount(100);
+ await expect(hub.locator('.v1940-saved-card')).toHaveCount(25);
+ await expect(hub.getByText('Page 1 of 4')).toBeVisible();
  await expect(hub).toContainText('LIST MAY BE INCOMPLETE');
  await expect(hub).toContainText('Previously saved work has NOT been deleted');
  page.once('dialog',d=>d.accept());
