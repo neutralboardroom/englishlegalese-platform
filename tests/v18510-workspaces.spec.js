@@ -17,7 +17,7 @@ test('HF24 owner dashboard: existing authorized owner login, operational counts,
  await expect(page.locator('#el18510-output')).toContainText('Active organizations: 1');
  await expect(page.locator('#el18510-output')).toContainText('awaiting_review');
  await page.getByRole('button',{name:'Refresh current data'}).click();
- expect(reads).toBe(2);
+ await expect.poll(()=>reads,{message:'Refresh must request fresh authorized owner counts'}).toBe(2);
  await page.getByRole('button',{name:'Sign out securely'}).click();
  await expect(page.locator('#el18510-output')).not.toContainText('Active organizations: 1');
  await expect(page.locator('#el18510-status')).toContainText('server session revoked');

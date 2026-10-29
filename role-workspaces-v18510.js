@@ -86,7 +86,7 @@ async function mountEmployerBooking(org){
    const discount=n>=11?15:n>=6?10:n>=3?5:0;
    const total=n*price*(100-discount)/100;
    estimate.textContent=n+' selected learners · '+sessions.value+' lessons each · '+(discount?discount+'% volume discount · ':'no volume discount · ')+'indicative total $'+total.toFixed(2)+' USD. This is not an invoice, booking confirmation or charge.';
-+total.toFixed(2)+' USD. This is not an invoice, booking confirmation or charge.';
+
    button.disabled=n===0;
   }
   choices.addEventListener('change',revise);program.addEventListener('change',revise);sessions.addEventListener('change',revise);revise();
