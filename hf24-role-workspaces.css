@@ -1,0 +1,9 @@
+/* HF24 role workspace navigation and teacher assigned queue */
+.v1940-role-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin:1rem 0}
+.v1940-role-grid article{padding:1rem;border:1px solid #b5cbd3;border-radius:8px;background:#f7fbfc}
+.v1940-role-grid h3{margin:.1rem 0 .6rem}
+.v1940-role-grid a{display:inline-block;margin:.5rem 0;color:#135b75;font-weight:700}
+.v1940-teacher-summary{font-weight:600;color:#17394b;margin:.65rem 0}
+.v1940-teacher-list button{font:inherit;min-height:44px;background:#eaf5f8;color:#184b60;border:1px solid #31758a;border-radius:6px;padding:.45rem .7rem;cursor:pointer}
+.v1940-teacher-list button:focus-visible{outline:3px solid #176b83;outline-offset:2px}
+@media(max-width:600px){.v1940-role-grid{grid-template-columns:1fr}}
