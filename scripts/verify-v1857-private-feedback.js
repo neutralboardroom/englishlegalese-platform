@@ -11,6 +11,6 @@ assert(api.includes('where user_id=$1 and lesson_key=$2 order by created_at desc
 assert(!/sendEmail|fetch\(\x27https?:\/\//.test(hub.slice(hub.indexOf('// HF21:'),hub.indexOf('previous.addEventListener'))),'Review lookup must not send emails or leak to third parties.');
 assert(css.includes('.v1940-review-button:focus-visible'),'Keyboard focus must remain visible');
 assert(page.includes('product-v1940-saved-lessons.js?v=1.85.8-hf22'));
-assert(page.includes('teacher assignment and feedback are never guaranteed'));
+assert(page.includes('Teacher assignment and feedback are never guaranteed'));
 assert(fs.readFileSync('index.html','utf8').includes('name="englishlegalese-release" content="1.85.8"'));
 console.log('PASS HF21: account-scoped on-demand teacher feedback, secure session guards, genuine review state only, no automatic emails, accessible plain-text feedback.');
