@@ -12,10 +12,19 @@ test('v1.78 homepage explicitly presents live human video teaching while preserv
 });
 test('v1.78 homepage preserves comprehensive paths, new classroom and courses while no paid service is activated',async({page})=>{
  await open(page,'home');
- for(const id of ['home','start','learning-pathways','courses','smartteacher','teachers','live-classes','trust'])await expect(page.locator('#'+id)).toBeVisible();
+ await expect(page.locator('#home')).toBeVisible();
+ await expect(page.locator('#live-classes')).toBeVisible();
+ await expect(page.locator('#v18512-home-preview')).toBeVisible();
+ for(const id of ['start','learning-pathways','courses','smartteacher','teachers','trust']){
+  await expect(page.locator('#'+id)).toBeHidden();
+  await page.evaluate(v=>location.hash='#'+v,id);
+  await expect(page.locator('#'+id)).toBeVisible();
+ }
+ await page.evaluate(()=>location.hash='#home');
  await expect(page.locator('#learning-pathways .v1780-goal-card')).toHaveCount(6);
  await expect(page.locator('#live-classes .v1780-benefit')).toHaveCount(3);
  await expect(page.locator('#live-classes .v1780-provider-pill')).toHaveCount(5);
+ await page.evaluate(()=>location.hash='#smartteacher');
  await expect(page.locator('#smartteacher .v1770-files')).toBeVisible();
 });
 test('v1.78 goal navigator opens real existing lessons and existing listening practice',async({page})=>{
