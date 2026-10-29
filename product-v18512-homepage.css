@@ -1,0 +1,30 @@
+/* HF26 homepage: five visible pathways and accessible, native disclosure controls.
+   All pre-existing course / exercise sections remain present inside their folds. */
+.v18512-home-preview{background:#fff;padding:1.4rem 0 3rem;scroll-margin-top:110px}
+.v18512-home-preview h2{font-family:var(--font-display,Georgia,serif);font-size:clamp(1.6rem,2.4vw,2.3rem);line-height:1.12;color:#0b2545;margin:1rem 0 .6rem}
+.v18512-home-preview>div>p{color:#37536a;max-width:780px}
+.v18512-pathway-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.8rem;margin:1rem 0}
+.v18512-pathway-card{min-width:0;display:flex;flex-direction:column;padding:1rem;border-radius:13px;border:1px solid #d9e3ed;background:#eef6ff}
+.v18512-business{background:#eafaf5}.v18512-certifications{background:#fff8ec}.v18512-employers{background:#f5f0ff}.v18512-teachers{background:#fff0f3}
+.v18512-pathway-card h3{font-size:1.05rem;line-height:1.3;margin:.15rem 0 .65rem}
+.v18512-pathway-card p{font-size:.91rem;line-height:1.5;color:#2e4c61;flex:1}
+.v18512-pathway-card a{display:inline-flex;align-items:center;min-height:44px;font-weight:750;color:#065e76;text-decoration:underline;text-underline-offset:3px}
+.v18512-steps{margin:1.3rem 0;padding:1rem;border:1px solid #e0e9f1;border-radius:12px}
+.v18512-steps h2{margin-top:0}
+.v18512-steps ol{list-style:none;counter-reset:el-steps;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin:0;padding:0}
+.v18512-steps li{counter-increment:el-steps;font-size:.91rem;line-height:1.5;border-left:2px solid #d7e6ed;padding:.2rem .5rem .2rem .75rem}
+.v18512-steps li::before{content:counter(el-steps);display:inline-flex;border-radius:50%;width:26px;height:26px;align-items:center;justify-content:center;background:#dff1fa;margin-right:.55rem;color:#034c6b;font-weight:800}
+.v18512-more{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;align-items:start}
+.v18512-disclosure{border:1px solid #c9dce9;border-radius:12px;background:#f8fbfd;min-width:0}
+.v18512-disclosure[open]{grid-column:1/-1;background:#fff}
+.v18512-disclosure summary{cursor:pointer;display:flex;flex-direction:column;gap:.35rem;padding:1rem;min-height:76px;color:#103654}
+.v18512-disclosure summary strong{font-size:1rem}
+.v18512-disclosure summary span{font-size:.87rem;color:#496273}
+.v18512-disclosure[open] summary{border-bottom:1px solid #d7e6ed}
+.v18512-disclosure-body{padding:.7rem 0}
+.v18512-disclosure-body>.section{max-width:100%}
+.v18512-end-actions{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin:1.3rem 0}
+.v18512-end-actions a{border-radius:8px;border:1px solid #196978;min-height:45px;padding:.7rem 1.1rem;background:#ebf6f8;color:#12485b;font-weight:750}
+.v18512-home-preview a:focus-visible,.v18512-home-preview summary:focus-visible{outline:3px solid #08759d;outline-offset:3px}
+@media(max-width:960px){.v18512-pathway-cards{grid-template-columns:repeat(3,minmax(0,1fr))}.v18512-steps ol{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.v18512-pathway-cards,.v18512-more{grid-template-columns:1fr}.v18512-steps ol{grid-template-columns:1fr}.v18512-home-preview{padding-top:.8rem}}
