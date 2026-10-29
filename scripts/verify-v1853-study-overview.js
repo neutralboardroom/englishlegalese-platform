@@ -20,7 +20,7 @@ assert.match(summary,/NOT a full lesson backup/);
 assert(js.includes('Continue my most recent draft'));
 assert(js.includes('Download study overview (.txt)'));
 assert(js.includes("if(!confirm('Download a private text summary"),'Export requires explicit opt-in');
-assert(js.includes('host.append(studyActions,toolbar,summary,list)'));
+assert(js.includes('host.append(studyActions,toolbar,summary,list,pageControls)'),'Private overview, controls, list and accessible pagination must all appear');
 assert(fs.readFileSync('learn/my-work/index.html','utf8').includes('product-v1940-saved-lessons.js?v=1.85.6-hf20'),'Fresh student dashboard must be loaded');
 assert(fs.readFileSync('index.html','utf8').includes('<meta name="englishlegalese-release" content="1.85.6" />'),'Homepage release marker matches actual version');
 assert.equal(require('../package.json').version,'1.85.6');
