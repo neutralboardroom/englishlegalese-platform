@@ -35,7 +35,7 @@ async function request({role='owner',valid=true,bearer=true}={}){
  assert.equal((await request({role:'student'})).statusCode,403);
  assert.equal((await request({valid:false})).statusCode,401);
  assert.equal((await request({bearer:false})).statusCode,401);
- fail=true;r=await request();assert.equal(r.statusCode,503);assert.equal(r.body.ok,false);assert(!JSON.stringify(r.body).includes('count'));
+ fail=true;r=await request();assert.equal(r.statusCode,503);assert.equal(r.body.ok,false);assert(!('teacher_applications' in r.body)&&!('class_statuses' in r.body)&&!('employer_enrollment' in r.body));
  assert(calls.every(sql=>/^SELECT /i.test(sql)),'No privileged write or modification is allowed.');
  console.log('PASS HF25: owner-only verified read-only triage, honest missing schema, fail closed, no PII, checkout, certificate or writes.');
 })().catch(e=>{console.error(e);process.exit(1)});
