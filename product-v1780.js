@@ -72,7 +72,23 @@ function addClassrooms(){
  [['video','Live interaction','Ask questions, practise spoken Legal English, and receive personalized explanations during a teacher-led video session.'],['book','Class scheduling','Choose a learning focus and preview a lesson time. Actual classes are confirmed only after teacher assignment and an official meeting link.'],['calendar','Calendar-friendly','A schedule can be shared using standard calendar invitations and an approved Zoom, Google Meet, Teams or regional meeting link.']].forEach(([kind,title,body])=>{const card=n('article',undefined,'panel v1780-benefit');card.append(n('span',kind==='video'?'◉':kind==='book'?'◷':'▦','v1780-benefit-symbol'),n('h3',title),n('p',body));benefits.append(card)});
  const studio=n('div',undefined,'v1780-studio'),preview=n('div',undefined,'panel v1780-room-preview');
  const bar=n('div',undefined,'v1780-room-bar');bar.append(n('span','● ● ●','v1780-dots'),n('strong','EnglishLegalese · live video classroom'));preview.append(bar);
- const display=n('div',undefined,'v1780-room-stage'),avatar=n('div','EL','v1780-avatar'),demo=n('div');demo.append(n('h3','Teacher-led learning, together.'),n('p','Video discussion • roleplay • vocabulary review • shared learning goals'));display.append(avatar,demo);
+ // Copy and CTAs are deliberately separate from the locked photo in assets.
+ // Future wording and destination edits belong HERE; do not modify the photo asset.
+ const CLASSROOM_OVERLAY_COPY=Object.freeze({
+  heading:'Teacher-led learning, together.',
+  supporting:'Video discussion • roleplay • vocabulary review • shared learning goals',
+  actions:Object.freeze([
+   {label:'Explore live classes',href:'/learn/live-classes/'},
+   {label:'View courses',href:'/learn/courses/'}
+  ])
+ });
+ const display=n('div',undefined,'v1780-room-stage'),demo=n('div',undefined,'v18512-room-overlay');
+ demo.append(n('h3',CLASSROOM_OVERLAY_COPY.heading),n('p',CLASSROOM_OVERLAY_COPY.supporting));
+ const links=n('div',undefined,'v18512-room-actions');
+ for(const action of CLASSROOM_OVERLAY_COPY.actions){
+  const link=n('a',action.label,'v18512-room-action');link.href=action.href;links.append(link);
+ }
+ demo.append(links);display.append(demo);
  const chips=n('div',undefined,'v1780-provider-pills');['Zoom','Google Meet','Microsoft Teams','Tencent / VooV','Manual approved link'].forEach(x=>chips.append(n('span',x,'v1780-provider-pill')));
  preview.append(display,chips,n('p','Classroom illustration. No live session, meeting room or teacher is assigned in this preview.','v1780-fine'));
  const scheduler=n('div',undefined,'panel v1780-scheduler');scheduler.append(n('div','YOUR CLASS PLANNING WORKSPACE','eyebrow'),n('h3','Build your online class plan'),n('p','Choose a study goal and an online classroom platform, then preview a time in your local timezone. No booking or payment is made.','v1780-fine'));

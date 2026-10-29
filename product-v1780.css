@@ -30,7 +30,15 @@
 .v1780-room-preview,.v1780-scheduler{min-width:0;overflow:hidden;padding:1.2rem!important}
 .v1780-room-bar{background:#112b42;color:#fff;display:flex;align-items:center;gap:.7rem;margin:-1.2rem -1.2rem 1.2rem;padding:.75rem 1rem;font-size:.9rem}
 .v1780-dots{color:#9bd1cd;letter-spacing:.18rem}
-.v1780-room-stage{border-radius:12px;background:linear-gradient(145deg,#193d58,#0b2436);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:280px;padding:1.4rem}
+.v1780-room-stage{border-radius:12px;background-image:linear-gradient(90deg,rgba(10,29,45,.84),rgba(10,29,45,.36) 64%,rgba(10,29,45,.12)),url('/assets/teacher-classroom-photo-locked-hf26.svg');background-size:cover;background-position:center;color:#fff;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;text-align:left;min-height:280px;padding:1.4rem;overflow:hidden}
+/* HF26 design lock: photo pixels live ONLY in assets/teacher-classroom-photo-locked-hf26.svg.
+   Do not place text or buttons in that SVG. Alter overlay JS/CSS independently. */
+.v18512-room-overlay{position:relative;z-index:1;max-width:100%}
+.v18512-room-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem}
+.v18512-room-action{display:inline-flex;justify-content:center;align-items:center;min-height:42px;padding:.55rem .85rem;background:rgba(255,255,255,.95);border:1px solid #fff;border-radius:8px;color:#153c56;font-size:.86rem;font-weight:750;text-decoration:none}
+.v18512-room-action:hover{background:#dff4f5;color:#153c56}
+.v18512-room-action:focus-visible{outline:3px solid #fff;outline-offset:3px}
+@media(max-width:680px){.v1780-room-stage{padding:1.1rem;min-height:280px;background-position:60% center;background-image:linear-gradient(90deg,rgba(10,29,45,.88),rgba(10,29,45,.5)),url('/assets/teacher-classroom-photo-locked-hf26.svg')}.v18512-room-overlay{max-width:100%}.v18512-room-action{font-size:.83rem}}
 .v1780-room-stage h3{color:#fff;font-size:1.43rem;margin:1rem 0 .4rem}
 .v1780-room-stage p{color:#e6f3f5;font-size:.94rem;line-height:1.55}
 .v1780-avatar{display:flex;align-items:center;justify-content:center;width:100px;height:100px;border-radius:50%;background:#c6e7e0;color:#123d45;font-size:2.4rem;font-weight:850;box-shadow:0 0 0 8px #ffffff20}
