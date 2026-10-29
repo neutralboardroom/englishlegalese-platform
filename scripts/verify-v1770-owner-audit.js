@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs'),assert=require('node:assert/strict');const rd=p=>fs.readFileSync(p,'utf8');
 const pkg=JSON.parse(rd('package.json')),index=rd('index.html'),app=rd('app.js'),overlay=rd('product-v1770.js'),css=rd('product-v1770.css'),audit=rd('governance/ENGLISHLEGALESE_V1770_OWNER_SCREENSHOT_AUDIT__MASTER_CHECKLIST__2026-10-20.md'),register=rd('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md');
-assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3','1.85.4','1.85.5','1.85.6','1.85.7'].includes(pkg.version));assert(index.includes('name="englishlegalese-release" content="'+pkg.version+'"'));assert(index.includes('product-v1770.js?v=1.77.0'));assert(index.includes('product-v1770.css?v=1.77.0'));
+assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3','1.85.4','1.85.5','1.85.6','1.85.7','1.85.8'].includes(pkg.version));assert(index.includes('name="englishlegalese-release" content="'+pkg.version+'"'));assert(index.includes('product-v1770.js?v=1.77.0'));assert(index.includes('product-v1770.css?v=1.77.0'));
 assert(app.includes('Georgian (ქართული)')&&app.includes('Human teacher guidance available'));
 assert(overlay.includes('const VERSION=')&&overlay.includes("input.maxLength=2500")&&overlay.includes("function mountLanguage")&&overlay.includes("function mountCourses")&&overlay.includes("function mountSmartTeacher")&&overlay.includes("function mountRoleViews")&&overlay.includes("function mountTrust"));
 assert(!overlay.includes('fetch(')&&!overlay.includes('XMLHttpRequest')&&!overlay.includes('sendBeacon')&&!overlay.includes('getUserMedia'));
