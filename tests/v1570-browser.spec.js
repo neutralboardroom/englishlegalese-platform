@@ -81,6 +81,11 @@ test.describe('EnglishLegalese v1.73.0 live homepage recovery inheritance', () =
     await page.goto('/');
     await page.locator('body.v1590-ready').waitFor();
 
+    // HF26 homepage summarizes long course content; the full legacy section must still work when opened.
+    await expect(page.locator('#courses')).toBeHidden();
+    await expect(page.locator('#v18512-home-preview')).toBeVisible();
+    await page.evaluate(()=>location.hash='#courses');
+    await expect(page.locator('#courses')).toBeVisible();
     const courseButton = page.locator('.js-v1580-courses');
     await expect(page.locator('#courses .v1800-class-card:visible')).toHaveCount(12);
     await expect(page.locator('#v1840-sample-lessons')).not.toHaveAttribute('open');

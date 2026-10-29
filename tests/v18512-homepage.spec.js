@@ -1,0 +1,35 @@
+'use strict';
+const {test,expect}=require('@playwright/test');
+test('HF26 homepage provides five pathways, a separate locked classroom photo, and expandable links to preserved tools',async({page})=>{
+ await page.goto('/#home');
+ const preview=page.locator('#v18512-home-preview');
+ await expect(preview).toBeVisible();
+ await expect(preview.getByRole('heading',{name:'Choose your EnglishLegalese pathway'})).toBeVisible();
+ await expect(preview.locator('.v18512-pathway-card')).toHaveCount(5);
+ await expect(page.locator('#live-classes')).toBeVisible();
+ const display=page.locator('#live-classes .v1780-room-stage');
+ await expect(display).toHaveCSS('background-image',/teacher-classroom-photo-locked-hf26\.svg/);
+ await expect(display.getByRole('heading',{name:'Teacher-led learning, together.'})).toBeVisible();
+ const fold=preview.locator('details.v18512-disclosure').filter({hasText:'Free learning resources'});
+ await expect(fold).not.toHaveAttribute('open',/.*/);
+ await fold.locator('summary').click();
+ await expect(fold).toHaveAttribute('open','');
+ await expect(fold.getByRole('link',{name:/AI Draft Review Lab/})).toHaveAttribute('href','#ai-review-lab');
+ await fold.getByRole('link',{name:/AI Draft Review Lab/}).click();
+ await expect(page).toHaveURL(/#ai-review-lab$/);
+ await expect(page.locator('#ai-review-lab')).toBeVisible();
+ await expect(page.locator('#case-brief-lab')).toBeHidden();
+});
+test('HF26 deep links preserve original focused course and free-resource content',async({page})=>{
+ await page.goto('/#case-brief-lab');
+ await expect(page.locator('#case-brief-lab')).toBeVisible();
+ await expect(page.locator('#v18512-home-preview')).toBeHidden();
+ await page.goto('/#home');
+ await expect(page.locator('#v18512-home-preview')).toBeVisible();
+ await expect(page.locator('#case-brief-lab')).toBeHidden();
+ const details=page.locator('#v18512-home-preview details.v18512-disclosure').filter({hasText:'Free learning resources'});
+ await details.locator('summary').click();
+ await details.getByRole('link',{name:/Case Brief Lab/}).click();
+ await expect(page).toHaveURL(/#case-brief-lab$/);
+ await expect(page.locator('#case-brief-lab')).toBeVisible();
+});

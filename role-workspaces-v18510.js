@@ -49,6 +49,32 @@ async function loadOwnerTriage(ownerToken,requestEpoch,section){
   section.append(employer,E('p','Certification issuance: not active · Employer card checkout: not active. No approval or payment actions are enabled in this read-only view.'));
  }catch(e){if(token===ownerToken&&epoch===requestEpoch&&section.isConnected)state.textContent='Operational queue unavailable: '+e.message+' No unverified totals are shown.'}
 }
+async function loadIntakeSummary(ownerToken,requestEpoch,section){
+ const state=E('p','Checking private enrollment and teacher application queue availability…');
+ state.setAttribute('role','status');section.append(state);
+ try{
+  const r=await fetch('/api/v18512/owner/intake-summary',{headers:auth(ownerToken),cache:'no-store'}),data=await parse(r);
+  if(token!==ownerToken||epoch!==requestEpoch||!section.isConnected)return;
+  if(!r.ok||data.ok!==true||!data.queues||typeof data.queues!=='object')throw Error(data.error||'Private intake queue unavailable');
+  section.replaceChildren(E('h3','Private intake review — verified totals only'),E('p',data.notes||'No personal applicant information is shown.'));
+  let due=0;
+  for(const [kind,label] of [['enrollment','Class enrollment requests'],['teacher','Teacher applications']]){
+   const area=E('section');area.append(E('h4',label));const list=E('ul'),rows=data.queues[kind];
+   if(!Array.isArray(rows))throw Error('Incomplete verified intake records');
+   if(!rows.length)list.append(E('li','No recorded entries in this category.'));
+   for(const row of rows){
+    if(!Number.isSafeInteger(row.total)||!Number.isSafeInteger(row.due)||row.total<0||row.due<0||row.due>row.total)throw Error('Invalid aggregate');
+    due+=row.due;list.append(E('li',row.status+': '+row.total+' recorded; '+row.due+' due for follow-up'));
+   }
+   area.append(list);section.append(area);
+  }
+  section.append(E('p','Total due follow-ups across verified intake queues: '+due+'. No automatic emails, decisions or payment actions were made.'));
+ }catch(e){
+  if(token===ownerToken&&epoch===requestEpoch&&section.isConnected){
+   section.replaceChildren(E('h3','Private intake review'),E('p','Private intake queue unavailable: '+e.message+'. No applicant details or unverified totals are displayed.'));
+  }
+ }
+}
 function renderOwner(data){
  const heading=E('h2','Operational snapshot');output.append(heading);
  output.append(E('p',data.notice||'Read-only production indicators.'));
@@ -62,6 +88,7 @@ function renderOwner(data){
   area.append(list);output.append(area);
  }
  const triage=E('section');triage.className='v18511-owner-triage';triage.setAttribute('aria-label','Verified operational action queues');output.append(triage);loadOwnerTriage(token,epoch,triage);
+ const intake=E('section');intake.className='v18512-owner-intake';intake.setAttribute('aria-label','Private owner intake review');output.append(intake);loadIntakeSummary(token,epoch,intake);
  const next=E('p','Next actions: review pending teacher submissions and class readiness; reconcile separately collected enrollment inquiries. This is not an invoice, employee-report editor, payout tool or permission manager.');
  output.append(next);
  const links=E('p');
@@ -186,26 +213,54 @@ function renderEmployer(data){
  output.append(E('p',people.length+' consented employees shown · '+published+' with published progress reports. Missing metrics are not zero and do not imply a failed assessment.'));
  if(data.truncated)output.append(E('p','Results are limited to the first 100 consented members; this is not a complete roster.'));
  if(!people.length)return;
+ const filters=E('div');filters.className='v18512-employer-filters';
+ const searchLabel=E('label','Find a consented employee'),search=E('input');search.type='search';search.maxLength=80;search.placeholder='Search the verified company';search.setAttribute('aria-label','Find a consented employee');searchLabel.append(search);
+ const statusLabel=E('label','Report availability'),statusFilter=E('select');statusFilter.setAttribute('aria-label','Filter by published report');
+ for(const [value,text]of [['all','All consented employees'],['published','Published progress only'],['missing','Without published progress']]){
+  const o=E('option',text);o.value=value;statusFilter.append(o);
+ }statusLabel.append(statusFilter);
+ const orderLabel=E('label','Sort employee names'),sort=E('select');sort.setAttribute('aria-label','Sort consented employee names');
+ for(const [value,text]of [['original','Original order'],['ascending','Name A to Z'],['descending','Name Z to A']]){
+  const o=E('option',text);o.value=value;sort.append(o);
+ }orderLabel.append(sort);
+ const filteredCount=E('p');filteredCount.className='v18512-employer-count';filteredCount.setAttribute('role','status');
+ filters.append(searchLabel,statusLabel,orderLabel,filteredCount);output.append(filters);
+ let visiblePeople=people;
  const wrap=E('div');wrap.style.overflowX='auto';
  const table=E('table');table.className='v1940-employer-report';
  const header=E('tr');
  for(const item of ['Employee','Reported','Completion','Attendance','Result','Milestones','Level'])header.append(E('th',item));
  const thead=E('thead');thead.append(header);table.append(thead);
- const tbody=E('tbody');
+ const tbody=E('tbody'),rows=[];
  for(const p of people){
   const tr=E('tr');const date=Date.parse(p.reported_at);
   for(const v of [p.name,p.has_published_report?(Number.isFinite(date)?new Date(date).toLocaleDateString():'Published; date unavailable'):'Not published',
    percent(p.completion_percent),percent(p.attendance_percent),percent(p.score_percent),
    p.milestones_completed??'Not reported',p.level||'Not reported'])tr.append(cell(v));
-  tbody.append(tr);
+  tbody.append(tr);rows.push({person:p,tr});
  }table.append(tbody);wrap.append(table);output.append(wrap);
- const exportBtn=E('button','Download these consented, published results (CSV)');
+ function applyEmployerFilters(){
+  const searchText=search.value.trim().toLocaleLowerCase(),kind=statusFilter.value;
+  const matched=rows.filter(({person})=>String(person.name||'').toLocaleLowerCase().includes(searchText)&&
+   (kind==='all'||(kind==='published'&&person.has_published_report)||(kind==='missing'&&!person.has_published_report)));
+  if(sort.value!=='original')matched.sort((a,b)=>(sort.value==='ascending'?1:-1)*String(a.person.name||'').localeCompare(String(b.person.name||'')));
+  const selected=new Set(matched);
+  for(const row of rows)row.tr.hidden=!selected.has(row);
+  for(const row of matched)tbody.append(row.tr);
+  visiblePeople=matched.map(row=>row.person);
+  filteredCount.textContent='Showing '+matched.length+' of '+people.length+' consented company employees. No results are inferred.';
+ }
+ search.addEventListener('input',applyEmployerFilters);
+ statusFilter.addEventListener('change',applyEmployerFilters);
+ sort.addEventListener('change',applyEmployerFilters);
+ applyEmployerFilters();
+ const exportBtn=E('button','Download these consented, published results (CSV; currently filtered)');
  exportBtn.type='button';exportBtn.className='v1940-export';
  exportBtn.addEventListener('click',()=>{
-  if(!token||!confirm('Download a PRIVATE report of the currently displayed consented employee progress? Keep it confidential. This file includes employee names and approved results; no private answers or teacher comments.'))return;
+  if(!token||!confirm('Download a PRIVATE report of the currently filtered consented employee progress? Keep it confidential. This file includes employee names and approved results; no private answers or teacher comments.'))return;
   const q=v=>'"'+String(v==null?'':v).replaceAll('"','""').replace(/^[=+@-]/,'\u0027')+'"';
   const lines=[['Employee','Published','Reported at','Completion percent','Attendance percent','Score percent','Milestones completed','Level'].map(q).join(',')];
-  for(const p of people)lines.push([p.name,p.has_published_report,p.reported_at||'',p.completion_percent??'',p.attendance_percent??'',p.score_percent??'',p.milestones_completed??'',p.level||''].map(q).join(','));
+  for(const p of visiblePeople)lines.push([p.name,p.has_published_report,p.reported_at||'',p.completion_percent??'',p.attendance_percent??'',p.score_percent??'',p.milestones_completed??'',p.level||''].map(q).join(','));
   const url=URL.createObjectURL(new Blob([lines.join('\r\n')+'\r\n'],{type:'text/csv;charset=utf-8'}));
   const a=E('a');a.href=url;a.download='englishlegalese-private-employer-progress-'+new Date().toISOString().slice(0,10)+'.csv';
   document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);

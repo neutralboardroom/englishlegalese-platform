@@ -2,7 +2,8 @@
 const {test,expect}=require('@playwright/test');
 test('HF24 homepage presents separate EnglishLegalese certificate pathways and value for employers',async({page})=>{
  await page.goto('/');
- await expect(page.locator('.hero-copy')).toContainText('Legal English and Business English certifications');
+ await expect(page.locator('.hero-copy .lead')).toContainText('EnglishLegalese offers its own separate Legal English and Business English certifications');
+ await expect(page.locator('.hero-copy .lead')).not.toContainText('EnglishLegalese will offer');
  await expect(page.locator('.hero-copy .lead')).toContainText('current and prospective employers gauge professional communication skills');
  await expect(page.locator('#mainNav a[href="/learn/certifications/"]')).toHaveCount(1);
 });

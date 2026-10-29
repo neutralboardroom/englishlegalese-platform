@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs');
 const js=fs.readFileSync('product-v1940-saved-lessons.js','utf8');
 const css=fs.readFileSync('product-v1940-saved-lessons.css','utf8');
 const html=fs.readFileSync('learn/my-work/index.html','utf8');
-assert.equal(require('../package.json').version,'1.85.11');
+assert.equal(require('../package.json').version,'1.85.12');
 for(const required of [
  "const PAGE_SIZE=25;let viewPage=0;","v1940-page-controls","Saved lesson pages",
  "E('button','Previous page')","E('button','Next page')","pageCounter.textContent=",
@@ -15,7 +15,7 @@ for(const required of [
  "for(const w of visible)","const report=studyReport(valid,","if(currentSequence!==hubRequestSequence||token!==currentToken)return"
 ])assert(js.includes(required),'HF20 protected saved-library behavior missing: '+required);
 assert(css.includes('.v1940-page-controls button:focus-visible'),'Keyboard pagination must be visible');
-assert(html.includes('product-v1940-saved-lessons.js?v=1.85.11-hf25'));
+assert(html.includes('product-v1940-saved-lessons.js?v=1.85.12-hf26'));
 assert(html.includes('not just the visible page'));
-assert(fs.readFileSync('index.html','utf8').includes('name="englishlegalese-release" content="1.85.11"'));
+assert(fs.readFileSync('index.html','utf8').includes('name="englishlegalese-release" content="1.85.12"'));
 console.log('PASS HF20: accessible private 25-item saved-work pages, sort, search, reset, no data deletion, full metadata-only export, exact release.');

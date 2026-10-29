@@ -4,7 +4,11 @@ async function ready(page,hash){await page.goto('/#'+hash);await page.locator('b
 test('v1.77 comprehensive homepage remains intact with condensed headline and teacher claim',async({page})=>{
  await ready(page,'home');await expect(page.locator('#home h1')).toContainText('live online classes with human teachers');
  await expect(page.locator('#home')).toContainText('Human teacher guidance available');
- await expect(page.locator('#start')).toBeVisible();await expect(page.locator('#courses')).toBeVisible();
+ await expect(page.locator('#v18512-home-preview')).toBeVisible();
+ await expect(page.locator('#start')).toBeHidden();await expect(page.locator('#courses')).toBeHidden();
+ await page.evaluate(()=>location.hash='#start');await expect(page.locator('#start')).toBeVisible();
+ await page.evaluate(()=>location.hash='#courses');await expect(page.locator('#courses')).toBeVisible();
+ await page.evaluate(()=>location.hash='#home');await expect(page.locator('#v18512-home-preview')).toBeVisible();
  await expect(page.locator('.site-header .brand img')).toBeVisible();
  await expect(page.locator('meta[name="englishlegalese-release"]')).toHaveAttribute('content',require('../package.json').version);
  await expect(page.locator('html')).toHaveAttribute('data-englishlegalese-material-release','1.84.0');

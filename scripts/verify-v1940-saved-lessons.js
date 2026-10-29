@@ -44,8 +44,8 @@ const paths=[
 assert.equal(paths.length,26);
 for(const p of paths){const page=read(p);assert(page.includes('product-v1940-saved-lessons.js?v=1.85.2-hf16')&&page.includes('product-v1940-saved-lessons.css?v=1.85.2-hf16'),'Self-paced saving omitted '+p)}
 for(const p of ['learn/my-work/index.html','learn/teacher-submissions/index.html'])assert(read(p).includes('v1940-'),'Missing dashboard '+p);
-assert(read('learn/my-work/index.html').includes('product-v1940-saved-lessons.js?v=1.85.11-hf25'),'Account dashboard must load the current script');
-assert(read('learn/teacher-submissions/index.html').includes('product-v1940-teacher-review.js?v=1.85.11-hf25'),'Teacher dashboard must load the current script');
+assert(read('learn/my-work/index.html').includes('product-v1940-saved-lessons.js?v=1.85.12-hf26'),'Account dashboard must load the current script');
+assert(read('learn/teacher-submissions/index.html').includes('product-v1940-teacher-review.js?v=1.85.12-hf26'),'Teacher dashboard must load the current script');
 assert(read('server.js').includes("require('./src/v1940-saved-lessons').install"),'Backend is not installed');
 assert(read('server.js').includes('authAbuse});'),'Account registration must reuse the original auth rate limiter');
 for(const t of ["./v1950-student-account-identity","/api/v1940/student/auth/login","/api/v1940/teacher/auth/login","email_verified:true","authAbuse.login","identity.verified(account.user.id)"])assert(server.includes(t),'Missing verified account safeguard '+t);
