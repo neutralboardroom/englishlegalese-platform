@@ -647,6 +647,7 @@ async function populateHub(){
       if(!token||token!==currentToken||hubRequestSequence!==currentSequence||!card.isConnected)return;
       if(!r.ok||j.ok!==true||!Array.isArray(j.submissions))
        throw Error(j.error||'Teacher submission history could not be confirmed.');
+      if(j.submissions.length>20)throw Error('The server returned too many submissions; history could not be validated.');
       feedback.replaceChildren();
       const latest=j.submissions[0];
       if(!latest){
@@ -661,6 +662,32 @@ async function populateHub(){
        feedback.append(E('p','Submitted to your assigned teacher; feedback has not been recorded yet. No automatic email was sent.'));
       }else{
        feedback.append(E('p','Submission recorded. Teacher assignment or review has not been confirmed. No automatic email was sent.'));
+      }
+      // HF22: history is retrieved only for the signed-in student's chosen
+      // lesson. Use plain-text DOM nodes, not HTML or shared-device storage.
+      if(j.submissions.length>1){
+       const history=E('details',undefined,'v1940-review-history');
+       history.append(E('summary','Earlier submissions ('+(j.submissions.length-1)+' shown, newest first)'));
+       for(const [index,previous] of j.submissions.slice(1).entries()){
+        const entry=E('section',undefined,'v1940-review-entry');
+        entry.append(E('strong','Earlier submission '+(index+1)));
+        const saved=Date.parse(previous?.created_at);
+        if(Number.isFinite(saved))entry.append(E('p','Submitted: '+new Date(saved).toLocaleString()));
+        if(previous?.review_status==='reviewed'){
+         entry.append(E('p','Reviewed by your assigned teacher'));
+         const recorded=Date.parse(previous.reviewed_at);
+         if(Number.isFinite(recorded))entry.append(E('p','Review recorded: '+new Date(recorded).toLocaleString()));
+         entry.append(E('p',typeof previous.teacher_feedback==='string'&&previous.teacher_feedback.trim()
+          ?previous.teacher_feedback:'This submission was marked reviewed without written comments.'));
+        }else if(previous?.review_status==='awaiting_review'){
+         entry.append(E('p','This earlier submission is awaiting feedback from its assigned teacher.'));
+        }else{
+         entry.append(E('p','This earlier submission was recorded; teacher assignment or review was not confirmed.'));
+        }
+        history.append(entry);
+       }
+       if(j.submissions.length===20)history.append(E('p','Showing the 20 most recent submissions returned by the server. Older submissions may also exist.'));
+       feedback.append(history);
       }
      }catch(e){
       if(!token||token!==currentToken||hubRequestSequence!==currentSequence||!card.isConnected)return;

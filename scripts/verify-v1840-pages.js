@@ -2,7 +2,7 @@
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const rd=x=>fs.readFileSync(x,'utf8');
 const pkg=JSON.parse(rd('package.json')),root=rd('index.html'),js=rd('product-v1840-pages.js'),css=rd('product-v1840-pages.css');
-assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3','1.85.4','1.85.5','1.85.6','1.85.7'].includes(pkg.version));
+assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3','1.85.4','1.85.5','1.85.6','1.85.7','1.85.8'].includes(pkg.version));
 assert(root.includes('name="englishlegalese-release" content="'+pkg.version+'"'));
 const data=JSON.parse(js.slice(js.indexOf('const DATA=')+'const DATA='.length,js.indexOf(';\nconst slug=')));
 const names=Object.keys(data);

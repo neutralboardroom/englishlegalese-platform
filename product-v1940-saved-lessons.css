@@ -34,4 +34,9 @@
 .v1940-review-button:focus-visible{outline:3px solid #176b83;outline-offset:2px}
 .v1940-review-result{overflow-wrap:anywhere;white-space:pre-wrap;line-height:1.5}
 .v1940-review-result p{margin:.3rem 0 .55rem}
+.v1940-review-history{margin:.8rem 0 .35rem;padding:.65rem;border:1px solid #a5c4cc;border-radius:7px;background:#fff}
+.v1940-review-history summary{cursor:pointer;font-weight:600;color:#184b60;min-height:36px}
+.v1940-review-history summary:focus-visible{outline:3px solid #176b83;outline-offset:2px}
+.v1940-review-entry{margin:.7rem 0;padding:.7rem;border-left:3px solid #31758a;background:#f4fafb;overflow-wrap:anywhere}
+.v1940-review-entry p{margin:.3rem 0 .55rem}
 @media(max-width:600px){.v1940-hub-toolbar{gap:.55rem}.v1940-hub-toolbar label{flex:1 1 100%}}
