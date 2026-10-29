@@ -1,9 +1,9 @@
 'use strict';
 const {test,expect}=require('@playwright/test');
-test('HF24 homepage promotes separate proposed certificates without implying award or accreditation',async({page})=>{
+test('HF24 homepage presents separate EnglishLegalese certificate pathways and value for employers',async({page})=>{
  await page.goto('/');
- await expect(page.locator('.hero-copy')).toContainText('Legal English and Business English certificates');
- await expect(page.locator('.hero-copy')).toContainText('credentials not yet issued');
+ await expect(page.locator('.hero-copy')).toContainText('Legal English and Business English certification pathways');
+ await expect(page.locator('.hero-copy .lead')).toContainText('current and prospective employers gauge job-relevant communication skills');
  await expect(page.locator('#mainNav a[href="/learn/certifications/"]')).toHaveCount(1);
 });
 for(const [slug,label,prefix]of [['legal','Legal','EL-LEG'],['business','Business','EL-BUS']]){
