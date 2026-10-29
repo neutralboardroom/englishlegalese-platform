@@ -8,7 +8,7 @@ for(const p of ["organization_id text not null references organizations(id)","re
 for(const p of ["/api/v18510/employer/roster","/api/v18510/employer/enrollment-requests","/api/v18510/employer/checkout","verifyEmployerOrg(req.user.id,id)","m.status='active'","u.role='student' AND u.status='active'","employee_user_ids","new Set(employees).size!==employees.length","ON CONFLICT (requester_user_id,client_request_id) DO NOTHING","payment_taken:false","employee_accounts_created:false","class_confirmed:false","checkout_available:false","payment_taken:false"] )assert(api.includes(p),'Missing secured employer booking condition '+p);
 assert(api.includes("requireBearer,auth,requireRoles('employer')"));
 assert(api.includes("estimated_total_cents"));
-assert(ui.includes('mountEmployerBooking(data.organization)'));
+assert(ui.includes('mountEmployerBooking(data.organization||orgs[0])'));
 assert(ui.includes('employee_user_ids:ids'));
 assert(ui.includes('client_request_id:pendingId'));
 assert(ui.includes('Payment may be arranged only after verified class availability'));
