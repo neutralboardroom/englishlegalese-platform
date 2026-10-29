@@ -545,6 +545,7 @@ const authAbuse=createAuthAbuseGuard();
 require('./src/v1940-saved-lessons').install(app,{store:persistentStore,services:productionServices,authMiddleware,requireRoles,configured,authAbuse});
 // HF24: employer consented published results and owner/admin read-only operational dashboards.
 require('./src/v18510-role-workspaces').install(app,{services:productionServices,authMiddleware,requireRoles});
+require('./src/v18511-owner-triage').install(app,{services:productionServices,authMiddleware,requireRoles});
 const aiGuard=createAiSafetyGate();
 const trialGuard=createTrialRateGate();
 const ledger=new FreeTrialLedger({store:persistentStore,sendMail:async mail=>{

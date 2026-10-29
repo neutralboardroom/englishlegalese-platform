@@ -20,6 +20,35 @@ function clear(){
 }
 function cell(text){return E('td',text==null?'Not reported':String(text))}
 function percent(n){return typeof n==='number'?n+'%':'Not reported'}
+async function loadOwnerTriage(ownerToken,requestEpoch,section){
+ const state=document.createElement('p');state.setAttribute('role','status');state.textContent='Checking verified operational queues…';
+ section.append(state);
+ try{
+  const response=await fetch('/api/v18511/owner/triage',{headers:auth(ownerToken),cache:'no-store'});
+  const data=await parse(response);
+  if(token!==ownerToken||epoch!==requestEpoch||!section.isConnected)return;
+  if(!response.ok||data.ok!==true)throw Error(data.error||'Operational queues unavailable');
+  section.replaceChildren(E('h3','Operational action queues (read-only)'),E('p','Verified '+new Date(data.verified_at).toLocaleString()+'. '+data.notice));
+  const groups=[['Teacher application approval states',data.teacher_applications],['Class scheduling readiness',data.class_readiness],['Class request and session states',data.class_statuses],['Progress report publication states',data.progress_report_states]];
+  for(const [name,states] of groups){
+   const field=E('section');field.append(E('h4',name));
+   const entries=Object.entries(states||{});const ul=E('ul');
+   if(!entries.length)ul.append(E('li','No records in this verified category.'));
+   for(const [state,count]of entries)ul.append(E('li',state+': '+count));
+   field.append(ul);section.append(field);
+  }
+  const employer=E('section');employer.append(E('h4','Employer enrollment requests'));
+  if(data.employer_enrollment?.schema_installed===false){
+   employer.append(E('p','Request database migration not installed — cannot report counts or accept stored employer requests yet.'));
+  }else{
+   const entries=Object.entries(data.employer_enrollment?.counts||{});const ul=E('ul');
+   if(!entries.length)ul.append(E('li','No recorded employer requests.'));
+   for(const [state,count]of entries)ul.append(E('li',state+': '+count));
+   employer.append(ul);
+  }
+  section.append(employer,E('p','Certification issuance: not active · Employer card checkout: not active. No approval or payment actions are enabled in this read-only view.'));
+ }catch(e){if(token===ownerToken&&epoch===requestEpoch&&section.isConnected)state.textContent='Operational queue unavailable: '+e.message+' No unverified totals are shown.'}
+}
 function renderOwner(data){
  const heading=E('h2','Operational snapshot');output.append(heading);
  output.append(E('p',data.notice||'Read-only production indicators.'));
@@ -32,6 +61,7 @@ function renderOwner(data){
   for(const [name,count]of rows)list.append(E('li',name+': '+count));
   area.append(list);output.append(area);
  }
+ const triage=E('section');triage.className='v18511-owner-triage';triage.setAttribute('aria-label','Verified operational action queues');output.append(triage);loadOwnerTriage(token,epoch,triage);
  const next=E('p','Next actions: review pending teacher submissions and class readiness; reconcile separately collected enrollment inquiries. This is not an invoice, employee-report editor, payout tool or permission manager.');
  output.append(next);
  const links=E('p');
