@@ -64,5 +64,6 @@ test('HF24 account landing routes each role to accurate existing workspace',asyn
  await expect(page.getByRole('link',{name:'Open student saved-work dashboard'})).toHaveAttribute('href','/learn/my-work/');
  await expect(page.getByRole('link',{name:'Open teacher review dashboard'})).toHaveAttribute('href','/learn/teacher-submissions/');
  await expect(page.getByRole('link',{name:'Open employer training workspace'})).toHaveAttribute('href','/learn/employers/');
- await expect(page.locator('.v1940-role-grid article')).toHaveCount(3);
+ await expect(page.getByRole('link',{name:'Open owner/admin dashboard'})).toHaveAttribute('href','/learn/owner-dashboard/');
+ await expect(page.locator('.v1940-role-grid article')).toHaveCount(4);
 });

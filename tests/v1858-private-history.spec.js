@@ -23,7 +23,7 @@ test('HF22 preserves latest submission state and securely discloses older genuin
  await expect(hub.locator('.v1940-review-result')).toContainText('feedback has not been recorded yet');
  const history=hub.locator('details.v1940-review-history');
  await expect(history).toHaveCount(1);
- await expect(history.locator('summary')).toContainText('Earlier submissions (2 shown');
+ await expect(history.locator('summary')).toContainText('Earlier submissions (2 returned');
  await history.locator('summary').click();
  await expect(history.locator('.v1940-review-entry')).toHaveCount(2);
  await expect(history).toContainText('Real older tutor remarks');
