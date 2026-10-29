@@ -6,7 +6,7 @@ const home=read('index.html'),app=read('app.js');
 const hub=read('learn/certifications/index.html');
 const legal=read('learn/legal-english-certification/index.html');
 const business=read('learn/business-english-certification/index.html');
-assert.equal(require('../package.json').version,'1.85.11');
+assert.equal(require('../package.json').version,'1.85.12');
 for(const [track,doc,prefix]of [['legal',legal,'EL-LEG'],['business',business,'EL-BUS']]){
  assert(doc.includes('EnglishLegalese-issued'));
  assert(doc.includes('name="englishlegalese-release" content="1.85.11"'));

@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs');
 const read=x=>fs.readFileSync(x,'utf8');
 const api=read('src/v18510-role-workspaces.js'),ui=read('role-workspaces-v18510.js');
 const sql=read('db/migrations/020_hf24_employer_enrollment_requests.sql');
-assert.equal(require('../package.json').version,'1.85.11');
+assert.equal(require('../package.json').version,'1.85.12');
 for(const p of ["organization_id text not null references organizations(id)","requester_user_id text not null references users(id)","employee_user_ids text[] not null","unique(requester_user_id,client_request_id)","payment_status text not null default 'not_requested'"])assert(sql.includes(p));
 for(const p of ["/api/v18510/employer/roster","/api/v18510/employer/enrollment-requests","/api/v18510/employer/checkout","verifyEmployerOrg(req.user.id,id)","m.status='active'","u.role='student' AND u.status='active'","employee_user_ids","new Set(employees).size!==employees.length","ON CONFLICT (requester_user_id,client_request_id) DO NOTHING","payment_taken:false","employee_accounts_created:false","class_confirmed:false","checkout_available:false","payment_taken:false"] )assert(api.includes(p),'Missing secured employer booking condition '+p);
 assert(api.includes("requireBearer,auth,requireRoles('employer')"));
