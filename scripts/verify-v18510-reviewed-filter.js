@@ -12,7 +12,7 @@ assert.equal(pkg.version,'1.85.10');
 for(const part of ["// HF24: Read-only summary","j.submissions.filter(item=>item?.review_status==='reviewed')","j.submissions.length-reviewedCount-awaitingCount","previousSubmissions.filter(item=>item?.review_status==='reviewed')","filter.setAttribute('aria-pressed',String(reviewedOnly))","previousList.replaceChildren()","!token||token!==currentToken||hubRequestSequence!==currentSequence||!card.isConnected"])assert(student.includes(part),'Missing student privacy or summary guard '+part);
 assert(student.includes('privateSubmissionReport(w.title||w.key,j.submissions)'));
 assert(css.includes('.v1940-history-filter:focus-visible'));
-for(const part of ["const awaiting=queueData.filter(x=>x.review_status==='awaiting_review').length","Assigned records returned:","Filter assigned submissions by status","Refresh assigned queue","'/api/v1940/teacher/auth/logout-everywhere'","requestSequence","assigned student submission","No email was sent"])assert(teacher.includes(part),'Missing teacher workflow '+part);
+for(const part of ["const awaiting=queueData.filter(x=>x.review_status==='awaiting_review').length","Assigned records returned:","Filter assigned submissions by status","Refresh assigned queue","'/api/v1940/teacher/auth/logout-everywhere'","requestSequence","assigned student submission","No email sent."])assert(teacher.includes(part),'Missing teacher workflow '+part);
 assert(!teacher.includes('innerHTML='));
 assert(hub.includes('product-v1940-saved-lessons.js?v=1.85.10-hf24'));
 assert(hub.includes('href="https://englishlegalese.com/learn/my-work/"'));

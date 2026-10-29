@@ -7,3 +7,11 @@
 .v1940-teacher-list button{font:inherit;min-height:44px;background:#eaf5f8;color:#184b60;border:1px solid #31758a;border-radius:6px;padding:.45rem .7rem;cursor:pointer}
 .v1940-teacher-list button:focus-visible{outline:3px solid #176b83;outline-offset:2px}
 @media(max-width:600px){.v1940-role-grid{grid-template-columns:1fr}}
+
+/* HF24 genuine role dashboard responsive data layout. */
+[data-el18510-workspace]{padding-bottom:3rem}
+[data-el18510-workspace] #el18510-actions button,[data-el18510-workspace] .v1940-export{font:inherit;min-height:44px;margin:.7rem 0;padding:.5rem .8rem;border:1px solid #31758a;border-radius:6px;background:#eaf5f8;color:#184b60;cursor:pointer}
+[data-el18510-workspace] :focus-visible{outline:3px solid #176b83;outline-offset:2px}
+.v1940-employer-report{width:100%;border-collapse:collapse;margin:1rem 0;font:inherit}
+.v1940-employer-report th,.v1940-employer-report td{border-bottom:1px solid #b5cbd3;padding:.65rem;text-align:left;white-space:nowrap}
+.v1940-employer-report th{background:#edf6f8}

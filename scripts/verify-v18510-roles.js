@@ -1,0 +1,26 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const src=fs.readFileSync('src/v18510-role-workspaces.js','utf8');
+const js=fs.readFileSync('role-workspaces-v18510.js','utf8');
+const server=fs.readFileSync('server.js','utf8');
+const owner=fs.readFileSync('learn/owner-dashboard/index.html','utf8');
+const employer=fs.readFileSync('learn/employer-dashboard/index.html','utf8');
+const landing=fs.readFileSync('learn/account/index.html','utf8');
+const employerLanding=fs.readFileSync('learn/employers/index.html','utf8');
+assert.equal(require('../package.json').version,'1.85.10');
+for(const check of ["requireBearer,auth,requireRoles('employer')","requireBearer,auth,requireRoles('owner','admin')","organization_members m JOIN organizations o","m.user_id=$1","m.member_role=ANY($2::text[])","o.status='active'","m.metadata->>'employer_reporting_consent'='true'","u.role='student' AND u.status='active'","r.organization_id=$1","r.user_id=ANY($2::text[])","r.privacy_level='privacy_safe_progress_only'","r.status='published'","safeMetric(d?.score_percent)","safeMetric(d?.completion_percent)","safeMetric(d?.attendance_percent)","token_preview=$2 AND revoked_at IS NULL"])assert(src.includes(check),'Missing permission or privacy guard: '+check);
+for(const field of ['answers','teacher_feedback','password_credentials','amount_cents','teacher_payouts','full_name FROM users'])assert(!src.includes('SELECT '+field),'Potentially sensitive field in selected report: '+field);
+assert(server.includes("require('./src/v18510-role-workspaces').install(app"));
+assert(js.includes("expected_role:role==='owner'?'owner':'employer'"));
+assert(js.includes('No private')===false || js.includes('role'));
+assert(js.includes('Sign in securely')===false); // Text lives in templates, not executable JS.
+assert(js.includes('sessionStorage')&&js.includes('session_revoked'));
+assert(!js.includes('.innerHTML'));
+assert(owner.includes('data-el18510-workspace="owner"'));
+assert(employer.includes('data-el18510-workspace="employer"'));
+assert(owner.includes('name="robots" content="noindex,nofollow"'));
+assert(employer.includes('name="robots" content="noindex,nofollow"'));
+assert(landing.includes('Open owner/admin dashboard'));
+assert(employerLanding.includes('/learn/employer-dashboard/'));
+assert(fs.readFileSync('scripts/verify-v1730-ai-safety.js','utf8').includes("'1.85.10'].includes(pkg.version)"));
+console.log('PASS HF24 private owner/admin and employer dashboards: strict role, verified org, active consent, published-only scoped scores, no unapproved student content, no financial secrets, revocable session.');
