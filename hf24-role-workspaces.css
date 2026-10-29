@@ -15,3 +15,13 @@
 .v1940-employer-report{width:100%;border-collapse:collapse;margin:1rem 0;font:inherit}
 .v1940-employer-report th,.v1940-employer-report td{border-bottom:1px solid #b5cbd3;padding:.65rem;text-align:left;white-space:nowrap}
 .v1940-employer-report th{background:#edf6f8}
+
+/* HF24 employer staff-reviewed enrollment requests, never active checkout. */
+.v1940-enrollment-tools{padding:1rem;margin:1.2rem 0;border:1px solid #b5cbd3;border-radius:10px;background:#f7fbfc}
+.v1940-employer-enroll-form{display:grid;gap:.75rem;max-width:720px}
+.v1940-employer-enroll-form label{display:flex;flex-direction:column;gap:.3rem}
+.v1940-employer-enroll-form label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.v1940-employer-enroll-form select,.v1940-employer-enroll-form textarea{font:inherit;border:1px solid #7293a0;padding:.45rem;min-height:44px;border-radius:6px}
+.v1940-enroll-roster{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;max-height:235px;overflow-y:auto}
+.v1940-employer-enroll-form button{font:inherit;min-height:44px;padding:.5rem .7rem;background:#eaf5f8;border:1px solid #31758a;border-radius:6px;color:#184b60;cursor:pointer}
+.v1940-employer-enroll-form :focus-visible{outline:3px solid #176b83;outline-offset:2px}

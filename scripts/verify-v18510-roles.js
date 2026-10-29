@@ -11,7 +11,7 @@ assert.equal(require('../package.json').version,'1.85.10');
 for(const check of ["requireBearer,auth,requireRoles('employer')","requireBearer,auth,requireRoles('owner','admin')","organization_members m JOIN organizations o","m.user_id=$1","m.member_role=ANY($2::text[])","o.status='active'","m.metadata->>'employer_reporting_consent'='true'","u.role='student' AND u.status='active'","r.organization_id=$1","r.user_id=ANY($2::text[])","r.privacy_level='privacy_safe_progress_only'","r.status='published'","safeMetric(d?.score_percent)","safeMetric(d?.completion_percent)","safeMetric(d?.attendance_percent)","token_preview=$2 AND revoked_at IS NULL"])assert(src.includes(check),'Missing permission or privacy guard: '+check);
 for(const field of ['answers','teacher_feedback','password_credentials','amount_cents','teacher_payouts','full_name FROM users'])assert(!src.includes('SELECT '+field),'Potentially sensitive field in selected report: '+field);
 assert(server.includes("require('./src/v18510-role-workspaces').install(app"));
-assert(js.includes("expected_role:role==='owner'?'owner':'employer'"));
+assert(js.includes("expected_role:role==='owner'?(values.get('account_role')==='admin'?'admin':'owner'):'employer'"));
 assert(js.includes('No private')===false || js.includes('role'));
 assert(js.includes('Sign in securely')===false); // Text lives in templates, not executable JS.
 assert(js.includes('sessionStorage')&&js.includes('session_revoked'));

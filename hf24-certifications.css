@@ -1,0 +1,14 @@
+/* EnglishLegalese HF24: original independent certification pathway pages. */
+.v1940-cert-page{padding-bottom:2.5rem;line-height:1.6}
+.v1940-cert-page section{margin:1.65rem 0}
+.v1940-cert-page h2{font-size:clamp(1.25rem,2vw,1.6rem)}
+.v1940-cert-page a{color:#12617e;text-decoration:underline;text-underline-offset:2px}
+.v1940-cert-page a:focus-visible{outline:3px solid #176b83;outline-offset:2px}
+.v1940-cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem}
+.v1940-cert-grid article,.v1940-cert-next{padding:1rem;border:1px solid #b5cbd3;border-radius:10px;background:#f5f9fb}
+.v1940-table-scroll{overflow-x:auto}
+.v1940-table-scroll table{border-collapse:collapse;width:100%;min-width:690px}
+.v1940-table-scroll th,.v1940-table-scroll td{padding:.75rem;text-align:left;vertical-align:top;border-bottom:1px solid #b5cbd3}
+.v1940-table-scroll thead{background:#e9f2f5}
+.v1940-cert-page li{margin:.55rem 0}
+@media(max-width:620px){.v1940-cert-page{padding:.3rem .75rem}.v1940-cert-grid{grid-template-columns:1fr}}
