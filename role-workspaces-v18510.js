@@ -254,7 +254,7 @@ function renderEmployer(data){
  statusFilter.addEventListener('change',applyEmployerFilters);
  sort.addEventListener('change',applyEmployerFilters);
  applyEmployerFilters();
- const exportBtn=E('button','Download selected consented progress results (CSV)');
+ const exportBtn=E('button','Download these consented, published results (CSV; currently filtered)');
  exportBtn.type='button';exportBtn.className='v1940-export';
  exportBtn.addEventListener('click',()=>{
   if(!token||!confirm('Download a PRIVATE report of the currently filtered consented employee progress? Keep it confidential. This file includes employee names and approved results; no private answers or teacher comments.'))return;

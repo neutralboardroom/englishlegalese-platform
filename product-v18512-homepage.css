@@ -29,14 +29,19 @@
 @media(max-width:960px){.v18512-pathway-cards{grid-template-columns:repeat(3,minmax(0,1fr))}.v18512-steps ol{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.v18512-pathway-cards,.v18512-more{grid-template-columns:1fr}.v18512-steps ol{grid-template-columns:1fr}.v18512-home-preview{padding-top:.8rem}}
 
-/* Legacy section roots stay unchanged for focused route navigation. On homepage
-   only, their content is available via the concise disclosure links instead. */
+/* Preserve the original direct-child course, teacher and trust sections on #home.
+   Prior navigation and exercises require them to be immediately interactive.
+   Shorter summary cards remain the primary choice; compact legacy sections
+   reduce visual weight without hiding real content or breaking deep links. */
 body[data-el-homepage-view="home"] #app > #start,
 body[data-el-homepage-view="home"] #app > #learning-pathways,
 body[data-el-homepage-view="home"] #app > #courses,
 body[data-el-homepage-view="home"] #app > #smartteacher,
 body[data-el-homepage-view="home"] #app > #teachers,
-body[data-el-homepage-view="home"] #app > #trust {display:none!important}
+body[data-el-homepage-view="home"] #app > #trust {display:block!important}
+body[data-el-homepage-view="home"] #app > #start,
+body[data-el-homepage-view="home"] #app > #learning-pathways,
+body[data-el-homepage-view="home"] #app > #courses {padding-block:1.1rem}
 .v18512-disclosure-body ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem 1rem;margin:.6rem 0;padding-left:1.25rem}
 .v18512-disclosure-body li{line-height:1.5}
 .v18512-disclosure-body a{display:inline-block;min-height:40px;padding:.4rem .15rem;text-decoration:underline;text-underline-offset:3px;color:#086277}
