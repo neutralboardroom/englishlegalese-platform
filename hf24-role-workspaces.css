@@ -27,3 +27,12 @@
 .v1940-enrollment-form button:disabled{opacity:.55;cursor:default}
 .v1940-enrollment-estimate,.v1940-enrollment-payment{font-weight:600;color:#25546a}
 .v1940-employer-history li{margin:.5rem 0}
+
+/* HF26 employer progress is filtered only after server-side organization and consent validation. */
+.v18512-employer-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem;margin:1rem 0}
+.v18512-employer-filters label{display:flex;flex-direction:column;gap:.4rem;color:#1a4354;font-weight:650}
+.v18512-employer-filters input,.v18512-employer-filters select{min-height:44px;width:100%;font:inherit;padding:.5rem;border:1px solid #92adbc;border-radius:7px;background:#fff}
+.v18512-employer-filters .v18512-employer-count{grid-column:1/-1;margin:.2rem 0;color:#31546b}
+.v1940-employer-report tr[hidden]{display:none}
+.v18512-owner-intake{margin-block:1rem;padding:.8rem 1rem;background:#f4f9fa;border:1px solid #cadfe3;border-radius:9px}
+@media(max-width:650px){.v18512-employer-filters{grid-template-columns:1fr}}
