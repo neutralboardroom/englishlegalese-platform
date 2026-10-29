@@ -1,0 +1,24 @@
+'use strict';
+/* HF26 PERMANENT IMAGE-ASSET LOCK. Copy, labels and links are not image pixels. */
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const {createHash}=require('node:crypto');
+const asset='assets/teacher-classroom-photo-locked-hf26.svg';
+const svg=fs.readFileSync(asset,'utf8');
+assert(svg.startsWith('<svg '),'Static teacher image asset must exist');
+assert(!/<text\b|<foreignObject\b|<script\b/i.test(svg),'Teacher photograph MUST NOT embed editable text');
+const match=svg.match(/href="data:image\/webp;base64,([A-Za-z0-9+/=]+)"/);
+assert(match,'Approved teacher photograph must be embedded locally, never link to a mutable outside source');
+const photo=Buffer.from(match[1],'base64');
+assert(photo.subarray(0,4).toString()==='RIFF'&&photo.subarray(8,12).toString()==='WEBP','Expected approved WebP photo pixels');
+assert.equal(createHash('sha256').update(photo).digest('hex'),'68e5443d8347ebf4d02e45d576fbed64f9a9b94dc5ca2706cf9c28251bd63898','LOCKED photo pixels were changed; editing only text or buttons must never change the image');
+const js=fs.readFileSync('product-v1780.js','utf8');
+const css=fs.readFileSync('product-v1780.css','utf8');
+for(const s of ["const CLASSROOM_OVERLAY_COPY=Object.freeze","heading:'Teacher-led learning, together.'","supporting:'Video discussion • roleplay • vocabulary review • shared learning goals'","actions:Object.freeze","Explore live classes","View courses","demo.append(links);display.append(demo);"])assert(js.includes(s),'Editable DOM copy or button configuration missing: '+s);
+assert(css.includes("url('/"+asset+"')"),'Teacher panel must reference the fixed independently versioned image asset');
+assert(css.includes('.v18512-room-action:focus-visible'),'Accessible user-editable call to action focus');
+assert(!js.includes('avatar=n('),'Old illustration placeholder must be removed');
+assert(!svg.includes('Teacher-led learning, together'),'Headline must never be part of the immutable image');
+const doc=fs.readFileSync('NEXT_VERSION_IMPROVEMENT_LIST.md','utf8');
+assert(doc.includes('All future text, button label and link changes must edit only overlay source'));
+console.log('PASS HF26 teacher classroom image: photo byte SHA256 locked, all headline, subtext, buttons and URLs are separate editable DOM; no need to regenerate photograph.');
