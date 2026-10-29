@@ -1282,7 +1282,7 @@
     if(target){ requestAnimationFrame(()=>target.scrollIntoView({behavior:'instant',block:'start'})); return; }
     if(attempt<20) setTimeout(()=>scrollToTarget(id,attempt+1),50);
   }
-  const homepageSectionIds = new Set(['home','start','courses','smartteacher','teachers','trust','live-classes','learning-pathways']);
+  const homepageSectionIds = new Set(['home','start','courses','smartteacher','teachers','trust','live-classes','learning-pathways','v18512-home-preview']);
   const focusBar = document.getElementById('elFocusToolbar');
   const focusBarName = document.getElementById('elFocusName');
   function applyRouteView(){
