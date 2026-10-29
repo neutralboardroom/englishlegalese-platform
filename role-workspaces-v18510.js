@@ -49,6 +49,32 @@ async function loadOwnerTriage(ownerToken,requestEpoch,section){
   section.append(employer,E('p','Certification issuance: not active · Employer card checkout: not active. No approval or payment actions are enabled in this read-only view.'));
  }catch(e){if(token===ownerToken&&epoch===requestEpoch&&section.isConnected)state.textContent='Operational queue unavailable: '+e.message+' No unverified totals are shown.'}
 }
+async function loadIntakeSummary(ownerToken,requestEpoch,section){
+ const state=E('p','Checking private enrollment and teacher application queue availability…');
+ state.setAttribute('role','status');section.append(state);
+ try{
+  const r=await fetch('/api/v18512/owner/intake-summary',{headers:auth(ownerToken),cache:'no-store'}),data=await parse(r);
+  if(token!==ownerToken||epoch!==requestEpoch||!section.isConnected)return;
+  if(!r.ok||data.ok!==true||!data.queues||typeof data.queues!=='object')throw Error(data.error||'Private intake queue unavailable');
+  section.replaceChildren(E('h3','Private intake review — verified totals only'),E('p',data.notes||'No personal applicant information is shown.'));
+  let due=0;
+  for(const [kind,label] of [['enrollment','Class enrollment requests'],['teacher','Teacher applications']]){
+   const area=E('section');area.append(E('h4',label));const list=E('ul'),rows=data.queues[kind];
+   if(!Array.isArray(rows))throw Error('Incomplete verified intake records');
+   if(!rows.length)list.append(E('li','No recorded entries in this category.'));
+   for(const row of rows){
+    if(!Number.isSafeInteger(row.total)||!Number.isSafeInteger(row.due)||row.total<0||row.due<0||row.due>row.total)throw Error('Invalid aggregate');
+    due+=row.due;list.append(E('li',row.status+': '+row.total+' recorded; '+row.due+' due for follow-up'));
+   }
+   area.append(list);section.append(area);
+  }
+  section.append(E('p','Total due follow-ups across verified intake queues: '+due+'. No automatic emails, decisions or payment actions were made.'));
+ }catch(e){
+  if(token===ownerToken&&epoch===requestEpoch&&section.isConnected){
+   section.replaceChildren(E('h3','Private intake review'),E('p','Private intake queue unavailable: '+e.message+'. No applicant details or unverified totals are displayed.'));
+  }
+ }
+}
 function renderOwner(data){
  const heading=E('h2','Operational snapshot');output.append(heading);
  output.append(E('p',data.notice||'Read-only production indicators.'));
@@ -62,6 +88,7 @@ function renderOwner(data){
   area.append(list);output.append(area);
  }
  const triage=E('section');triage.className='v18511-owner-triage';triage.setAttribute('aria-label','Verified operational action queues');output.append(triage);loadOwnerTriage(token,epoch,triage);
+ const intake=E('section');intake.className='v18512-owner-intake';intake.setAttribute('aria-label','Private owner intake review');output.append(intake);loadIntakeSummary(token,epoch,intake);
  const next=E('p','Next actions: review pending teacher submissions and class readiness; reconcile separately collected enrollment inquiries. This is not an invoice, employee-report editor, payout tool or permission manager.');
  output.append(next);
  const links=E('p');
