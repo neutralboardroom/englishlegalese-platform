@@ -1,0 +1,14 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const home=fs.readFileSync('index.html','utf8'),src=fs.readFileSync('product-v18512-homepage.js','utf8'),style=fs.readFileSync('product-v18512-homepage.css','utf8');
+assert.equal(require('../package.json').version,'1.85.12');
+assert(home.includes('product-v18512-homepage.js?v=1.85.12'));
+assert(home.includes('product-v18512-homepage.css?v=1.85.12'));
+for(const s of ['learning-pathways','case-brief-lab','smartteacher-free-trial','teachers','employers','trust'])assert(src.includes(s),'Preserve original homepage section '+s);
+for(const name of ['Legal English','Business English','Certifications','For employers','Teachers & classes'])assert(src.includes(name));
+assert(src.includes('document.createElement(tag)'));
+assert(src.includes('document.createElement(tag)')&&src.includes('details')&&src.includes('summary')&&src.includes('window.addEventListener(\'hashchange\',reveal)'));
+assert(src.includes('body.append(section)'),'Original sections must move, not be recreated or deleted');
+assert(style.includes(':focus-visible'));
+assert(!src.includes('fetch(')&&!src.includes('innerHTML'),'No new AJAX, stored learner data or unsafe injected HTML');
+console.log('PASS HF26 homepage: accessible summary-first path, five focus cards, preserved legacy practice tools, deep-link disclosure and original teacher scheduler.');
