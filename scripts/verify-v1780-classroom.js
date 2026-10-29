@@ -2,7 +2,7 @@
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const rd=p=>fs.readFileSync(p,'utf8');
 const pkg=JSON.parse(rd('package.json')),html=rd('index.html'),app=rd('app.js'),js=rd('product-v1780.js'),css=rd('product-v1780.css'),reg=rd('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md'),audit=rd('governance/ENGLISHLEGALESE_V1770_OWNER_SCREENSHOT_AUDIT__MASTER_CHECKLIST__2026-10-20.md');
-assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3','1.85.4','1.85.5','1.85.6'].includes(pkg.version));
+assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3','1.85.4','1.85.5','1.85.6','1.85.7'].includes(pkg.version));
 const productionWorkflow=rd('.github/workflows/englishlegalese-v1780-production-acceptance.yml');
 assert(productionWorkflow.includes('product-v1780.js?v=1.78.0&acceptance='),'Live acceptance must inspect exact new asset');
 assert(productionWorkflow.includes("'1.78.0-navigation-domain-hardening'"),'Live acceptance must inspect exact health version');

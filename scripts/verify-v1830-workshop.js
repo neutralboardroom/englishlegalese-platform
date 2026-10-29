@@ -2,7 +2,7 @@
 const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('node:vm'),rd=f=>fs.readFileSync(f,'utf8');
 const pkg=JSON.parse(rd('package.json')),html=rd('index.html'),js=rd('product-v1830-feedback.js'),css=rd('product-v1830-feedback.css');
 const rules=rd('governance/ENGLISHLEGALESE_CANONICAL_RULE_REGISTER__v1.57.0.md'),extra=rd('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md');
-assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3','1.85.4','1.85.5','1.85.6'].includes(pkg.version));assert(html.includes('name="englishlegalese-release" content="'+pkg.version+'"'));
+assert.ok(['1.85.0','1.85.1','1.85.2','1.85.3','1.85.4','1.85.5','1.85.6','1.85.7'].includes(pkg.version));assert(html.includes('name="englishlegalese-release" content="'+pkg.version+'"'));
 for(const item of ['product-v1830-feedback.js?v=1.83.0','product-v1830-feedback.css?v=1.83.0','product-v1820-learning-studio.js?v=1.84.0','product-v1810-pricing.js?v=1.81.0','product-v1800-catalog.js?v=1.84.0'])assert(html.includes(item),'Preserve predecessor content and add '+item);
 const ctx={window:{}};vm.runInNewContext(rd('curriculum-v1800-data.js'),ctx,{timeout:2500});
 assert.equal(ctx.window.ELCURRICULUM_V1800.records.length,28);

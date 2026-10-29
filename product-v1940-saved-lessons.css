@@ -29,4 +29,9 @@
 .v1940-page-controls button:focus-visible{outline:3px solid #176b83;outline-offset:2px}
 .v1940-page-counter{font-weight:600;color:#17394b;text-align:center}
 @media(max-width:600px){.v1940-page-controls{gap:.6rem}.v1940-page-controls button{flex:1 1 40%}.v1940-page-counter{order:-1;flex:1 1 100%}}
+.v1940-review-button{display:inline-block;margin:.6rem 0 .1rem;font:inherit;min-height:44px;padding:.45rem .75rem;border:1px solid #31758a;border-radius:6px;background:#eaf5f8;color:#184b60;cursor:pointer}
+.v1940-review-button:disabled{opacity:.65;cursor:wait}
+.v1940-review-button:focus-visible{outline:3px solid #176b83;outline-offset:2px}
+.v1940-review-result{overflow-wrap:anywhere;white-space:pre-wrap;line-height:1.5}
+.v1940-review-result p{margin:.3rem 0 .55rem}
 @media(max-width:600px){.v1940-hub-toolbar{gap:.55rem}.v1940-hub-toolbar label{flex:1 1 100%}}
