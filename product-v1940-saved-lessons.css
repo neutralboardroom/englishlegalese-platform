@@ -13,6 +13,8 @@
 .v1940-saved-card strong{display:block}
 @media(max-width:600px){.v1940-account,.v1940-controls{padding:.5rem}.v1940-buttons button{flex:1 1 42%}.v1940-login label,.v1940-login input{width:100%}}
 
+.v1940-buttons button:disabled{opacity:.7;cursor:wait}
+/* HF19: user-initiated private backup parts. */
 /* HF16: compact, accessible saved-work search and status filters on every screen. */
 .v1940-hub-toolbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:.85rem;margin:.85rem 0}
 .v1940-hub-toolbar label{display:flex;flex-direction:column;flex:1 1 225px;gap:.2rem;font-weight:600;color:#17394b}
