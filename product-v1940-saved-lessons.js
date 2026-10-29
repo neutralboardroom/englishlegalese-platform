@@ -465,6 +465,45 @@ function discover(){
   buildLesson('page:'+slug,title,root);
  }
 }
+// HF23: Pure, private, bounded per-lesson teacher submission history report.
+// Never include original student answers, session tokens, email or database IDs.
+// Server returns only the latest 20; a full historical account export is separate.
+function privateSubmissionReport(lessonTitle,submissions){
+ if(!Array.isArray(submissions)||!submissions.length||submissions.length>20)
+  throw Error('No valid private submission history is available to export.');
+ const cleanLine=v=>String(v==null?'':v).replace(/[\u0000-\u001f\u007f]/g,' ').trim().slice(0,180);
+ const cleanFeedback=v=>String(v==null?'':v).replace(/[\u0000-\u0008\u000b-\u001f\u007f]/g,'').trim().slice(0,5000);
+ const iso=v=>{const time=Date.parse(v);return Number.isFinite(time)?new Date(time).toISOString():'Date not recorded'};
+ const lines=[
+  'EnglishLegalese — PRIVATE student submission and teacher feedback report',
+  'Lesson: '+cleanLine(lessonTitle),
+  'Reported submissions: '+submissions.length+' (newest first)',
+  'Generated at: '+new Date().toISOString(),
+  'Contains only recorded review states, dates and teacher feedback — never student answers or credentials.',
+  'This is NOT a full account backup. The server returns at most 20 recent submissions per lesson.',
+  'Older submissions may exist, particularly if 20 are shown. Records can change after downloading.',
+  'Keep this file private. No email, upload or teacher notification was sent.',
+  ''
+ ];
+ submissions.forEach((item,index)=>{
+  const status=item?.review_status;
+  const label=status==='reviewed'?'Reviewed by assigned teacher'
+   :status==='awaiting_review'?'Awaiting teacher feedback'
+   :'Recorded; teacher assignment/review unconfirmed';
+  lines.push('Submission '+(index+1)+(index===0?' (latest)':''));
+  lines.push('Submitted: '+iso(item?.created_at));
+  lines.push('Review status: '+label);
+  if(status==='reviewed'){
+   lines.push('Reviewed at: '+iso(item?.reviewed_at));
+   lines.push('Teacher feedback:');
+   lines.push(cleanFeedback(item?.teacher_feedback)||'Marked reviewed; no written comments recorded.');
+  }
+  lines.push('');
+ });
+ return lines.join('\n')+'\n';
+}
+// HF23 private submission report END
+
 // HF17 study report pure helper BEGIN
 // A metadata-only snapshot of the authenticated account list or opt-in device list.
 // Deliberately excludes answers, email, passwords, tokens, teacher feedback and grades.
@@ -688,6 +727,23 @@ async function populateHub(){
        }
        if(j.submissions.length===20)history.append(E('p','Showing the 20 most recent submissions returned by the server. Older submissions may also exist.'));
        feedback.append(history);
+      }
+      // HF23: A second, explicit opt-in for a TEXT-ONLY copy of exactly
+      // the private per-lesson history already fetched by this student.
+      if(j.submissions.length){
+       const exportHistory=E('button','Download private submission history (.txt)','v1940-review-export');
+       exportHistory.type='button';
+       exportHistory.addEventListener('click',()=>{
+        if(!token||token!==currentToken||hubRequestSequence!==currentSequence||!card.isConnected)return;
+        if(!confirm('Download a PRIVATE text report of this lesson’s recent submission statuses and recorded teacher feedback? It may contain sensitive teacher comments, but NO student answers. Keep it secure. The server returns up to 20 recent submissions, not necessarily all. No email or upload will be sent.'))return;
+        if(!token||token!==currentToken||hubRequestSequence!==currentSequence||!card.isConnected)return;
+        const report=privateSubmissionReport(w.title||w.key,j.submissions);
+        const url=URL.createObjectURL(new Blob([report],{type:'text/plain;charset=utf-8'}));
+        const anchor=E('a');anchor.href=url;anchor.download='englishlegalese-private-feedback-'+new Date().toISOString().slice(0,10)+'.txt';
+        document.body.append(anchor);anchor.click();anchor.remove();
+        setTimeout(()=>URL.revokeObjectURL(url),1500);
+       });
+       feedback.append(exportHistory,E('p','This private text report contains teacher feedback and dates only, never your lesson answers. Keep it secure; older history may exist.'));
       }
      }catch(e){
       if(!token||token!==currentToken||hubRequestSequence!==currentSequence||!card.isConnected)return;
