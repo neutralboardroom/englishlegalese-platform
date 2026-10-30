@@ -51,7 +51,9 @@ function mount(){
   }
   const controls=heroCopy.querySelector('.hero-actions');
   const intro=E('p','Practical Legal and Business English for work, combining human teachers, independent courses, and carefully guided AI practice.','v18529-short-intro');
-  if(controls){heroCopy.insertBefore(intro,controls);heroCopy.insertBefore(full,controls)}else heroCopy.append(intro,full);
+  const cert=E('p','EnglishLegalese offers separate Legal English and Business English certification pathways using CEFR-informed, teacher-supervised assessments. ','v18529-short-cert');
+  cert.append(link('Explore certifications →','/learn/certifications/'));
+  if(controls){heroCopy.insertBefore(intro,controls);heroCopy.insertBefore(cert,controls);heroCopy.insertBefore(full,controls)}else heroCopy.append(intro,cert,full);
  }
  // Preserve actual planner, its controls, events and provider choices; move it without cloning.
  hero.after(room);
