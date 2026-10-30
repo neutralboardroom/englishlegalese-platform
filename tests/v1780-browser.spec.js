@@ -122,5 +122,6 @@ test('HF30 class planning covers Legal, Business, investor, employer and supervi
  expect(writes).toEqual([]);
  await page.goto('/#home');
  await expect(page.locator('#v18512-home-preview .v18530-saved-work-note')).toContainText('Sign in to your account to save and resume');
+ await expect(page.locator('#v18512-home-preview .v18530-saved-work-note')).toContainText('A save is confirmed only when the server acknowledges it');
  await expect(page.locator('#v18512-home-preview .v18530-saved-work-note a')).toHaveAttribute('href','/learn/account/');
 });
