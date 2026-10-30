@@ -38,6 +38,9 @@ function iconSymbol(name,cls){
 }
 function link(text,destination,cls){const a=E('a',text,cls);a.href=destination;return a}
 function mount(){
+ // Scope condensed display to the actual default home hash only, NEVER to focused
+ // legacy tools whose nested section routing reports a generic home view.
+ document.documentElement.dataset.v18529CompactHome=(!location.hash||location.hash==='#home')?'yes':'no';
  const root=document.getElementById('app'),hero=root?.querySelector('#home'),room=root?.querySelector('#live-classes');
  if(!root||!hero||!room||root.querySelector('#v18512-home-preview'))return;
  // Keep the full original teaching explanation available, but make the homepage
