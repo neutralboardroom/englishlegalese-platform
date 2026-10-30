@@ -80,6 +80,8 @@ test('HF29 owner visual acceptance: compact protected teacher preview and comple
  await expect(room.getByRole('heading',{name:'Teacher-led learning, together.'})).toBeVisible();
  await expect(room.getByRole('link',{name:'Explore live classes'})).toHaveAttribute('href','/learn/live-classes/');
  await expect(home.locator('.v18512-pathway-card')).toHaveCount(5);
+ await expect(home.locator('.v18512-pathway-card .v18528-card-icon svg')).toHaveCount(5);
+ await expect(home.locator('.v18512-disclosure .v18528-disclosure-icon svg')).toHaveCount(5);
  await expect(home.locator('.v18512-steps li')).toHaveCount(4);
  await expect(home.locator('details.v18512-disclosure')).toHaveCount(5);
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
