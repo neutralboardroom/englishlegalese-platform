@@ -120,4 +120,7 @@ test('HF30 class planning covers Legal, Business, investor, employer and supervi
  await expect(s.locator('.v1780-class-result')).toContainText('Business English certification assessment preparation');
  await expect(s.locator('.v1780-class-result')).toContainText('Not booked');
  expect(writes).toEqual([]);
+ await page.goto('/#home');
+ await expect(page.locator('#v18512-home-preview .v18530-saved-work-note')).toContainText('Sign in to your account to save and resume');
+ await expect(page.locator('#v18512-home-preview .v18530-saved-work-note a')).toHaveAttribute('href','/learn/account/');
 });
