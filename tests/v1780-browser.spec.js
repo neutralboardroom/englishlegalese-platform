@@ -103,6 +103,8 @@ test('v1.78 teachers explain video classroom access without inventing immediate 
 test('HF30 class planning covers Legal, Business, investor, employer and supervised-assessment preparation without bookings or data writes',async({page})=>{
  const writes=[];page.on('request',r=>{if(['POST','PUT','PATCH'].includes(r.method()))writes.push(r.url());});
  await open(page,'live-classes');const s=page.locator('#live-classes'),focus=s.locator('#v1780-focus');
+ await expect(s.locator('.eyebrow')).toContainText('Legal English and Business English');
+ await expect(s).toContainText('Class plans are previews until a real teacher confirms the session.');
  await expect(focus.locator('option')).toHaveCount(12);
  for(const [label,value] of [['Live one-to-one Business English','5'],['Investor and Wall Street communication','7'],['Business English certification assessment preparation','9'],['Legal English certification assessment preparation','10'],['Employer team communication training','11']]){
   await expect(focus.locator('option[value="'+value+'"]')).toHaveText(label);
