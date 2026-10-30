@@ -49,7 +49,7 @@ test('HF28 tablet layout does not overflow and reports specific offenders',async
  expect(report.scroll,JSON.stringify(report)).toBeLessThanOrEqual(report.viewport+4);
 });
 
-test('HF29 owner visual acceptance: compact protected teacher preview and complete homepage sections',async({page})=>{
+test('HF29 owner visual acceptance: compact protected teacher preview and complete homepage sections',async({page},testInfo)=>{
  await page.setViewportSize({width:1440,height:900});
  await page.goto('/#home');
  const home=page.locator('#v18512-home-preview');
@@ -68,4 +68,13 @@ test('HF29 owner visual acceptance: compact protected teacher preview and comple
  await expect(home.locator('details.v18512-disclosure')).toHaveCount(5);
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
  expect(overflow).toBeLessThanOrEqual(4);
+ if(testInfo.project.name==='desktop-chromium'){
+  await page.locator('#home').screenshot({path:testInfo.outputPath('hf29-home-original-hero-desktop.png')});
+  await page.locator('#live-classes').screenshot({path:testInfo.outputPath('hf29-classroom-planner-desktop.png')});
+  await page.locator('#v18512-home-preview').screenshot({path:testInfo.outputPath('hf29-pathways-steps-resources-desktop.png')});
+  await page.setViewportSize({width:900,height:900});
+  await page.locator('#live-classes').screenshot({path:testInfo.outputPath('hf29-classroom-planner-tablet.png')});
+  await page.setViewportSize({width:390,height:844});
+  await page.locator('#live-classes').screenshot({path:testInfo.outputPath('hf29-classroom-planner-mobile.png')});
+ }
 });
