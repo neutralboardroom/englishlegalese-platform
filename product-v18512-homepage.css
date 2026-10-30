@@ -191,3 +191,18 @@ body[data-el-homepage-view="home"] #home .v18529-short-cert a{color:#086277;font
  body[data-el-homepage-view="home"] #live-classes .v1780-class-controls button{min-height:40px;padding:.45rem .7rem}
  body[data-el-homepage-view="home"] #live-classes #v1790-class-prep{margin:.4rem 0;padding:.5rem .8rem}
 }
+
+/* HF29 precedence correction: legacy visual-v1610.css sets !important hero
+   font and gap, so ordinary compressed CSS had no effect on the real page. */
+@media(min-width:1200px){
+ body[data-el-homepage-view="home"] #home.hero .hero-grid{
+  grid-template-columns:minmax(0,1.07fr) minmax(0,.93fr)!important;
+  gap:18px!important;
+ }
+ body[data-el-homepage-view="home"] #home.hero .hero-copy h1{
+  font-size:clamp(2.15rem,2.8vw,2.6rem)!important;
+  line-height:1.07!important;
+  max-width:35ch!important;
+  margin:0 0 .65rem!important;
+ }
+}
