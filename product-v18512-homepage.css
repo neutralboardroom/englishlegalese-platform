@@ -166,3 +166,28 @@ body[data-el-homepage-view="home"] #home .v18529-short-cert a{color:#086277;font
  body[data-el-homepage-view="home"] #live-classes .v1780-field select{min-height:40px;padding:.4rem .6rem}
  body[data-el-homepage-view="home"] #live-classes .v1780-room-preview>.v1780-fine{margin:.45rem 0 0;font-size:.76rem}
 }
+
+/* HF29 final visual gate: remove accumulated padding from the old separate
+   introduction, comparison and planner, keeping all content/buttons functional. */
+@media(min-width:1200px){
+ body[data-el-homepage-view="home"] #home{padding-top:12px;padding-bottom:8px}
+ body[data-el-homepage-view="home"] #home .hero-grid{gap:16px}
+ body[data-el-homepage-view="home"] #home .hero-copy h1{font-size:clamp(1.65rem,2.15vw,2.4rem);line-height:1.06;margin-bottom:.55rem}
+ body[data-el-homepage-view="home"] #home .v18529-short-intro,
+ body[data-el-homepage-view="home"] #home .v18529-short-cert{margin:.3rem 0;font-size:.86rem;line-height:1.35}
+ body[data-el-homepage-view="home"] #home .v18529-about-method{margin:.35rem 0;padding:.45rem .65rem;font-size:.78rem}
+ body[data-el-homepage-view="home"] #home .hero-actions{margin:.55rem 0;gap:.35rem;flex-wrap:nowrap}
+ body[data-el-homepage-view="home"] #home .hero-actions .btn{padding:.55rem .7rem;font-size:.8rem;line-height:1.2;min-width:0}
+ body[data-el-homepage-view="home"] #home .hero-secondary{margin:.35rem 0;font-size:.82rem}
+ body[data-el-homepage-view="home"] #home .trust-row{margin-top:.45rem;gap:.35rem}
+ body[data-el-homepage-view="home"] #home .trust-item{padding:.4rem .45rem;border-radius:9px;font-size:.69rem}
+ body[data-el-homepage-view="home"] #home .hero-card{padding:12px}
+ body[data-el-homepage-view="home"] #home .hero-example{padding:.55rem .65rem;margin:.4rem 0}
+ body[data-el-homepage-view="home"] #home .hero-language{margin-top:.35rem}
+ body[data-el-homepage-view="home"] #live-classes .v1780-scheduler .v1780-fine{font-size:.8rem;line-height:1.35;margin:.25rem 0}
+ body[data-el-homepage-view="home"] #live-classes .v1780-room-stage{min-height:205px}
+ body[data-el-homepage-view="home"] #live-classes .v1780-form-grid{gap:.35rem .5rem}
+ body[data-el-homepage-view="home"] #live-classes .v1780-class-status{font-size:.8rem;line-height:1.3}
+ body[data-el-homepage-view="home"] #live-classes .v1780-class-controls button{min-height:40px;padding:.45rem .7rem}
+ body[data-el-homepage-view="home"] #live-classes #v1790-class-prep{margin:.4rem 0;padding:.5rem .8rem}
+}
