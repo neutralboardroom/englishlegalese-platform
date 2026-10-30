@@ -48,3 +48,24 @@ test('HF28 tablet layout does not overflow and reports specific offenders',async
  const report=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,offenders:Array.from(document.querySelectorAll('html, body, body *')).map(e=>({tag:e.tagName,id:e.id,cls:typeof e.className==='string'?e.className.slice(0,95):'',right:Math.round(e.getBoundingClientRect().right),width:Math.round(e.getBoundingClientRect().width),scroll:e.scrollWidth,client:e.clientWidth,offset:e.offsetWidth})).filter(x=>(x.right>document.documentElement.clientWidth+5 && x.width>0)||(x.scroll>x.client+40 && x.client>0)).sort((a,b)=>(b.scroll-b.client)-(a.scroll-a.client)).slice(0,25)}));
  expect(report.scroll,JSON.stringify(report)).toBeLessThanOrEqual(report.viewport+4);
 });
+
+test('HF29 owner visual acceptance: compact protected teacher preview and complete homepage sections',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});
+ await page.goto('/#home');
+ const home=page.locator('#v18512-home-preview');
+ const room=page.locator('#live-classes .v1780-room-stage');
+ const planner=page.locator('#live-classes .v1780-scheduler');
+ await expect(room).toBeVisible();
+ await expect(planner).toBeVisible();
+ const dimensions=await room.boundingBox();
+ expect(dimensions,'Teacher photo/video preview must stay at previous compact proportions').toBeTruthy();
+ expect(dimensions.height,'Teacher photo/video preview must not become the oversized HF28 hero').toBeLessThanOrEqual(335);
+ await expect(room).toHaveCSS('background-image',/teacher-classroom-photo-locked-hf26\\.svg/);
+ await expect(room.getByRole('heading',{name:'Teacher-led learning, together.'})).toBeVisible();
+ await expect(room.getByRole('link',{name:'Explore live classes'})).toHaveAttribute('href','/learn/live-classes/');
+ await expect(home.locator('.v18512-pathway-card')).toHaveCount(5);
+ await expect(home.locator('.v18512-steps li')).toHaveCount(4);
+ await expect(home.locator('details.v18512-disclosure')).toHaveCount(5);
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+ expect(overflow).toBeLessThanOrEqual(4);
+});
