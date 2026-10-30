@@ -81,6 +81,9 @@ test('HF29 owner visual acceptance: compact protected teacher preview and comple
  await expect(room).toHaveCSS('background-image',/teacher-classroom-photo-locked-hf26\.svg/);
  await expect(room.getByRole('heading',{name:'Teacher-led learning, together.'})).toBeVisible();
  await expect(room.getByRole('link',{name:'Explore live classes'})).toHaveAttribute('href','/learn/live-classes/');
+ const landingPosition=await home.boundingBox();
+ expect(landingPosition,'Approved core pathway cards must appear near the top of the compact homepage, not after long legacy lesson content').toBeTruthy();
+ expect(landingPosition.y,'The earlier HF28 redesign buried the pathway cards below extended classroom content').toBeLessThanOrEqual(1400);
  await expect(home.locator('.v18512-pathway-card')).toHaveCount(5);
  await expect(home.locator('.v18512-pathway-card .v18528-card-icon svg')).toHaveCount(5);
  await expect(home.locator('.v18512-disclosure .v18528-disclosure-icon svg')).toHaveCount(5);
