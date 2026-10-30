@@ -138,3 +138,7 @@ body[data-el-homepage-view="home"] #home .v18529-about-method[open] .lead,
 body[data-el-homepage-view="home"] #home .v18529-about-method[open] .v1760-method-note,
 body[data-el-homepage-view="home"] #home .v18529-about-method[open] .v18510-cert-hero{font-size:.9rem;line-height:1.6;margin:.85rem 0;color:#37566c}
 body[data-el-homepage-view="home"] #live-classes .v1780-room-preview .v1780-fine{color:#d6e6ed}
+
+/* HF29 original, editable line icons — no raster mockup elements or emoji. */
+.v18528-card-icon svg{width:36px;height:36px;display:block}
+.v18528-disclosure-icon svg{width:28px;height:28px;display:block}
