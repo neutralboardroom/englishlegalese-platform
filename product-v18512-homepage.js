@@ -25,6 +25,19 @@ function link(text,destination,cls){const a=E('a',text,cls);a.href=destination;r
 function mount(){
  const root=document.getElementById('app'),hero=root?.querySelector('#home'),room=root?.querySelector('#live-classes');
  if(!root||!hero||!room||root.querySelector('#v18512-home-preview'))return;
+ // Keep the full original teaching explanation available, but make the homepage
+ // scannable as approved; its words remain normal editable DOM, not image pixels.
+ const heroCopy=hero.querySelector('.hero-copy');
+ if(heroCopy&&!heroCopy.querySelector('.v18529-about-method')){
+  const full=E('details',undefined,'v18529-about-method');
+  full.append(E('summary','Read how human teaching and AI-supported practice work together'));
+  for(const selector of ['.lead','.v1760-method-note','.v18510-cert-hero']){
+   const node=heroCopy.querySelector(selector);if(node)full.append(node);
+  }
+  const controls=heroCopy.querySelector('.hero-actions');
+  const intro=E('p','Practical Legal and Business English for work, combining human teachers, independent courses, and carefully guided AI practice.','v18529-short-intro');
+  if(controls){heroCopy.insertBefore(intro,controls);heroCopy.insertBefore(full,controls)}else heroCopy.append(intro,full);
+ }
  // Preserve actual planner, its controls, events and provider choices; move it without cloning.
  hero.after(room);
  const preview=E('section',undefined,'v18512-home-preview');preview.id='v18512-home-preview';preview.setAttribute('aria-labelledby','v18512-home-title');
