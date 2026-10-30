@@ -93,3 +93,6 @@ body[data-el-homepage-view="home"] #live-classes .v1780-scheduler{background:#ff
 /* HF28: unshown legacy toast must not expand tablet document width. Visible toasts retain their existing behavior. */
 #toast:not(.show){display:none!important}
 #toast.show{box-sizing:border-box;max-width:min(380px,calc(100vw - 32px))}
+
+/* HF28 precise diagnosis: connector pseudo-elements escape 2-column learning-step grid at 900px. Keep decorative connectors only for the full 4-column desktop layout. */
+@media(max-width:1100px){.v18512-steps li::after{display:none!important}}
