@@ -52,6 +52,8 @@ test('HF28 tablet layout does not overflow and reports specific offenders',async
 test('HF29 full redesign shows concise landing and preserves original class detail on focus route',async({page})=>{
  await page.goto('/#home');
  await expect(page.locator('#home .v18529-short-intro')).toBeVisible();
+ await expect(page.locator('#home .v18529-short-cert')).toContainText('offers separate Legal English and Business English certification pathways');
+ await expect(page.locator('#home .v18529-short-cert a')).toHaveAttribute('href','/learn/certifications/');
  await expect(page.locator('#home .v18529-about-method')).toBeVisible();
  await expect(page.locator('#home .v18529-about-method .lead')).toBeHidden();
  await expect(page.locator('#live-classes .v1780-studio')).toBeVisible();
