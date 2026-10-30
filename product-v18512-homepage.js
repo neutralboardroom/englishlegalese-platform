@@ -7,19 +7,20 @@ if(window.__el18512HomepageInstalled)return;
 window.__el18512HomepageInstalled=true;
 const E=(tag,text,cls)=>{const x=document.createElement(tag);if(text!==undefined)x.textContent=text;if(cls)x.className=cls;return x};
 const PATHS=Object.freeze([
- ['Legal English','Professional language for legal practice and international work.','/learn/legal-english/','legal'],
- ['Business English','Workplace communication, meetings, negotiation and investors.','/learn/business-english/','business'],
- ['Legal English Certifications','Explore teacher-supervised Legal English assessments and CEFR-informed levels.','/learn/legal-english-certification/','certifications-legal'],
- ['Business English Certifications','Explore an independent Business English assessment pathway and CEFR-informed levels.','/learn/business-english-certification/','certifications-business'],
- ['For employers','Explore group classes, employee enrollment requests and consent-based progress reporting.','/learn/employers/','employers'],
- ['Teachers & classes','Explore human-teacher classes and learning formats.','/learn/live-classes/','teachers']
+ ['Legal English','Build the English skills you need for legal work and international practice.','/learn/legal-english/','legal','graduation-cap'],
+ ['Business English','Communicate confidently in global business and professional settings.','/learn/business-english/','business','chart-no-axes-combined'],
+ ['Certifications','Explore our separate Legal English and Business English certification pathways.','/learn/certifications/','certifications','award'],
+ ['For employers','Train your team with practical, results-focused English programs.','/learn/employers/','employers','users-round'],
+ ['Teachers & classes','Learn with human teachers in live online lessons.','/learn/live-classes/','teachers','presentation']
 ]);
 const GROUPS=Object.freeze([
- ['Featured courses and topics','See Legal English, Business English and introductory practice.',[['Start and learning guide','#start'],['Find your learning route','#learning-pathways'],['Learning diagnostic','#diagnostic'],['Course topics and exercises','#courses']]],
- ['Free learning resources','Access all original speaking, writing, reading and practice labs.',[['Learning skills studio','#skills'],['Short practice','#quick-practice'],['SmartTeacher','#smartteacher'],['AI Draft Review Lab','#ai-review-lab'],['Contract Clause Reading Lab','#clause-reading-lab'],['Meeting Follow-up Lab','#meeting-followup-lab'],['Email Clarity Lab','#email-clarity-lab'],['Guided Practice','#guided-practice-path'],['Case Brief Lab','#case-brief-lab'],['Legal Vocabulary','#legal-vocabulary-guide'],['Revision Studio','#revision-studio'],['Free Trial Information','#smartteacher-free-trial']]],
- ['For employers and teaching','Read our programs, teaching opportunities and course options.',[['Teacher-led programs','#teachers'],['Team learning and employers','#employers'],['Employer training page','/learn/employers/']]],
- ['How it works, privacy and FAQ','Find practical guidance and limits before enrolling.',[['Learning experience','#learning-experience'],['Trust and privacy','#trust'],['Pricing and packages','/pricing/'],['Account and saved work','/learn/account/']]]
+ ['Featured Courses','Popular topics for Legal and Business English','book-open', [['Start and learning guide','#start'],['Find your learning route','#learning-pathways'],['Learning diagnostic','#diagnostic'],['Course topics and exercises','#courses']]],
+ ['Certifications','Levels, assessments, and employer value','award',[['Legal English certification','/learn/legal-english-certification/'],['Business English certification','/learn/business-english-certification/'],['Certification overview','/learn/certifications/']]],
+ ['Free Learning Resources','14 tools, practice materials, and more','book-open-check',[['Learning skills studio','#skills'],['Short practice','#quick-practice'],['SmartTeacher','#smartteacher'],['AI Draft Review Lab','#ai-review-lab'],['Contract Clause Reading Lab','#clause-reading-lab'],['Meeting Follow-up Lab','#meeting-followup-lab'],['Email Clarity Lab','#email-clarity-lab'],['Guided Practice','#guided-practice-path'],['Case Brief Lab','#case-brief-lab'],['Legal Vocabulary','#legal-vocabulary-guide'],['Revision Studio','#revision-studio'],['Free Trial Information','#smartteacher-free-trial']]],
+ ['For Employers','Programs, enrollment, and benefits','users-round',[['Team learning and employers','#employers'],['Employer training page','/learn/employers/'],['Employer dashboard','/learn/employer-dashboard/']]],
+ ['FAQs','Quick answers to common questions','circle-help',[['Learning experience','#learning-experience'],['Trust and privacy','#trust'],['Pricing and packages','/pricing/'],['Account and saved work','/learn/account/']]]
 ]);
+const ICONS=Object.freeze({'graduation-cap':'🎓','chart-no-axes-combined':'▥','award':'♜','users-round':'♧','presentation':'▣','book-open':'▤','book-open-check':'▦','circle-help':'?'});
 function link(text,destination,cls){const a=E('a',text,cls);a.href=destination;return a}
 function mount(){
  const root=document.getElementById('app'),hero=root?.querySelector('#home'),room=root?.querySelector('#live-classes');
@@ -27,17 +28,17 @@ function mount(){
  // Preserve actual planner, its controls, events and provider choices; move it without cloning.
  hero.after(room);
  const preview=E('section',undefined,'v18512-home-preview');preview.id='v18512-home-preview';preview.setAttribute('aria-labelledby','v18512-home-title');
- const wrap=E('div',undefined,'container'),title=E('h2','Choose your EnglishLegalese pathway');title.id='v18512-home-title';
- wrap.append(title,E('p','Explore the essentials first. Open a topic below whenever you want the complete tools and details.'));
+ const wrap=E('div',undefined,'container'),title=E('h2','Explore EnglishLegalese');title.id='v18512-home-title';
+ title.className='v18528-visually-hidden';wrap.append(title);
  const cards=E('div',undefined,'v18512-pathway-cards');
- for(const [name,description,href,cls] of PATHS){const item=E('article',undefined,'v18512-pathway-card v18512-'+cls);item.append(E('h3',name),E('p',description),link('Explore '+name+' →',href));cards.append(item)}wrap.append(cards);
- const steps=E('section',undefined,'v18512-steps');steps.append(E('h2','How EnglishLegalese works'));const ol=E('ol');
- for(const line of ['Choose a legal or business language learning goal.','Build skills through structured exercises and human guidance.','Use real-world professional communication scenarios to practise.','Explore supervised certificate assessment requirements when relevant.'])ol.append(E('li',line));
+ for(const [name,description,href,cls,icon] of PATHS){const item=E('article',undefined,'v18512-pathway-card v18512-'+cls);const symbol=E('span',ICONS[icon],'v18528-card-icon');symbol.setAttribute('aria-hidden','true');const body=E('div');body.append(E('h3',name),E('p',description),link(name==='Certifications'?'Learn about certifications →':'Explore '+name+' →',href));item.append(symbol,body);cards.append(item)}wrap.append(cards);
+ const steps=E('section',undefined,'v18512-steps');steps.append(E('h2','How EnglishLegalese works'),E('p','Flexible, practical, and designed for real results.'));const ol=E('ol');
+ for(const line of ['Choose your focus — Legal English, Business English, certifications, or free resources.','Learn with expert teachers through live online classes.','Build real skills in speaking, reading, writing, and professional communication.','Earn a certification (optional) after a qualifying teacher-supervised assessment.'])ol.append(E('li',line));
  steps.append(ol);wrap.append(steps);
- const heading=E('h2','More to explore');heading.id='v18512-more-heading';wrap.append(heading);
+ const heading=E('h2','More to explore');heading.id='v18512-more-heading';heading.className='v18528-visually-hidden';wrap.append(heading);
  const groupArea=E('div',undefined,'v18512-more');groupArea.setAttribute('aria-labelledby','v18512-more-heading');
- for(const [name,info,destinations] of GROUPS){const details=E('details',undefined,'v18512-disclosure'),summary=E('summary'),content=E('div',undefined,'v18512-disclosure-body'),list=E('ul');
-  summary.append(E('strong',name),E('span',info));details.append(summary);
+ for(const [name,info,icon,destinations] of GROUPS){const details=E('details',undefined,'v18512-disclosure'),summary=E('summary'),content=E('div',undefined,'v18512-disclosure-body'),list=E('ul');
+  const symbol=E('span',ICONS[icon],'v18528-disclosure-icon');symbol.setAttribute('aria-hidden','true');const copy=E('span');copy.append(E('strong',name),E('span',info));summary.append(symbol,copy);details.append(summary);
   for(const [label,href]of destinations){const li=E('li');li.append(link(label+' →',href));list.append(li)}
   content.append(list,E('p','Full material remains available on its original page or focused learning section.'));details.append(content);groupArea.append(details);
  }wrap.append(groupArea);
