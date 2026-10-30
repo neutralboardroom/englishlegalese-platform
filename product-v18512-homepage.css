@@ -126,7 +126,7 @@ body[data-el-homepage-view="home"] #live-classes .v1780-scheduler{
 
 /* HF29 full conversation visual audit: short default home, full details on focus routes.
    These rules never delete learning content or planner forms. */
-body[data-el-homepage-view="home"] #live-classes > .container > :not(.v1780-studio){display:none!important}
+html[data-v18529-compact-home="yes"] #live-classes > .container > :not(.v1780-studio):not(#v1790-class-prep){display:none!important}
 body[data-el-homepage-view="home"] #live-classes{padding-top:1rem!important;padding-bottom:1.1rem!important}
 body[data-el-homepage-view="home"] #home .hero-grid{align-items:center}
 body[data-el-homepage-view="home"] #home .hero-copy{min-width:0}
