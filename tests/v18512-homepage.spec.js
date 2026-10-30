@@ -45,6 +45,6 @@ test('HF28 tablet layout does not overflow and reports specific offenders',async
  await page.setViewportSize({width:900,height:1000});
  await page.goto('/#home');
  await expect(page.locator('#v18512-home-preview')).toBeVisible();
- const report=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,offenders:Array.from(document.querySelectorAll('body *')).map(e=>({tag:e.tagName,id:e.id,cls:typeof e.className==='string'?e.className.slice(0,95):'',right:Math.round(e.getBoundingClientRect().right),width:Math.round(e.getBoundingClientRect().width)})).filter(x=>x.right>document.documentElement.clientWidth+5 && x.width>0).slice(0,20)}));
+ const report=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,offenders:Array.from(document.querySelectorAll('html, body, body *')).map(e=>({tag:e.tagName,id:e.id,cls:typeof e.className==='string'?e.className.slice(0,95):'',right:Math.round(e.getBoundingClientRect().right),width:Math.round(e.getBoundingClientRect().width),scroll:e.scrollWidth,client:e.clientWidth,offset:e.offsetWidth})).filter(x=>(x.right>document.documentElement.clientWidth+5 && x.width>0)||(x.scroll>x.client+40 && x.client>0)).sort((a,b)=>(b.scroll-b.client)-(a.scroll-a.client)).slice(0,25)}));
  expect(report.scroll,JSON.stringify(report)).toBeLessThanOrEqual(report.viewport+4);
 });
