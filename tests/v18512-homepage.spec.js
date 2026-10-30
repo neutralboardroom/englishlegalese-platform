@@ -83,6 +83,11 @@ test('HF29 owner visual acceptance: compact protected teacher preview and comple
  await expect(room).toHaveCSS('background-image',/teacher-classroom-photo-locked-hf26\.svg/);
  await expect(room.getByRole('heading',{name:'Teacher-led learning, together.'})).toBeVisible();
  await expect(room.getByRole('link',{name:'Explore live classes'})).toHaveAttribute('href','/learn/live-classes/');
+ const heroGeometry=await page.evaluate(()=>({font:parseFloat(getComputedStyle(document.querySelector('#home h1')).fontSize),gap:parseFloat(getComputedStyle(document.querySelector('#home .hero-grid')).columnGap)}));
+ if(testInfo.project.name==='desktop-chromium'){
+  expect(heroGeometry.font,'Old visual CSS must not keep the overly large hero heading').toBeLessThanOrEqual(44);
+  expect(heroGeometry.gap,'Old visual CSS must not keep the excessive hero grid gap').toBeLessThanOrEqual(22);
+ }
  const landingPosition=await home.boundingBox();
  expect(landingPosition,'Approved core pathway cards must appear near the top of the compact homepage, not after long legacy lesson content').toBeTruthy();
  if(testInfo.project.name==='desktop-chromium')expect(landingPosition.y,'The earlier HF28 redesign buried desktop pathway cards below extended classroom content').toBeLessThanOrEqual(1400);
