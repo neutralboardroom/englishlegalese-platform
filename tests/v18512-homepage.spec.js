@@ -49,6 +49,22 @@ test('HF28 tablet layout does not overflow and reports specific offenders',async
  expect(report.scroll,JSON.stringify(report)).toBeLessThanOrEqual(report.viewport+4);
 });
 
+test('HF29 full redesign shows concise landing and preserves original class detail on focus route',async({page})=>{
+ await page.goto('/#home');
+ await expect(page.locator('#home .v18529-short-intro')).toBeVisible();
+ await expect(page.locator('#home .v18529-about-method')).toBeVisible();
+ await expect(page.locator('#home .v18529-about-method .lead')).toBeHidden();
+ await expect(page.locator('#live-classes .v1780-studio')).toBeVisible();
+ await expect(page.locator('#live-classes .v1780-benefits')).toBeHidden();
+ await expect(page.locator('#v18512-home-preview .v18512-pathway-card')).toHaveCount(5);
+ await page.goto('/#live-classes');
+ await expect(page.locator('#live-classes .v1780-benefits')).toBeVisible();
+ await expect(page.locator('#live-classes .v1780-studio')).toBeVisible();
+ await page.goto('/#home');
+ await page.locator('#home .v18529-about-method summary').click();
+ await expect(page.locator('#home .v18529-about-method .lead')).toBeVisible();
+});
+
 test('HF29 owner visual acceptance: compact protected teacher preview and complete homepage sections',async({page},testInfo)=>{
  await page.setViewportSize({width:1440,height:900});
  await page.goto('/#home');
