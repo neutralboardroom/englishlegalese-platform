@@ -78,7 +78,7 @@ function mount(){
  const footer=E('p',undefined,'v18512-end-actions');
  for(const [label,href]of [['Start learning','/learn/start/'],['View pricing','/pricing/'],['Create an account','/learn/account/']])footer.append(link(label,href));
  wrap.append(footer);
- const saved=E('p','Sign in to your account to save and resume independent lessons. Without an account, work may not carry over between devices. ','v18530-saved-work-note');
+ const saved=E('p','Sign in to your account to save and resume independent lessons across devices when cloud saving is available. A save is confirmed only when the server acknowledges it; unsigned-in drafts may remain on this device. ','v18530-saved-work-note');
  saved.append(link('Account and saved lessons →','/learn/account/'));
  wrap.append(saved);preview.append(wrap);room.after(preview);
  document.documentElement.dataset.v18512Homepage='summary-first';
