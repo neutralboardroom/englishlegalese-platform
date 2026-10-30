@@ -1,11 +1,15 @@
 'use strict';
 const {test,expect}=require('@playwright/test');
-test('HF26 homepage provides five pathways, a separate locked classroom photo, and expandable links to preserved tools',async({page})=>{
+test('HF27 homepage provides six pathways, a separate locked classroom photo, and expandable links to preserved tools',async({page})=>{
  await page.goto('/#home');
  const preview=page.locator('#v18512-home-preview');
  await expect(preview).toBeVisible();
  await expect(preview.getByRole('heading',{name:'Choose your EnglishLegalese pathway'})).toBeVisible();
- await expect(preview.locator('.v18512-pathway-card')).toHaveCount(5);
+ await expect(preview.locator('.v18512-pathway-card')).toHaveCount(6);
+ await expect(preview.getByRole('heading',{name:'Legal English Certifications'})).toBeVisible();
+ await expect(preview.getByRole('heading',{name:'Business English Certifications'})).toBeVisible();
+ await expect(preview.getByRole('link',{name:/Explore Legal English Certifications/})).toHaveAttribute('href','/learn/legal-english-certification/');
+ await expect(preview.getByRole('link',{name:/Explore Business English Certifications/})).toHaveAttribute('href','/learn/business-english-certification/');
  await expect(page.locator('#live-classes')).toBeVisible();
  const display=page.locator('#live-classes .v1780-room-stage');
  await expect(display).toHaveCSS('background-image',/teacher-classroom-photo-locked-hf26\.svg/);

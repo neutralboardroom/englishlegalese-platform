@@ -9,8 +9,9 @@ const E=(tag,text,cls)=>{const x=document.createElement(tag);if(text!==undefined
 const PATHS=Object.freeze([
  ['Legal English','Professional language for legal practice and international work.','/learn/legal-english/','legal'],
  ['Business English','Workplace communication, meetings, negotiation and investors.','/learn/business-english/','business'],
- ['Certifications','Explore separate Legal and Business English assessment pathways.','/learn/certifications/','certifications'],
- ['For employers','Practical corporate classes and consent-based employee reporting.','/learn/employers/','employers'],
+ ['Legal English Certifications','Explore teacher-supervised Legal English assessments and CEFR-informed levels.','/learn/legal-english-certification/','certifications-legal'],
+ ['Business English Certifications','Explore an independent Business English assessment pathway and CEFR-informed levels.','/learn/business-english-certification/','certifications-business'],
+ ['For employers','Explore group classes, employee enrollment requests and consent-based progress reporting.','/learn/employers/','employers'],
  ['Teachers & classes','Explore human-teacher classes and learning formats.','/learn/live-classes/','teachers']
 ]);
 const GROUPS=Object.freeze([
