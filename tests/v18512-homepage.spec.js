@@ -60,7 +60,7 @@ test('HF29 owner visual acceptance: compact protected teacher preview and comple
  const dimensions=await room.boundingBox();
  expect(dimensions,'Teacher photo/video preview must stay at previous compact proportions').toBeTruthy();
  expect(dimensions.height,'Teacher photo/video preview must not become the oversized HF28 hero').toBeLessThanOrEqual(335);
- await expect(room).toHaveCSS('background-image',/teacher-classroom-photo-locked-hf26\\.svg/);
+ await expect(room).toHaveCSS('background-image',/teacher-classroom-photo-locked-hf26\.svg/);
  await expect(room.getByRole('heading',{name:'Teacher-led learning, together.'})).toBeVisible();
  await expect(room.getByRole('link',{name:'Explore live classes'})).toHaveAttribute('href','/learn/live-classes/');
  await expect(home.locator('.v18512-pathway-card')).toHaveCount(5);
