@@ -40,3 +40,11 @@ test('HF26 deep links preserve original focused course and free-resource content
  await expect(page).toHaveURL(/#case-brief-lab$/);
  await expect(page.locator('#case-brief-lab')).toBeVisible();
 });
+
+test('HF28 tablet layout does not overflow and reports specific offenders',async({page})=>{
+ await page.setViewportSize({width:900,height:1000});
+ await page.goto('/#home');
+ await expect(page.locator('#v18512-home-preview')).toBeVisible();
+ const report=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,offenders:Array.from(document.querySelectorAll('body *')).map(e=>({tag:e.tagName,id:e.id,cls:typeof e.className==='string'?e.className.slice(0,95):'',right:Math.round(e.getBoundingClientRect().right),width:Math.round(e.getBoundingClientRect().width)})).filter(x=>x.right>document.documentElement.clientWidth+5 && x.width>0).slice(0,20)}));
+ expect(report.scroll,JSON.stringify(report)).toBeLessThanOrEqual(report.viewport+4);
+});
