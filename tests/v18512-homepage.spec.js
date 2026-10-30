@@ -1,20 +1,23 @@
 'use strict';
 const {test,expect}=require('@playwright/test');
-test('HF27 homepage provides six pathways, a separate locked classroom photo, and expandable links to preserved tools',async({page})=>{
+test('HF28 homepage provides five approved pathways, a separate locked classroom photo, and expandable links to preserved tools',async({page})=>{
  await page.goto('/#home');
  const preview=page.locator('#v18512-home-preview');
  await expect(preview).toBeVisible();
- await expect(preview.getByRole('heading',{name:'Choose your EnglishLegalese pathway'})).toBeVisible();
- await expect(preview.locator('.v18512-pathway-card')).toHaveCount(6);
- await expect(preview.getByRole('heading',{name:'Legal English Certifications'})).toBeVisible();
- await expect(preview.getByRole('heading',{name:'Business English Certifications'})).toBeVisible();
- await expect(preview.getByRole('link',{name:/Explore Legal English Certifications/})).toHaveAttribute('href','/learn/legal-english-certification/');
- await expect(preview.getByRole('link',{name:/Explore Business English Certifications/})).toHaveAttribute('href','/learn/business-english-certification/');
+ await expect(preview.getByRole('heading',{name:'Explore EnglishLegalese'})).toBeVisible();
+ await expect(preview.locator('.v18512-pathway-card')).toHaveCount(5);
+ await expect(preview.getByRole('heading',{name:'Certifications',exact:true})).toBeVisible();
+ await expect(preview.getByRole('link',{name:/Learn about certifications/})).toHaveAttribute('href','/learn/certifications/');
+ await expect(preview.locator('details.v18512-disclosure')).toHaveCount(5);
+ const cert=preview.locator('details.v18512-disclosure').filter({hasText:'Levels, assessments, and employer value'});
+ await cert.locator('summary').click();
+ await expect(cert.getByRole('link',{name:/Legal English certification/})).toHaveAttribute('href','/learn/legal-english-certification/');
+ await expect(cert.getByRole('link',{name:/Business English certification/})).toHaveAttribute('href','/learn/business-english-certification/');
  await expect(page.locator('#live-classes')).toBeVisible();
  const display=page.locator('#live-classes .v1780-room-stage');
  await expect(display).toHaveCSS('background-image',/teacher-classroom-photo-locked-hf26\.svg/);
  await expect(display.getByRole('heading',{name:'Teacher-led learning, together.'})).toBeVisible();
- const fold=preview.locator('details.v18512-disclosure').filter({hasText:'Free learning resources'});
+ const fold=preview.locator('details.v18512-disclosure').filter({hasText:'Free Learning Resources'});
  await expect(fold).not.toHaveAttribute('open',/.*/);
  await fold.locator('summary').click();
  await expect(fold).toHaveAttribute('open','');
@@ -31,7 +34,7 @@ test('HF26 deep links preserve original focused course and free-resource content
  await page.goto('/#home');
  await expect(page.locator('#v18512-home-preview')).toBeVisible();
  await expect(page.locator('#case-brief-lab')).toBeHidden();
- const details=page.locator('#v18512-home-preview details.v18512-disclosure').filter({hasText:'Free learning resources'});
+ const details=page.locator('#v18512-home-preview details.v18512-disclosure').filter({hasText:'Free Learning Resources'});
  await details.locator('summary').click();
  await details.getByRole('link',{name:/Case Brief Lab/}).click();
  await expect(page).toHaveURL(/#case-brief-lab$/);
