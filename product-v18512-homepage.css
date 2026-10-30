@@ -96,3 +96,30 @@ body[data-el-homepage-view="home"] #live-classes .v1780-scheduler{background:#ff
 
 /* HF28 precise diagnosis: connector pseudo-elements escape 2-column learning-step grid at 900px. Keep decorative connectors only for the full 4-column desktop layout. */
 @media(max-width:1100px){.v18512-steps li::after{display:none!important}}
+
+/* HF29 owner-approved correction: restore the prior compact classroom preview,
+   preserving the locked photo, independent DOM overlay and working class planner. */
+body[data-el-homepage-view="home"] #live-classes .v1780-studio{
+  grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+  gap:1rem;align-items:start;overflow:visible;border-radius:0;box-shadow:none;
+}
+body[data-el-homepage-view="home"] #live-classes .v1780-room-preview{
+  border-radius:12px!important;padding:1.2rem!important;
+}
+body[data-el-homepage-view="home"] #live-classes .v1780-room-bar{
+  margin:-1.2rem -1.2rem 1.2rem!important;border-radius:12px 12px 0 0;
+}
+body[data-el-homepage-view="home"] #live-classes .v1780-room-stage{
+  height:auto;min-height:280px;padding:1.4rem;border-radius:12px;
+}
+body[data-el-homepage-view="home"] #live-classes .v1780-room-stage h3{
+  font-size:1.43rem;line-height:1.15;max-width:none;
+}
+body[data-el-homepage-view="home"] #live-classes .v1780-room-stage p{font-size:.94rem}
+body[data-el-homepage-view="home"] #live-classes .v1780-scheduler{
+  border-radius:12px!important;padding:1.2rem!important;
+}
+@media(max-width:1199px){
+ body[data-el-homepage-view="home"] #live-classes .v1780-studio{grid-template-columns:1fr}
+ body[data-el-homepage-view="home"] #live-classes .v1780-room-stage{min-height:280px}
+}
