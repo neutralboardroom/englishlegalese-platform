@@ -206,3 +206,18 @@ body[data-el-homepage-view="home"] #home .v18529-short-cert a{color:#086277;font
   margin:0 0 .65rem!important;
  }
 }
+
+/* HF29 rendered-screenshot correction: use actual desktop pixels and a forced
+   single CTA row so the older prose hero no longer crowds out course pathways. */
+@media(min-width:1200px){
+ #home.hero{padding-top:10px!important;padding-bottom:8px!important}
+ #home .hero-grid{gap:16px!important}
+ #home .hero-copy h1{font-size:clamp(32px,2.4vw,38px)!important;line-height:1.04!important;margin:0 0 8px!important}
+ #home .hero-actions{display:flex!important;flex-wrap:nowrap!important;gap:6px!important;margin:8px 0!important}
+ #home .hero-actions .btn{flex:0 1 auto!important;white-space:nowrap;font-size:12px!important;padding:9px 11px!important}
+ #home .trust-row{margin-top:5px!important;gap:4px!important}
+ #home .trust-item{padding:5px!important;font-size:11px!important}
+ #home .hero-card{padding:11px!important}
+ #home .hero-example{margin:4px 0!important;padding:7px 10px!important}
+ #home .hero-language{margin-top:5px!important}
+}
