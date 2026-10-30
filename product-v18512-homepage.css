@@ -142,3 +142,6 @@ body[data-el-homepage-view="home"] #live-classes .v1780-room-preview .v1780-fine
 /* HF29 original, editable line icons — no raster mockup elements or emoji. */
 .v18528-card-icon svg{width:36px;height:36px;display:block}
 .v18528-disclosure-icon svg{width:28px;height:28px;display:block}
+
+body[data-el-homepage-view="home"] #home .v18529-short-cert{font-size:.9rem;line-height:1.48;max-width:60ch;color:#315a6c;margin:.65rem 0}
+body[data-el-homepage-view="home"] #home .v18529-short-cert a{color:#086277;font-weight:750;text-underline-offset:3px}
