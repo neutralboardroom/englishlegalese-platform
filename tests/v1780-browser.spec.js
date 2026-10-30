@@ -99,3 +99,23 @@ test('v1.78 teachers explain video classroom access without inventing immediate 
  await open(page,'employers');
  await expect(page.locator('#v1780-teacher-handoff')).toBeHidden();
 });
+
+test('HF30 class planning covers Legal, Business, investor, employer and supervised-assessment preparation without bookings or data writes',async({page})=>{
+ const writes=[];page.on('request',r=>{if(['POST','PUT','PATCH'].includes(r.method()))writes.push(r.url());});
+ await open(page,'live-classes');const s=page.locator('#live-classes'),focus=s.locator('#v1780-focus');
+ await expect(focus.locator('option')).toHaveCount(12);
+ for(const [label,value] of [['Live one-to-one Business English','5'],['Investor and Wall Street communication','7'],['Business English certification assessment preparation','9'],['Legal English certification assessment preparation','10'],['Employer team communication training','11']]){
+  await expect(focus.locator('option[value="'+value+'"]')).toHaveText(label);
+ }
+ await focus.selectOption('7');
+ await s.locator('#v1780-when').fill('2035-04-17T14:30');
+ await s.getByRole('button',{name:'Preview class plan'}).click();
+ await expect(s.locator('.v1780-class-result')).toContainText('Investor and Wall Street communication');
+ await expect(s.locator('.v1780-class-result')).toContainText('Not booked');
+ await focus.selectOption('9');
+ await expect(s.locator('.v1780-class-result')).toBeHidden();
+ await s.getByRole('button',{name:'Preview class plan'}).click();
+ await expect(s.locator('.v1780-class-result')).toContainText('Business English certification assessment preparation');
+ await expect(s.locator('.v1780-class-result')).toContainText('Not booked');
+ expect(writes).toEqual([]);
+});
