@@ -66,8 +66,8 @@ function makeUnit2(){
 function addClassrooms(){
  const root=$('#app'),teachers=$('#teachers');if(!root||!teachers||$('#live-classes'))return;
  const s=n('section',undefined,'section v1780-classrooms');s.id='live-classes';s.setAttribute('aria-labelledby','v1780-class-title');
- const c=n('div',undefined,'container'),top=n('div',undefined,'section-head'),heading=n('div');heading.append(n('div','Human-taught Legal English','eyebrow'),n('h2','Learn live with a human teacher in an online video classroom.'));heading.querySelector('h2').id='v1780-class-title';
- top.append(heading,n('p','Structured classes, interactive discussion, guided roleplay and direct teacher feedback—designed to complement independent practice.'));
+ const c=n('div',undefined,'container'),top=n('div',undefined,'section-head'),heading=n('div');heading.append(n('div','Human-taught Legal English and Business English','eyebrow'),n('h2','Learn live with a human teacher in an online video classroom.'));heading.querySelector('h2').id='v1780-class-title';
+ top.append(heading,n('p','Structured Legal English, Business English, investor communication and professional team learning through interactive discussion, guided roleplay and direct teacher feedback. Class plans are previews until a real teacher confirms the session.'));
  const benefits=n('div',undefined,'v1780-benefits');
  [['video','Live interaction','Ask questions, practise spoken Legal English, and receive personalized explanations during a teacher-led video session.'],['book','Class scheduling','Choose a learning focus and preview a lesson time. Actual classes are confirmed only after teacher assignment and an official meeting link.'],['calendar','Calendar-friendly','A schedule can be shared using standard calendar invitations and an approved Zoom, Google Meet, Teams or regional meeting link.']].forEach(([kind,title,body])=>{const card=n('article',undefined,'panel v1780-benefit');card.append(n('span',kind==='video'?'◉':kind==='book'?'◷':'▦','v1780-benefit-symbol'),n('h3',title),n('p',body));benefits.append(card)});
  const studio=n('div',undefined,'v1780-studio'),preview=n('div',undefined,'panel v1780-room-preview');
