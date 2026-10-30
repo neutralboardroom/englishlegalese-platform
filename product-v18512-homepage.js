@@ -77,7 +77,10 @@ function mount(){
  }wrap.append(groupArea);
  const footer=E('p',undefined,'v18512-end-actions');
  for(const [label,href]of [['Start learning','/learn/start/'],['View pricing','/pricing/'],['Create an account','/learn/account/']])footer.append(link(label,href));
- wrap.append(footer);preview.append(wrap);room.after(preview);
+ wrap.append(footer);
+ const saved=E('p','Sign in to your account to save and resume independent lessons. Without an account, work may not carry over between devices. ','v18530-saved-work-note');
+ saved.append(link('Account and saved lessons →','/learn/account/'));
+ wrap.append(saved);preview.append(wrap);room.after(preview);
  document.documentElement.dataset.v18512Homepage='summary-first';
  // Existing routing remains authoritative for focus views and deep links.
  if(typeof window.englishLegaleseApplyView==='function')window.englishLegaleseApplyView();
