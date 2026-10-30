@@ -89,3 +89,7 @@ body[data-el-homepage-view="home"] #live-classes .v1780-scheduler{background:#ff
 
 /* HF28 tablet regression: the teacher preview has a wide intrinsic minimum; stack before 900px tablets. */
 @media(max-width:1199px){body[data-el-homepage-view="home"] #live-classes .v1780-studio{grid-template-columns:minmax(0,1fr)}body[data-el-homepage-view="home"] #live-classes .v1780-room-preview,body[data-el-homepage-view="home"] #live-classes .v1780-scheduler{min-width:0;max-width:100%;box-sizing:border-box}body[data-el-homepage-view="home"] #live-classes .v1780-room-stage{height:auto;min-height:340px}body[data-el-homepage-view="home"] #live-classes .v1780-form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* HF28: unshown legacy toast must not expand tablet document width. Visible toasts retain their existing behavior. */
+#toast:not(.show){display:none!important}
+#toast.show{box-sizing:border-box;max-width:min(380px,calc(100vw - 32px))}
