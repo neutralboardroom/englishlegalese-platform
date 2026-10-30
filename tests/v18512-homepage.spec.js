@@ -8,6 +8,8 @@ test('HF27 homepage provides six pathways, a separate locked classroom photo, an
  await expect(preview.locator('.v18512-pathway-card')).toHaveCount(6);
  await expect(preview.getByRole('heading',{name:'Legal English Certifications'})).toBeVisible();
  await expect(preview.getByRole('heading',{name:'Business English Certifications'})).toBeVisible();
+ await expect(preview.getByRole('link',{name:/Explore Legal English Certifications/})).toHaveAttribute('href','/learn/legal-english-certification/');
+ await expect(preview.getByRole('link',{name:/Explore Business English Certifications/})).toHaveAttribute('href','/learn/business-english-certification/');
  await expect(page.locator('#live-classes')).toBeVisible();
  const display=page.locator('#live-classes .v1780-room-stage');
  await expect(display).toHaveCSS('background-image',/teacher-classroom-photo-locked-hf26\.svg/);
