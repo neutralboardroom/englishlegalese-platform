@@ -1,3 +1,11 @@
+# HF36 — Original cross-program continuing lessons and discoverability (2026-10-31)
+
+The current **HF35** main remains authoritative baseline until both independent release gates accept this HF36 candidate. Based on real educational benefit and the owner's request for more lessons for the ongoing membership program, HF36 adds twelve substantial, original *free* continuing-practice modules: six Legal English, six Business/Investor English; keeps the previous twelve lessons unchanged (24 total). Each new module has realistic fictional scenario, vocabulary, substantial model response, drafting assignment, three-choice source-aware check, context-specific feedback and optional teacher extension. Learning content is independently findable from both program pages, both free-resource pages, original lesson hub and membership comparison; subject-specific links jump directly into the right six. All existing homepage styling and images, course count, catalog, class packages, prices, four role dashboards, certifications and strict no-billing safety posture remain unchanged. Tests enforce no private draft persistence, no POST/PUT/PATCH/DELETE, correct tracking of 24 lessons, context-aware checks and mobile overflow. See `docs/HF36_CONTINUING_LEARNING_RELEASE_2026-10-31.md` for full benefit/no-drift contract.
+
+**Release protocol:** wait for both exact-head independent CI source+browser qualification and screenshot review; merge/deploy only after success. Production inquiry migration, recurring billing, staff teaching capacity and certifications remain separately blocked until actually qualified. Full preceding backlog retained verbatim.
+
+---
+
 # HF35 — targeted continuing-practice learning quality (2026-10-31)
 
 **Why this is meaningful:** HF34 shipped 12 original Legal/Business English self-guided lessons, but every one of their two-option knowledge checks put the correct answer second and returned the same generic response. That repeated pattern rewarded guessing and obscured the actual professional communication skill. This is an identifiable user-learning defect, not a redesign request.
