@@ -53,6 +53,11 @@ function install(app,{services,authMiddleware,requireRoles}){
    {from:1,to:4,incremental_seat_usd:25},{from:5,to:19,incremental_seat_usd:23},
    {from:20,to:49,incremental_seat_usd:21},{from:50,to:null,custom_quote:true}],
   payment_enabled:false,entitlements_enabled:false,organization_roles_require_verification:true,
+  covered_programs:['legal_english','business_english','investor_english'],
+  independent_certifications:['legal_english','business_english'],
+  proposed_renewal_terms:{continues_until_canceled:true,billing_intervals:['monthly','annual'],
+    cancel_before_next_renewal:true,access_through_current_paid_period:true,
+    extra_renewal_after_confirmed_cancel:false,cancellation_active:false},
   note:'Monthly amounts are proposals for digital learning access, not active subscriptions. Teacher-led classes and supervised certificate assessments have separate costs.'
  }));
  app.get('/api/v1970/memberships/quote',(req,res)=>{
@@ -65,6 +70,7 @@ function install(app,{services,authMiddleware,requireRoles}){
  app.get('/api/v1970/memberships/readiness',async(_req,res)=>respond(res,200,{
   ok:true,interest_form_available:await dbReady(),subscription_checkout_available:false,
   active_subscriptions_available:false,enterprise_seat_provisioning_available:false,
+  cancellation_portal_available:false,renewal_billing_available:false,
   notice:'Membership inquiries are not active licenses. No subscription checkout, renewal or payment collection has been enabled.'
  }));
  app.post('/api/v1970/memberships/interest',async(req,res)=>{
