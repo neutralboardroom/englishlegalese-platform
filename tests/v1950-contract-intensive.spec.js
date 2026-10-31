@@ -24,6 +24,7 @@ for(const track of ['legal','business']){
   await section.locator('.v1950-preparation summary').click();
   await expect(section.locator('.v1950-preparation li')).toHaveCount(8);
   await expect(section.locator('.v1950-course-nav a')).toHaveAttribute('href',track==='legal'?'/learn/business-english/#v1950-business-contracts':'/learn/legal-english/#v1950-legal-contracts');
+  await expect(section.locator('a.v1950-request-class')).toHaveAttribute('href','/learn/enroll/');
   await expect(section.locator('.v1950-sources a')).toHaveCount(3);
   expect(writes,'No student data, booking, payment or answer may leave the browser').toEqual([]);
   await section.screenshot({path:testInfo.outputPath('HF32-'+track+'-contracts-course-'+testInfo.project.name+'.png'),animations:'disabled'});
