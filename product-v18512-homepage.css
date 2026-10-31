@@ -221,3 +221,67 @@ body[data-el-homepage-view="home"] #home .v18529-short-cert a{color:#086277;font
  #home .hero-example{margin:4px 0!important;padding:7px 10px!important}
  #home .hero-language{margin-top:5px!important}
 }
+
+/* HF31: ACTUAL owner-approved image-led first screen, replacing the stacked
+   text-first home hierarchy. All form/button text remains DOM-editable.
+   Photo bytes stay locked in assets/teacher-classroom-photo-locked-hf26.svg. */
+body[data-el-homepage-view="home"] #home.hero{
+ padding:0!important;background:#fff!important;border-bottom:0!important;
+}
+#home .v18531-integrated-hero{
+ display:grid;grid-template-columns:minmax(0,1.65fr) minmax(330px,.9fr);
+ align-items:center;gap:1.1rem;
+ min-height:410px;padding:16px clamp(18px,2.4vw,40px);
+ background-image:linear-gradient(90deg,rgba(7,24,37,.76) 0%,rgba(7,24,37,.25) 57%,rgba(7,24,37,.12)),url('/assets/teacher-classroom-photo-locked-hf26.svg');
+ background-size:cover;background-position:center;
+ box-sizing:border-box;
+}
+#home .v18531-teacher-copy{align-self:center;color:#fff;padding:1.3rem 1rem 1.3rem clamp(.5rem,2vw,1.8rem);min-width:0;max-width:760px}
+#home .v18531-image-heading{font-family:var(--font-display,Georgia,serif)!important;color:#fff!important;font-size:clamp(2.5rem,5vw,4.5rem)!important;line-height:1.02!important;letter-spacing:-.02em!important;max-width:15ch;margin:0 0 1rem!important;text-shadow:0 3px 14px rgba(0,0,0,.3)}
+#home .v18531-image-lead{color:#fff;font-size:clamp(1rem,1.5vw,1.25rem);line-height:1.55;max-width:55ch;margin:0 0 1.1rem;text-shadow:0 1px 6px rgba(0,0,0,.35)}
+#home .v18531-image-caveat{font-size:.78rem;color:#e7f2f7;line-height:1.4;max-width:70ch;margin:1rem 0 0}
+#home .v18531-hero-actions{display:flex;flex-wrap:wrap;gap:.65rem;align-items:center}
+#home .v18531-hero-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:45px;padding:.6rem 1.2rem;text-decoration:none;font-weight:800;border-radius:9px;box-sizing:border-box}
+#home .v18531-blue-action{color:#fff!important;background:#0964d9;border:1px solid #87b9ed}
+#home .v18531-white-action{color:#095397!important;background:#fff;border:1px solid #b5d2ee}
+#home .v18531-hero-actions a:focus-visible,#home .v18531-form-actions a:focus-visible,#home .v18531-form-actions button:focus-visible{outline:3px solid #f4c760;outline-offset:3px}
+#home .v18531-hero-planner{
+ background:#fff;color:#102f49;border:1px solid #e4edf4;border-radius:15px;
+ padding:clamp(1rem,1.7vw,1.5rem);box-shadow:0 13px 30px rgba(0,0,0,.22);
+ max-width:500px;min-width:0;box-sizing:border-box;margin:0 0 0 auto;width:100%;
+}
+#home .v18531-planner-eyebrow{font-size:.73rem;letter-spacing:.055em;font-weight:800;color:#11676b;margin:0 0 .45rem}
+#home .v18531-hero-planner h3{font-family:var(--font-display,Georgia,serif);font-size:clamp(1.5rem,2.1vw,2rem);color:#0d3151;margin:0 0 .55rem;line-height:1.1}
+#home .v18531-planner-intro{font-size:.8rem;line-height:1.5;margin:0 0 .8rem;color:#375069}
+#home .v18531-form-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}
+#home .v18531-field{display:flex;flex-direction:column;gap:.25rem;min-width:0;font-size:.74rem;font-weight:800;color:#173d60;line-height:1.3}
+#home .v18531-field select,#home .v18531-field input{font:inherit;font-weight:500;background:#fff;color:#183c59;border:1px solid #b9cddd;border-radius:6px;min-height:39px;padding:.45rem .5rem;min-width:0;width:100%;box-sizing:border-box}
+#home .v18531-plan-note{font-size:.72rem;line-height:1.45;color:#526a7c;margin:.65rem 0}
+#home .v18531-form-actions{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
+#home .v18531-form-actions>*{display:inline-flex;align-items:center;justify-content:center;text-align:center;min-height:40px;padding:.45rem .5rem;font-size:.78rem;font-weight:750;border-radius:7px;box-sizing:border-box;cursor:pointer;text-decoration:none}
+#home .v18531-plan-button{border:1px solid #086f77;background:#177278;color:#fff}
+#home .v18531-topic-button{border:1px solid #8ab5bc;background:#fff;color:#156e79}
+#home .v18531-form-status{margin:.6rem 0 0;font-size:.73rem;color:#1d616e;line-height:1.35}
+#home .v18531-plan-result{margin:.55rem 0 0;background:#eff8f8;color:#1e4e60;border:1px solid #b6d6d7;border-radius:8px;padding:.55rem .75rem;font-size:.74rem;line-height:1.45}
+#home .v18531-plan-result p{margin:.3rem 0}
+#home .v18512-home-preview{padding:1rem 0 2rem;background:#fff}
+#home .v18512-pathway-cards{margin:.4rem 0 1.2rem}
+#home .v18512-pathway-card{min-height:175px}
+#home .v18512-steps{margin:1.1rem 0}
+#home .v18512-disclosure summary{min-height:135px}
+#home > .hero-grid{border-top:1px solid #e3eaf0;padding-top:1rem;padding-bottom:1rem;margin-top:1rem;opacity:.98}
+#home > .hero-grid:before{content:'Additional learning guidance';grid-column:1/-1;font-family:var(--font-display,Georgia,serif);font-size:1.35rem;color:#153d5c;font-weight:700}
+@media(max-width:1050px){
+ #home .v18531-integrated-hero{grid-template-columns:minmax(0,1fr);background-position:center;gap:.6rem}
+ #home .v18531-teacher-copy{padding:.5rem 1rem;max-width:740px}
+ #home .v18531-hero-planner{max-width:630px;margin:.3rem auto 1rem;width:100%}
+}
+@media(max-width:600px){
+ #home .v18531-integrated-hero{padding:.75rem;background-image:linear-gradient(90deg,rgba(7,24,37,.84),rgba(7,24,37,.5)),url('/assets/teacher-classroom-photo-locked-hf26.svg');background-position:60% center}
+ #home .v18531-image-heading{font-size:clamp(2.25rem,8vw,3.25rem)!important}
+ #home .v18531-teacher-copy{padding:.7rem}
+ #home .v18531-hero-actions a{flex:1 1 42%;padding:.55rem .7rem;font-size:.82rem}
+ #home .v18531-form-fields{grid-template-columns:1fr}
+ #home .v18531-hero-planner{padding:.85rem}
+ #home .v18531-form-actions{grid-template-columns:1fr}
+}
