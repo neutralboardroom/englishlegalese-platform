@@ -18,6 +18,8 @@ function mount(host,track){
  for(const f of features)glance.append(el('span',f));
  const nav=el('p',undefined,'v1950-course-nav');const cross=el('a','Compare the '+(track==='legal'?'Business English':'Legal English')+' course →');cross.href='/learn/'+(track==='legal'?'business-english':'legal-english')+'/#v1950-'+(track==='legal'?'business':'legal')+'-contracts';
  nav.append(cross);
+ const request=el('a','Request a teacher-led class on this intensive →','v1950-request-class');request.href='/learn/enroll/';
+ nav.append(request);
  const list=el('div',undefined,'v1950-lessons');
  DATA[track].forEach((l,i)=>{
   const [name,goal,words,scenario,model,practice,teacher,question,choices,correct,explain]=l;
