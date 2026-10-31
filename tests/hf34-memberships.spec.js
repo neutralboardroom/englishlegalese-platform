@@ -83,8 +83,8 @@ test('HF34 one shared auto-renewing membership appears across all pricing and pr
  await expect(page.locator('main')).toContainText('retain the access included in your already-paid period');
  await page.goto('/pricing/');
  await expect(page.getByRole('heading',{name:'One membership for both Legal English and Business English'})).toBeVisible();
- await expect(page.locator('#v1970-shared-pricing')).toContainText('renew automatically');
- await expect(page.locator('#v1970-shared-pricing')).toContainText('keep access through the period already paid for');
+ await expect(page.locator('section[aria-labelledby="v1970-shared-pricing"]')).toContainText('renew automatically');
+ await expect(page.locator('section[aria-labelledby="v1970-shared-pricing"]')).toContainText('keep access through the period already paid for');
  await page.goto('/learn/legal-english/');
  await expect(page.getByRole('region',{name:'Shared membership options'})).toContainText('both Legal English and Business English');
  await page.goto('/learn/business-english/');
