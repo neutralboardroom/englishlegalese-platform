@@ -1,0 +1,67 @@
+'use strict';
+const {test,expect}=require('@playwright/test');
+test('HF34 one employee is a valid team membership estimate; price stays monotonic',async({page},testInfo)=>{
+ await page.goto('/learn/memberships/');
+ await expect(page.getByRole('heading',{name:'Memberships that can grow with you'})).toBeVisible();
+ await expect(page.getByText('No checkout, automatic renewal, paid AI entitlement',{exact:false})).toBeVisible();
+ const seats=page.getByLabel('How many employees would use the learning platform?');
+ await expect(seats).toHaveValue('1');
+ await expect(page.locator('#v1970-quote-result')).toContainText('$25/month');
+ await page.screenshot({path:testInfo.outputPath('hf34-membership-overview.png'),fullPage:true});
+ await seats.fill('5');await expect(page.locator('#v1970-quote-result')).toContainText('$123/month');
+ await seats.fill('19');await expect(page.locator('#v1970-quote-result')).toContainText('$445/month');
+ await seats.fill('20');await expect(page.locator('#v1970-quote-result')).toContainText('$466/month');
+ await seats.fill('50');await expect(page.locator('#v1970-quote-result')).toContainText('individually priced enterprise proposal');
+ await seats.fill('0');await expect(page.locator('#v1970-quote-result')).toContainText('Choose a whole number');
+ const width=await page.evaluate(()=>({w:document.documentElement.scrollWidth,v:window.innerWidth}));
+ expect(width.w).toBeLessThanOrEqual(width.v+2);
+});
+test('HF34 disabled form never claims to save an inquiry when backend is unavailable',async({page})=>{
+ await page.route('**/api/v1970/memberships/readiness',r=>r.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"interest_form_available":false,"subscription_checkout_available":false}'}));
+ await page.goto('/learn/memberships/');
+ await expect(page.locator('#v1970-submit')).toBeDisabled();
+ await expect(page.locator('#v1970-form-status')).toContainText('not accepting submissions yet');
+ await expect(page.locator('main')).toContainText('Existing free resources remain free');
+});
+test('HF34 opt-in request starts with one seat, never creates subscription or card charge',async({page})=>{
+ await page.route('**/api/v1970/memberships/readiness',r=>r.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"interest_form_available":true,"subscription_checkout_available":false}'}));
+ let submissions=0;
+ await page.route('**/api/v1970/memberships/interest',r=>{
+  submissions++;
+  const b=JSON.parse(r.request().postData()||'{}');
+  expect(b.request_kind).toBe('organization');
+  expect(b.plan_code).toBe('team');
+  expect(b.seat_count).toBe(1);
+  expect(b.contact_consent).toBe(true);
+  expect(b).not.toHaveProperty('payment_method');
+  return r.fulfill({status:201,contentType:'application/json',body:'{"ok":true,"received":true,"reference":"fictional-request-123","charged":false,"subscribed":false}'});
+ });
+ await page.goto('/learn/memberships/');
+ await page.getByRole('link',{name:'Request membership information for this team'}).click();
+ await expect(page.locator('#v1970-kind')).toHaveValue('organization');
+ await expect(page.locator('#v1970-plan')).toHaveValue('team');
+ await expect(page.locator('#v1970-seat-field input')).toHaveValue('1');
+ await page.getByLabel('Contact name').fill('Example HR');
+ await page.getByLabel('Contact email').fill('example@example.test');
+ await page.getByLabel('Organization name').fill('Example Firm');
+ await page.locator('input[name=contact_consent]').check();
+ await page.getByRole('button',{name:'Request membership information'}).click();
+ await expect(page.locator('#v1970-form-status')).toContainText('information request recorded');
+ await expect(page.locator('#v1970-form-status')).toContainText('No payment or subscription was created');
+ expect(submissions).toBe(1);
+});
+test('HF34 membership discovery preserves old pricing, employer, account and lesson options',async({page})=>{
+ await page.goto('/pricing/');
+ await expect(page.getByRole('link',{name:/Compare proposed individual and team memberships/})).toHaveAttribute('href','/learn/memberships/');
+ await expect(page.locator('main')).toContainText('Private online lessons');
+ await expect(page.locator('main')).toContainText('SmartTeacher AI');
+ await page.goto('/learn/employers/');
+ await expect(page.getByRole('link',{name:'Compare membership plans'})).toHaveAttribute('href','/learn/memberships/');
+ await expect(page.locator('main')).toContainText('Team Legal English');
+ await page.goto('/learn/account/');
+ await expect(page.getByRole('link',{name:/Explore proposed memberships starting with one employee/})).toHaveAttribute('href','/learn/memberships/');
+ await expect(page.locator('main')).toContainText('Student dashboard');
+ await expect(page.locator('main')).toContainText('Teacher dashboard');
+ await expect(page.locator('main')).toContainText('Employer dashboard');
+ await expect(page.locator('main')).toContainText('Owner / admin operations');
+});
