@@ -99,3 +99,31 @@ test('v1.78 teachers explain video classroom access without inventing immediate 
  await open(page,'employers');
  await expect(page.locator('#v1780-teacher-handoff')).toBeHidden();
 });
+
+test('HF32 honest class planner includes both English subjects, investor and employer training without booking or payment',async({page},testInfo)=>{
+ const writes=[];page.on('request',request=>{if(['POST','PUT','PATCH','DELETE'].includes(request.method()))writes.push(request.url())});
+ await open(page,'live-classes');const section=page.locator('#live-classes'),focus=section.locator('#v1780-focus');
+ await expect(section.locator('.section-head .eyebrow').first()).toContainText('Legal English and Business English');
+ await expect(section).toContainText('Class plans are previews until a real teacher confirms the session.');
+ await expect(focus.locator('option')).toHaveCount(14);
+ for(const [value,original] of [['0','Live one-to-one Legal English'],['1','Small-group speaking and roleplay'],['2','Legal writing feedback class'],['3','Contract vocabulary and document reading'],['4','LL.M. / academic Legal English']]){
+  await expect(focus.locator('option[value="'+value+'"]')).toHaveText(original);
+ }
+ for(const [value,label] of [['5','Live one-to-one Business English'],['6','Business meetings, negotiation and presentations'],['7','Investor and Wall Street communication'],['8','Professional business writing and email'],['9','Business English certification assessment preparation'],['10','Legal English certification assessment preparation'],['11','Employer team communication training'],['12','Legal contracts, agreements and negotiation intensive'],['13','Business contracts, agreements and negotiation intensive']]){
+  await expect(focus.locator('option[value="'+value+'"]')).toHaveText(label);
+ }
+ await focus.selectOption('7');await section.locator('#v1780-when').fill('2035-04-17T14:30');
+ await section.getByRole('button',{name:'Preview class plan'}).click();
+ await expect(section.locator('.v1780-class-result')).toContainText('Investor and Wall Street communication');
+ await expect(section.locator('.v1780-class-result')).toContainText('Not booked');
+ await section.screenshot({path:testInfo.outputPath('HF32-business-and-investor-class-planner-'+testInfo.project.name+'.png'),animations:'disabled'});
+ await focus.selectOption('9');
+ await expect(section.locator('.v1780-class-result')).toBeHidden();
+ await section.getByRole('button',{name:'Preview class plan'}).click();
+ await expect(section.locator('.v1780-class-result')).toContainText('Business English certification assessment preparation');
+ await expect(section.locator('.v1780-class-result')).toContainText('Not booked');
+ expect(writes,'Class planning must never create a booking or send private learner details').toEqual([]);
+ await page.goto('/#home');
+ await expect(page.locator('#v18531-integrated-hero')).toBeVisible();
+ await expect(page.locator('#v18512-home-preview .v18512-pathway-card')).toHaveCount(5);
+});
