@@ -105,11 +105,11 @@ test('HF32 honest class planner includes both English subjects, investor and emp
  await open(page,'live-classes');const section=page.locator('#live-classes'),focus=section.locator('#v1780-focus');
  await expect(section.locator('.section-head .eyebrow').first()).toContainText('Legal English and Business English');
  await expect(section).toContainText('Class plans are previews until a real teacher confirms the session.');
- await expect(focus.locator('option')).toHaveCount(12);
+ await expect(focus.locator('option')).toHaveCount(14);
  for(const [value,original] of [['0','Live one-to-one Legal English'],['1','Small-group speaking and roleplay'],['2','Legal writing feedback class'],['3','Contract vocabulary and document reading'],['4','LL.M. / academic Legal English']]){
   await expect(focus.locator('option[value="'+value+'"]')).toHaveText(original);
  }
- for(const [value,label] of [['5','Live one-to-one Business English'],['6','Business meetings, negotiation and presentations'],['7','Investor and Wall Street communication'],['8','Professional business writing and email'],['9','Business English certification assessment preparation'],['10','Legal English certification assessment preparation'],['11','Employer team communication training']]){
+ for(const [value,label] of [['5','Live one-to-one Business English'],['6','Business meetings, negotiation and presentations'],['7','Investor and Wall Street communication'],['8','Professional business writing and email'],['9','Business English certification assessment preparation'],['10','Legal English certification assessment preparation'],['11','Employer team communication training'],['12','Legal contracts, agreements and negotiation intensive'],['13','Business contracts, agreements and negotiation intensive']]){
   await expect(focus.locator('option[value="'+value+'"]')).toHaveText(label);
  }
  await focus.selectOption('7');await section.locator('#v1780-when').fill('2035-04-17T14:30');
