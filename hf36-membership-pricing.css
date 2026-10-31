@@ -1,0 +1,25 @@
+/* HF36 — proposed cross-track membership pricing visible without hiding existing class prices. */
+.hf36-membership-summary{max-width:1200px;margin:1.25rem auto 1.75rem;padding:1.15rem 1.35rem;border:1px solid #cedbe5;border-radius:.85rem;background:#f7fafc;box-sizing:border-box}
+.hf36-membership-summary h2{font-size:clamp(1.25rem,2vw,1.65rem);margin:.1rem 0 .7rem;color:#143b55;line-height:1.3}
+.hf36-membership-summary h3{font-size:1.08rem;line-height:1.4;margin:.2rem 0 .65rem;color:#143b55}
+.hf36-membership-summary p{margin:.4rem 0 .8rem;line-height:1.6;max-width:95ch}
+.hf36-membership-summary .hf36-kicker{font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;font-weight:750;color:#245c78}
+.hf36-membership-summary .hf36-prices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1rem 0}
+.hf36-membership-summary .hf36-price-card{background:white;border:1px solid #d2dfe7;border-radius:.65rem;padding:1rem;min-width:0}
+.hf36-membership-summary .hf36-plan-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.55rem;margin:.75rem 0}
+.hf36-membership-summary .hf36-plan{padding:.65rem .45rem;text-align:center;border-radius:.35rem;background:#eef5fa;min-width:0}
+.hf36-membership-summary .hf36-plan strong{display:block;font-size:clamp(1.16rem,2vw,1.55rem);color:#103f60}
+.hf36-membership-summary .hf36-plan span{display:block;font-size:.85rem;font-weight:650;overflow-wrap:anywhere}
+.hf36-membership-summary .hf36-plan small{display:block;font-size:.73rem;color:#354b5a}
+.hf36-membership-summary .hf36-seat-price{font-size:clamp(1.2rem,2vw,1.55rem);font-weight:750;color:#103f60}
+.hf36-membership-summary .hf36-bands{font-size:.91rem;line-height:1.6}
+.hf36-membership-summary .hf36-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.65rem 1.2rem;margin:.7rem 0}
+.hf36-membership-summary .hf36-primary{display:inline-block;background:#174966;color:#fff!important;font-weight:700;padding:.72rem 1rem;border-radius:.42rem;text-decoration:none}
+.hf36-membership-summary .hf36-primary:hover{text-decoration:underline}
+.hf36-membership-summary a:focus-visible{outline:3px solid #b36c22;outline-offset:3px}
+.hf36-membership-summary .hf36-disclosure{font-size:.91rem;color:#3a4952;border-top:1px solid #d2dfe7;padding-top:.72rem}
+.hf36-membership-summary.hf36-compact{padding:1rem 1.25rem}
+.hf36-membership-summary.hf36-compact .hf36-prices{margin:.65rem 0}
+.hf36-membership-summary.hf36-compact .hf36-plan-grid{margin:.5rem 0}
+@media(max-width:720px){.hf36-membership-summary{margin:1rem .7rem 1.4rem;padding:1rem}.hf36-membership-summary .hf36-prices{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:400px){.hf36-membership-summary .hf36-plan-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
