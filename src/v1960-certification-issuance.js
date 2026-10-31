@@ -50,6 +50,15 @@ function install(app,{services,authMiddleware,requireRoles}){
    return send(res,200,{ok:true,assessments:q.rows,credentials:c.rows,verification_secret_not_recoverable:true});
   }catch{return error(res)}
  });
+ app.post('/api/v1960/certifications/assessments/:id/public-verification-consent',guard,auth,requireRoles('student'),async(req,res)=>{
+  if(!available()||!idOk(req.params.id))return error(res);
+  if(typeof req.body?.consent!=='boolean')return send(res,400,{ok:false,error:'Explicit verification-consent choice required.'});
+  try{
+   const q=await services.query("UPDATE certification_assessments SET public_verification_consent_at=CASE WHEN $3 THEN now() ELSE NULL END,updated_at=now() WHERE id=$1 AND candidate_user_id=$2 AND status IN ('requested','scheduled','supervised','under_review') RETURNING id,public_verification_consent_at",[req.params.id,req.user.id,req.body.consent]);
+   if(!q.rows.length)return send(res,404,{ok:false,error:'No eligible assessment belongs to this student account.'});
+   return send(res,200,{ok:true,public_verification_consent:Boolean(q.rows[0].public_verification_consent_at)});
+  }catch{return error(res)}
+ });
  app.post('/api/v1960/certifications/assessments/:id/supervision',guard,auth,requireRoles('teacher'),async(req,res)=>{
   if(!exams()||!idOk(req.params.id))return error(res);
   const b=req.body||{};
@@ -90,10 +99,10 @@ function install(app,{services,authMiddleware,requireRoles}){
  app.post('/api/v1960/certifications/assessments/:id/issue',guard,auth,requireRoles('owner','admin'),async(req,res)=>{
   if(!issuance()||!idOk(req.params.id))return error(res);
   if(req.body?.confirm_verified_human_assessment!==true||req.body?.confirm_qc_and_calibration!==true||
-     req.body?.candidate_public_verification_consent!==true)
+     req.body?.confirm_candidate_consent_checked!==true)
    return send(res,400,{ok:false,error:'Verified human assessment, calibrated quality controls and candidate public verification consent required.'});
   try{
-   const a=(await services.query("SELECT * FROM certification_assessments WHERE id=$1 AND status='under_review' AND supervision_attested AND authorized_tools_attested AND accommodations_reviewed AND identity_verified_at IS NOT NULL AND protected_evidence_reference IS NOT NULL AND proctor_user_id IS NOT NULL",[req.params.id])).rows[0];
+   const a=(await services.query("SELECT * FROM certification_assessments WHERE id=$1 AND status='under_review' AND supervision_attested AND authorized_tools_attested AND accommodations_reviewed AND identity_verified_at IS NOT NULL AND protected_evidence_reference IS NOT NULL AND proctor_user_id IS NOT NULL AND public_verification_consent_at IS NOT NULL",[req.params.id])).rows[0];
    if(!a||a.rubric_version!==approvedRubric())return send(res,409,{ok:false,error:'No eligible verified supervised examination.'});
    const reviews=(await services.query('SELECT * FROM certification_assessor_reviews WHERE assessment_id=$1 ORDER BY submitted_at,id',[a.id])).rows;
    if(reviews.length!==2||reviews[0].assessor_user_id===reviews[1].assessor_user_id||
