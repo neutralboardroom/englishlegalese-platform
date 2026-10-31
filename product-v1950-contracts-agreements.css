@@ -34,3 +34,6 @@
 .v1950-source-note{font-size:.78rem;color:#44616f;margin:.3rem 0 0}
 @media(max-width:900px){.v1950-glance{grid-template-columns:repeat(2,minmax(0,1fr))}.v1950-lessons{grid-template-columns:1fr}.v1950-contract-course{margin:1rem .75rem}}
 @media(max-width:500px){.v1950-glance{grid-template-columns:1fr}.v1950-contract-course{margin:.8rem .35rem;padding:1rem}.v1950-lesson summary{font-size:.92rem}}
+
+.v1950-course-nav{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:center}
+.v1950-course-nav a.v1950-request-class{display:inline-flex;background:#126a75;color:#fff;border-radius:7px;text-decoration:none;font-weight:750;padding:.6rem .95rem;line-height:1.4}
