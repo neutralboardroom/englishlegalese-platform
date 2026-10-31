@@ -17,6 +17,7 @@ test('HF31 approved image-led homepage is FIRST; five pathways precede legacy gu
  await expect(newHero.locator('.v18531-hero-planner')).toBeVisible();
  await expect(preview.locator('.v18512-pathway-card')).toHaveCount(5);
  await expect(preview.locator('.v18512-steps li')).toHaveCount(4);
+ await expect(preview.locator('.v18512-steps li .v18531-step-icon svg')).toHaveCount(4);
  await expect(preview.locator('details.v18512-disclosure')).toHaveCount(5);
  const loc=await page.evaluate(()=>{
   const rect=s=>{const r=document.querySelector(s).getBoundingClientRect();return {top:r.top+scrollY,bottom:r.bottom+scrollY,height:r.height}};
