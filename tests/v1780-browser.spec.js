@@ -100,7 +100,7 @@ test('v1.78 teachers explain video classroom access without inventing immediate 
  await expect(page.locator('#v1780-teacher-handoff')).toBeHidden();
 });
 
-test('HF32 honest class planner includes both English subjects, investor and employer training without booking or payment',async({page})=>{
+test('HF32 honest class planner includes both English subjects, investor and employer training without booking or payment',async({page},testInfo)=>{
  const writes=[];page.on('request',request=>{if(['POST','PUT','PATCH','DELETE'].includes(request.method()))writes.push(request.url())});
  await open(page,'live-classes');const section=page.locator('#live-classes'),focus=section.locator('#v1780-focus');
  await expect(section.locator('.section-head .eyebrow').first()).toContainText('Legal English and Business English');
@@ -116,6 +116,7 @@ test('HF32 honest class planner includes both English subjects, investor and emp
  await section.getByRole('button',{name:'Preview class plan'}).click();
  await expect(section.locator('.v1780-class-result')).toContainText('Investor and Wall Street communication');
  await expect(section.locator('.v1780-class-result')).toContainText('Not booked');
+ await section.screenshot({path:testInfo.outputPath('HF32-business-and-investor-class-planner-'+testInfo.project.name+'.png'),animations:'disabled'});
  await focus.selectOption('9');
  await expect(section.locator('.v1780-class-result')).toBeHidden();
  await section.getByRole('button',{name:'Preview class plan'}).click();
