@@ -77,6 +77,34 @@ async function loadIntakeSummary(ownerToken,requestEpoch,section){
   }
  }
 }
+async function loadMembershipInterests(ownerToken,requestEpoch,section){
+ const notice=E('p','Checking membership information requests…');notice.setAttribute('role','status');section.append(notice);
+ try{
+  const r=await fetch('/api/v1970/owner/membership-interests',{headers:auth(ownerToken),cache:'no-store'});
+  const d=await parse(r);
+  if(token!==ownerToken||epoch!==requestEpoch||!section.isConnected)return;
+  if(!r.ok||d.ok!==true||!Array.isArray(d.inquiries))throw Error(d.error||'Inquiry records unavailable.');
+  section.replaceChildren(E('h3','Membership information requests'));
+  section.append(E('p','Only opt-in requests, not active subscriptions, payments or licensed seats.'));
+  const counts=E('p','Recorded request statuses: '+Object.entries(d.total_by_status||{}).map(([k,v])=>k+': '+v).join(' · '));
+  section.append(counts);
+  if(!d.inquiries.length){section.append(E('p','No recorded membership inquiries.'));return}
+  const list=E('ul');
+  for(const x of d.inquiries){
+   const li=E('li'),details=E('strong',String(x.contact_name||'Contact').slice(0,120));
+   const email=E('a',String(x.contact_email||'').slice(0,254));
+   const value=String(x.contact_email||'').trim();
+   if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))email.href='mailto:'+encodeURIComponent(value);
+   const desc=E('span',' · '+String(x.plan_code||'')+' · '+(x.seat_count==null?'individual':x.seat_count+' requested seats')+
+    ' · '+String(x.status||'new')+' · '+String(x.preferred_term||'monthly'));
+   li.append(details,E('span',' · '),email,desc);list.append(li);
+  }
+  section.append(list,E('p','Contacts were provided voluntarily for membership information only. Do not send unsolicited marketing.'));
+ }catch(e){
+  if(token===ownerToken&&epoch===requestEpoch&&section.isConnected)
+   section.replaceChildren(E('h3','Membership information requests'),E('p','Inquiry records unavailable: '+e.message+'. No requests or paid seats are assumed.'));
+ }
+}
 function renderOwner(data){
  const heading=E('h2','Operational snapshot');output.append(heading);
  output.append(E('p',data.notice||'Read-only production indicators.'));
@@ -91,6 +119,8 @@ function renderOwner(data){
  }
  const triage=E('section');triage.className='v18511-owner-triage';triage.setAttribute('aria-label','Verified operational action queues');output.append(triage);loadOwnerTriage(token,epoch,triage);
  const intake=E('section');intake.className='v18512-owner-intake';intake.setAttribute('aria-label','Private owner intake review');output.append(intake);loadIntakeSummary(token,epoch,intake);
+ const membership=E('section');membership.className='v1970-owner-membership-inquiries';membership.setAttribute('aria-label','Private opt-in membership information requests');output.append(membership);
+ loadMembershipInterests(token,epoch,membership);
  const next=E('p','Next actions: review pending teacher submissions and class readiness; reconcile separately collected enrollment inquiries. This is not an invoice, employee-report editor, payout tool or permission manager.');
  output.append(next);
  const links=E('p');
