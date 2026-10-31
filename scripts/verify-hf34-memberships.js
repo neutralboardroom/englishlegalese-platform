@@ -50,6 +50,13 @@ async function run(m,path,req){
  r=await run(x.get,'/api/v1970/memberships/quote',{query:{seats:'50'}});assert.equal(r.body.custom,true);
  r=await run(x.get,'/api/v1970/memberships/quote',{query:{seats:'0'}});assert.equal(r.code,400);
  r=await run(x.get,'/api/v1970/memberships/readiness',{});assert.equal(r.body.interest_form_available,true);assert.equal(r.body.subscription_checkout_available,false);
+ const catalog=await run(x.get,'/api/v1970/memberships/catalog',{});
+ assert.deepEqual(catalog.body.covered_programs,['legal_english','business_english','investor_english']);
+ assert.deepEqual(catalog.body.independent_certifications,['legal_english','business_english']);
+ assert.equal(catalog.body.proposed_renewal_terms.continues_until_canceled,true);
+ assert.equal(catalog.body.proposed_renewal_terms.cancel_before_next_renewal,true);
+ assert.equal(catalog.body.proposed_renewal_terms.access_through_current_paid_period,true);
+ assert.equal(catalog.body.proposed_renewal_terms.cancellation_active,false);
  const body={client_request_id:randomUUID(),request_kind:'organization',plan_code:'team',contact_name:'Jane Example',
    contact_email:'jane@example.test',organization_name:'Example & Co.',seat_count:1,
    preferred_term:'monthly',contact_consent:true};
