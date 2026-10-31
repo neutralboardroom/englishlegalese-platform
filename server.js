@@ -547,6 +547,8 @@ require('./src/v1940-saved-lessons').install(app,{store:persistentStore,services
 require('./src/v18510-role-workspaces').install(app,{services:productionServices,authMiddleware,requireRoles});
 require('./src/v18511-owner-triage').install(app,{services:productionServices,authMiddleware,requireRoles});
 require('./src/v18512-ops').install(app,{services:productionServices,authMiddleware,requireRoles});
+// HF32: disabled by default; additive schema and assessed human exam controls required.
+require('./src/v1960-certification-issuance').install(app,{services:productionServices,authMiddleware,requireRoles});
 const aiGuard=createAiSafetyGate();
 const trialGuard=createTrialRateGate();
 const ledger=new FreeTrialLedger({store:persistentStore,sendMail:async mail=>{
