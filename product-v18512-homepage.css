@@ -285,3 +285,51 @@ body[data-el-homepage-view="home"] #home.hero{
  #home .v18531-hero-planner{padding:.85rem}
  #home .v18531-form-actions{grid-template-columns:1fr}
 }
+
+/* HF31 finish approved visual proportions: icon alongside each pathway,
+   inline numbered/icon learning steps, compact horizontal disclosures. */
+#home .v18512-pathway-card{
+ display:grid;grid-template-columns:56px minmax(0,1fr);column-gap:.75rem;
+ align-items:start;min-height:155px;padding:.95rem;
+}
+#home .v18512-pathway-card>.v18528-card-icon{margin:0;width:48px;height:48px;grid-column:1}
+#home .v18512-pathway-card>div{grid-column:2;height:auto;min-width:0;display:flex;flex-direction:column;align-self:stretch}
+#home .v18512-pathway-card h3{font-family:var(--font-display,Georgia,serif);font-size:1.19rem;line-height:1.15;margin:0 0 .4rem}
+#home .v18512-pathway-card p{margin:0 0 .55rem;font-size:.82rem;line-height:1.45}
+#home .v18512-pathway-card a{font-size:.82rem;line-height:1.45;margin-top:auto}
+#home .v18512-steps h2{text-align:left;font-size:1.85rem;margin:0}
+#home .v18512-steps>p{text-align:left;margin:.3rem 0 1rem}
+#home .v18512-steps ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem}
+#home .v18512-steps li.v18531-step{
+ display:flex;align-items:center;justify-content:flex-start;gap:.6rem;position:relative;
+ min-width:0;margin:0;padding:.3rem .7rem .3rem 3rem;text-align:left;
+ border-right:1px solid #d7e4ec;font-size:.78rem;font-weight:650;line-height:1.45;
+}
+#home .v18512-steps li.v18531-step:last-child{border-right:0}
+#home .v18512-steps li.v18531-step::before{
+ content:attr(data-step);display:flex;align-items:center;justify-content:center;
+ width:38px;height:38px;left:0;top:50%;transform:translateY(-50%);
+ background:#e4f0ff;border:1px solid #cbdef2;border-radius:50%;font-size:1.2rem;color:#07569c;box-shadow:none;
+}
+#home .v18512-steps li.v18531-step::after{display:none!important}
+#home .v18531-step-icon{flex:0 0 36px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:#edf6f6;color:#086f77;width:36px;height:36px}
+#home .v18531-step-icon svg{width:25px;height:25px}
+#home .v18531-step-copy{min-width:0}
+#home .v18512-disclosure summary{
+ display:flex;flex-direction:row;align-items:center;justify-content:flex-start;
+ gap:.65rem;text-align:left;min-height:87px;padding:.7rem .6rem;
+}
+#home .v18512-disclosure summary .v18528-disclosure-icon{flex:0 0 42px;width:42px;height:42px}
+#home .v18512-disclosure summary>span:last-child{align-items:flex-start;text-align:left;min-width:0}
+#home .v18512-disclosure summary strong{font-family:var(--font-display,Georgia,serif);font-size:1rem;line-height:1.2}
+#home .v18512-disclosure summary span{line-height:1.35}
+@media(max-width:1100px){
+ #home .v18512-steps ol{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #home .v18512-steps li.v18531-step:nth-child(even){border-right:0}
+}
+@media(max-width:650px){
+ #home .v18512-steps ol{grid-template-columns:1fr}
+ #home .v18512-steps li.v18531-step{border-right:0;border-bottom:1px solid #d7e4ec;min-height:65px}
+ #home .v18512-pathway-card{min-height:130px}
+ #home .v18512-disclosure summary{min-height:78px}
+}
