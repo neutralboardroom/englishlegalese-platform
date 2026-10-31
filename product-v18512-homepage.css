@@ -96,3 +96,128 @@ body[data-el-homepage-view="home"] #live-classes .v1780-scheduler{background:#ff
 
 /* HF28 precise diagnosis: connector pseudo-elements escape 2-column learning-step grid at 900px. Keep decorative connectors only for the full 4-column desktop layout. */
 @media(max-width:1100px){.v18512-steps li::after{display:none!important}}
+
+/* HF29 owner-approved correction: restore the prior compact classroom preview,
+   preserving the locked photo, independent DOM overlay and working class planner. */
+body[data-el-homepage-view="home"] #live-classes .v1780-studio{
+  grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+  gap:1rem;align-items:start;overflow:visible;border-radius:0;box-shadow:none;
+}
+body[data-el-homepage-view="home"] #live-classes .v1780-room-preview{
+  border-radius:12px!important;padding:1.2rem!important;
+}
+body[data-el-homepage-view="home"] #live-classes .v1780-room-bar{
+  margin:-1.2rem -1.2rem 1.2rem!important;border-radius:12px 12px 0 0;
+}
+body[data-el-homepage-view="home"] #live-classes .v1780-room-stage{
+  height:auto;min-height:280px;padding:1.4rem;border-radius:12px;
+}
+body[data-el-homepage-view="home"] #live-classes .v1780-room-stage h3{
+  font-size:1.43rem;line-height:1.15;max-width:none;
+}
+body[data-el-homepage-view="home"] #live-classes .v1780-room-stage p{font-size:.94rem}
+body[data-el-homepage-view="home"] #live-classes .v1780-scheduler{
+  border-radius:12px!important;padding:1.2rem!important;
+}
+@media(max-width:1199px){
+ body[data-el-homepage-view="home"] #live-classes .v1780-studio{grid-template-columns:1fr}
+ body[data-el-homepage-view="home"] #live-classes .v1780-room-stage{min-height:280px}
+}
+
+/* HF29 full conversation visual audit: short default home, full details on focus routes.
+   These rules never delete learning content or planner forms. */
+html[data-v18529-compact-home="yes"] #live-classes > .container > :not(.v1780-studio):not(#v1790-class-prep){display:none!important}
+body[data-el-homepage-view="home"] #live-classes{padding-top:1rem!important;padding-bottom:1.1rem!important}
+body[data-el-homepage-view="home"] #home .hero-grid{align-items:center}
+body[data-el-homepage-view="home"] #home .hero-copy{min-width:0}
+body[data-el-homepage-view="home"] #home .hero-copy h1{font-size:clamp(1.9rem,3vw,3.15rem);line-height:1.07}
+body[data-el-homepage-view="home"] #home .v18529-short-intro{font-size:1.03rem;line-height:1.5;max-width:58ch;color:#345a6b}
+body[data-el-homepage-view="home"] #home .v18529-about-method{font-size:.88rem;margin:.6rem 0 1rem;border-radius:10px;border:1px solid #dce8ee;background:#fff;padding:.75rem 1rem;max-width:60ch}
+body[data-el-homepage-view="home"] #home .v18529-about-method summary{cursor:pointer;font-weight:750;color:#086277;line-height:1.4}
+body[data-el-homepage-view="home"] #home .v18529-about-method[open] .lead,
+body[data-el-homepage-view="home"] #home .v18529-about-method[open] .v1760-method-note,
+body[data-el-homepage-view="home"] #home .v18529-about-method[open] .v18510-cert-hero{font-size:.9rem;line-height:1.6;margin:.85rem 0;color:#37566c}
+body[data-el-homepage-view="home"] #live-classes .v1780-room-preview .v1780-fine{color:#d6e6ed}
+
+/* HF29 original, editable line icons — no raster mockup elements or emoji. */
+.v18528-card-icon svg{width:36px;height:36px;display:block}
+.v18528-disclosure-icon svg{width:28px;height:28px;display:block}
+
+body[data-el-homepage-view="home"] #home .v18529-short-cert{font-size:.9rem;line-height:1.48;max-width:60ch;color:#315a6c;margin:.65rem 0}
+body[data-el-homepage-view="home"] #home .v18529-short-cert a{color:#086277;font-weight:750;text-underline-offset:3px}
+
+/* HF29 visual acceptance: compress TWO stacked legacy hero rows, not their content.
+   The compact classroom photograph remains a real editable panel, never a new image. */
+@media(min-width:1200px){
+ body[data-el-homepage-view="home"] #home{padding-top:22px;padding-bottom:17px}
+ body[data-el-homepage-view="home"] #home .hero-grid{gap:24px}
+ body[data-el-homepage-view="home"] #home .hero-copy h1{font-size:clamp(1.9rem,2.45vw,2.75rem);line-height:1.08;max-width:22ch}
+ body[data-el-homepage-view="home"] #home .hero-actions{margin:14px 0;gap:8px}
+ body[data-el-homepage-view="home"] #home .hero-card{padding:16px}
+ body[data-el-homepage-view="home"] #live-classes .v1780-room-stage{min-height:230px;padding:1.05rem}
+ body[data-el-homepage-view="home"] #live-classes .v1780-provider-pills{display:none}
+ body[data-el-homepage-view="home"] #live-classes .v1780-room-preview{padding:1rem!important}
+ body[data-el-homepage-view="home"] #live-classes .v1780-room-bar{margin:-1rem -1rem 1rem!important;padding:.5rem .75rem}
+ body[data-el-homepage-view="home"] #live-classes .v1780-scheduler{padding:1rem!important}
+ body[data-el-homepage-view="home"] #live-classes .v1780-scheduler h3{font-size:1.35rem}
+ body[data-el-homepage-view="home"] #live-classes .v1780-class-controls{margin:.5rem 0}
+ body[data-el-homepage-view="home"] #live-classes .v1780-form-grid{gap:.55rem}
+ body[data-el-homepage-view="home"] #live-classes .v1780-field input,
+ body[data-el-homepage-view="home"] #live-classes .v1780-field select{min-height:40px;padding:.4rem .6rem}
+ body[data-el-homepage-view="home"] #live-classes .v1780-room-preview>.v1780-fine{margin:.45rem 0 0;font-size:.76rem}
+}
+
+/* HF29 final visual gate: remove accumulated padding from the old separate
+   introduction, comparison and planner, keeping all content/buttons functional. */
+@media(min-width:1200px){
+ body[data-el-homepage-view="home"] #home{padding-top:12px;padding-bottom:8px}
+ body[data-el-homepage-view="home"] #home .hero-grid{gap:16px}
+ body[data-el-homepage-view="home"] #home .hero-copy h1{font-size:clamp(1.65rem,2.15vw,2.4rem);line-height:1.06;margin-bottom:.55rem}
+ body[data-el-homepage-view="home"] #home .v18529-short-intro,
+ body[data-el-homepage-view="home"] #home .v18529-short-cert{margin:.3rem 0;font-size:.86rem;line-height:1.35}
+ body[data-el-homepage-view="home"] #home .v18529-about-method{margin:.35rem 0;padding:.45rem .65rem;font-size:.78rem}
+ body[data-el-homepage-view="home"] #home .hero-actions{margin:.55rem 0;gap:.35rem;flex-wrap:nowrap}
+ body[data-el-homepage-view="home"] #home .hero-actions .btn{padding:.55rem .7rem;font-size:.8rem;line-height:1.2;min-width:0}
+ body[data-el-homepage-view="home"] #home .hero-secondary{margin:.35rem 0;font-size:.82rem}
+ body[data-el-homepage-view="home"] #home .trust-row{margin-top:.45rem;gap:.35rem}
+ body[data-el-homepage-view="home"] #home .trust-item{padding:.4rem .45rem;border-radius:9px;font-size:.69rem}
+ body[data-el-homepage-view="home"] #home .hero-card{padding:12px}
+ body[data-el-homepage-view="home"] #home .hero-example{padding:.55rem .65rem;margin:.4rem 0}
+ body[data-el-homepage-view="home"] #home .hero-language{margin-top:.35rem}
+ body[data-el-homepage-view="home"] #live-classes .v1780-scheduler .v1780-fine{font-size:.8rem;line-height:1.35;margin:.25rem 0}
+ body[data-el-homepage-view="home"] #live-classes .v1780-room-stage{min-height:205px}
+ body[data-el-homepage-view="home"] #live-classes .v1780-form-grid{gap:.35rem .5rem}
+ body[data-el-homepage-view="home"] #live-classes .v1780-class-status{font-size:.8rem;line-height:1.3}
+ body[data-el-homepage-view="home"] #live-classes .v1780-class-controls button{min-height:40px;padding:.45rem .7rem}
+ body[data-el-homepage-view="home"] #live-classes #v1790-class-prep{margin:.4rem 0;padding:.5rem .8rem}
+}
+
+/* HF29 precedence correction: legacy visual-v1610.css sets !important hero
+   font and gap, so ordinary compressed CSS had no effect on the real page. */
+@media(min-width:1200px){
+ body[data-el-homepage-view="home"] #home.hero .hero-grid{
+  grid-template-columns:minmax(0,1.07fr) minmax(0,.93fr)!important;
+  gap:18px!important;
+ }
+ body[data-el-homepage-view="home"] #home.hero .hero-copy h1{
+  font-size:clamp(2.15rem,2.8vw,2.6rem)!important;
+  line-height:1.07!important;
+  max-width:35ch!important;
+  margin:0 0 .65rem!important;
+ }
+}
+
+/* HF29 rendered-screenshot correction: use actual desktop pixels and a forced
+   single CTA row so the older prose hero no longer crowds out course pathways. */
+@media(min-width:1200px){
+ #home.hero{padding-top:10px!important;padding-bottom:8px!important}
+ #home .hero-grid{gap:16px!important}
+ #home .hero-copy h1{font-size:clamp(32px,2.4vw,38px)!important;line-height:1.04!important;margin:0 0 8px!important}
+ #home .hero-actions{display:flex!important;flex-wrap:nowrap!important;gap:6px!important;margin:8px 0!important}
+ #home .hero-actions .btn{flex:0 1 auto!important;white-space:nowrap;font-size:12px!important;padding:9px 11px!important}
+ #home .trust-row{margin-top:5px!important;gap:4px!important}
+ #home .trust-item{padding:5px!important;font-size:11px!important}
+ #home .hero-card{padding:11px!important}
+ #home .hero-example{margin:4px 0!important;padding:7px 10px!important}
+ #home .hero-language{margin-top:5px!important}
+}

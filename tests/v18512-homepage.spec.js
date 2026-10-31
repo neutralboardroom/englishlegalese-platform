@@ -48,3 +48,63 @@ test('HF28 tablet layout does not overflow and reports specific offenders',async
  const report=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,offenders:Array.from(document.querySelectorAll('html, body, body *')).map(e=>({tag:e.tagName,id:e.id,cls:typeof e.className==='string'?e.className.slice(0,95):'',right:Math.round(e.getBoundingClientRect().right),width:Math.round(e.getBoundingClientRect().width),scroll:e.scrollWidth,client:e.clientWidth,offset:e.offsetWidth})).filter(x=>(x.right>document.documentElement.clientWidth+5 && x.width>0)||(x.scroll>x.client+40 && x.client>0)).sort((a,b)=>(b.scroll-b.client)-(a.scroll-a.client)).slice(0,25)}));
  expect(report.scroll,JSON.stringify(report)).toBeLessThanOrEqual(report.viewport+4);
 });
+
+test('HF29 full redesign shows concise landing and preserves original class detail on focus route',async({page})=>{
+ await page.goto('/#home');
+ await expect(page.locator('#home .v18529-short-intro')).toBeVisible();
+ await expect(page.locator('#home .v18529-short-cert')).toContainText('offers separate Legal English and Business English certification pathways');
+ await expect(page.locator('#home .v18529-short-cert a')).toHaveAttribute('href','/learn/certifications/');
+ await expect(page.locator('#home .v18529-about-method')).toBeVisible();
+ await expect(page.locator('#home .v18529-about-method .lead')).toBeHidden();
+ await expect(page.locator('#live-classes .v1780-studio')).toBeVisible();
+ await expect(page.locator('#live-classes .v1780-benefits')).toBeHidden();
+ await expect(page.locator('#v18512-home-preview .v18512-pathway-card')).toHaveCount(5);
+ await page.goto('/#live-classes');
+ await expect(page.locator('#live-classes .v1780-benefits')).toBeVisible();
+ await expect(page.locator('#live-classes .v1780-studio')).toBeVisible();
+ await page.goto('/#v1820-learning-studio');
+ await expect(page.locator('#v1820-learning-studio')).toBeVisible();
+ await page.goto('/#home');
+ await page.locator('#home .v18529-about-method summary').click();
+ await expect(page.locator('#home .v18529-about-method .lead')).toBeVisible();
+});
+
+test('HF29 owner visual acceptance: compact protected teacher preview and complete homepage sections',async({page},testInfo)=>{
+ await page.setViewportSize({width:1440,height:900});
+ await page.goto('/#home');
+ const home=page.locator('#v18512-home-preview');
+ const room=page.locator('#live-classes .v1780-room-stage');
+ const planner=page.locator('#live-classes .v1780-scheduler');
+ await expect(room).toBeVisible();
+ await expect(planner).toBeVisible();
+ const dimensions=await room.boundingBox();
+ expect(dimensions,'Teacher photo/video preview must stay at previous compact proportions').toBeTruthy();
+ expect(dimensions.height,'Teacher photo/video preview must not become the oversized HF28 hero').toBeLessThanOrEqual(335);
+ await expect(room).toHaveCSS('background-image',/teacher-classroom-photo-locked-hf26\.svg/);
+ await expect(room.getByRole('heading',{name:'Teacher-led learning, together.'})).toBeVisible();
+ await expect(room.getByRole('link',{name:'Explore live classes'})).toHaveAttribute('href','/learn/live-classes/');
+ const heroGeometry=await page.evaluate(()=>({font:parseFloat(getComputedStyle(document.querySelector('#home h1')).fontSize),gap:parseFloat(getComputedStyle(document.querySelector('#home .hero-grid')).columnGap)}));
+ if(testInfo.project.name==='desktop-chromium'){
+  expect(heroGeometry.font,'Old visual CSS must not keep the overly large hero heading').toBeLessThanOrEqual(44);
+  expect(heroGeometry.gap,'Old visual CSS must not keep the excessive hero grid gap').toBeLessThanOrEqual(22);
+ }
+ const landingPosition=await home.boundingBox();
+ expect(landingPosition,'Approved core pathway cards must appear near the top of the compact homepage, not after long legacy lesson content').toBeTruthy();
+ if(testInfo.project.name==='desktop-chromium')expect(landingPosition.y,'The earlier HF28 redesign buried desktop pathway cards below extended classroom content').toBeLessThanOrEqual(1400);
+ await expect(home.locator('.v18512-pathway-card')).toHaveCount(5);
+ await expect(home.locator('.v18512-pathway-card .v18528-card-icon svg')).toHaveCount(5);
+ await expect(home.locator('.v18512-disclosure .v18528-disclosure-icon svg')).toHaveCount(5);
+ await expect(home.locator('.v18512-steps li')).toHaveCount(4);
+ await expect(home.locator('details.v18512-disclosure')).toHaveCount(5);
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+ expect(overflow).toBeLessThanOrEqual(4);
+ if(testInfo.project.name==='desktop-chromium'){
+  await page.locator('#home').screenshot({path:testInfo.outputPath('hf29-home-original-hero-desktop.png')});
+  await page.locator('#live-classes').screenshot({path:testInfo.outputPath('hf29-classroom-planner-desktop.png')});
+  await page.locator('#v18512-home-preview').screenshot({path:testInfo.outputPath('hf29-pathways-steps-resources-desktop.png')});
+  await page.setViewportSize({width:900,height:900});
+  await page.locator('#live-classes').screenshot({path:testInfo.outputPath('hf29-classroom-planner-tablet.png')});
+  await page.setViewportSize({width:390,height:844});
+  await page.locator('#live-classes').screenshot({path:testInfo.outputPath('hf29-classroom-planner-mobile.png')});
+ }
+});
