@@ -60,14 +60,14 @@ test('HF34 opt-in request starts with one seat, never creates subscription or ca
 });
 test('HF34 membership discovery preserves old pricing, employer, account and lesson options',async({page})=>{
  await page.goto('/pricing/');
- await expect(page.getByRole('link',{name:/Compare proposed individual and team memberships/})).toHaveAttribute('href','/learn/memberships/');
+ await expect(page.getByRole('link',{name:/Compare individual and company membership plans and full proposed terms/})).toHaveAttribute('href','/learn/memberships/');
  await expect(page.locator('main')).toContainText('Private online lessons');
  await expect(page.locator('main')).toContainText('SmartTeacher AI');
  await page.goto('/learn/employers/');
  await expect(page.getByRole('link',{name:'Compare membership plans'})).toHaveAttribute('href','/learn/memberships/');
  await expect(page.locator('main')).toContainText('Multi-employee group training options');
  await page.goto('/learn/account/');
- await expect(page.getByRole('link',{name:/Explore proposed memberships starting with one employee/})).toHaveAttribute('href','/learn/memberships/');
+ await expect(page.getByRole('link',{name:/Explore individual and one-employee-start team memberships/})).toHaveAttribute('href','/learn/memberships/');
  await expect(page.locator('main')).toContainText('Student dashboard');
  await expect(page.locator('main')).toContainText('Teacher dashboard');
  await expect(page.locator('main')).toContainText('Employer dashboard');
@@ -77,7 +77,7 @@ test('HF34 membership discovery preserves old pricing, employer, account and les
 test('HF34 one shared auto-renewing membership appears across all pricing and program surfaces',async({page})=>{
  await page.goto('/learn/memberships/');
  await expect(page.locator('main')).toContainText('both Legal English and Business English');
- await expect(page.locator('main')).toContainText('No second subscription is needed');
+ await expect(page.locator('main')).toContainText('You do not need to buy two subscriptions');
  await expect(page.locator('main')).toContainText('continue automatically');
  await expect(page.locator('main')).toContainText('Cancel any time before the next renewal');
  await expect(page.locator('main')).toContainText('retain the access included in your already-paid period');
