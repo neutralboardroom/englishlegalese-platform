@@ -73,3 +73,39 @@ test('HF34 membership discovery preserves old pricing, employer, account and les
  await expect(page.locator('main')).toContainText('Employer dashboard');
  await expect(page.locator('main')).toContainText('Owner / admin operations');
 });
+
+test('HF34 one shared auto-renewing membership appears across all pricing and program surfaces',async({page})=>{
+ await page.goto('/learn/memberships/');
+ await expect(page.locator('main')).toContainText('both Legal English and Business English');
+ await expect(page.locator('main')).toContainText('No second subscription is needed');
+ await expect(page.locator('main')).toContainText('continue automatically');
+ await expect(page.locator('main')).toContainText('Cancel any time before the next renewal');
+ await expect(page.locator('main')).toContainText('retain the access included in your already-paid period');
+ await page.goto('/pricing/');
+ await expect(page.getByRole('heading',{name:'One membership for both Legal English and Business English'})).toBeVisible();
+ await expect(page.locator('#v1970-shared-pricing')).toContainText('renew automatically');
+ await expect(page.locator('#v1970-shared-pricing')).toContainText('keep access through the period already paid for');
+ await page.goto('/learn/legal-english/');
+ await expect(page.getByRole('region',{name:'Shared membership options'})).toContainText('both Legal English and Business English');
+ await page.goto('/learn/business-english/');
+ await expect(page.getByRole('region',{name:'Shared membership options'})).toContainText('both Business English and Legal English');
+ await page.goto('/learn/employers/');
+ await expect(page.locator('main')).toContainText('One license per employee covers both Legal English and Business English');
+ await page.goto('/');
+ await expect(page.locator('aside[aria-label="One subscription for Legal and Business English"]')).toContainText('cancel before the next billing period');
+});
+test('HF34 twelve additional original lessons cover two separate learning tracks without payment or uploads',async({page})=>{
+ await page.goto('/learn/continuing-practice/');
+ await expect(page.getByRole('heading',{name:'Continuing Legal English & Business English practice'})).toBeVisible();
+ await expect(page.locator('article.v1971-lesson')).toHaveCount(12);
+ await expect(page.locator('#legal-track + .v1971-grid article')).toHaveCount(6);
+ await expect(page.locator('#business-track + .v1971-grid article')).toHaveCount(6);
+ await expect(page.locator('main')).toContainText('free self-guided previews');
+ await expect(page.locator('main')).toContainText('No answers are saved');
+ const first=page.locator('article.v1971-lesson').first();
+ await first.getByRole('radio').nth(1).check();
+ await first.getByRole('button',{name:'Check answer'}).click();
+ await expect(first.getByRole('status')).toContainText('Correct');
+ const m=await page.evaluate(()=>({width:document.documentElement.scrollWidth,viewport:window.innerWidth}));
+ expect(m.width).toBeLessThanOrEqual(m.viewport+2);
+});
