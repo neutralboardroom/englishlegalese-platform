@@ -1,3 +1,13 @@
+# HF33 — Privileged Dashboard Security and Trustworthy Employer Workflows (2026-10-31 CANDIDATE)
+
+This is the **next actual website candidate** from verified live HF32 main `96109484549d7b4444c6b51def96d6613813bf5b`; not a new universal builder. User instructed review of all student, teacher, employer and owner/admin dashboards. Specific high-value changes: owners/admins and employers gain authenticated, atomic all-device session revocation (student and teacher already have it); employer training request idempotency now tracks the exact request payload, preventing changed requests from accidentally replaying earlier requests; the Account dashboard directory truthfully links to the verified authenticated employer portal and preserves employer inquiry routes. All four role dashboards and separate Legal/Business certificates remain in scope; previous homepage and protected images unchanged.
+
+Release state **CANDIDATE** until two independent CI gates pass on the final SHA, browser visual/user-journey acceptance, guarded merge and exact Render/public-host verification. Production schema and payments untouched. Distinct genuine EnglishLegalese certifications are a separate draft PR, not live; never assert otherwise. See `docs/HF33_DASHBOARD_SECURITY_RELEASE_RECEIPT_2026-10-31.md` for benefit, rule and test traceability.
+
+**Next material improvements:** teacher actual schedule/attendance review with real verified assigned classes and student privacy; authenticated employer invitation/consent and staff-confirmed seat approvals; owner staff review queue and accountable decisions; supervised candidate assessments only after trained staff, rubrics, evidence and verified certificate registry; retain pending operations and privacy safeguards. All prior scope continues unchanged below.
+
+---
+
 ## HF32 expansion — two original eight-lesson Contracts, Agreements & Negotiation intensives (owner direction 2026-10-31)
 
 **Owner request:** Expand the contracts, agreements and negotiation learning in BOTH Legal English and Business English, tailored to the language needs of each profession, research authoritative reference practices, and include whatever additional practical learning is useful. This supplements rather than replaces the existing 24 Legal English topics, 16 Business English topics, eight Wall Street/Investor topics, original four-lesson outlines, teacher guides, workbooks, Free Contract Clause Reading Lab and Business Negotiations tool. Preserve all prior materials and counts, including source data from EL Curriculum v1800.
