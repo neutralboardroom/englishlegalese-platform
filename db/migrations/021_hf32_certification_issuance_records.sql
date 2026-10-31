@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS certification_assessments (
  status text NOT NULL DEFAULT 'requested' CHECK (status IN
  ('requested','scheduled','supervised','under_review','approved','rejected','appealed','void')),
  candidate_consent_at timestamptz NOT NULL,
+ public_verification_consent_at timestamptz,
  supervised_at timestamptz,
  proctor_user_id text REFERENCES users(id) ON DELETE RESTRICT,
  identity_verified_at timestamptz,
