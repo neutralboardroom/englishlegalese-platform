@@ -333,3 +333,42 @@ body[data-el-homepage-view="home"] #home.hero{
  #home .v18512-pathway-card{min-height:130px}
  #home .v18512-disclosure summary{min-height:78px}
 }
+
+/* HF31 image-quality acceptance: the protected photo is intentionally a
+   900x348 SVG frame of a small embedded source. Do not enlarge it to the
+   full 1440px hero (the actual screenshot showed visible blocky pixels).
+   Preserve its original bytes; restrict only the background image's drawn
+   area, keeping the approved first-screen copy + live form composition. */
+@media(min-width:1051px){
+ #home .v18531-integrated-hero{
+  background-color:#213d4c;
+  background-image:
+   linear-gradient(90deg,rgba(8,25,38,.93) 0%,rgba(8,25,38,.68) 28%,rgba(8,25,38,.13) 61%,rgba(8,25,38,.03) 100%),
+   url('/assets/teacher-classroom-photo-locked-hf26.svg');
+  background-repeat:no-repeat,no-repeat;
+  background-size:100% 100%,min(940px,72vw) auto;
+  background-position:center,54% center;
+ }
+}
+@media(min-width:601px) and (max-width:1050px){
+ #home .v18531-integrated-hero{
+  background-color:#1b394a;
+  background-image:
+    linear-gradient(180deg,rgba(8,24,37,.75),rgba(8,24,37,.35) 42%,rgba(8,24,37,.85)),
+    url('/assets/teacher-classroom-photo-locked-hf26.svg');
+  background-repeat:no-repeat,no-repeat;
+  background-size:100% 100%,min(900px,100vw) auto;
+  background-position:center,center 15%;
+ }
+}
+@media(max-width:600px){
+ #home .v18531-integrated-hero{
+  background-color:#142c3b;
+  background-image:
+    linear-gradient(180deg,rgba(8,24,37,.84),rgba(8,24,37,.84)),
+    url('/assets/teacher-classroom-photo-locked-hf26.svg');
+  background-repeat:no-repeat,no-repeat;
+  background-size:100% 100%,min(620px,130vw) auto;
+  background-position:center,center top;
+ }
+}
