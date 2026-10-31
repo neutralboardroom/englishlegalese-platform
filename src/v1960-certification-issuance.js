@@ -59,6 +59,20 @@ function install(app,{services,authMiddleware,requireRoles}){
    return send(res,200,{ok:true,public_verification_consent:Boolean(q.rows[0].public_verification_consent_at)});
   }catch{return error(res)}
  });
+ app.post('/api/v1960/certifications/assessments/:id/schedule',guard,auth,requireRoles('owner','admin'),async(req,res)=>{
+  if(!exams()||!idOk(req.params.id))return error(res);
+  const {proctor_user_id,reviewer_one_user_id,reviewer_two_user_id}=req.body||{};
+  const ids=[proctor_user_id,reviewer_one_user_id,reviewer_two_user_id];
+  if(ids.some(x=>!plain(x,150))||reviewer_one_user_id===reviewer_two_user_id)
+   return send(res,400,{ok:false,error:'Assign a trained proctor and two different trained reviewers.'});
+  try{
+   if(!(await Promise.all(ids.map(authorizedAssessor))).every(Boolean))
+    return send(res,403,{ok:false,error:'Every assigned examiner must have current explicit training approval.'});
+   const q=await services.query("UPDATE certification_assessments SET status='scheduled',assigned_proctor_user_id=$2,assigned_reviewer_one_user_id=$3,assigned_reviewer_two_user_id=$4,scheduled_at=now(),updated_at=now() WHERE id=$1 AND status='requested' RETURNING id",[req.params.id,...ids]);
+   if(!q.rows.length)return send(res,409,{ok:false,error:'Exam not found or already scheduled.'});
+   return send(res,200,{ok:true,status:'scheduled',appointment_confirmed:false,notice:'Examiners assigned. Confirm the live appointment separately; this is not an automatic classroom booking.'});
+  }catch{return error(res)}
+ });
  app.post('/api/v1960/certifications/assessments/:id/supervision',guard,auth,requireRoles('teacher'),async(req,res)=>{
   if(!exams()||!idOk(req.params.id))return error(res);
   const b=req.body||{};
@@ -69,7 +83,7 @@ function install(app,{services,authMiddleware,requireRoles}){
   try{
    if(!await authorizedAssessor(req.user.id))return send(res,403,{ok:false,error:'Authorized, trained examiner status required.'});
    const q=await services.query(
-    "UPDATE certification_assessments SET status='supervised', supervised_at=now(), proctor_user_id=$2, identity_verified_at=now(), identity_verified_by=$2, unseen_prompt_set_id=$3, protected_evidence_reference=$4, supervision_attested=true, authorized_tools_attested=true, accommodations_reviewed=true, rubric_version=$5, updated_at=now() WHERE id=$1 AND status IN ('requested','scheduled') RETURNING id",
+    "UPDATE certification_assessments SET status='supervised', supervised_at=now(), proctor_user_id=$2, identity_verified_at=now(), identity_verified_by=$2, unseen_prompt_set_id=$3, protected_evidence_reference=$4, supervision_attested=true, authorized_tools_attested=true, accommodations_reviewed=true, rubric_version=$5, updated_at=now() WHERE id=$1 AND status='scheduled' AND assigned_proctor_user_id=$2 RETURNING id",
     [req.params.id,req.user.id,b.prompt_set_id.trim(),b.protected_evidence_reference.trim(),approvedRubric()]);
    if(!q.rows.length)return send(res,409,{ok:false,error:'Assessment not found or already supervised. Changes require a new examination and audit.'});
    await log(req.params.id,null,req.user.id,'supervision_recorded',{rubric_version:approvedRubric()});
@@ -84,8 +98,8 @@ function install(app,{services,authMiddleware,requireRoles}){
    return send(res,400,{ok:false,error:'Provide five 0–4 rubric ratings, decision, no conflict and protected evidence reference.'});
   try{
    if(!await authorizedAssessor(req.user.id))return send(res,403,{ok:false,error:'Approved trained examiner authorization required.'});
-   const a=await services.query("SELECT proctor_user_id,rubric_version FROM certification_assessments WHERE id=$1 AND status IN ('supervised','under_review') AND supervision_attested AND identity_verified_at IS NOT NULL",[req.params.id]);
-   if(!a.rows.length||a.rows[0].rubric_version!==approvedRubric())return send(res,409,{ok:false,error:'Supervised examination or approved rubric not available.'});
+   const a=await services.query("SELECT proctor_user_id,rubric_version,assigned_reviewer_one_user_id,assigned_reviewer_two_user_id FROM certification_assessments WHERE id=$1 AND status IN ('supervised','under_review') AND supervision_attested AND identity_verified_at IS NOT NULL",[req.params.id]);
+   if(!a.rows.length||a.rows[0].rubric_version!==approvedRubric()||![a.rows[0].assigned_reviewer_one_user_id,a.rows[0].assigned_reviewer_two_user_id].includes(req.user.id))return send(res,409,{ok:false,error:'Supervised examination or approved rubric not available.'});
    const q=await services.query(
     "INSERT INTO certification_assessor_reviews(assessment_id,assessor_user_id,rubric_version,listening_score,speaking_score,reading_score,writing_score,interaction_score,evidence_reference,recommended_pass,conflict_declared) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,false) ON CONFLICT DO NOTHING RETURNING id",
     [req.params.id,req.user.id,approvedRubric(),...scoreKeys.map(k=>b[k]),b.evidence_reference.trim(),b.recommended_pass]);
@@ -106,6 +120,7 @@ function install(app,{services,authMiddleware,requireRoles}){
    if(!a||a.rubric_version!==approvedRubric())return send(res,409,{ok:false,error:'No eligible verified supervised examination.'});
    const reviews=(await services.query('SELECT * FROM certification_assessor_reviews WHERE assessment_id=$1 ORDER BY submitted_at,id',[a.id])).rows;
    if(reviews.length!==2||reviews[0].assessor_user_id===reviews[1].assessor_user_id||
+      ![a.assigned_reviewer_one_user_id,a.assigned_reviewer_two_user_id].every(id=>reviews.some(x=>x.assessor_user_id===id))||
       reviews.some(x=>x.conflict_declared||!x.recommended_pass||x.rubric_version!==a.rubric_version)||
       !scoreKeys.every(k=>reviews.every(x=>x[k]>=3)&&Math.abs(reviews[0][k]-reviews[1][k])<=1))
     return send(res,409,{ok:false,error:'Two trained independent examiner reviews with calibrated passing evidence are required; borderline or disputed results need moderation.'});
