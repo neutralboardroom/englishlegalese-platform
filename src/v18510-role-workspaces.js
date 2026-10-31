@@ -159,6 +159,30 @@ function install(app,{services,authMiddleware,requireRoles}){
    },notice:'Read-only counts from the core database, not a financial audit or separate enrollment-inquiry database. No user impersonation, payments, private learner work or automatic emails are available here.'});
   }catch{return send(res,503,{ok:false,error:'Owner operational counts could not be verified. No zeros were invented.'})}
  });
+ // HF33: owner/admin and employer sessions now support the same all-device
+ // revoke semantics already provided to students and teachers. The nonce
+ // rotation and stored session revocations commit atomically, never locally.
+ app.post('/api/v18510/workspace/logout-everywhere',requireBearer,auth,requireRoles('owner','admin','employer'),async(req,res)=>{
+  if(!available()||!req.authSessionKey||!services.persistentStore?.pool)
+   return send(res,503,{ok:false,error:'Secure all-device sign-out is unavailable. No revocation was confirmed.'});
+  let client;
+  try{
+   client=await services.persistentStore.pool.connect();
+   await client.query('BEGIN');
+   const account=await client.query('SELECT role,status FROM users WHERE id=$1 FOR UPDATE',[req.user.id]);
+   const row=account.rows[0];
+   if(!row||row.status!=='active'||!['owner','admin','employer'].includes(row.role)||row.role!==req.user.role)
+    throw Error('Account role or active status could not be verified.');
+   const nonce=require('node:crypto').randomBytes(24).toString('hex');
+   await client.query("UPDATE users SET metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{session_version}',to_jsonb($2::text),true),updated_at=now() WHERE id=$1",[req.user.id,nonce]);
+   await client.query('UPDATE user_sessions SET revoked_at=now() WHERE user_id=$1 AND revoked_at IS NULL',[req.user.id]);
+   await client.query('COMMIT');
+   return send(res,200,{ok:true,signed_out_everywhere:true,session_revoked:true,student_data_untouched:true});
+  }catch{
+   if(client)await client.query('ROLLBACK').catch(()=>{});
+   return send(res,503,{ok:false,error:'All-device sign-out could not be confirmed. No success is claimed.'});
+  }finally{if(client)client.release()}
+ });
  app.post('/api/v18510/workspace/logout',requireBearer,auth,requireRoles('owner','admin','employer'),async(req,res)=>{
   if(!available()||!req.authSessionKey)return send(res,503,{ok:false,error:'Server session revocation cannot be confirmed.'});
   try{const x=await services.query('UPDATE user_sessions SET revoked_at=now() WHERE user_id=$1 AND token_preview=$2 AND revoked_at IS NULL RETURNING id',[req.user.id,req.authSessionKey]);
