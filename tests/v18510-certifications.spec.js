@@ -23,5 +23,6 @@ test('HF24 certification directory offers both independent tracks',async({page})
  await page.goto('/learn/certifications/');
  await expect(page.getByRole('link',{name:/Explore Legal English certification/})).toHaveAttribute('href','/learn/legal-english-certification/');
  await expect(page.getByRole('link',{name:/Explore Business English certification/})).toHaveAttribute('href','/learn/business-english-certification/');
- await expect(page.locator('main')).toContainText('We will not issue exams or certificates until');
+ await expect(page.locator('main')).toContainText('Assessment booking and certificate issuance are not yet active');
+ await expect(page.getByRole('link',{name:/Check the status of an issued EnglishLegalese certificate/})).toHaveAttribute('href','/learn/certificate-verification/');
 });
