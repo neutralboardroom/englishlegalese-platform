@@ -7,8 +7,8 @@ for(const track of ['legal','business']){
   const section=page.locator('#v1950-'+track+'-contracts');
   await expect(section).toBeVisible();
   await expect(section.getByRole('heading',{level:2})).toContainText('Contracts, Agreements & Negotiation');
-  await expect(section.locator('details.v1950-lesson')).toHaveCount(8);
-  await expect(section).toContainText('self-guided');
+  await expect(section.locator('details.v1950-lesson')).toHaveCount(track==='legal'?16:8);
+  await expect(section.locator('.v1950-kicker')).toContainText(/self-guided/i);
   await expect(section).toContainText('Nothing on this page is a booked class');
   await section.locator('details.v1950-lesson').first().locator('summary').click();
   const first=section.locator('details.v1950-lesson').first();
