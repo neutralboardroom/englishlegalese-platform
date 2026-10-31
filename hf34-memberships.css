@@ -18,6 +18,7 @@
 .v1970-secondary{grid-template-columns:repeat(3,minmax(0,1fr));margin:1rem 0}
 .v1970-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;max-width:920px}
 .v1970-fields label{display:flex;flex-direction:column;gap:.3rem;font-weight:650}
+.v1970-fields label[hidden]{display:none}
 .v1970-fields input,.v1970-fields select{width:100%;min-width:0;box-sizing:border-box;padding:.75rem .8rem;border:1px solid #7895aa;border-radius:6px;background:#fff;color:#143e56;font:inherit}
 .v1970-consent{display:flex;align-items:flex-start;gap:.65rem;max-width:770px;margin:1.35rem 0;line-height:1.55}
 .v1970-consent input{margin-top:.35rem;flex-shrink:0}
