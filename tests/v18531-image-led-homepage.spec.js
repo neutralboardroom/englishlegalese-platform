@@ -6,6 +6,9 @@ test('HF31 approved image-led homepage is FIRST; five pathways precede legacy gu
  const [width,height]=sizes[testInfo.project.name]||[1440,900];
  await page.setViewportSize({width,height});
  await page.goto('/#home');
+ await expect(page.locator('meta[name="englishlegalese-homepage-build"]')).toHaveAttribute('content','HF31-image-led-first-screen');
+ await expect(page.locator('script[src*="product-v18512-homepage.js"]')).toHaveAttribute('src',/hf=31-image-led/);
+ await expect(page.locator('link[href*="product-v18512-homepage.css"]')).toHaveAttribute('href',/hf=31-image-led/);
  const home=page.locator('#home'),newHero=home.locator('#v18531-integrated-hero');
  const preview=home.locator('#v18512-home-preview');
  await expect(newHero).toBeVisible();
