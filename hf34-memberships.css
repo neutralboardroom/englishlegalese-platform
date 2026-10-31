@@ -1,0 +1,31 @@
+/* HF34: narrow, accessible extension of existing page typography and site visual system. */
+.v1970-panel{margin:1.4rem auto 2.4rem;max-width:1160px}
+.v1970-panel>h2{font-size:clamp(1.45rem,2.5vw,2rem);line-height:1.22}
+.v1970-panel>p{max-width:74ch}
+.v1970-truth{max-width:77ch;padding:1rem 1.1rem;background:#f3f8fa;border-left:4px solid #24516f;border-radius:6px;color:#183d52}
+.v1970-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin-top:1.15rem}
+.v1970-card{border:1px solid #d7e3e9;border-radius:10px;padding:1.15rem;background:#fff;display:flex;flex-direction:column;gap:.35rem;min-width:0}
+.v1970-card h3{font-size:1.19rem;margin:.1rem 0}
+.v1970-card p{margin:.4rem 0}
+.v1970-card a{margin-top:auto;font-weight:650;color:#104c70;text-underline-offset:3px}
+.v1970-kicker{text-transform:uppercase;letter-spacing:.065em;color:#45677c;font-weight:700;font-size:.75rem}
+.v1970-price{font-size:1.8rem;font-weight:750;color:#123f5f}
+.v1970-price span{font-size:.85rem;font-weight:450}
+.v1970-quote{border:1px solid #bdd4e2;border-radius:12px;padding:1.3rem;max-width:790px;background:#f7fbfd}
+.v1970-quote input{display:block;width:100%;max-width:240px;margin:.65rem 0;padding:.68rem .8rem;border:1px solid #7292a7;border-radius:6px;font:inherit;color:#173e55;background:#fff}
+.v1970-quote [role=status]{font-size:1.2rem;font-weight:700;color:#164664}
+.v1970-small{font-size:.9rem;color:#456174;line-height:1.6}
+.v1970-secondary{grid-template-columns:repeat(3,minmax(0,1fr));margin:1rem 0}
+.v1970-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;max-width:920px}
+.v1970-fields label{display:flex;flex-direction:column;gap:.3rem;font-weight:650}
+.v1970-fields label[hidden]{display:none}
+.v1970-fields input,.v1970-fields select{width:100%;min-width:0;box-sizing:border-box;padding:.75rem .8rem;border:1px solid #7895aa;border-radius:6px;background:#fff;color:#143e56;font:inherit}
+.v1970-consent{display:flex;align-items:flex-start;gap:.65rem;max-width:770px;margin:1.35rem 0;line-height:1.55}
+.v1970-consent input{margin-top:.35rem;flex-shrink:0}
+#v1970-submit{background:#164b6c;border:2px solid #164b6c;border-radius:6px;color:#fff;padding:.8rem 1.15rem;font:inherit;font-weight:700;cursor:pointer}
+#v1970-submit:disabled{opacity:.56;cursor:not-allowed}
+#v1970-form-status{min-height:1.7em}
+.v1970-hp{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%);white-space:nowrap}
+.v1970-card :focus-visible,.v1970-panel :focus-visible{outline:3px solid #c47822;outline-offset:3px}
+@media(max-width:920px){.v1970-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.v1970-secondary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.v1970-grid,.v1970-fields,.v1970-secondary{grid-template-columns:minmax(0,1fr)}.v1970-card{padding:1rem}.v1970-quote{padding:1rem}.v1970-panel{margin-bottom:2rem}}
