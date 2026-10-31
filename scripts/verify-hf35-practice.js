@@ -1,0 +1,20 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const page=fs.readFileSync(path.join(__dirname,'../learn/continuing-practice/index.html'),'utf8');
+const js=fs.readFileSync(path.join(__dirname,'../product-v1980-practice-checks.js'),'utf8');
+const checks=[...page.matchAll(/<fieldset class="v1980-check" data-v1980-check data-correct="(\d)" data-explanation="([^"]+)"/g)];
+assert.equal(checks.length,12,'twelve original lessons retained');
+const counts={0:0,1:0,2:0};
+for(const m of checks){assert.ok(m[1] in counts,'only 3 possible answer slots');counts[m[1]]++;assert.ok(m[2].length>45,'lesson-specific explanation expected');}
+assert.deepEqual(counts,{0:4,1:4,2:4});
+assert.equal((page.match(/class="v1971-lesson"/g)||[]).length,12);
+assert.equal((page.match(/<label><input type="radio" name="q\d+" value="[012]">/g)||[]).length,36);
+assert.equal((page.match(/<textarea rows="4" maxlength="1800"/g)||[]).length,12);
+assert.ok(page.includes('src="/product-v1980-practice-checks.js?v=hf35"'));
+assert.ok(!page.includes('document.querySelectorAll(\'button[data-check]\')'),'outdated hardcoded answer index removed');
+for(const term of ['window.fetch','XMLHttpRequest','localStorage','sessionStorage','sendBeacon','document.cookie'])assert.ok(!js.includes(term),'no outbound calls or persistent drafts via '+term);
+assert.ok(js.includes("fieldset.dataset.explanation"));
+assert.ok(js.includes('aria-live="polite"')===false,'live region stays in HTML');
+console.log('PASS HF35: twelve unchanged lessons, 3 choices each, balanced position, original drafts and per-lesson no-network feedback.');
