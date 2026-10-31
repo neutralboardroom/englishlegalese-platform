@@ -8,7 +8,7 @@ async function ownerAPIs(page){
  await page.route('**/api/v18511/owner/triage',r=>r.fulfill({status:503,contentType:'application/json',body:'{"ok":false,"error":"No verified queues"}'}));
  await page.route('**/api/v18512/owner/intake-summary',r=>r.fulfill({status:503,contentType:'application/json',body:'{"ok":false,"error":"Intake not provisioned"}'}));
 }
-test('HF33 privileged owner can revoke sessions on every device without exposing data',async({page})=>{
+test('HF33 privileged owner can revoke sessions on every device without exposing data',async({page},testInfo)=>{
  await login(page,'owner');await ownerAPIs(page);
  let requests=0;
  await page.route('**/api/v18510/workspace/logout-everywhere',r=>{
@@ -22,6 +22,7 @@ test('HF33 privileged owner can revoke sessions on every device without exposing
  await page.getByRole('button',{name:'Sign in securely'}).click();
  await expect(page.getByRole('button',{name:'Sign out on all devices'})).toBeVisible();
  await expect(page.locator('#el18510-output')).toContainText('Operational snapshot');
+ await page.screenshot({path:testInfo.outputPath('hf33-owner-dashboard.png'),fullPage:true});
  page.once('dialog',dialog=>dialog.accept());
  await page.getByRole('button',{name:'Sign out on all devices'}).click();
  await expect(page.locator('#el18510-status')).toContainText('Signed out on all devices');
@@ -69,11 +70,12 @@ test('HF33 changed employer enrollment must not replay an earlier idempotency ke
  expect(bodies[0].employee_user_ids).toEqual(['student-one']);
  expect(bodies[1].employee_user_ids).toEqual(['student-one','student-two']);
 });
-test('HF33 account hub links directly to actual secure dashboards and makes no false employer claim',async({page})=>{
+test('HF33 account hub links directly to actual secure dashboards and makes no false employer claim',async({page},testInfo)=>{
  await page.goto('/learn/account/');
  await expect(page.getByRole('link',{name:'Open secure employer dashboard'})).toHaveAttribute('href','/learn/employer-dashboard/');
  await expect(page.locator('main')).not.toContainText('Employer logins, employee-private reports, payment and automatic scheduling are not active');
  await expect(page.getByRole('link',{name:'Open student saved-work dashboard'})).toHaveAttribute('href','/learn/my-work/');
  await expect(page.getByRole('link',{name:'Open teacher review dashboard'})).toHaveAttribute('href','/learn/teacher-submissions/');
  await expect(page.getByRole('link',{name:'Open owner/admin dashboard'})).toHaveAttribute('href','/learn/owner-dashboard/');
+ await page.screenshot({path:testInfo.outputPath('hf33-account-hub.png'),fullPage:true});
 });
