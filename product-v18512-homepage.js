@@ -37,6 +37,50 @@ function iconSymbol(name,cls){
  span.append(svg);span.setAttribute('aria-hidden','true');return span;
 }
 function link(text,destination,cls){const a=E('a',text,cls);a.href=destination;return a}
+/* HF31 real visual homepage: one image-led first screen plus a genuine,
+ * local-only lesson planning form. The protected teacher photograph is a CSS
+ * image asset; every word and button remains independent editable DOM.
+ * Existing full classroom planner remains intact on its focused route. */
+function buildIntegratedHero(){
+ const section=E('section',undefined,'v18531-integrated-hero');section.id='v18531-integrated-hero';section.setAttribute('aria-label','Teacher-led English learning and class planning');
+ const copy=E('div',undefined,'v18531-teacher-copy');
+ const title=E('h2','Teacher-led learning, together.');title.className='v18531-image-heading';
+ const description=E('p','Learn practical Legal English and Business English for real-world professional communication with experienced human teachers and guided independent practice.','v18531-image-lead');
+ const actions=E('div',undefined,'v18531-hero-actions');
+ actions.append(link('Start learning','/learn/start/','v18531-blue-action'),link('View courses','/learn/courses/','v18531-white-action'),link('Learn more','#v18512-home-preview','v18531-white-action'));
+ const caveat=E('p','Explore classes and create an unconfirmed plan. Times are preferences, not live availability or bookings.','v18531-image-caveat');
+ copy.append(title,description,actions,caveat);
+ const form=E('form',undefined,'v18531-hero-planner');form.noValidate=true;form.setAttribute('aria-label','Preview a teacher-led class plan');form.setAttribute('autocomplete','off');
+ form.append(E('p','YOUR CLASS PLANNING WORKSPACE','v18531-planner-eyebrow'),E('h3','Build your online class plan'),E('p','Choose your study focus and preview a lesson time in your local timezone. No booking or payment is made.','v18531-planner-intro'));
+ const fields=E('div',undefined,'v18531-form-fields');
+ const control=(id,name,element)=>{element.id=id;const label=E('label',undefined,'v18531-field');label.htmlFor=id;label.append(E('span',name),element);return label};
+ const focus=E('select');focus.required=true;
+ ['Live one-to-one Legal English','Live one-to-one Business English','Business meetings, presentations and negotiation','Investor and Wall Street communication','Legal writing and contract vocabulary','Teacher-supervised certification preparation','Employer team communication'].forEach((value,i)=>{const o=E('option',value);o.value=String(i);focus.append(o)});
+ const provider=E('select');
+ [['zoom','Zoom'],['meet','Google Meet'],['teams','Microsoft Teams'],['voov','Tencent / VooV'],['other','Another approved video classroom']].forEach(([id,value])=>{const o=E('option',value);o.value=id;provider.append(o)});
+ const when=E('input');when.type='datetime-local';when.required=true;
+ const suggested=new Date(Date.now()+24*60*60*1000);suggested.setHours(10,0,0,0);
+ const isoLocal=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')+'T'+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');when.value=isoLocal(suggested);
+ const duration=E('select');[['30','30 minutes'],['45','45 minutes'],['60','60 minutes'],['90','90 minutes']].forEach(([id,value])=>{const o=E('option',value);o.value=id;duration.append(o)});duration.value='60';
+ fields.append(control('v18531-focus','Learning focus',focus),control('v18531-provider','Preferred video classroom',provider),control('v18531-when','Preferred lesson time (your device timezone)',when),control('v18531-duration','Class length',duration));
+ const timezone=Intl.DateTimeFormat().resolvedOptions().timeZone||'your device timezone';
+ const note=E('p','Times shown in your device timezone: '+timezone+'. This is a personal planning preview.','v18531-plan-note');
+ const buttons=E('div',undefined,'v18531-form-actions');
+ const submit=E('button','Preview a class plan','v18531-plan-button');submit.type='submit';
+ buttons.append(submit,link('View all class topics','/learn/live-classes/','v18531-topic-button'));
+ const status=E('p','Select a focus and preferred time to preview your plan.','v18531-form-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+ const result=E('div',undefined,'v18531-plan-result');result.hidden=true;
+ form.append(fields,note,buttons,status,result);
+ const reset=()=>{result.hidden=true;status.textContent='Choices changed. Preview the revised plan before using it.'};
+ for(const c of [focus,provider,when,duration])c.addEventListener('change',reset);
+ form.addEventListener('submit',event=>{
+  event.preventDefault();const date=new Date(when.value);
+  if(!when.value||Number.isNaN(date.getTime())||date.getTime()<=Date.now()+120000){result.hidden=true;status.textContent='Choose a valid future date and time at least two minutes from now.';when.focus();return}
+  result.replaceChildren(E('strong','Your unconfirmed class plan'),E('p',focus.selectedOptions[0].textContent+' · '+provider.selectedOptions[0].textContent+' · '+date.toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'})+' · '+duration.selectedOptions[0].textContent),E('p','Not booked: a real teacher and an approved meeting link must be confirmed separately.'));
+  result.hidden=false;status.textContent='Planning preview prepared locally. No appointment, payment or network request was made.';
+ });
+ section.append(copy,form);return section;
+}
 function mount(){
  // Scope condensed display to the actual default home hash only, NEVER to focused
  // legacy tools whose nested section routing reports a generic home view.
@@ -60,13 +104,19 @@ function mount(){
  }
  // Preserve actual planner, its controls, events and provider choices; move it without cloning.
  hero.after(room);
+ // The approved first screen must be IMAGE-LED, not the legacy writing example.
+ // Keep that original example and all its links later in the same #home section.
+ if(!hero.querySelector('#v18531-integrated-hero'))hero.prepend(buildIntegratedHero());
  const preview=E('section',undefined,'v18512-home-preview');preview.id='v18512-home-preview';preview.setAttribute('aria-labelledby','v18512-home-title');
  const wrap=E('div',undefined,'container'),title=E('h2','Explore EnglishLegalese');title.id='v18512-home-title';
  title.className='v18528-visually-hidden';wrap.append(title);
  const cards=E('div',undefined,'v18512-pathway-cards');
  for(const [name,description,href,cls,icon] of PATHS){const item=E('article',undefined,'v18512-pathway-card v18512-'+cls);const symbol=iconSymbol(icon,'v18528-card-icon');const body=E('div');body.append(E('h3',name),E('p',description),link(name==='Certifications'?'Learn about certifications →':'Explore '+name+' →',href));item.append(symbol,body);cards.append(item)}wrap.append(cards);
  const steps=E('section',undefined,'v18512-steps');steps.append(E('h2','How EnglishLegalese works'),E('p','Flexible, practical, and designed for real results.'));const ol=E('ol');
- for(const line of ['Choose your focus — Legal English, Business English, certifications, or free resources.','Learn with expert teachers through live online classes.','Build real skills in speaking, reading, writing, and professional communication.','Earn a certification (optional) after a qualifying teacher-supervised assessment.'])ol.append(E('li',line));
+ const stepCopy=['Choose your focus — Legal English, Business English, certifications, or free resources.','Learn with expert teachers through live online classes.','Build real skills in speaking, reading, writing, and professional communication.','Earn a certification (optional) after a qualifying teacher-supervised assessment.'];
+ const stepIcons=['book-open','presentation','chart-no-axes-combined','award'];
+ stepCopy.forEach((line,i)=>{const item=E('li',undefined,'v18531-step');item.dataset.step=String(i+1);item.append(iconSymbol(stepIcons[i],'v18531-step-icon'),E('span',line,'v18531-step-copy'));ol.append(item)});
+
  steps.append(ol);wrap.append(steps);
  const heading=E('h2','More to explore');heading.id='v18512-more-heading';heading.className='v18528-visually-hidden';wrap.append(heading);
  const groupArea=E('div',undefined,'v18512-more');groupArea.setAttribute('aria-labelledby','v18512-more-heading');
@@ -77,7 +127,11 @@ function mount(){
  }wrap.append(groupArea);
  const footer=E('p',undefined,'v18512-end-actions');
  for(const [label,href]of [['Start learning','/learn/start/'],['View pricing','/pricing/'],['Create an account','/learn/account/']])footer.append(link(label,href));
- wrap.append(footer);preview.append(wrap);room.after(preview);
+ wrap.append(footer);preview.append(wrap);
+ // Position the actual approved pathways immediately below the image-led hero;
+ // the historic education/copy block follows as an accessible supplement.
+ const original=hero.querySelector(':scope > .hero-grid');
+ if(original){hero.insertBefore(preview,original)}else hero.append(preview);
  document.documentElement.dataset.v18512Homepage='summary-first';
  // Existing routing remains authoritative for focus views and deep links.
  if(typeof window.englishLegaleseApplyView==='function')window.englishLegaleseApplyView();
