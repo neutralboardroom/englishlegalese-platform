@@ -32,7 +32,7 @@
 - RELEASE_TEST_RECEIPT: **PENDING** actual independent workflow conclusions and visual review.
 - No file deletion, schema change or private cross-tenant access.
 - CROSS_PROJECT_RULE_TRANSFER_LEDGER: no sister-project data or rule authority transferred.
-- RESEARCH_AND_COMPETITOR_ADOPTION_LEDGER: no new competing-proprietary material used; direct evidence from the real platform's security gap and existing consistent student/teacher controls. Do not assert external accreditation or UX benchmarks not verified.
+- RESEARCH_AND_COMPETITOR_ADOPTION_LEDGER: **ADOPT** OWASP's server-side session invalidation requirement instead of relying on clearing browser state (https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html; https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/06-Session_Management/06-Logout_Functionality/). **ADAPT** W3C WCAG 4.1.3 guidance to announce private operation results in existing accessible status regions without shifting focus (https://www.w3.org/WAI/WCAG21/Understanding/status-messages). No competitor proprietary work or design borrowed; the direct product evidence was a documented security/accuracy gap rather than a need for visual benchmarking. **DEFER_WITH_REASON** unrelated certification market comparisons until assessment validity and real examiner controls are the release scope. No claim of third-party accreditation, standard certification or performance validation.
 - Rollback: latest real pre-HF33 live Render `dep-dbimp9dg1s2s73f6cfm0` / main `96109484549d7b4444c6b51def96d6613813bf5b`. A new production rollback receipt can only be set after actual successful deployment.
 
 ## DEFERRED — DO NOT MISREPRESENT
