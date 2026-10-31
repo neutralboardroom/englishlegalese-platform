@@ -113,7 +113,10 @@ function mount(){
  const cards=E('div',undefined,'v18512-pathway-cards');
  for(const [name,description,href,cls,icon] of PATHS){const item=E('article',undefined,'v18512-pathway-card v18512-'+cls);const symbol=iconSymbol(icon,'v18528-card-icon');const body=E('div');body.append(E('h3',name),E('p',description),link(name==='Certifications'?'Learn about certifications →':'Explore '+name+' →',href));item.append(symbol,body);cards.append(item)}wrap.append(cards);
  const steps=E('section',undefined,'v18512-steps');steps.append(E('h2','How EnglishLegalese works'),E('p','Flexible, practical, and designed for real results.'));const ol=E('ol');
- for(const line of ['Choose your focus — Legal English, Business English, certifications, or free resources.','Learn with expert teachers through live online classes.','Build real skills in speaking, reading, writing, and professional communication.','Earn a certification (optional) after a qualifying teacher-supervised assessment.'])ol.append(E('li',line));
+ const stepCopy=['Choose your focus — Legal English, Business English, certifications, or free resources.','Learn with expert teachers through live online classes.','Build real skills in speaking, reading, writing, and professional communication.','Earn a certification (optional) after a qualifying teacher-supervised assessment.'];
+ const stepIcons=['book-open','presentation','chart-no-axes-combined','award'];
+ stepCopy.forEach((line,i)=>{const item=E('li',undefined,'v18531-step');item.dataset.step=String(i+1);item.append(iconSymbol(stepIcons[i],'v18531-step-icon'),E('span',line,'v18531-step-copy'));ol.append(item)});
+
  steps.append(ol);wrap.append(steps);
  const heading=E('h2','More to explore');heading.id='v18512-more-heading';heading.className='v18528-visually-hidden';wrap.append(heading);
  const groupArea=E('div',undefined,'v18512-more');groupArea.setAttribute('aria-labelledby','v18512-more-heading');
