@@ -8,6 +8,8 @@ const E=(tag,text)=>{const x=document.createElement(tag);if(text!==undefined)x.t
 const form=document.getElementById('el18510-login'),status=document.getElementById('el18510-status');
 const output=document.getElementById('el18510-output'),actions=document.getElementById('el18510-actions');
 const logout=document.getElementById('el18510-logout'),refresh=document.getElementById('el18510-refresh');
+const logoutEverywhere=E('button','Sign out on all devices');logoutEverywhere.type='button';
+logout.after(logoutEverywhere);logoutEverywhere.hidden=true;
 let token=null,epoch=0,selection=null;
 try{token=sessionStorage.getItem(key)}catch{}
 const auth=t=>({Authorization:'Bearer '+t});
@@ -16,7 +18,7 @@ function notice(text){status.textContent=text}
 function clear(){
  ++epoch;token=null;selection=null;
  try{sessionStorage.removeItem(key)}catch{}
- output.replaceChildren();actions.hidden=true;logout.hidden=true;form.hidden=false;
+ output.replaceChildren();actions.hidden=true;logout.hidden=true;logoutEverywhere.hidden=true;form.hidden=false;
 }
 function cell(text){return E('td',text==null?'Not reported':String(text))}
 function percent(n){return typeof n==='number'?n+'%':'Not reported'}
@@ -147,24 +149,29 @@ async function mountEmployerBooking(org){
    button.disabled=n===0;
   }
   choices.addEventListener('change',revise);program.addEventListener('change',revise);sessions.addEventListener('change',revise);revise();
-  let pendingId=null;
+  let pendingId=null,pendingSignature=null;
   form.addEventListener('submit',async ev=>{
    ev.preventDefault();
    if(token!==currentToken||epoch!==sequence){feedback.textContent='Your employer session has changed. Reload before requesting enrollment.';return}
    const ids=[...selected].filter(([,c])=>c.checked).map(([id])=>id);
    if(!ids.length){feedback.textContent='Select at least one current company learner.';return}
-   if(!pendingId)pendingId=crypto.randomUUID();
+   // Retry the same details with the same idempotency key. If the employer
+   // changes employees, course, package or time, it is a NEW request, not a
+   // retry of a previous request that might already have been accepted.
+   const request={organization_id:org.id,program:program.value,package_sessions:Number(sessions.value),
+    employee_user_ids:ids,preferred_time_window:when.value.trim()};
+   const signature=JSON.stringify(request);
+   if(!pendingId||signature!==pendingSignature){pendingId=crypto.randomUUID();pendingSignature=signature}
    button.disabled=true;feedback.textContent='Saving the enrollment request for staff review…';
    try{
     const rr=await fetch('/api/v18510/employer/enrollment-requests',{method:'POST',headers:{...auth(currentToken),'Content-Type':'application/json'},body:JSON.stringify({
-     organization_id:org.id,program:program.value,package_sessions:Number(sessions.value),employee_user_ids:ids,
-     preferred_time_window:when.value.trim(),client_request_id:pendingId
+     ...request,client_request_id:pendingId
     }),cache:'no-store'});
     const result=await parse(rr);
     if(token!==currentToken||epoch!==sequence)return;
     if(!rr.ok||result.ok!==true)throw Error(result.error||'Enrollment could not be recorded.');
     feedback.textContent='Request recorded: '+result.reference+'. '+result.notice+' You can review it with staff. This is not a paid enrollment.';
-    pendingId=null;
+    pendingId=null;pendingSignature=null;
     loadEnrollmentRequests(org,section,currentToken,sequence);
    }catch(e){if(token===currentToken&&epoch===sequence)feedback.textContent='Request NOT confirmed: '+e.message+' Do not assume seats were booked or paid.'}
    finally{if(token===currentToken&&epoch===sequence)revise()}
@@ -293,9 +300,22 @@ form.addEventListener('submit',async ev=>{
   if(seq!==epoch)return;
   if(!r.ok||!j.token||!(role==='owner'?['owner','admin'].includes(j.user?.role):j.user?.role==='employer'))throw Error('An authorized '+role+' account is required.');
   token=j.token;try{sessionStorage.setItem(key,token)}catch{}
-  form.hidden=true;logout.hidden=false;actions.hidden=false;notice('Signed in.');await load();
+  form.hidden=true;logout.hidden=false;logoutEverywhere.hidden=false;actions.hidden=false;notice('Signed in.');await load();
  }catch(e){if(seq===epoch)notice('Login unavailable: '+e.message)}
  finally{pass.value=''}
+});
+logoutEverywhere.addEventListener('click',async()=>{
+ if(!token||!confirm('Sign out of this account on EVERY device? All active owner, admin or employer sessions for this account will be revoked. No saved work or company reports will be deleted.'))return;
+ const oldToken=token,oldEpoch=epoch;
+ logoutEverywhere.disabled=true;notice('Revoking all your account sessions…');
+ try{
+  const r=await fetch('/api/v18510/workspace/logout-everywhere',{method:'POST',headers:auth(oldToken),cache:'no-store'});
+  const j=await parse(r);
+  if(token!==oldToken||epoch!==oldEpoch)return;
+  if(!r.ok||j.signed_out_everywhere!==true)throw Error(j.error||'All-device revocation not confirmed.');
+  clear();notice('Signed out on all devices. All account sessions revoked; saved work and verified reports preserved.');
+ }catch(e){if(token===oldToken&&epoch===oldEpoch)notice('All-device sign-out NOT confirmed: '+e.message+'. You can retry or sign out on this device.')}
+ finally{logoutEverywhere.disabled=false}
 });
 logout.addEventListener('click',async()=>{
  const t=token;clear();
@@ -309,7 +329,7 @@ if(token){
  fetch('/api/v119/auth/me',{headers:auth(token),cache:'no-store'}).then(async r=>{
   const j=await parse(r);if(!token)return;
   if(!r.ok||!(role==='owner'?['owner','admin'].includes(j.user?.role):j.user?.role==='employer')){clear();notice('Session expired or account role changed. Sign in again.');return}
-  form.hidden=true;logout.hidden=false;actions.hidden=false;load();
+  form.hidden=true;logout.hidden=false;logoutEverywhere.hidden=false;actions.hidden=false;load();
  }).catch(()=>{clear();notice('Session could not be verified. Sign in again.')});
 }else clear();
 })();
