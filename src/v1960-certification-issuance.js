@@ -67,7 +67,7 @@ function install(app,{services,authMiddleware,requireRoles}){
     !plain(b.prompt_set_id,120)||!plain(b.protected_evidence_reference,500))
     return send(res,400,{ok:false,error:'Actual live supervision, identity, access rules, accommodations and secured evidence must all be attested.'});
   try{
-   if(!await authorizedAssessor(req.user.id))return send(res,403,{ok:false,error:'Accredited internal examiner authorization required.'});
+   if(!await authorizedAssessor(req.user.id))return send(res,403,{ok:false,error:'Authorized, trained examiner status required.'});
    const q=await services.query(
     "UPDATE certification_assessments SET status='supervised', supervised_at=now(), proctor_user_id=$2, identity_verified_at=now(), identity_verified_by=$2, unseen_prompt_set_id=$3, protected_evidence_reference=$4, supervision_attested=true, authorized_tools_attested=true, accommodations_reviewed=true, rubric_version=$5, updated_at=now() WHERE id=$1 AND status IN ('requested','scheduled') RETURNING id",
     [req.params.id,req.user.id,b.prompt_set_id.trim(),b.protected_evidence_reference.trim(),approvedRubric()]);
@@ -153,6 +153,26 @@ function install(app,{services,authMiddleware,requireRoles}){
    if(!q.rows.length)return send(res,404,{ok:false,error:'An active credential with that serial was not found.'});
    await log(q.rows[0].assessment_id,q.rows[0].id,req.user.id,'credential_revoked',{reason_category:'documented_by_issuer'});
    return send(res,200,{ok:true,revoked:true});
+  }catch{return error(res)}
+ });
+ app.post('/api/v1960/certifications/credentials/:serial/public-verification-consent',guard,auth,requireRoles('student'),async(req,res)=>{
+  if(!available()||typeof req.params.serial!=='string'||typeof req.body?.consent!=='boolean')return error(res);
+  try{
+   const q=await services.query("UPDATE certification_credentials SET public_verify_consent=$3 WHERE serial=$1 AND candidate_user_id=$2 RETURNING id,public_verify_consent",[req.params.serial,req.user.id,req.body.consent]);
+   if(!q.rows.length)return send(res,404,{ok:false,error:'No credential belonging to this account was found.'});
+   return send(res,200,{ok:true,public_verification_consent:q.rows[0].public_verify_consent});
+  }catch{return error(res)}
+ });
+ app.post('/api/v1960/certifications/appeals/:id/decision',guard,auth,requireRoles('owner','admin'),async(req,res)=>{
+  if(!available()||!idOk(req.params.id))return error(res);
+  const {decision,reason}=req.body||{};
+  if(!['upheld','reassessment','denied'].includes(decision)||!plain(reason,1000)||reason.trim().length<20)
+   return send(res,400,{ok:false,error:'Document an appeal decision and reason of at least 20 characters.'});
+  try{
+   const q=await services.query("UPDATE certification_appeals SET status=$2,decision_reason=$3,decided_by=$4,decided_at=now() WHERE id=$1 AND status='pending' RETURNING assessment_id",[req.params.id,decision,reason.trim(),req.user.id]);
+   if(!q.rows.length)return send(res,404,{ok:false,error:'No pending appeal was found.'});
+   await log(q.rows[0].assessment_id,null,req.user.id,'appeal_decided',{decision});
+   return send(res,200,{ok:true,status:decision,credential_automatically_changed:false,notice:'A reassessment or credential correction requires a separate documented issuer action.'});
   }catch{return error(res)}
  });
  app.post('/api/v1960/certifications/assessments/:id/appeal',guard,auth,requireRoles('student'),async(req,res)=>{
