@@ -94,9 +94,9 @@ function install(app,{services,authMiddleware,requireRoles}){
     [b.client_request_id,kind,plan,name,email,org,seat??null,term]);
    let row=q.rows[0];
    if(!row){
-    const conflict=await services.query('SELECT id,request_kind,plan_code,contact_email,organization_name,seat_count,preferred_term,created_at FROM membership_interest_requests WHERE client_request_id=$1::uuid',[b.client_request_id]);
+    const conflict=await services.query('SELECT id,request_kind,plan_code,contact_name,contact_email,organization_name,seat_count,preferred_term,created_at FROM membership_interest_requests WHERE client_request_id=$1::uuid',[b.client_request_id]);
     const old=conflict.rows[0];
-    if(!old||old.request_kind!==kind||old.plan_code!==plan||old.contact_email!==email||
+    if(!old||old.request_kind!==kind||old.plan_code!==plan||old.contact_name!==name||old.contact_email!==email||
        (old.organization_name||null)!==org||(old.seat_count??null)!==(seat??null)||old.preferred_term!==term)
      return respond(res,409,{ok:false,error:'This request ID was already used for a different inquiry. Reload and submit a new request.'});
     row=old;
