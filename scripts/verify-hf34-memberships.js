@@ -27,7 +27,7 @@ function appHarness(){
     organization_name:params[5],seat_count:params[6],preferred_term:params[7],created_at:'2026-10-31T00:00:00Z'};
    records.set(id,record);writes.push(record);return{rows:[record]};
   }
-  if(sql.startsWith('SELECT id,request_kind'))return{rows:[records.get(params[0])].filter(Boolean)};
+  if(sql.startsWith('SELECT id,request_kind')&&sql.includes('WHERE client_request_id'))return{rows:[records.get(params[0])].filter(Boolean)};
   if(sql.includes('ORDER BY created_at DESC'))return{rows:[...records.values()]};
   if(sql.includes('count(*)::int'))return{rows:[{status:'new',n:records.size}]};
   throw Error('Unexpected SQL: '+sql);
