@@ -57,7 +57,7 @@ test('HF34 membership discovery preserves old pricing, employer, account and les
  await expect(page.locator('main')).toContainText('SmartTeacher AI');
  await page.goto('/learn/employers/');
  await expect(page.getByRole('link',{name:'Compare membership plans'})).toHaveAttribute('href','/learn/memberships/');
- await expect(page.locator('main')).toContainText('Team Legal English');
+ await expect(page.locator('main')).toContainText('Multi-employee group training options');
  await page.goto('/learn/account/');
  await expect(page.getByRole('link',{name:/Explore proposed memberships starting with one employee/})).toHaveAttribute('href','/learn/memberships/');
  await expect(page.locator('main')).toContainText('Student dashboard');
