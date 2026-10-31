@@ -6,6 +6,14 @@ test('HF34 one employee is a valid team membership estimate; price stays monoton
  await expect(page.getByText('No checkout, automatic renewal, paid AI entitlement',{exact:false})).toBeVisible();
  const seats=page.getByLabel('How many employees would use the learning platform?');
  await expect(seats).toHaveValue('1');
+ await expect(page.locator('#v1970-org-field')).toBeHidden();
+ await expect(page.locator('#v1970-seat-field')).toBeHidden();
+ await page.locator('#v1970-kind').selectOption('organization');
+ await expect(page.locator('#v1970-org-field')).toBeVisible();
+ await expect(page.locator('#v1970-seat-field')).toBeVisible();
+ await page.locator('#v1970-kind').selectOption('individual');
+ await expect(page.locator('#v1970-org-field')).toBeHidden();
+ await expect(page.locator('#v1970-seat-field')).toBeHidden();
  await expect(page.locator('#v1970-quote-result')).toContainText('$25/month');
  await page.screenshot({path:testInfo.outputPath('hf34-membership-overview.png'),fullPage:true});
  await seats.fill('5');await expect(page.locator('#v1970-quote-result')).toContainText('$123/month');
