@@ -66,8 +66,8 @@ function makeUnit2(){
 function addClassrooms(){
  const root=$('#app'),teachers=$('#teachers');if(!root||!teachers||$('#live-classes'))return;
  const s=n('section',undefined,'section v1780-classrooms');s.id='live-classes';s.setAttribute('aria-labelledby','v1780-class-title');
- const c=n('div',undefined,'container'),top=n('div',undefined,'section-head'),heading=n('div');heading.append(n('div','Human-taught Legal English','eyebrow'),n('h2','Learn live with a human teacher in an online video classroom.'));heading.querySelector('h2').id='v1780-class-title';
- top.append(heading,n('p','Structured classes, interactive discussion, guided roleplay and direct teacher feedback—designed to complement independent practice.'));
+ const c=n('div',undefined,'container'),top=n('div',undefined,'section-head'),heading=n('div');heading.append(n('div','Human-taught Legal English and Business English','eyebrow'),n('h2','Learn live with a human teacher in an online video classroom.'));heading.querySelector('h2').id='v1780-class-title';
+ top.append(heading,n('p','Structured Legal English, Business English, investor communication and professional team learning through interactive discussion, guided roleplay and direct teacher feedback. Class plans are previews until a real teacher confirms the session.'));
  const benefits=n('div',undefined,'v1780-benefits');
  [['video','Live interaction','Ask questions, practise spoken Legal English, and receive personalized explanations during a teacher-led video session.'],['book','Class scheduling','Choose a learning focus and preview a lesson time. Actual classes are confirmed only after teacher assignment and an official meeting link.'],['calendar','Calendar-friendly','A schedule can be shared using standard calendar invitations and an approved Zoom, Google Meet, Teams or regional meeting link.']].forEach(([kind,title,body])=>{const card=n('article',undefined,'panel v1780-benefit');card.append(n('span',kind==='video'?'◉':kind==='book'?'◷':'▦','v1780-benefit-symbol'),n('h3',title),n('p',body));benefits.append(card)});
  const studio=n('div',undefined,'v1780-studio'),preview=n('div',undefined,'panel v1780-room-preview');
@@ -94,7 +94,10 @@ function addClassrooms(){
  const scheduler=n('div',undefined,'panel v1780-scheduler');scheduler.append(n('div','YOUR CLASS PLANNING WORKSPACE','eyebrow'),n('h3','Build your online class plan'),n('p','Choose a study goal and an online classroom platform, then preview a time in your local timezone. No booking or payment is made.','v1780-fine'));
  const form=n('form');form.noValidate=true;
  const labels=(id,txt,ctl)=>{ctl.id=id;const lab=n('label',txt,'v1780-field');lab.htmlFor=id;lab.append(ctl);return lab;};
- const focus=n('select'),choices=['Live one-to-one Legal English','Small-group speaking and roleplay','Legal writing feedback class','Contract vocabulary and document reading','LL.M. / academic Legal English'];choices.forEach((x,i)=>{const o=n('option',x);o.value=String(i);focus.append(o)});
+ const focus=n('select'),choices=[
+  'Live one-to-one Legal English','Small-group speaking and roleplay','Legal writing feedback class','Contract vocabulary and document reading','LL.M. / academic Legal English',
+  'Live one-to-one Business English','Business meetings, negotiation and presentations','Investor and Wall Street communication','Professional business writing and email','Business English certification assessment preparation','Legal English certification assessment preparation','Employer team communication training'
+ ];choices.forEach((x,i)=>{const o=n('option',x);o.value=String(i);focus.append(o)});
  const provider=n('select');[['zoom','Zoom'],['meet','Google Meet'],['teams','Microsoft Teams'],['voov','Tencent / VooV (regional option)'],['manual','Another approved video provider']].forEach(([val,txt])=>{const o=n('option',txt);o.value=val;provider.append(o)});
  const when=n('input');when.type='datetime-local';when.required=true;const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);tomorrow.setHours(10,0,0,0);const toLocal=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')+'T'+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');when.value=toLocal(tomorrow);
  const duration=n('select');[['30','30 minutes'],['45','45 minutes'],['60','60 minutes'],['90','90 minutes']].forEach(([val,txt])=>{const o=n('option',txt);o.value=val;duration.append(o)});duration.value='60';
