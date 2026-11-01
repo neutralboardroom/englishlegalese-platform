@@ -30,7 +30,6 @@
   restore.append(fileInput);
   actions.append(download,restore);
   const feedback=make('p','v2000-draft-feedback','');
-  feedback.setAttribute('role','status');
   feedback.setAttribute('aria-live','polite');
   tools.append(heading,guidance,actions,feedback);
   label.after(tools);
