@@ -1,3 +1,13 @@
+# HF37 — 2026-11-01: original 24-lesson private spoken rehearsal (candidate)
+
+**Material benefit:** Legal and Business learners can practice actual professional speech, not just type responses: unique client prompts, unrehearsed answer practice, follow-up questions, optional 45-second timer, chunked pronunciation practice, and a hidden professional sample response on all 24 original fictional lessons. This is a no-microphone, no-audio-upload, no-score, no-draft-save educational feature, not an AI speaking test or certificate. It strengthens fluency and confidence without altering curriculum, pricing, user roles, homepage or protected media.
+
+**Validation/deployment:** Fresh HF36 branch; mandatory HF37 node checks plus browser tests in inherited independent exact-head release gates. Merge/deploy only after verified passes and Render confirmation. See `docs/HF37_SPEAKING_REHEARSAL_RELEASE_2026-11-01.md` for current status.
+
+**Unfinished priorities (unchanged):** verified protected teacher/student/employer/owner workflows, real class scheduling and tuition payments, human-supervised separate Legal and Business certifications, consented employer evidence, full privacy lifecycle and live integrations remain gated by proper credentials, authority and production evidence. No private student's submitted contract or lesson material imported.
+
+---
+
 # HF36 user-observed pricing discoverability correction — 2026-10-31
 
 Owner saw the proposed shared Legal/Business membership mentioned but not priced prominently on Pricing; the shared-program description appeared after the older class-pricing list. HF36 now **shows actual proposed monthly amounts directly after the Pricing heading**, ahead of existing/byte-preserved `#pricing`: Starter $12, Plus $19, Pro $29, Guided $79 (conditional teacher capacity); employers from one seat $25/month with incremental tiers 5–19 $23 and 20–49 $21, custom 50+. Matching truthful summaries placed after each Legal and Business program heading, on Employers, within the Memberships lead and Account reference, and in the preexisting homepage pricing aside only. No homepage hero/design changes, legacy lesson price changes, billing activation or invented annual discount. Combined program coverage and cancel-before-next-renewal policy preserved. Responsive CSS and mandatory browser/source parity checks added to the V20 release gate; deploy only after two independent exact-head successful jobs. See updated `docs/HF36_CONTINUING_LEARNING_RELEASE_2026-10-31.md`.
