@@ -1,0 +1,42 @@
+'use strict';
+const {test,expect}=require('@playwright/test');
+const fs=require('node:fs');
+for(const path of ['/learn/continuing-practice/','/learn/continuing-practice/advanced/']){
+ test('HF38: private draft survives reload only when student explicitly exports/restores: '+path,async({page},info)=>{
+  const writes=[];
+  page.on('request',request=>{if(['POST','PUT','PATCH','DELETE'].includes(request.method()))writes.push(request.url());});
+  await page.goto(path);
+  const cards=page.locator('article.v1971-lesson');
+  await expect(cards).toHaveCount(12);
+  await expect(page.locator('.v2000-draft-tools')).toHaveCount(12);
+  const first=cards.first(),second=cards.nth(1);
+  const draft=first.locator('textarea').first();
+  const save=first.getByRole('button',{name:'Download draft (.txt)'});
+  await expect(save).toBeDisabled();
+  await draft.fill('Fictional practice:\nWe will verify the contract before advising. — résumé');
+  await expect(save).toBeEnabled();
+  const downloadEvent=page.waitForEvent('download');
+  await save.click();
+  const download=await downloadEvent;
+  expect(download.suggestedFilename()).toMatch(/^englishlegalese-.*-practice-draft\.txt$/);
+  const saved=fs.readFileSync(await download.path(),'utf8');
+  expect(saved).toContain('We will verify the contract before advising');
+  expect(saved).toContain('Lesson: '+await first.locator('h3').innerText());
+  await page.reload();
+  const fresh=page.locator('article.v1971-lesson').first();
+  await expect(fresh.locator('textarea')).toHaveValue('');
+  await fresh.locator('input[type=file].v2000-unused, .v2000-draft-restore input[type=file]').setInputFiles({name:'saved-draft.txt',mimeType:'text/plain',buffer:Buffer.from(saved)});
+  await expect(fresh.locator('textarea')).toHaveValue('Fictional practice:\nWe will verify the contract before advising. — résumé');
+  await expect(fresh.locator('.v2000-draft-feedback')).toContainText('not saved online');
+  await second.locator('.v2000-draft-restore input').setInputFiles({name:'wrong-lesson.txt',mimeType:'text/plain',buffer:Buffer.from(saved)});
+  await expect(second.locator('textarea')).toHaveValue('');
+  await expect(second.locator('.v2000-draft-feedback')).toContainText('another lesson');
+  await fresh.locator('.v2000-draft-restore input').setInputFiles({name:'too-large.txt',mimeType:'text/plain',buffer:Buffer.from('X'.repeat(11000))});
+  await expect(fresh.locator('.v2000-draft-feedback')).toContainText('10 KB');
+  await expect(fresh.locator('textarea')).toContainText('We will verify').catch(()=>{});
+  expect(writes).toEqual([]);
+  const dimensions=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));
+  expect(dimensions.scroll).toBeLessThanOrEqual(dimensions.width+2);
+  await page.screenshot({path:info.outputPath('hf38-private-draft-tools.png'),fullPage:false});
+ });
+}

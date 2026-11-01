@@ -1,0 +1,12 @@
+/* HF38 — additive private local draft export/import on the 24 lesson pages only. */
+.v2000-draft-tools{border:1px solid #a7c4d3;background:#f5f9fb;border-radius:.55rem;padding:.85rem;margin:.65rem 0 1rem;max-width:100%;box-sizing:border-box}
+.v2000-draft-heading{font-weight:750;color:#173c54;margin:.1rem 0 .3rem}
+.v2000-draft-guidance{font-size:.91rem;line-height:1.6;margin:.2rem 0 .65rem}
+.v2000-draft-actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.v2000-draft-actions>button{font:inherit;border:0;border-radius:6px;padding:.55rem .8rem;color:#fff;background:#164965;cursor:pointer;min-height:44px}
+.v2000-draft-actions>button:disabled{cursor:not-allowed;opacity:.52}
+.v2000-draft-restore{display:flex;flex-direction:column;gap:.25rem;font-size:.9rem;font-weight:650;max-width:100%;min-width:0}
+.v2000-draft-restore input{display:block;font:inherit;max-width:100%;width:min(100%,260px);box-sizing:border-box}
+.v2000-draft-feedback{min-height:1.5em;margin:.6rem 0 0;line-height:1.5}
+.v2000-draft-tools :focus-visible{outline:3px solid #bc772c;outline-offset:3px}
+@media(max-width:520px){.v2000-draft-actions{flex-direction:column;align-items:stretch}.v2000-draft-actions>button{width:100%}}

@@ -1,3 +1,7 @@
+# HF38 — 2026-11-01: optional private practice draft save/restore (candidate)
+
+**User benefit:** All 24 free Legal and Business practice lessons now let a learner explicitly download their own unfinished fictional writing to a plain .txt file and later restore it to the matching lesson. This is local-only, no account, upload, automatic persistent storage, grading or cloud claim. The remaining unprovisioned dashboards, live booking/payment, teacher-supervised certification and employer workflows remain pending; no original backlog item is dropped. See `docs/HF38_PRIVATE_DRAFTS_RELEASE_2026-11-01.md` for status, risks and qualification. Release only after both independent exact-head checks and exact Render/live-host validation.
+
 # HF37 — 2026-11-01: original 24-lesson private spoken rehearsal (candidate)
 
 **Material benefit:** Legal and Business learners can practice actual professional speech, not just type responses: unique client prompts, unrehearsed answer practice, follow-up questions, optional 45-second timer, chunked pronunciation practice, and a hidden professional sample response on all 24 original fictional lessons. This is a no-microphone, no-audio-upload, no-score, no-draft-save educational feature, not an AI speaking test or certificate. It strengthens fluency and confidence without altering curriculum, pricing, user roles, homepage or protected media.
