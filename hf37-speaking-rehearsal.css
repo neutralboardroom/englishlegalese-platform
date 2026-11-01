@@ -1,0 +1,19 @@
+/* HF37: scoped, additive speaking rehearsal; approved homepage unaffected. */
+.v1990-speaking{margin:1.05rem 0;padding:.8rem 1rem;border:1px solid #bad1db;border-radius:12px;background:#f5fafc;color:#17364a}
+.v1990-speaking>summary{cursor:pointer;font-weight:750;line-height:1.5;color:#15435c}
+.v1990-speaking>summary:focus-visible,.v1990-hint>summary:focus-visible,.v1990-timer button:focus-visible{outline:3px solid #d38b26;outline-offset:3px}
+.v1990-inner{padding:.35rem .2rem .1rem;max-width:100%}
+.v1990-privacy{font-size:.92rem;line-height:1.55;color:#365263}
+.v1990-turn{border-top:1px solid #d5e1e7;padding:.48rem 0}
+.v1990-turn h4{font-size:1.02rem;margin:.4rem 0 .2rem;line-height:1.45}
+.v1990-turn p{margin:.25rem 0 .5rem;line-height:1.65}
+.v1990-hint{margin:.55rem 0;padding:.55rem .7rem;border:1px solid #bed3dd;border-radius:8px;background:#fff}
+.v1990-hint summary{cursor:pointer;font-weight:650}
+.v1990-hint p{margin:.65rem 0 .15rem}
+.v1990-chunk,.v1990-pronounce{line-height:1.65;overflow-wrap:anywhere}
+.v1990-timer{display:flex;align-items:center;flex-wrap:wrap;gap:.6rem;margin-top:.75rem}
+.v1990-timer button{font:inherit;border-radius:8px;border:1px solid #286180;background:#205677;color:#fff;padding:.5rem .85rem;cursor:pointer;min-height:42px}
+.v1990-timer button:disabled{opacity:.55;cursor:not-allowed}
+.v1990-time{font-variant-numeric:tabular-nums;font-size:1.12rem;font-weight:750;min-width:3rem}
+.v1990-notice{margin:.35rem 0;line-height:1.5}
+@media(max-width:520px){.v1990-speaking{padding:.7rem}.v1990-timer button{width:100%}}
