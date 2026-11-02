@@ -17,7 +17,7 @@ for(const path of ['/learn/continuing-practice/','/learn/continuing-practice/adv
   const panel=first.locator('details.v2010-panel');
   await panel.locator('summary').click();
   await expect(panel.locator('input[type=checkbox]')).toHaveCount(3);
-  await expect(panel.locator('.v2010-challenge')).toContainText('unconfirmed');
+  await expect(panel.locator('.v2010-challenge')).toContainText(path.includes('/advanced/')?'verify':'unconfirmed');
   await panel.locator('input[type=checkbox]').first().check();
   await expect(panel.locator('.v2010-review-status')).toContainText('1 of 3');
   await first.locator('textarea').fill('We will verify the schedule before advising.');
