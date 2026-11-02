@@ -1,3 +1,11 @@
+# HF39 — 2026-11-02: meaningful original lesson-specific writing self-review (candidate)
+
+**Before/after:** Twenty-four free professional-English writing assignments already had model answers, private local draft backup, choice checks and spoken rehearsal, but no per-lesson guide for self-revising the actual learner's prose. HF39 adds three individual writing-review criteria and a stretch question for every original lesson, plus live word/character count and an ephemeral self-reflection checklist that resets after draft edits. Learner writing remains browser-only; no auto-scoring, false official assessment, server submissions, persistent checkmarks or account dependency. The approved photo-led homepage and all HF38/previous paths are unchanged. Qualified release only after both independent final-SHA gates, browser screenshots, guarded merge and exact Render+two-host smoke. See `docs/HF39_WRITING_SELF_REVIEW_RELEASE_2026-11-02.md`.
+
+**Backlog retained without loss:** Actual fully staffed teaching, role dashboard completion, employee consent, payment processing and teacher-supervised credential issuance/verification remain pending under existing owner restrictions. All earlier requirements and historical records appear unchanged below.
+
+---
+
 # HF38 — 2026-11-01: optional private practice draft save/restore (candidate)
 
 **User benefit:** All 24 free Legal and Business practice lessons now let a learner explicitly download their own unfinished fictional writing to a plain .txt file and later restore it to the matching lesson. This is local-only, no account, upload, automatic persistent storage, grading or cloud claim. The remaining unprovisioned dashboards, live booking/payment, teacher-supervised certification and employer workflows remain pending; no original backlog item is dropped. See `docs/HF38_PRIVATE_DRAFTS_RELEASE_2026-11-01.md` for status, risks and qualification. Release only after both independent exact-head checks and exact Render/live-host validation.
