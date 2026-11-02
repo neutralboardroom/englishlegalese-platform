@@ -12,7 +12,8 @@ assert.equal(records.length,24,'exactly 24 distinct review guides');
 assert.deepEqual(new Set(records.map(r=>r[0])),new Set(titles),'every real lesson has individual guidance');
 for(const record of records){
  assert.equal(record.length,5,'exact lesson title, three review prompts, and challenge');
- for(const value of record)assert.ok(typeof value==='string'&&value.length>30,'guidance is substantive');
+ assert.ok(typeof record[0]==='string'&&record[0].length>10,'specific lesson title');
+ for(const value of record.slice(1))assert.ok(typeof value==='string'&&value.length>30,'guidance is substantive');
 }
 for(const page of pages){
  assert.equal((page.match(/<article class="v1971-lesson"/g)||[]).length,12,'12 original lessons remain per page');
