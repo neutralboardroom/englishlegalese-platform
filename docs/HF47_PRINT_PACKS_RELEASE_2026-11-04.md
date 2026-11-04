@@ -1,0 +1,10 @@
+# HF47 — privacy-safe printable student and teacher lesson packs
+2026-11-04. Parent HF46 1235fbc1f235b7ba928ca461d2661dcdf7fdb136; fourth material successor in HF44–HF48.
+
+**User problem:** Real classrooms can have unreliable projector audio, weak Internet, or only a wired microphone. Teachers need an offline-friendly paper fallback that separates student prompts from answers. A naive browser 'print page' would reveal whatever a student typed in a private textarea, or inadvertently publish an answer key.
+
+**Benefit:** Every one of the 24 original Legal/Business practice cards now supports one-click accessible preview of a printable student handout and a separate teacher guide. Each is built exclusively from fixed original fictional curriculum text; student sheets include information-gap task, speaking differentiation, partner questions and blank writing lines. Teacher view adds ONLY instructor model answers and a timed 50-minute agenda. No dynamic private text is read, persisted, printed or shared. Printing happens only on a second explicit user action and targets the standalone dialog; all remaining site elements are suppressed by print CSS. Dialog may be closed/cancelled without changes.
+
+**Constraints:** Not a certificate, attendance record, actual lesson booking, live AI tutor, student report or data upload. Browser print availability depends on the operating system; text-only remains usable without microphone or Internet once loaded. Approved photo-led homepage, logo, privacy and roles, existing lessons and all earlier teaching enhancements untouched.
+
+**Research adaptation:** Cambridge English teacher framework emphasizes effective resources and adaptation to learning environments; CEFR Companion volume stresses interaction/mediation. No external branding/text copied; original printable exercises only. Test student/teacher isolation, no private writing in print DOM, printable media, mobile dialog, no network writes; both independent exact-head CI + visual evidence required.

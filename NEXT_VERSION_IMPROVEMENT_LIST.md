@@ -1,3 +1,9 @@
+# HF47 — 2026-11-04: privacy-safe printable lesson packets (fourth of five)
+
+All 24 professional-English lessons now generate standalone learner worksheets AND separate instructor answer-key/50-minute agenda previews, explicitly printed only when requested. Real learner drafts, passwords and records are excluded by source design. The student print view hides the entire site and teacher notes while printing, offering a dependable paper backup when projectors, classroom audio or connectivity are unreliable. Preserves all earlier versions and all original lessons. See `docs/HF47_PRINT_PACKS_RELEASE_2026-11-04.md`. Complete inherited backlog follows without deletion.
+
+---
+
 # HF46 — 2026-11-04: 24 original information-gap and clarification labs (third of five)
 
 Each professional Legal/Business lesson now includes a new ambiguous workplace statement, three realistic speaking stages, a concealed careful clarification model and a partner confirmation variation. Learners practice distinguishing observed statements from missing verified information, rather than memorizing vocabulary alone. No microphone/recording, AI grading, legal advice, or fake class. Preserves HF44 two-level exercises, HF45 72 question-answer prompts and all prior site functionality. See `docs/HF46_CLARIFICATION_LAB_RELEASE_2026-11-04.md`. Historical backlog and all remaining owner requirements follow unchanged.
