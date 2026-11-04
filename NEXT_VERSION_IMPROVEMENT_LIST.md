@@ -1,3 +1,9 @@
+# HF46 — 2026-11-04: 24 original information-gap and clarification labs (third of five)
+
+Each professional Legal/Business lesson now includes a new ambiguous workplace statement, three realistic speaking stages, a concealed careful clarification model and a partner confirmation variation. Learners practice distinguishing observed statements from missing verified information, rather than memorizing vocabulary alone. No microphone/recording, AI grading, legal advice, or fake class. Preserves HF44 two-level exercises, HF45 72 question-answer prompts and all prior site functionality. See `docs/HF46_CLARIFICATION_LAB_RELEASE_2026-11-04.md`. Historical backlog and all remaining owner requirements follow unchanged.
+
+---
+
 # HF45 — 2026-11-04: 72 new teacher discussion questions and model answers (second of five)
 
 Material addition: 3 topic-specific follow-up questions and hidden model answers for EACH of the 24 original Legal/Business lessons, providing 72 additional teacher-led prompts when real speaking turns go faster than planned. Supports complete evidence-aware answers, not scores or legal opinions. Keeps HF44 differentiation and all earlier website functionality unchanged. See `docs/HF45_TEACHER_QUESTIONS_RELEASE_2026-11-04.md`. Full inherited backlog below retained verbatim.
