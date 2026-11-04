@@ -1,3 +1,9 @@
+# HF44 — 2026-11-04: differentiated professional speaking (first of five cumulative candidates)
+
+Benefit: 24 original two-path speaking practices for mixed-ability Legal/Business English learners — guided full-sentence completion and a harder explanation/qualification task with a concealed example answer. Not a formal CEFR assessment or grade; no audio/microphone upload. Preserves HF43 and earlier material features, approved homepage and visual lock. See `docs/HF44_DIFFERENTIATED_SPEAKING_RELEASE_2026-11-04.md`. Future priorities include teacher question banks, clarification tasks, privacy-safe handouts and guided practice paths. All inherited backlog below remains unchanged.
+
+---
+
 # HF43 — 2026-11-04: searchable navigation across all 24 original lessons (final candidate)
 
 **Fifth cumulative substantive version in the HF39–HF43 sequence.** Users and teachers may now open a compact lesson finder on both self-study pages, search 24 exact original professional scenarios across the two collections, filter Legal versus Business/Investor topics, see accurate matches, jump directly to a specific lesson and reset without loss of drafts or other content. No existing lesson is hidden, and no search or completion status is stored. Preserves HF39 original writing self-review; HF40 24 dialogues; HF41 controlled voice models; HF42 fifty-minute teacher plans with student-only projector; prior HF35/37/38 and all prices, scope, employer/teacher dashboards, independent certifications, approved homepage/logo/teacher photo. Source-only until dual independent exact-head acceptance, reviewed screenshots, guarded merge, exact Render auto-deploy and both-host verification. See `docs/HF43_LESSON_FINDER_RELEASE_2026-11-04.md` and all four predecessor receipts. The COMPLETE inherited history and future priorities follow unchanged.

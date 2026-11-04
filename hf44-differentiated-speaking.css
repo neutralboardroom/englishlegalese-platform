@@ -1,0 +1,11 @@
+/* HF44: responsive support and stretch practice, scoped to the existing lesson cards. */
+.v1971-lesson details.v2060-differentiation{margin:1rem 0;padding:.85rem;border:1px solid #c3d6df;background:#f9fcfd;border-radius:8px;min-width:0}
+.v2060-differentiation>summary{font-weight:750;cursor:pointer}
+.v2060-context,.v2060-guide{font-size:.94rem;line-height:1.55}
+.v2060-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem}
+.v2060-option{border:1px solid #d0dee5;border-radius:6px;padding:.75rem;background:#fff;min-width:0}
+.v2060-option h4{margin:.1rem 0 .5rem;font-size:1rem}
+.v2060-option p{overflow-wrap:anywhere;line-height:1.55}
+.v1971-lesson details.v2060-answer{background:#f4f9fb;margin:.5rem 0;border:1px solid #d3e2eb}
+.v2060-differentiation :focus-visible{outline:3px solid #bf7932;outline-offset:3px}
+@media(max-width:650px){.v2060-options{grid-template-columns:minmax(0,1fr)}}
