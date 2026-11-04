@@ -1,0 +1,9 @@
+/* HF45: substantial teacher prompts without crowding the core learner workflow. */
+.v1971-lesson details.v2070-questions{margin:.95rem 0;padding:.8rem;background:#f6faf5;border:1px solid #c7dcca;border-radius:8px;min-width:0}
+.v2070-questions>summary{font-weight:700;cursor:pointer}
+.v2070-intro{line-height:1.55;font-size:.92rem}
+.v2070-list{padding-left:1.35rem;line-height:1.5}
+.v2070-list>li{padding:.45rem .1rem;overflow-wrap:anywhere}
+.v2070-question{font-weight:600;margin:.2rem 0}
+.v1971-lesson details.v2070-answer{background:#fff;border:1px solid #d7e4d7;padding:.55rem;margin:.4rem 0}
+.v2070-questions :focus-visible{outline:3px solid #bb7939;outline-offset:3px}

@@ -1,3 +1,9 @@
+# HF45 — 2026-11-04: 72 new teacher discussion questions and model answers (second of five)
+
+Material addition: 3 topic-specific follow-up questions and hidden model answers for EACH of the 24 original Legal/Business lessons, providing 72 additional teacher-led prompts when real speaking turns go faster than planned. Supports complete evidence-aware answers, not scores or legal opinions. Keeps HF44 differentiation and all earlier website functionality unchanged. See `docs/HF45_TEACHER_QUESTIONS_RELEASE_2026-11-04.md`. Full inherited backlog below retained verbatim.
+
+---
+
 # HF44 — 2026-11-04: differentiated professional speaking (first of five cumulative candidates)
 
 Benefit: 24 original two-path speaking practices for mixed-ability Legal/Business English learners — guided full-sentence completion and a harder explanation/qualification task with a concealed example answer. Not a formal CEFR assessment or grade; no audio/microphone upload. Preserves HF43 and earlier material features, approved homepage and visual lock. See `docs/HF44_DIFFERENTIATED_SPEAKING_RELEASE_2026-11-04.md`. Future priorities include teacher question banks, clarification tasks, privacy-safe handouts and guided practice paths. All inherited backlog below remains unchanged.
