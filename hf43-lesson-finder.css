@@ -1,0 +1,16 @@
+/* HF43: no-hiding navigational directory, scoped to two practice pages. */
+.v2050-finder{max-width:1140px;margin:1rem auto;padding:1rem;box-sizing:border-box;border:1px solid #bdceda;border-radius:8px;background:#f7fafc;min-width:0}
+.v2050-finder>summary{font-weight:750;cursor:pointer;font-size:1.09rem}
+.v2050-finder>p{line-height:1.55}
+.v2050-controls{display:flex;gap:.8rem;flex-wrap:wrap;align-items:end}
+.v2050-controls label{display:flex;flex-direction:column;gap:.4rem;flex:1 1 220px;font-weight:650;min-width:0}
+.v2050-controls input,.v2050-controls select{font:inherit;padding:.65rem;border:1px solid #7895a7;border-radius:5px;max-width:100%;min-height:44px;box-sizing:border-box;background:#fff}
+.v2050-clear{font:inherit;cursor:pointer;min-height:44px;border:0;background:#164965;color:#fff;border-radius:5px;padding:.65rem .85rem}
+.v2050-results-count{font-weight:650;color:#24516a;margin:.9rem 0}
+.v2050-results{padding-left:1.4rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem 1.2rem}
+.v2050-results li{padding:.2rem .1rem;overflow-wrap:anywhere}
+.v2050-results a{font-weight:650}
+.v2050-track{display:block;font-size:.86rem;color:#3a5c71;margin:.2rem 0}
+.v2050-finder :focus-visible{outline:3px solid #b77527;outline-offset:3px}
+.v1971-lesson[id^="practice-lesson-"]{scroll-margin-top:1.5rem}
+@media(max-width:780px){.v2050-results{grid-template-columns:minmax(0,1fr)}.v2050-finder{margin:1rem}}

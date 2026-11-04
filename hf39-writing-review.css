@@ -1,0 +1,15 @@
+/* HF39: additive, understated, mobile-safe learner self-review. No homepage changes. */
+.v2010-review{margin:.85rem 0 1rem;min-width:0}
+.v2010-word-counter{font-size:.9rem;color:#33556a;margin:.2rem 0 .55rem;overflow-wrap:anywhere}
+.v1971-lesson details.v2010-panel{border:1px solid #b9d0db;background:#f5fafc;border-radius:6px;padding:.75rem;margin:.35rem 0 1rem;min-width:0}
+.v2010-panel summary{cursor:pointer;font-weight:700;line-height:1.45}
+.v2010-help{font-size:.92rem;line-height:1.5;margin:.7rem 0}
+.v2010-checklist{border:0!important;padding:.15rem 0!important;margin:.35rem 0!important;display:block!important;min-width:0}
+.v2010-checklist legend{font-weight:700;margin-bottom:.6rem}
+.v2010-check-label{display:flex!important;align-items:flex-start;gap:.65rem;line-height:1.45;margin:.6rem 0;overflow-wrap:anywhere;cursor:pointer}
+.v2010-check-label input{margin:.25rem 0 0;flex:0 0 auto;min-width:19px;min-height:19px;accent-color:#164965}
+.v2010-check-label span{min-width:0}
+.v2010-challenge{border-left:3px solid #789fb5;padding-left:.7rem;line-height:1.5;margin:.8rem 0}
+.v2010-review-status{font-weight:600;color:#1e4a64;line-height:1.45;margin:.75rem 0 0}
+.v2010-panel :focus-visible{outline:3px solid #b77527;outline-offset:3px}
+@media(max-width:780px){.v2010-review{max-width:100%}.v2010-panel{overflow-wrap:anywhere}}

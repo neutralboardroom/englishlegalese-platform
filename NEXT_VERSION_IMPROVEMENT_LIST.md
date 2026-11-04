@@ -1,3 +1,35 @@
+# HF43 — 2026-11-04: searchable navigation across all 24 original lessons (final candidate)
+
+**Fifth cumulative substantive version in the HF39–HF43 sequence.** Users and teachers may now open a compact lesson finder on both self-study pages, search 24 exact original professional scenarios across the two collections, filter Legal versus Business/Investor topics, see accurate matches, jump directly to a specific lesson and reset without loss of drafts or other content. No existing lesson is hidden, and no search or completion status is stored. Preserves HF39 original writing self-review; HF40 24 dialogues; HF41 controlled voice models; HF42 fifty-minute teacher plans with student-only projector; prior HF35/37/38 and all prices, scope, employer/teacher dashboards, independent certifications, approved homepage/logo/teacher photo. Source-only until dual independent exact-head acceptance, reviewed screenshots, guarded merge, exact Render auto-deploy and both-host verification. See `docs/HF43_LESSON_FINDER_RELEASE_2026-11-04.md` and all four predecessor receipts. The COMPLETE inherited history and future priorities follow unchanged.
+
+---
+
+# HF42 — 2026-11-04: teacher-ready 50-minute scripts and safe student projector slides (candidate)
+
+Fourth material successor in the five-version sequence: every one of 24 Legal/Business lessons now contains an 8-stage, **exactly 50-minute** teacher guide with specific spoken questions, model responses, paired-turn practice, pronunciation repetition, role swaps, front-of-room demonstration, feedback and exit sentence. Teacher-only cues remain in a collapsed guide; an independent accessible projector dialog displays ONLY student tasks in large text, with Next/Previous and Close. This directly incorporates real classroom constraints, without making booking, online AI conversation, graded certification or audio-output claims. See `docs/HF42_TEACHER_SESSION_RELEASE_2026-11-04.md`. HF39–HF41 preserved, as is all earlier inherited backlog below.
+
+---
+
+# HF41 — 2026-11-04: optional audible sample pronunciation on all 24 lessons (candidate)
+
+Each lesson now offers user-initiated browser/device English voice playback of the ORIGINAL fixed model sentence, speed adjustment, stop, transcript and truthful no-audio fallback. Audio destination and device voice availability are not guaranteed; no learner draft or microphone captured, and no AI-score or certification claim. Addresses the real lack of audible modeled professional sentences and classroom speaker-routing uncertainty. Builds additively on HF39 writing review and HF40 dialogue. See `docs/HF41_LISTEN_REPEAT_RELEASE_2026-11-04.md`. Outstanding role-dashboard, human-teacher scheduling, verified assessments, real billing, employer consents remain pending. Complete inherited backlog retained intact below.
+
+---
+
+# HF40 — 2026-11-04: 24 original paired dialogues (candidate)
+
+Additional material improvement after HF39: each original professional Legal/Business scenario now supports a three-turn partner question/response/clarification dialogue, a hidden suggested final answer, role exchange and a teacher facilitation cue. Gives a useful interactive speaking exercise without a microphone, fake live AI, booking, scoring, upload or class availability. Owner's classroom emphasis on complete spoken sentences and manageable pair turns applied in subject-appropriate professional lessons. All prior curriculum and the current HF39 writing-review candidate preserved. See `docs/HF40_PAIRED_DIALOGUES_RELEASE_2026-11-04.md`. Next: accessible pronunciation support and teacher-ready timetabled sessions. Existing full historical backlog is retained below verbatim.
+
+---
+
+# HF39 — 2026-11-02: meaningful original lesson-specific writing self-review (candidate)
+
+**Before/after:** Twenty-four free professional-English writing assignments already had model answers, private local draft backup, choice checks and spoken rehearsal, but no per-lesson guide for self-revising the actual learner's prose. HF39 adds three individual writing-review criteria and a stretch question for every original lesson, plus live word/character count and an ephemeral self-reflection checklist that resets after draft edits. Learner writing remains browser-only; no auto-scoring, false official assessment, server submissions, persistent checkmarks or account dependency. The approved photo-led homepage and all HF38/previous paths are unchanged. Qualified release only after both independent final-SHA gates, browser screenshots, guarded merge and exact Render+two-host smoke. See `docs/HF39_WRITING_SELF_REVIEW_RELEASE_2026-11-02.md`.
+
+**Backlog retained without loss:** Actual fully staffed teaching, role dashboard completion, employee consent, payment processing and teacher-supervised credential issuance/verification remain pending under existing owner restrictions. All earlier requirements and historical records appear unchanged below.
+
+---
+
 # HF38 — 2026-11-01: optional private practice draft save/restore (candidate)
 
 **User benefit:** All 24 free Legal and Business practice lessons now let a learner explicitly download their own unfinished fictional writing to a plain .txt file and later restore it to the matching lesson. This is local-only, no account, upload, automatic persistent storage, grading or cloud claim. The remaining unprovisioned dashboards, live booking/payment, teacher-supervised certification and employer workflows remain pending; no original backlog item is dropped. See `docs/HF38_PRIVATE_DRAFTS_RELEASE_2026-11-01.md` for status, risks and qualification. Release only after both independent exact-head checks and exact Render/live-host validation.

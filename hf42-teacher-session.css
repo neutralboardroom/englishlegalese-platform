@@ -1,0 +1,20 @@
+/* HF42: teacher guide remains collapsed; learner projection is a separate native dialog. */
+.v1971-lesson details.v2040-teacher{border:1px solid #c7d7e0;border-radius:7px;padding:.85rem;background:#fff9f1;margin:1rem 0;min-width:0}
+.v2040-teacher>summary{font-weight:750;cursor:pointer}
+.v2040-teacher-note{line-height:1.55;font-size:.92rem}
+.v2040-timeline{padding-left:1.45rem;line-height:1.5}
+.v2040-timeline>li{margin:.75rem 0;padding-left:.15rem}
+.v2040-timeline li strong{display:block;color:#27455a}
+.v2040-timeline li p{margin:.25rem 0}
+.v2040-teacher-actions{margin:.85rem 0}
+.v2040-stage{position:fixed;inset:4%;box-sizing:border-box;max-width:1100px;width:92%;max-height:90vh;margin:auto;border:2px solid #224e65;border-radius:14px;background:#fff;color:#143449;padding:clamp(1rem,3vw,2rem);box-shadow:0 12px 50px rgba(0,0,0,.35);overflow:auto}
+.v2040-stage::backdrop{background:rgba(5,20,33,.80)}
+.v2040-stage-head h2{font-size:clamp(1.4rem,3.2vw,2.8rem);line-height:1.2;margin:.25rem 0}
+.v2040-progress{font-weight:700;color:#24516c}
+.v2040-stage-prompt{font-size:clamp(1.35rem,3.8vw,3rem);line-height:1.4;margin:2rem 0;overflow-wrap:anywhere;max-width:100%}
+.v2040-stage-actions{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:flex-end}
+.v2040-stage-actions button{background:#164965;color:#fff;border:0;border-radius:6px;padding:.8rem 1rem;font:inherit;font-size:1.05rem;cursor:pointer}
+.v2040-stage-actions button:disabled{opacity:.5;cursor:not-allowed}
+.v2040-stage :focus-visible,.v2040-teacher :focus-visible{outline:3px solid #d1882c;outline-offset:3px}
+@media(max-width:520px){.v2040-stage{inset:2%;width:96%;max-height:96vh}.v2040-stage-prompt{margin:1rem 0}.v2040-stage-actions{justify-content:stretch}.v2040-stage-actions button{flex:1 1 44%}}
+@media(prefers-reduced-motion:reduce){.v2040-stage{scroll-behavior:auto}}
