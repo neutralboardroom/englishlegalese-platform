@@ -40,7 +40,7 @@
   }
   label.append(pace);
   controls.append(play,stopButton,label);
-  const status=el('p','','v2030-status');status.setAttribute('role','status');
+  const status=el('p','','v2030-status');status.setAttribute('aria-live','polite');
   const transcript=el('details',undefined,'v2030-transcript');
   transcript.append(el('summary','Read the sample sentence instead'),el('p',sample));
   box.append(controls,status,transcript);

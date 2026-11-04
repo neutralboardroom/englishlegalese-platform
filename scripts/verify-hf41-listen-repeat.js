@@ -8,7 +8,8 @@ for(const page of pages){
  for(const required of ['product-v1990-speaking-rehearsal','product-v2000-private-drafts','product-v2010-writing-review','product-v2020-paired-dialogues','product-v2030-listen-repeat.js?v=hf41','hf41-listen-repeat.css?v=hf41'])assert.ok(page.includes(required),required);
 }
 for(const forbidden of ['fetch(','localStorage','sessionStorage','getUserMedia','MediaRecorder','SpeechRecognition','sendBeacon','innerHTML','textarea.value'])assert.ok(!js.includes(forbidden),'privacy: '+forbidden);
-for(const required of ['SpeechSynthesisUtterance','speechSynthesis','synth.cancel()','synth.speak(utterance)','utterance.lang=','utterance.onerror','visibilitychange','pagehide','aria-label','role'])assert.ok(js.includes(required),required);
+for(const required of ['SpeechSynthesisUtterance','speechSynthesis','synth.cancel()','synth.speak(utterance)','utterance.lang=','utterance.onerror','visibilitychange','pagehide','aria-label','aria-live'])assert.ok(js.includes(required),required);
 assert.ok(css.includes('.v2030-audio'));
+assert.ok(!js.includes("status.setAttribute('role','status')"),'preserve legacy unique lesson knowledge-check status role');
 assert.ok(!fs.readFileSync('index.html','utf8').includes('hf41-listen-repeat'));
 console.log('PASS HF41: 24 sample playback controls, transcript/pace/stop/accessibility, no student text or microphone use.');
