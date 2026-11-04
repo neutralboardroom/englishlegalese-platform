@@ -15,6 +15,7 @@ for(const path of ['/learn/continuing-practice/','/learn/continuing-practice/adv
   await dialog.getByRole('button',{name:'Next',exact:true}).click();
   await expect(dialog.locator('.v2040-progress')).toContainText('2 of 8');
   await expect(dialog.locator('.v2040-stage-prompt')).not.toContainText('Teacher model:');
+  await page.screenshot({path:info.outputPath('hf42-learner-projector.png'),fullPage:false});
   await dialog.getByRole('button',{name:'Close projector view'}).click();
   await expect(dialog).toHaveCount(0);
   expect(writes).toEqual([]);
