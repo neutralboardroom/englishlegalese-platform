@@ -8,6 +8,7 @@ for(const path of ['/learn/continuing-practice/','/learn/continuing-practice/adv
   await expect(cards).toHaveCount(12);
   await expect(page.locator('.v2090-actions')).toHaveCount(12);
   await cards.first().locator('textarea').fill('PRIVATE FICTITIOUS STUDENT DRAFT NEVER PRINT 749182');
+  await cards.first().locator('.v2100-more-tools > summary').click();
   await page.evaluate(()=>{window.print=()=>{};});
   await cards.first().getByRole('button',{name:'Preview student worksheet'}).click();
   const dialog=page.getByRole('dialog');

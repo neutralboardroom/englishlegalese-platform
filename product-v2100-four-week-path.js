@@ -172,4 +172,16 @@
  render();
  const finder=document.querySelector('.v2050-finder');
  if(finder)finder.after(panel);else wrap.before(panel);
+ // Keep long professional practice pages approachable on tablets and phones.
+ // Group the four new optional tools while preserving all controls and content.
+ for(const article of document.querySelectorAll('article.v1971-lesson')){
+  const selectors=['.v2060-differentiation','.v2070-questions','.v2080-clarification','.v2090-actions'];
+  const tools=selectors.map(s=>article.querySelector(s));
+  if(tools.some(node=>!node))continue;
+  const details=make('details',undefined,'v2100-more-tools');
+  details.append(make('summary','More speaking practice, teacher questions and printable worksheets'));
+  details.append(make('p','Choose a supported challenge, ask more professional questions, practise clarification or preview a printable worksheet. These optional resources do not record your answers.','v2100-more-intro'));
+  for(const tool of tools)details.append(tool);
+  article.append(details);
+ }
 })();

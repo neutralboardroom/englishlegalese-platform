@@ -14,3 +14,12 @@
 .v2100-mode{line-height:1.55;font-size:.91rem;color:#34546a}
 .v2100-path :focus-visible{outline:3px solid #bd7b31;outline-offset:3px}
 @media(max-width:780px){.v2100-path{margin:1rem}.v2100-weeks{grid-template-columns:minmax(0,1fr)}}
+
+/* Compact the four new optional practice modes into one accessible disclosure per lesson.
+   Prevents unnecessarily long tablet print/screenshots and reduces learner scrolling. */
+.v1971-lesson details.v2100-more-tools{margin:.65rem 0;padding:.7rem;border:1px solid #c2d4df;border-radius:7px;background:#f6fafc;min-width:0}
+.v2100-more-tools>summary{font-weight:750;line-height:1.45;cursor:pointer}
+.v2100-more-intro{font-size:.9rem;line-height:1.5;margin:.7rem 0}
+.v1971-lesson .v2100-more-tools>details{margin:.55rem 0}
+.v1971-lesson .v2100-more-tools>.v2090-actions{margin:.55rem 0;padding:.6rem}
+.v2100-more-tools :focus-visible{outline:3px solid #bc7b35;outline-offset:3px}

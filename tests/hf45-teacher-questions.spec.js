@@ -5,6 +5,7 @@ for(const path of ['/learn/continuing-practice/','/learn/continuing-practice/adv
  const writes=[];page.on('request',r=>{if(['POST','PUT','PATCH','DELETE'].includes(r.method()))writes.push(r.url());});
  await page.goto(path);await expect(page.locator('article.v1971-lesson')).toHaveCount(12);
  await expect(page.locator('details.v2070-questions')).toHaveCount(12);
+ await page.locator('article.v1971-lesson').first().locator('.v2100-more-tools > summary').click();
  const panel=page.locator('article.v1971-lesson').first().locator('.v2070-questions');
  await panel.locator('summary').first().click();
  await expect(panel.locator('.v2070-list>li')).toHaveCount(3);

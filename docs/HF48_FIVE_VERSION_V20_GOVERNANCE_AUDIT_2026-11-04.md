@@ -60,3 +60,7 @@ The existing PR Github Actions run is the authoritative real evidence once compl
 Preserved in full as `NEXT_VERSION_IMPROVEMENT_LIST.md` in the same PR, with all older entries byte-preserved after the new five release entries. Incomplete authorized workflows remain pending: authenticated staff/teacher scheduling, real company/employee consent and onboarding, transactionally verified billing when owner authorizes, protected role-admin operations, calibrated supervised Legal/Business assessments and issued/revoked/verifiable credentials.
 
 **Rollback:** return Render and GitHub production to the prior known-good exact HF43 SHA if live visual/functional smoke reveals material regression; avoid destructive data mutations. No data migration in this change.
+
+
+### Tablet WebKit material regression discovered and corrected after first run
+An earlier candidate's HF35/HF36 inherited tests detected that the fully extended practice pages exceeded the WebKit maximum full-page screenshot height on tablet. The substantive fix groups the four new optional HF44–HF47 teaching tools under one accessible native disclosure per lesson, preserving the individual controls and text. This improves actual learner navigation and reduces unneeded vertical scrolling; **the two inherited screenshot tests are not weakened**. All new browser tests must exercise the new disclosure. A fresh dual-independent exact-final-head gate is required; do not quote the earlier failed run as acceptance.

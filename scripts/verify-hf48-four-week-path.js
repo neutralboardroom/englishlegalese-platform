@@ -19,5 +19,6 @@ for(const row of weeks){assert.equal(row.length,6);assert.equal(row[3].length,3)
 for(const page of pages){assert.equal((page.match(/<article class="v1971-lesson"/g)||[]).length,12);
  for(const x of ['product-v2060-differentiated-speaking','product-v2070-teacher-questions','product-v2080-clarification-lab','product-v2090-print-packs','product-v2100-four-week-path.js?v=hf48','hf48-four-week-path.css?v=hf48'])assert.ok(page.includes(x),x);}
 for(const bad of ['fetch(','localStorage','sessionStorage','sendBeacon','innerHTML','getUserMedia','textarea.value'])assert.ok(!js.includes(bad),'privacy: '+bad);
+assert.ok(js.includes('v2100-more-tools'),'compact accessible per-lesson optional tools');
 assert.ok(!fs.readFileSync('index.html','utf8').includes('hf48-four-week'));
 console.log('PASS HF48: eight subject-specific four-week sequences, exactly 24 lesson links, no invented completion or tracking.');
