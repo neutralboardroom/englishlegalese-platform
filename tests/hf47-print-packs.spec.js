@@ -26,7 +26,7 @@ for(const path of ['/learn/continuing-practice/','/learn/continuing-practice/adv
   const teacher=page.getByRole('dialog');
   await expect(teacher).toContainText('Instructor-only answer key');
   await expect(teacher).not.toContainText('PRIVATE FICTITIOUS STUDENT DRAFT NEVER PRINT');
-  await expect(teacher.locator('.v2090-lines')).toHaveCount(6);
+  await expect(teacher.locator('.v2090-lines')).toHaveCount(7);
   await teacher.getByRole('button',{name:'Close preview'}).click();
   expect(writes).toEqual([]);
   const widths=await page.evaluate(()=>[document.documentElement.scrollWidth,innerWidth]);
