@@ -1,3 +1,9 @@
+# HF41 — 2026-11-04: optional audible sample pronunciation on all 24 lessons (candidate)
+
+Each lesson now offers user-initiated browser/device English voice playback of the ORIGINAL fixed model sentence, speed adjustment, stop, transcript and truthful no-audio fallback. Audio destination and device voice availability are not guaranteed; no learner draft or microphone captured, and no AI-score or certification claim. Addresses the real lack of audible modeled professional sentences and classroom speaker-routing uncertainty. Builds additively on HF39 writing review and HF40 dialogue. See `docs/HF41_LISTEN_REPEAT_RELEASE_2026-11-04.md`. Outstanding role-dashboard, human-teacher scheduling, verified assessments, real billing, employer consents remain pending. Complete inherited backlog retained intact below.
+
+---
+
 # HF40 — 2026-11-04: 24 original paired dialogues (candidate)
 
 Additional material improvement after HF39: each original professional Legal/Business scenario now supports a three-turn partner question/response/clarification dialogue, a hidden suggested final answer, role exchange and a teacher facilitation cue. Gives a useful interactive speaking exercise without a microphone, fake live AI, booking, scoring, upload or class availability. Owner's classroom emphasis on complete spoken sentences and manageable pair turns applied in subject-appropriate professional lessons. All prior curriculum and the current HF39 writing-review candidate preserved. See `docs/HF40_PAIRED_DIALOGUES_RELEASE_2026-11-04.md`. Next: accessible pronunciation support and teacher-ready timetabled sessions. Existing full historical backlog is retained below verbatim.

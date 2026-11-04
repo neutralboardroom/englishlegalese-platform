@@ -1,0 +1,10 @@
+# HF41 — optional listen and repeat via installed device/browser voices
+2026-11-04. Parent HF40 c85e361a8b28b58c1ee55680a27b0e7752d7687b. This is the third cumulative user-benefiting version after HF39 (writing self-review) and HF40 (24 paired dialogues).
+
+### Identifiable problem and benefit
+Before: learners had approximate pronunciation cues, silent text, spoken rehearsal and dialogue, but no optional audible model on the actual lesson page. After: all 24 practice lessons expose user-initiated browser speech synthesis of a fixed original model sentence, optional normal/slow/quick rates, stop, complete visible transcript, and honest fallback if the browser/device lacks suitable voices. Teacher chooses whether to play into room speakers. Nothing captures student voices or promises the audio output device, offline availability, AI conversation, pronunciation grading or CEFR/certification result.
+
+### Research and owner teaching application
+Owner classroom testing found HDMI audio sometimes went to a low-volume projector instead of school PA speakers. Public copy explicitly asks teacher to check audio routing before room playback; accessible transcript always works even without audio. British Council task feedback (https://www.teachingenglish.org.uk/professional-development/teachers/managing-lesson/conducting-feedback-exercises-and-tasks) and CEFR Companion (https://www.coe.int/en/web/common-european-framework-reference-languages/cefr-companion-volume-and-its-language-versions) support communicative practice, but none of these sources validates device TTS as official assessment. ADAPT: repeat and paraphrase spoken language; REJECT: fabricated AI teacher or automatic scoring.
+
+No homepage/media/courses/pricing/scheduling/auth/data/migrations/payments/emails changed. Existing 24 texts, knowledge checks, HF37/HF38/HF39/HF40 are preserved. Exact-head dual independent browser/visual release gates remain mandatory before qualified production.

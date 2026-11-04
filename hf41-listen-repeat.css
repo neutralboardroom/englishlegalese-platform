@@ -1,0 +1,12 @@
+/* HF41: learner-initiated device audio only. Scoped to lesson cards. */
+.v2030-audio{border:1px solid #c2d1dd;border-radius:7px;background:#f9fbfd;padding:.85rem;margin:1rem 0;min-width:0}
+.v2030-audio h4{font-size:1rem;margin:.15rem 0 .55rem}
+.v2030-description{font-size:.91rem;line-height:1.55}
+.v2030-controls{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
+.v1971-lesson .v2030-controls button{padding:.55rem .72rem;line-height:1.35}
+.v1971-lesson .v2030-controls button:disabled{opacity:.56;cursor:not-allowed}
+.v2030-controls label{font-size:.94rem;font-weight:650;display:flex;gap:.4rem;align-items:center}
+.v2030-controls select{font:inherit;padding:.42rem;border:1px solid #829cae;border-radius:4px;max-width:100%;background:#fff}
+.v2030-status{min-height:1.2rem;font-size:.92rem;line-height:1.5}
+.v1971-lesson details.v2030-transcript{background:#fff;border:1px solid #d6e3e9;padding:.6rem;margin:.65rem 0}
+.v2030-audio :focus-visible{outline:3px solid #b77527;outline-offset:3px}
