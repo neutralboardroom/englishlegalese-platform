@@ -17,7 +17,8 @@ for(const route of ['/learn/continuing-practice/','/learn/continuing-practice/ad
   if(speech){
    await first.getByRole('button',{name:'Play sample sentence'}).click();
    await expect(first.locator('.v2030-status')).not.toBeEmpty();
-   await first.getByRole('button',{name:'Stop playback'}).click({force:true}).catch(()=>{});
+   const stop=first.getByRole('button',{name:'Stop playback'});
+   if(await stop.isEnabled())await stop.click();
   }else{
    await expect(first.getByRole('button',{name:'Play sample sentence'})).toBeDisabled();
   }
