@@ -16,5 +16,9 @@ for(const page of pages){assert.equal((page.match(/<article class="v1971-lesson"
  for(const earlier of ['product-v2000-private-drafts','product-v2010-writing-review','product-v2020-paired-dialogues','product-v2030-listen-repeat','product-v2040-teacher-session'])assert.ok(page.includes(earlier),earlier);}
 for(const bad of ['fetch(','localStorage','sessionStorage','sendBeacon','innerHTML','getUserMedia','MediaRecorder'])assert.ok(!js.includes(bad),'privacy: '+bad);
 for(const expected of ['search.type=\'search\'','select.addEventListener','Clear search and subject','replaceChildren','lesson cards','scrollIntoView','role'])assert.ok(js.includes(expected),expected);
+assert.equal((pages.join('').match(/undefined/g)||[]).length,1,'only the intentional ordinary adjective undefined remains; no corrupted punctuation');
+assert.ok(pages[0].includes('“Send it soon”'),'quoted assignment restored');
+assert.ok(pages[0].includes('didn’t you?'),'contraction restored');
+assert.ok(pages[1].includes('“we will consider it”'),'meeting language restored');
 assert.ok(!fs.readFileSync('index.html','utf8').includes('hf43-lesson-finder'));
 console.log('PASS HF43: 24 lesson deep links, subject/search navigation, no hidden lesson content and zero student tracking.');
