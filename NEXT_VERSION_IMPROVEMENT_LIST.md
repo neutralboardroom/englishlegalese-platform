@@ -1,3 +1,9 @@
+# HF42 — 2026-11-04: teacher-ready 50-minute scripts and safe student projector slides (candidate)
+
+Fourth material successor in the five-version sequence: every one of 24 Legal/Business lessons now contains an 8-stage, **exactly 50-minute** teacher guide with specific spoken questions, model responses, paired-turn practice, pronunciation repetition, role swaps, front-of-room demonstration, feedback and exit sentence. Teacher-only cues remain in a collapsed guide; an independent accessible projector dialog displays ONLY student tasks in large text, with Next/Previous and Close. This directly incorporates real classroom constraints, without making booking, online AI conversation, graded certification or audio-output claims. See `docs/HF42_TEACHER_SESSION_RELEASE_2026-11-04.md`. HF39–HF41 preserved, as is all earlier inherited backlog below.
+
+---
+
 # HF41 — 2026-11-04: optional audible sample pronunciation on all 24 lessons (candidate)
 
 Each lesson now offers user-initiated browser/device English voice playback of the ORIGINAL fixed model sentence, speed adjustment, stop, transcript and truthful no-audio fallback. Audio destination and device voice availability are not guaranteed; no learner draft or microphone captured, and no AI-score or certification claim. Addresses the real lack of audible modeled professional sentences and classroom speaker-routing uncertainty. Builds additively on HF39 writing review and HF40 dialogue. See `docs/HF41_LISTEN_REPEAT_RELEASE_2026-11-04.md`. Outstanding role-dashboard, human-teacher scheduling, verified assessments, real billing, employer consents remain pending. Complete inherited backlog retained intact below.
