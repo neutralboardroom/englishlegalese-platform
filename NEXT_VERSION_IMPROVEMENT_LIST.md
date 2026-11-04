@@ -1,3 +1,9 @@
+# HF40 — 2026-11-04: 24 original paired dialogues (candidate)
+
+Additional material improvement after HF39: each original professional Legal/Business scenario now supports a three-turn partner question/response/clarification dialogue, a hidden suggested final answer, role exchange and a teacher facilitation cue. Gives a useful interactive speaking exercise without a microphone, fake live AI, booking, scoring, upload or class availability. Owner's classroom emphasis on complete spoken sentences and manageable pair turns applied in subject-appropriate professional lessons. All prior curriculum and the current HF39 writing-review candidate preserved. See `docs/HF40_PAIRED_DIALOGUES_RELEASE_2026-11-04.md`. Next: accessible pronunciation support and teacher-ready timetabled sessions. Existing full historical backlog is retained below verbatim.
+
+---
+
 # HF39 — 2026-11-02: meaningful original lesson-specific writing self-review (candidate)
 
 **Before/after:** Twenty-four free professional-English writing assignments already had model answers, private local draft backup, choice checks and spoken rehearsal, but no per-lesson guide for self-revising the actual learner's prose. HF39 adds three individual writing-review criteria and a stretch question for every original lesson, plus live word/character count and an ephemeral self-reflection checklist that resets after draft edits. Learner writing remains browser-only; no auto-scoring, false official assessment, server submissions, persistent checkmarks or account dependency. The approved photo-led homepage and all HF38/previous paths are unchanged. Qualified release only after both independent final-SHA gates, browser screenshots, guarded merge and exact Render+two-host smoke. See `docs/HF39_WRITING_SELF_REVIEW_RELEASE_2026-11-02.md`.

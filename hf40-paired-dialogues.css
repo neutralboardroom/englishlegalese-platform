@@ -1,0 +1,9 @@
+/* HF40 — additive paired conversational practice scoped only to continuing lessons. */
+.v1971-lesson details.v2020-dialogue{background:#f1f8f7;border:1px solid #bdd8d3;border-radius:7px;padding:.85rem;margin:1rem 0;min-width:0}
+.v2020-dialogue summary{cursor:pointer;font-weight:700;line-height:1.4}
+.v2020-dialogue>p{line-height:1.55}
+.v2020-lines{padding-left:1.45rem;line-height:1.65;margin:.7rem 0}
+.v2020-lines li{padding:.26rem .2rem;overflow-wrap:anywhere}
+.v1971-lesson details.v2020-model{background:#fff;border:1px solid #d3e1df;padding:.6rem;margin:.6rem 0}
+.v2020-cue{font-size:.92rem;color:#34525c}
+.v2020-dialogue :focus-visible{outline:3px solid #b77527;outline-offset:3px}
