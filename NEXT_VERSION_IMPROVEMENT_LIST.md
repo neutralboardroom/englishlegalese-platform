@@ -1,3 +1,9 @@
+# HF48 — 2026-11-04: cohesive Legal/Business four-week learning pathways (fifth cumulative candidate)
+
+**Cumulative five-version sequence HF44–HF48 completed in source, deployment status subject to exact final qualification:** HF44 supported and advanced speaking tasks for all 24 lessons; HF45 72 new teaching question-answer pairs; HF46 24 evidence-aware clarification scenarios; HF47 isolated printable student vs instructor packets (no private drafts); HF48 two original four-week lesson sequences spanning exactly 12 Legal and 12 Business/Investor practice lessons, with weekly speaking outcomes and teacher/independent approaches. New changes scoped to the two continuing-practice pages, five CSS and JS teaching modules, tests, docs, package check and this cumulative historical backlog. Original HF43 homepage visual lock and protected assets unchanged; no product data, account, mail, payment, class schedule or certificate issuance changes. Formal receipts: `docs/HF44_DIFFERENTIATED_SPEAKING_RELEASE_2026-11-04.md`, `docs/HF45_TEACHER_QUESTIONS_RELEASE_2026-11-04.md`, `docs/HF46_CLARIFICATION_LAB_RELEASE_2026-11-04.md`, `docs/HF47_PRINT_PACKS_RELEASE_2026-11-04.md`, `docs/HF48_GUIDED_FOUR_WEEK_PATH_RELEASE_2026-11-04.md`. Original and future requirements follow unaltered below.
+
+---
+
 # HF47 — 2026-11-04: privacy-safe printable lesson packets (fourth of five)
 
 All 24 professional-English lessons now generate standalone learner worksheets AND separate instructor answer-key/50-minute agenda previews, explicitly printed only when requested. Real learner drafts, passwords and records are excluded by source design. The student print view hides the entire site and teacher notes while printing, offering a dependable paper backup when projectors, classroom audio or connectivity are unreliable. Preserves all earlier versions and all original lessons. See `docs/HF47_PRINT_PACKS_RELEASE_2026-11-04.md`. Complete inherited backlog follows without deletion.
