@@ -182,6 +182,10 @@
   details.append(make('summary','More speaking practice, teacher questions and printable worksheets'));
   details.append(make('p','Choose a supported challenge, ask more professional questions, practise clarification or preview a printable worksheet. These optional resources do not record your answers.','v2100-more-intro'));
   for(const tool of tools)details.append(tool);
-  article.append(details);
+  // Keep the long-page footprint no larger than HF43: the existing speaking
+  // rehearsal is already a visible opt-in disclosure on every lesson.
+  const rehearsal=article.querySelector('details.v1990-speaking');
+  if(rehearsal)rehearsal.append(details);
+  else article.append(details);
  }
 })();

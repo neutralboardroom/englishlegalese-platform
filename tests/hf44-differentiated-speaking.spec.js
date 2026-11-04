@@ -6,6 +6,7 @@ for(const path of ['/learn/continuing-practice/','/learn/continuing-practice/adv
   await page.goto(path);const cards=page.locator('article.v1971-lesson');
   await expect(cards).toHaveCount(12);
   await expect(page.locator('details.v2060-differentiation')).toHaveCount(12);
+  await cards.first().locator('details.v1990-speaking > summary').click();
   await cards.first().locator('.v2100-more-tools > summary').click();
   const p=cards.first().locator('details.v2060-differentiation');
   await p.locator('summary').first().click();
