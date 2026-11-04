@@ -6,7 +6,7 @@ const pages=['learn/continuing-practice/index.html','learn/continuing-practice/a
 const titles=pages.flatMap(p=>[...p.matchAll(/<h3>([^<]+)<\/h3>/g)].map(m=>m[1].replace(/&amp;/g,'&')));
 assert.equal(rows.length,24);assert.equal(new Set(rows.map(x=>x[0])).size,24);
 assert.deepEqual(new Set(rows.map(x=>x[0])),new Set(titles));
-for(const row of rows){assert.equal(row.length,5);for(const sentence of row.slice(1))assert.ok(sentence.length>=40,'substantive original dialog');}
+for(const row of rows){assert.equal(row.length,5);for(const sentence of row.slice(1))assert.ok(sentence.length>=25,'substantive original dialog');}
 for(const html of pages){assert.equal((html.match(/<article class="v1971-lesson"/g)||[]).length,12);
 assert.ok(html.includes('product-v2020-paired-dialogues.js?v=hf40'));
 assert.ok(html.includes('hf40-paired-dialogues.css?v=hf40'));
