@@ -1,0 +1,27 @@
+/* HF47 preview; print is opt-in and contains only fixed, nonprivate published lesson content. */
+.v2090-actions{margin:1rem 0;padding:.7rem;background:#fbfaf6;border:1px solid #dccfb5;border-radius:7px;display:flex;gap:.65rem;flex-wrap:wrap}
+.v2090-help{flex-basis:100%;font-size:.9rem;line-height:1.5;margin:.15rem 0 .5rem}
+.v1971-lesson .v2090-actions button{font:inherit;min-height:42px;cursor:pointer}
+.v2090-preview{position:fixed;inset:3%;width:min(900px,94vw);max-width:94vw;max-height:94vh;box-sizing:border-box;overflow:auto;border:2px solid #294e64;background:#fff;border-radius:9px;padding:1.1rem;color:#172d38}
+.v2090-preview::backdrop{background:rgba(10,25,40,.75)}
+.v2090-paper{font-family:system-ui,sans-serif;line-height:1.55}
+.v2090-paper h2{font-size:1.45rem;line-height:1.3}
+.v2090-paper h3{font-size:1.12rem;margin:1.2rem 0 .4rem}
+.v2090-disclaimer{font-size:.82rem;color:#3f5d6c}
+.v2090-lines{padding-left:1.35rem}
+.v2090-lines li{margin:.35rem 0;overflow-wrap:anywhere}
+.v2090-writing-line{height:1.8rem;border-bottom:1px solid #6a7981}
+.v2090-preview-controls{position:sticky;bottom:-1.1rem;background:#fff;border-top:1px solid #ccd8db;display:flex;gap:.7rem;justify-content:flex-end;padding:.8rem}
+.v2090-preview-controls button{font:inherit;padding:.65rem;background:#17475e;color:#fff;border:0;border-radius:5px;cursor:pointer}
+.v2090-preview :focus-visible,.v2090-actions :focus-visible{outline:3px solid #bd7b31;outline-offset:3px}
+@media(max-width:500px){.v2090-preview{inset:1.5%;max-width:97vw;width:97vw;padding:.7rem}.v2090-preview-controls{bottom:-.7rem;flex-wrap:wrap}.v2090-preview-controls button{flex:1 1 40%}}
+@media print{
+ @page{size:auto;margin:14mm}
+ body>*:not(dialog.v2090-preview){display:none!important}
+ body>dialog.v2090-preview{display:block!important;position:static!important;inset:auto!important;border:0!important;border-radius:0!important;box-shadow:none!important;max-height:none!important;max-width:none!important;width:100%!important;overflow:visible!important;padding:0!important;margin:0!important;color:#000!important;background:#fff!important}
+ .v2090-preview-controls,.v2090-preview::backdrop{display:none!important}
+ .v2090-paper{font:11pt/1.45 Georgia,serif!important;color:#000!important}
+ .v2090-paper h2{font-size:18pt!important}
+ .v2090-paper h3{font-size:13pt!important;break-after:avoid}
+ .v2090-lines li{break-inside:avoid}
+}

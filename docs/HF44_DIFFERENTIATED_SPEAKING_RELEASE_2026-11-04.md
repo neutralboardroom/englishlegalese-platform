@@ -1,0 +1,10 @@
+# HF44 — supported and challenging professional speaking activities
+Date: 2026-11-04. True predecessor: production HF43 main 35bc634e79ab2c9d8edd4ad304ea63c075d4d2b6. First successor in requested HF44–HF48 five-material-version series. Builder V20 archive from /EnglishLegalese/ checked against SHA256 manifest and original V19. Status: SOURCE CANDIDATE until both exact-head release gates, visual review, guarded merge, Render live and two-host verification.
+
+**Problem.** All 24 original Legal/Business/Investor self-study lessons have professional roleplay, private writing and 50-minute teacher guides, but learners with very different confidence levels receive only one spoken response difficulty. This is particularly limiting in mixed-ability groups and online tutoring.
+
+**Benefit.** Each of 24 original professional scenarios now has an original scaffolded fill-in sentence for beginning/constrained speakers, a challenging qualification or explanation prompt for more proficient speakers, and a hidden evidence-aware example answer. All panels optional and identifiable; learners choose the support they need, not an AI-assigned CEFR level. Paired interaction remains the emphasis. No certification/teacher-grading implication or private data collection.
+
+**Evidence.** Adapted Council of Europe CEFR Companion volume (2024), mediation and interactive use, https://www.coe.int/en/web/common-european-framework-reference-languages/mediation-in-the-classroom, and Cambridge English teaching framework on adapting to learner needs, https://www.cambridgeenglish.org/educators-organisations/professional-development/teaching-framework/assessment/ . No official score claim. No additional tracking or PII.
+
+**No drift.** 24 original lesson bodies, HF39–HF43, account/employer/teacher/admin roles, pricing, certification pages, locked homepage and image assets, all other pages, no backend/DB, no email and no payments changed. New scoped JS/CSS and tests only. Rollback: revert HF44 additive imports. Future: richer teacher questions, clarification checks, print handouts, coherent study sequence.

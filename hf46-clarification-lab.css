@@ -1,0 +1,10 @@
+/* HF46 clear professional information-gap rehearsal. */
+.v1971-lesson details.v2080-clarification{margin:.95rem 0;padding:.8rem;border:1px solid #c5cfdf;background:#f8f8ff;border-radius:7px;min-width:0}
+.v2080-clarification>summary{font-weight:700;cursor:pointer}
+.v2080-intro,.v2080-teacher-note{font-size:.94rem;line-height:1.55}
+.v2080-message{margin:.75rem 0!important;padding:.7rem!important;border-left:4px solid #728ab2!important;background:#fff;line-height:1.6;overflow-wrap:anywhere}
+.v2080-tasks{padding-left:1.35rem;line-height:1.6}
+.v2080-tasks li{padding:.2rem 0}
+.v1971-lesson details.v2080-model{margin:.6rem 0;background:#fff;border:1px solid #d1d9ec;padding:.6rem}
+.v2080-model p{overflow-wrap:anywhere;line-height:1.6}
+.v2080-clarification :focus-visible{outline:3px solid #bb7939;outline-offset:3px}

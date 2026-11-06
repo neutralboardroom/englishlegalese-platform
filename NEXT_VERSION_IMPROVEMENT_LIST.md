@@ -1,3 +1,33 @@
+# HF48 — 2026-11-04: cohesive Legal/Business four-week learning pathways (fifth cumulative candidate)
+
+**Cumulative five-version sequence HF44–HF48 completed in source, deployment status subject to exact final qualification:** HF44 supported and advanced speaking tasks for all 24 lessons; HF45 72 new teaching question-answer pairs; HF46 24 evidence-aware clarification scenarios; HF47 isolated printable student vs instructor packets (no private drafts); HF48 two original four-week lesson sequences spanning exactly 12 Legal and 12 Business/Investor practice lessons, with weekly speaking outcomes and teacher/independent approaches. New changes scoped to the two continuing-practice pages, five CSS and JS teaching modules, tests, docs, package check and this cumulative historical backlog. Original HF43 homepage visual lock and protected assets unchanged; no product data, account, mail, payment, class schedule or certificate issuance changes. Formal receipts: `docs/HF44_DIFFERENTIATED_SPEAKING_RELEASE_2026-11-04.md`, `docs/HF45_TEACHER_QUESTIONS_RELEASE_2026-11-04.md`, `docs/HF46_CLARIFICATION_LAB_RELEASE_2026-11-04.md`, `docs/HF47_PRINT_PACKS_RELEASE_2026-11-04.md`, `docs/HF48_GUIDED_FOUR_WEEK_PATH_RELEASE_2026-11-04.md`. Original and future requirements follow unaltered below.
+
+---
+
+# HF47 — 2026-11-04: privacy-safe printable lesson packets (fourth of five)
+
+All 24 professional-English lessons now generate standalone learner worksheets AND separate instructor answer-key/50-minute agenda previews, explicitly printed only when requested. Real learner drafts, passwords and records are excluded by source design. The student print view hides the entire site and teacher notes while printing, offering a dependable paper backup when projectors, classroom audio or connectivity are unreliable. Preserves all earlier versions and all original lessons. See `docs/HF47_PRINT_PACKS_RELEASE_2026-11-04.md`. Complete inherited backlog follows without deletion.
+
+---
+
+# HF46 — 2026-11-04: 24 original information-gap and clarification labs (third of five)
+
+Each professional Legal/Business lesson now includes a new ambiguous workplace statement, three realistic speaking stages, a concealed careful clarification model and a partner confirmation variation. Learners practice distinguishing observed statements from missing verified information, rather than memorizing vocabulary alone. No microphone/recording, AI grading, legal advice, or fake class. Preserves HF44 two-level exercises, HF45 72 question-answer prompts and all prior site functionality. See `docs/HF46_CLARIFICATION_LAB_RELEASE_2026-11-04.md`. Historical backlog and all remaining owner requirements follow unchanged.
+
+---
+
+# HF45 — 2026-11-04: 72 new teacher discussion questions and model answers (second of five)
+
+Material addition: 3 topic-specific follow-up questions and hidden model answers for EACH of the 24 original Legal/Business lessons, providing 72 additional teacher-led prompts when real speaking turns go faster than planned. Supports complete evidence-aware answers, not scores or legal opinions. Keeps HF44 differentiation and all earlier website functionality unchanged. See `docs/HF45_TEACHER_QUESTIONS_RELEASE_2026-11-04.md`. Full inherited backlog below retained verbatim.
+
+---
+
+# HF44 — 2026-11-04: differentiated professional speaking (first of five cumulative candidates)
+
+Benefit: 24 original two-path speaking practices for mixed-ability Legal/Business English learners — guided full-sentence completion and a harder explanation/qualification task with a concealed example answer. Not a formal CEFR assessment or grade; no audio/microphone upload. Preserves HF43 and earlier material features, approved homepage and visual lock. See `docs/HF44_DIFFERENTIATED_SPEAKING_RELEASE_2026-11-04.md`. Future priorities include teacher question banks, clarification tasks, privacy-safe handouts and guided practice paths. All inherited backlog below remains unchanged.
+
+---
+
 # HF43 — 2026-11-04: searchable navigation across all 24 original lessons (final candidate)
 
 **Fifth cumulative substantive version in the HF39–HF43 sequence.** Users and teachers may now open a compact lesson finder on both self-study pages, search 24 exact original professional scenarios across the two collections, filter Legal versus Business/Investor topics, see accurate matches, jump directly to a specific lesson and reset without loss of drafts or other content. No existing lesson is hidden, and no search or completion status is stored. Preserves HF39 original writing self-review; HF40 24 dialogues; HF41 controlled voice models; HF42 fifty-minute teacher plans with student-only projector; prior HF35/37/38 and all prices, scope, employer/teacher dashboards, independent certifications, approved homepage/logo/teacher photo. Source-only until dual independent exact-head acceptance, reviewed screenshots, guarded merge, exact Render auto-deploy and both-host verification. See `docs/HF43_LESSON_FINDER_RELEASE_2026-11-04.md` and all four predecessor receipts. The COMPLETE inherited history and future priorities follow unchanged.

@@ -1,0 +1,8 @@
+# HF45 — 72 precise teacher follow-up questions with model answers
+2026-11-04. Parent HF44 aa9dd83101a5cf2d39dec4be51855f4b12a478e5; second genuine improvement in cumulative HF44–HF48 release.
+
+**Before:** prior HF40 original roleplay supplies three dialogue turns; HF42 provides an exact 50-minute guide, but teachers frequently run out of specific follow-up language and need alternative prompts adapted to real student answers. **After:** each of 24 original legal/business lessons has three EXTRA topic-specific open questions, each with a concealed plausible complete-sentence response. 72 new questions and 72 matching original model answers support extended group discussion and one-to-one tutoring.
+
+**Pedagogy:** follow-up on facts, careful uncertainty, next actions, conditionals, paraphrase. Supported/stretched HF44 prompts remain intact. Based on the Cambridge English teaching framework's adaptation to learners and communication skills; Council of Europe CEFR Companion volume, as cited in HF44. The original examples are not legal advice, an assessment instrument, or actual human feedback.
+
+**Constraints:** No homepage/branding/class schedules/teacher assignments/account changes/payment, email, production DB or hidden grading. No private input or network requests. Separate expandable optional panels, all original lessons intact. New Node and 4-browser checks mandatory; keep full predecessor rules and rollback to HF44 if needed.

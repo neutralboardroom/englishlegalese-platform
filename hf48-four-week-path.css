@@ -1,0 +1,25 @@
+/* HF48: compact four-week program map, optional and scoped to existing continuing-practice pages. */
+.v2100-path{max-width:1140px;margin:1.1rem auto;padding:1rem;box-sizing:border-box;border:1px solid #c8d4e0;background:#f7f9fd;border-radius:9px;min-width:0}
+.v2100-path>summary{font-size:1.09rem;font-weight:750;cursor:pointer}
+.v2100-intro,.v2100-footnote{line-height:1.55;font-size:.95rem}
+.v2100-controls{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.v2100-controls label{display:flex;flex-direction:column;gap:.4rem;flex:1 1 235px;font-weight:650}
+.v2100-controls select{min-height:44px;max-width:100%;padding:.6rem;font:inherit;background:#fff;border-radius:5px;border:1px solid #8198ad}
+.v2100-weeks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.v2100-week{border:1px solid #d2dde8;border-radius:7px;background:#fff;padding:.95rem;min-width:0}
+.v2100-week h3{font-size:1.06rem;margin:.15rem 0 .6rem;line-height:1.4}
+.v2100-links{padding-left:1.35rem;line-height:1.5}
+.v2100-links li{padding:.18rem 0;overflow-wrap:anywhere}
+.v2100-goal{font-weight:650;line-height:1.5}
+.v2100-mode{line-height:1.55;font-size:.91rem;color:#34546a}
+.v2100-path :focus-visible{outline:3px solid #bd7b31;outline-offset:3px}
+@media(max-width:780px){.v2100-path{margin:1rem}.v2100-weeks{grid-template-columns:minmax(0,1fr)}}
+
+/* Compact the four new optional practice modes into one accessible disclosure per lesson.
+   Prevents unnecessarily long tablet print/screenshots and reduces learner scrolling. */
+.v1971-lesson details.v2100-more-tools{margin:.65rem 0;padding:.7rem;border:1px solid #c2d4df;border-radius:7px;background:#f6fafc;min-width:0}
+.v2100-more-tools>summary{font-weight:750;line-height:1.45;cursor:pointer}
+.v2100-more-intro{font-size:.9rem;line-height:1.5;margin:.7rem 0}
+.v1971-lesson .v2100-more-tools>details{margin:.55rem 0}
+.v1971-lesson .v2100-more-tools>.v2090-actions{margin:.55rem 0;padding:.6rem}
+.v2100-more-tools :focus-visible{outline:3px solid #bc7b35;outline-offset:3px}
