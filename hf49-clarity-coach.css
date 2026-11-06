@@ -1,0 +1,25 @@
+/* HF49 phonological clarity coaching. Nested under HF48 closed speaking disclosure;
+   no added visible initial per-card height, including at tablet WebKit screenshot limit. */
+.v1971-lesson details.v2110-prosody{margin:.6rem 0;padding:.75rem;border:1px solid #bed7d8;border-radius:7px;background:#f7fcfb;min-width:0}
+.v2110-prosody>summary{font-weight:700;line-height:1.4;cursor:pointer}
+.v2110-prosody h4{font-size:1rem;line-height:1.35;margin:1.1rem 0 .45rem}
+.v2110-intro,.v2110-teacher-cue{font-size:.91rem;line-height:1.55}
+.v2110-chunk-script{font-weight:650;line-height:1.6;overflow-wrap:anywhere}
+.v2110-chunk-progress{padding:.7rem;background:#fff;border-left:3px solid #33717a;line-height:1.5;min-height:2.5rem;overflow-wrap:anywhere}
+.v2110-stress{line-height:1.55}
+.v2110-phrase{font-size:1.04rem;font-weight:650;line-height:1.55}
+.v2110-controls{display:flex;gap:.55rem;flex-wrap:wrap;align-items:center;margin:.6rem 0}
+.v2110-controls button,.v2110-selfcheck button{font:inherit;min-height:42px;padding:.52rem .65rem;cursor:pointer}
+.v2110-controls button:disabled{opacity:.58;cursor:not-allowed}
+.v2110-controls label{display:flex;gap:.35rem;align-items:center;font-weight:600}
+.v2110-controls select{font:inherit;padding:.4rem;border:1px solid #7f9ca5;border-radius:4px;background:#fff}
+.v2110-audio-status{font-size:.9rem;line-height:1.5;min-height:1rem}
+.v2110-listener-question{font-weight:650;line-height:1.55}
+.v1971-lesson details.v2110-listener-model{border:1px solid #d1e1e0;background:#fff;margin:.55rem 0;padding:.55rem}
+.v2110-selfcheck{border:1px solid #c3d9d7;padding:.65rem;margin:.8rem 0;display:flex;flex-direction:column;gap:.55rem}
+.v2110-selfcheck legend{font-weight:700;line-height:1.4;padding:0 .2rem}
+.v2110-selfcheck label{display:flex;align-items:flex-start;gap:.35rem;line-height:1.45}
+.v2110-selfcheck input{width:18px;height:18px;flex:none}
+.v2110-selfcheck button{align-self:flex-start}
+.v2110-prosody :focus-visible{outline:3px solid #b8772a;outline-offset:3px}
+@media(max-width:520px){.v2110-controls button{flex:1 1 40%}.v2110-chunk-progress{min-height:3.5rem}}
