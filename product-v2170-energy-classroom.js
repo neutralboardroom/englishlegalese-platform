@@ -8,7 +8,8 @@
  const status=element('energy-status'),loginForm=element('energy-login-form'),
   signout=element('energy-signout'),authorized=element('energy-authorized'),
   teacherPanel=element('energy-teacher-panel'),teacherStatus=element('energy-teacher-status'),
-  createForm=element('energy-create-form'),scheduleStatus=element('energy-schedule-status'),
+  createForm=element('energy-create-form'),historicalPanel=element('energy-historical-panel'),historicalForm=element('energy-historical-form'),
+  scheduleStatus=element('energy-schedule-status'),
   schedule=element('energy-schedule'),lessonsView=element('energy-lessons'),
   courseSelect=element('energy-create-lesson');
  let token=null,role=null,canAutoMeet=false,loadedLessons=[],loadedSessions=[];
@@ -53,7 +54,7 @@
  function showError(e){status.textContent=e?.message||String(e);}
  function loggedOut(message='Sign in with your verified EnglishLegalese account.'){
   token=null;role=null;loadedLessons=[];loadedSessions=[];
-  authorized.hidden=true;teacherPanel.hidden=true;
+  authorized.hidden=true;teacherPanel.hidden=true;historicalPanel.hidden=true;
   signout.hidden=true;loginForm.hidden=false;status.textContent=message;
   clear(schedule);clear(lessonsView);clear(courseSelect);
  }
@@ -80,7 +81,7 @@
  async function refresh(){
   const sessionResult=await call(API+'sessions');
   loadedSessions=sessionResult.sessions||[];
-  authorized.hidden=false;teacherPanel.hidden=role==='student';
+  authorized.hidden=false;teacherPanel.hidden=role==='student';historicalPanel.hidden=!['owner','admin'].includes(role);
   loginForm.hidden=true;signout.hidden=false;
   if(role==='student'&&loadedSessions.length===0){
    status.textContent='Signed in. Your teacher has not yet assigned a private class to this account.';
@@ -104,6 +105,7 @@
    const section=node('section',undefined,'session');
    const title=node('h3',rowLabel(row));section.append(title);
    section.append(node('p','Status: '+row.status+' · 60 minutes · '+row.provider,'muted'));
+   if(role!=='student'&&row.teacher_only_pronunciation_progress) section.append(node('p','Private teaching observation — crude oil pronunciation: '+row.teacher_only_pronunciation_progress.replaceAll('_',' '),'muted'));
    const actions=node('div',undefined,'actions');
    const meeting=safeMeet(row.meet_url);
    if(row.meet_ready&&meeting){
@@ -221,6 +223,19 @@
   let start;try{start=localStart(element('energy-start').value)}catch(e){teacherStatus.textContent=e.message;return;}
   const data={student_email:element('energy-student-email').value.trim(),lesson_number:Number(courseSelect.value),starts_at:start,meet_url:url||null};
   await perform(button,API+'sessions',data,teacherStatus);
+ });
+ historicalForm.addEventListener('submit',async event=>{
+  event.preventDefault();
+  if(!['owner','admin'].includes(role)||!token)return;
+  if(!element('energy-history-confirm').checked){teacherStatus.textContent='Confirm that the class was actually taught.';return;}
+  let date;
+  try{date=localStart(element('energy-history-date').value);}
+  catch(e){teacherStatus.textContent=e.message;return;}
+  const button=historicalForm.querySelector('button[type=submit]');
+  await perform(button,API+'previously-taught',{
+    student_email:element('energy-history-email').value.trim(),
+    taught_at:date,pronunciation_progress:element('energy-pronunciation-progress').value,confirmed_taught:true
+  },teacherStatus);
  });
  (async()=>{
   try{
