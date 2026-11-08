@@ -1,0 +1,28 @@
+/* HF50–HF52 EnglishLegalese standalone adult professional clinic extensions.
+   Mounted inside the already closed HF48/HF37 disclosure to preserve full-page size. */
+.v1971-lesson :is(.v2120-response-ladder,.v2130-evidence-check,.v2140-mini-clinic){margin:.65rem 0;padding:.72rem;border:1px solid #c4d9dc;border-radius:7px;background:#f8fcfd;min-width:0}
+.v1971-lesson :is(.v2120-response-ladder,.v2130-evidence-check,.v2140-mini-clinic)>summary{font-weight:700;cursor:pointer;line-height:1.45}
+.v1971-lesson :is(.v2120-note,.v2130-intro,.v2140-intro){font-size:.92rem;line-height:1.55;margin:.65rem 0}
+.v2120-controls,.v2140-controls,.v2140-dialog-controls{display:flex;gap:.6rem;flex-wrap:wrap;margin:.65rem 0}
+.v2120-controls label{display:flex;flex-direction:column;gap:.25rem;font-weight:650;line-height:1.5}
+.v2120-controls select{background:#fff;font:inherit;padding:.5rem;max-width:100%;border:1px solid #718995;border-radius:4px}
+.v2120-instructions,.v2140-plan{padding:.6rem;background:#fff;border-left:3px solid #416c81;line-height:1.6;overflow-wrap:anywhere}
+.v2120-instructions h4,.v2130-evidence-check h4,.v2140-plan h4{font-size:1rem;margin:.3rem 0 .55rem}
+.v2130-choices{display:grid;gap:.55rem;margin:.7rem 0}
+.v2130-choices button{text-align:left;white-space:normal;overflow-wrap:anywhere}
+.v2130-choices button[aria-pressed=true],.v2140-controls button[aria-pressed=true]{outline:2px solid #266879;outline-offset:1px;background:#e6f2f4}
+.v2130-feedback{min-height:1.1rem;line-height:1.55;font-weight:600}
+.v1971-lesson .v2130-repair{border:1px solid #bcd0d5;background:#fff;padding:.55rem;margin:.55rem 0}
+.v1971-lesson :is(.v2130-evidence-check,.v2140-mini-clinic) button,
+.v2140-learner-dialog button{font:inherit;padding:.55rem .8rem;min-height:44px;cursor:pointer;max-width:100%}
+.v2140-phases{margin:.5rem 0;padding-left:1.6rem}
+.v2140-phases li{margin:.3rem 0}
+.v2140-learner-dialog{width:min(94vw,900px);max-height:92vh;padding:clamp(1rem,3vw,2.25rem);border:2px solid #2a6470;border-radius:10px;box-shadow:0 12px 44px #0004;background:#fff;color:#142f3e;overflow:auto}
+.v2140-learner-dialog::backdrop{background:rgba(10,25,38,.82)}
+.v2140-learner-dialog h2{font-size:clamp(1.3rem,3vw,2rem);line-height:1.35}
+.v2140-slide-count{font-weight:700;line-height:1.45}
+.v2140-slide-content{font-size:clamp(1.2rem,3.5vw,2.4rem);line-height:1.45;overflow-wrap:anywhere}
+.v2140-learner-dialog :focus-visible,
+.v1971-lesson :is(.v2120-response-ladder,.v2130-evidence-check,.v2140-mini-clinic) :focus-visible{outline:3px solid #a06b12;outline-offset:3px}
+@media(max-width:520px){.v2140-controls button{flex:1 1 40%}.v2140-dialog-controls button{flex:1 1 35%}}
+@media print{.v2140-learner-dialog{display:none!important}}

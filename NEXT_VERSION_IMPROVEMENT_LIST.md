@@ -1,3 +1,9 @@
+# HF50–HF53 — 2026-11-08: coordinated maximum material EnglishLegalese upgrade
+
+Permanent project identity: **EnglishLegalese** (independent Legal English + Business English teaching platform). A verified TR-Clone V1.0 static response-ladder pedagogy protocol was locally and independently adapted, with 24 adult professional teaching-response paths (quiet/developing/confident), 24 evidence-versus-assumption clinical judgment practices and 24 minute-by-minute shorter 15/30-minute partner-speaking clinics plus learner-only slide previews. No TR-Clone AI runtime or TR-ControlCenter service was found and **neither live connection is claimed**. A versioned central-coordination handoff and protocol compatibility manifest live in `coordination/`. The new authoritative EnglishLegalese **Universal Builder V21** permanently preserves all of V20, latest release evidence, project name, role, boundaries, integration/compatibility and maximum reasonable material work rules. All previous features/requirements are inherited below.
+
+---
+
 # HF49 — 2026-11-06: 24 new intelligibility and connected-speech coaching labs (candidate)
 
 Material teaching improvement: one original three-chunk professional phrase, focus-word stress prompt, stepwise thought-group pacing, optional device voice and transcript fallback, real listener clarification question/hidden sample answer and an unsaved self-reflection checklist for EACH of the 24 existing Legal, Business and Investor English lessons. Based on CEFR intelligibility/prosody and British Council connected-speech guidance; no accent imitation, microphone recording, AI grading, legal advice, certification or private data handling. All prior HF48 teaching resources remain intact; new lab is nested within existing closed speaking tools to preserve tablet layout. See `docs/HF49_CLARITY_COACH_RELEASE_2026-11-06.md`. The complete inherited backlog and owner requirements continue below unchanged.
