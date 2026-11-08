@@ -55,7 +55,7 @@ for(const needle of [
  'API+\x27sessions\x27','Join Google Meet from EnglishLegalese'
 ]){assert.ok(ui.includes(needle),'UI integration missing '+needle);}
 assert.ok(html.includes('name="robots" content="noindex,nofollow,noarchive"'));
-assert.ok(html.includes('product-v2170-energy-classroom.js?v=hf56'));
+assert.ok(html.includes('product-v2170-energy-classroom.js?v=hf57'));
 assert.ok(!html.includes('meet.google.com/abc-defg-hij" class="join"'),'no hard-coded join link');
 assert.ok(legal.includes("entry.href='/learn/private-energy-contracts/'"),'Contracts & Agreements must link to private classroom');
 assert.ok(server.includes("require('./src/v2150-private-energy-classroom').install(app"),'API should be mounted via existing secure services');
