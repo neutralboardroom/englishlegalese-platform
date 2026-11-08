@@ -197,6 +197,32 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    return reply(res,200,{ok:true,role:req.user.role==='student'?'student':'teacher',sessions:rows.rows.map(x=>outward(x,req.user.role==='student'?'student':'teacher')),no_invitation_sent:true});
   }catch{return reply(res,503,{ok:false,error:'Private class schedule is temporarily unavailable.'});}
  });
+ // HF57 safe readiness check: uses the exact same revocable login and
+ // student/teacher database ownership checks as actual meeting access.
+ // Never include a meeting URL, client name, pronunciation notes, or content.
+ app.get('/api/v2150/private-energy/sessions/:id/readiness',guard,ready,async(req,res)=>{
+  try{
+   const row=await accessible(req,req.params.id);
+   if(!row)return reply(res,404,{ok:false,error:'Private class not found for this account.'});
+   const isTeacher=row.teacher_user_id===req.user.id;
+   const scheduled=row.status==='scheduled';
+   const providerReady=scheduled&&Boolean(meetLink(row.video_join_url));
+   const hasStart=Boolean(row.scheduled_at)&&Number.isFinite(new Date(row.scheduled_at).getTime());
+   const state=providerReady?'ready':row.status==='completed'?'completed':row.status==='cancelled'?'cancelled':!hasStart?'needs_time':'needs_meeting';
+   const nextAction=providerReady
+    ?'Open Google Meet from your EnglishLegalese class card and test mic/speakers before joining.'
+    :row.status==='completed'||row.status==='cancelled'
+     ?'No active live class exists for this record.'
+     :isTeacher
+      ?'Confirm the lesson time and attach or securely create a valid meeting link.'
+      :'Your teacher must confirm the lesson time and meeting link before you can join.';
+   return reply(res,200,{ok:true,session_id:row.id,role:isTeacher?'teacher':'student',
+    state,lesson_number:Number(row.metadata?.lesson_number)||null,duration_minutes:60,
+    provider:'Google Meet',class_time_confirmed:hasStart,meeting_link_ready:providerReady,
+    join_available:providerReady,teacher_led:true,recording_enabled:false,
+    client_documents_shared:false,next_action:nextAction});
+  }catch{return reply(res,503,{ok:false,error:'Private class readiness could not be checked.'});}
+ });
  const managers=requireRoles('teacher','owner','admin');
  // Backward-looking setup requires an owner/admin, verified account, actual date
  // and explicit confirmation. It never claims a meeting link, payment, grade or certification.
