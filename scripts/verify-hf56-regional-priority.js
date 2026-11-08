@@ -38,4 +38,13 @@ const extractNav=s=>s.slice(s.indexOf('<nav class="v1840-topnav"'),s.lastIndexOf
 assert.equal(extractNav(html),extractNav(legal),'reuse original header navigation without changes');
 const extractFooter=s=>s.slice(s.indexOf('<footer class="v1840-footer">'),s.indexOf('</footer>',s.indexOf('<footer class="v1840-footer">'))+9);
 assert.equal(extractFooter(html),extractFooter(legal),'reuse original footer without changes');
+const sourceCsv=fs.readFileSync('research/HF56_TH_VN_ADULT_PROFESSIONAL_TRAINING_PROSPECTS_RESEARCH_ONLY.csv','utf8');
+const dataRows=sourceCsv.trim().split('\\n').slice(1);
+assert.equal(dataRows.length,20,'10 Thailand + 10 Vietnam public source candidates');
+assert.equal(dataRows.filter(row=>row.startsWith('"TH"')).length,10,'Thailand equal research candidates');
+assert.equal(dataRows.filter(row=>row.startsWith('"VN"')).length,10,'Vietnam equal research candidates');
+for(const row of dataRows){
+ assert.ok(row.includes('"FALSE","RESEARCH_ONLY","0"'),'no contact validated or outreach sent');
+ assert.ok(!row.includes('@'),'research-only candidate CSV must contain no email addresses');
+}
 console.log('PASS HF56 markets: Vietnam and Thailand recruitment co-priority, Chinese option conditioned on access, adult course routes and identical site chrome.');
