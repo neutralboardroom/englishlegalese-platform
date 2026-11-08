@@ -111,13 +111,13 @@ const AGENDA=Object.freeze([
 ]);
 function reply(res,status,json){return res.status(status).set('Cache-Control','private, no-store').set('Referrer-Policy','no-referrer').set('X-Content-Type-Options','nosniff').json(json);}
 function nowTime(value){
- if(typeof value!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d(?::\d\d)?(?:Z|[+-]\d\d:\d\d)$/.test(value))return null;
+ if(typeof value!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d(?::\d\d(?:\.\d{1,3})?)?(?:Z|[+-]\d\d:\d\d)$/.test(value))return null;
  const t=new Date(value).getTime();
  if(!Number.isFinite(t)||t<Date.now()-15*60000||t>Date.now()+180*86400000)return null;
  return new Date(t).toISOString();
 }
 function pastTime(value){
- if(typeof value!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d(?::\d\d)?(?:Z|[+-]\d\d:\d\d)$/.test(value))return null;
+ if(typeof value!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d(?::\d\d(?:\.\d{1,3})?)?(?:Z|[+-]\d\d:\d\d)$/.test(value))return null;
  const t=new Date(value).getTime();
  if(!Number.isFinite(t)||t>Date.now()||t<Date.now()-120*86400000)return null;
  return new Date(t).toISOString();
