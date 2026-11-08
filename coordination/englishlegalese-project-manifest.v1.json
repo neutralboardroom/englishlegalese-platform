@@ -1,0 +1,78 @@
+{
+  "schema": "englishlegalese-controlcenter-handoff/v1",
+  "project": {
+    "id": "EnglishLegalese",
+    "name": "EnglishLegalese",
+    "website": "https://englishlegalese.com/",
+    "github_repository": "neutralboardroom/englishlegalese-platform",
+    "independent_brand": true,
+    "domains": [
+      "Legal English",
+      "Business English"
+    ],
+    "roles": [
+      "student",
+      "teacher",
+      "employer",
+      "owner-admin"
+    ],
+    "never_merge_with": [
+      "TR-Classroom",
+      "TR-Online"
+    ]
+  },
+  "release": {
+    "predecessor": "HF49",
+    "baseline_sha": "12dbc4b5f858dc99660439b7d87959749acc56fa",
+    "change_set": "HF50–HF53",
+    "builder_verified": "EnglishLegalese Universal Builder V20",
+    "builder_successor": "EnglishLegalese Universal Builder V21",
+    "route_scope": [
+      "/learn/continuing-practice/",
+      "/learn/continuing-practice/advanced/"
+    ]
+  },
+  "shared_engine": {
+    "id": "TR-Clone",
+    "verified_offline_source_version": "V1.0",
+    "verified_builder_version": "V2",
+    "protocol": "tr-clone/teacher-response-ladder/v1",
+    "supported_response_modes": [
+      "quiet",
+      "developing",
+      "confident"
+    ],
+    "adapted_module": "product-v2120-response-ladder.js",
+    "original_corpus": "product-v2120-practice-bridge-data.js",
+    "local_protocol_compatibility": "implemented_to_be_tested",
+    "live_ai_runtime_connected": false,
+    "credentials_or_private_data_shared": false,
+    "adult_only_prototype_boundary": true
+  },
+  "coordinator": {
+    "id": "TR-ControlCenter",
+    "authoritative_repository_or_api_verified": false,
+    "state": "handoff_manifest_prepared_not_connected",
+    "handoff_path": "coordination/EnglishLegalese_TR_ControlCenter_Handoff.md",
+    "accepted_contract_version": null,
+    "verified_two_way_handshake": false
+  },
+  "constraints": {
+    "no_cross_project_merging": true,
+    "no_cross_project_identity": true,
+    "no_cross_project_learner_records": true,
+    "no_secret_or_payment_sharing": true,
+    "no_marketing_emails": true,
+    "no_unauthorized_external_ai": true,
+    "owned_content_only": true,
+    "approved_homepage_untouched": true
+  },
+  "acceptance": {
+    "inherited_regressions_required": true,
+    "dual_exact_head_ci_required": true,
+    "manual_visual_review_required": true,
+    "render_commit_match_required": true,
+    "two_domains_verify_required": true,
+    "no_unverified_integration_claim": true
+  }
+}
