@@ -44,10 +44,10 @@ async function setup(page,role='student'){
 test('HF57 student receives six guided speaking stages, privacy checklist and 60-minute local timer',async({page})=>{
  const {errors,writes}=await setup(page);
  const lessonCard=page.locator('details.energy-lesson').first();
- await lessonCard.locator('> summary').click();
+ await lessonCard.locator(':scope > summary').click();
  const tool=lessonCard.locator('.energy-live-conductor');
  await expect(tool).toHaveCount(1);
- await tool.locator('> summary').click();
+ await tool.locator(':scope > summary').click();
  await expect(tool.locator('.energy-live-check')).toHaveCount(3);
  await expect(tool.locator('.energy-live-current')).toContainText('Stage 1 of 6');
  await expect(tool).not.toContainText('Teacher-only buyer/counsel prompts');
@@ -81,9 +81,9 @@ test('HF57 student receives six guided speaking stages, privacy checklist and 60
 test('HF57 teacher-only buyer role and pronunciation coaching never enter student view',async({page})=>{
  const {errors,writes}=await setup(page,'teacher');
  const card=page.locator('.energy-lesson').first();
- await card.locator('> summary').click();
+ await card.locator(':scope > summary').click();
  const tool=card.locator('.energy-live-conductor');
- await tool.locator('> summary').click();
+ await tool.locator(':scope > summary').click();
  await tool.getByRole('button',{name:'Next stage'}).click();
  await expect(tool).toContainText('Teacher-only pronunciation direction');
  await tool.getByRole('button',{name:'Next stage'}).click();
