@@ -206,8 +206,8 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    if(!row)return reply(res,404,{ok:false,error:'Private class not found for this account.'});
    const isTeacher=row.teacher_user_id===req.user.id;
    const scheduled=row.status==='scheduled';
-   const providerReady=scheduled&&Boolean(meetLink(row.video_join_url));
    const hasStart=Boolean(row.scheduled_at)&&Number.isFinite(new Date(row.scheduled_at).getTime());
+   const providerReady=scheduled&&hasStart&&Boolean(meetLink(row.video_join_url));
    const state=providerReady?'ready':row.status==='completed'?'completed':row.status==='cancelled'?'cancelled':!hasStart?'needs_time':'needs_meeting';
    const nextAction=providerReady
     ?'Open Google Meet from your EnglishLegalese class card and test mic/speakers before joining.'
