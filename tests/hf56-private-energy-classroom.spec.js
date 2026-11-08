@@ -25,6 +25,7 @@ test('HF56 student sees only assigned live session and generic lesson prompts',a
  await page.goto('/learn/private-energy-contracts/');
  await expect(page.locator('#energy-authorized')).toBeVisible();
  await expect(page.locator('#energy-teacher-panel')).toBeHidden();
+ await expect(page.locator('#energy-historical-panel')).toBeHidden();
  await expect(page.locator('#energy-login-form')).toBeHidden();
  await expect(page.getByRole('link',{name:'Join Google Meet from EnglishLegalese'})).toHaveAttribute('href','https://meet.google.com/abc-defg-hij');
  await expect(page.locator('#energy-lessons')).not.toContainText('Teacher-only role-play prompts');
@@ -51,6 +52,10 @@ test('HF56 teacher sees session setup, no real client source disclosure',async({
  await expect(page.locator('#energy-teacher-panel')).toBeVisible();
  await expect(page.locator('#energy-student-email')).toBeVisible();
  await expect(page.locator('#energy-lessons')).toContainText('Teacher-only role-play prompts');
+ await expect(page.locator('#energy-historical-panel')).toBeVisible();
+ await page.locator('#energy-historical-panel > summary').click();
+ await expect(page.locator('#energy-history-email')).toBeVisible();
+ await expect(page.locator('#energy-pronunciation-progress option')).toHaveCount(3);
  await expect(page.locator('#energy-create-lesson option')).toHaveCount(1);
  await expect(page.locator('a[href^="https://meet.google.com/"]')).toHaveCount(0);
 });
