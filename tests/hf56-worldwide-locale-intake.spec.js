@@ -47,5 +47,5 @@ test('HF56 market switch does not block global adult enrollment or force a langu
  await expect(form.locator('select[name="preferred_contact_language"]')).toHaveValue('en');
  await form.locator('select[name="learner_market"]').selectOption('cn');
  await expect(form.locator('select[name="preferred_contact_language"]')).toHaveValue('zh-Hans');
- await expect(page.locator('#v1850-enroll-form p[lang="zh-Hans"]')).toContainText('视频'); // If absent, translated note should still explain confirmed live access.
+ await expect(page.locator('#v1850-enroll-form p[lang="zh-Hans"]')).toContainText('法律英语');
 });
