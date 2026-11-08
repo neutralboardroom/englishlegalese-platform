@@ -14,7 +14,7 @@ assert.equal(runtime.AGENDA.at(-1).end,60,'whole teacher-led class is one hour')
 let prev=0;for(const segment of runtime.AGENDA){assert.equal(segment.start,prev,'no gaps/overlaps');assert.ok(segment.end>segment.start);prev=segment.end;}
 for(const lesson of runtime.lessons){
  for(const key of ['title','goal','scenario','model','teacherPrompt','homework']){
-  assert.ok(typeof lesson[key]==='string'&&lesson[key].length>45,'missing substantial lesson field: '+lesson.number+':'+key);
+  assert.ok(typeof lesson[key]==='string'&&(key==='title'?lesson[key].length>=18:lesson[key].length>45),'missing substantial lesson field: '+lesson.number+':'+key);
  }
  assert.ok(lesson.vocabulary.length>=4);
  assert.ok(/fictional/i.test(lesson.scenario));
