@@ -12,6 +12,13 @@ test('HF56 private classroom reveals no meeting link to visitors',async({page})=
  expect(req.status()).toBe(401);
  const req2=await page.request.get('/api/v2150/private-energy/lessons');
  expect(req2.status()).toBe(401);
+ // Inherited class-session demo routes must not circumvent private link access.
+ const legacyWrite=await page.request.post('/api/v118/class-sessions',{data:{id:'EL-ENERGY-test',metadata:{course_key:'energy-contracts-60-v1'}}});
+ expect(legacyWrite.status()).toBe(403);
+ const legacyRead=await page.request.get('/api/v120/class-sessions/EL-ENERGY-test/cockpit');
+ expect(legacyRead.status()).toBe(404);
+ const legacyCloseout=await page.request.post('/api/v120/class-sessions/EL-ENERGY-test/closeout',{data:{}});
+ expect(legacyCloseout.status()).toBe(404);
  const dims=await page.evaluate(()=>[document.documentElement.scrollWidth,innerWidth]);
  expect(dims[0]).toBeLessThanOrEqual(dims[1]+2);
  expect(errors).toEqual([]);
