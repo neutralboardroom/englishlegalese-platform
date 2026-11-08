@@ -116,6 +116,12 @@ function nowTime(value){
  if(!Number.isFinite(t)||t<Date.now()-15*60000||t>Date.now()+180*86400000)return null;
  return new Date(t).toISOString();
 }
+function pastTime(value){
+ if(typeof value!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d(?::\d\d)?(?:Z|[+-]\d\d:\d\d)$/.test(value))return null;
+ const t=new Date(value).getTime();
+ if(!Number.isFinite(t)||t>Date.now()||t<Date.now()-120*86400000)return null;
+ return new Date(t).toISOString();
+}
 function meetLink(input){
  if(input==null||input==='')return null;
  if(typeof input!=='string')return false;
@@ -131,6 +137,7 @@ function outward(row,role){
   meet_ready:row.status==='scheduled'&&MEET.test(String(row.video_join_url||'')),
   meet_url:row.status==='scheduled'&&MEET.test(String(row.video_join_url||''))?row.video_join_url:null,
   student_name:role==='teacher'?row.learner_name:undefined,
+  teacher_only_pronunciation_progress:role==='teacher'&&row.metadata?.pronunciation_focus==='crude_oil'?row.metadata?.pronunciation_progress||null:undefined,
   provider:'Google Meet',recording:'Off by default; any recording requires separate consent.',
   notes:'English-language teaching with fictional contract exercises, not live client advice.'
  };
@@ -191,6 +198,37 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
   }catch{return reply(res,503,{ok:false,error:'Private class schedule is temporarily unavailable.'});}
  });
  const managers=requireRoles('teacher','owner','admin');
+ // Backward-looking setup requires an owner/admin, verified account, actual date
+ // and explicit confirmation. It never claims a meeting link, payment, grade or certification.
+ app.post('/api/v2150/private-energy/previously-taught',guard,requireRoles('owner','admin'),ready,async(req,res)=>{
+  const body=req.body||{};
+  const email=typeof body.student_email==='string'?body.student_email.trim().toLowerCase():'';
+  const taughtOn=pastTime(body.taught_at);
+  const progress=body.pronunciation_progress||'not_recorded';
+  if(!EMAIL.test(email)||!taughtOn||!['improved','needs_review','not_recorded'].includes(progress)||body.confirmed_taught!==true)
+   return reply(res,400,{ok:false,error:'Confirm an actual previously taught lesson date, a student email, and an optional limited pronunciation observation.'});
+  let client;
+  try{
+   client=await services.persistentStore.pool.connect();
+   await client.query('BEGIN');
+   const q=await client.query("SELECT id,full_name,role,status,metadata FROM users WHERE lower(email)=lower($1) AND role='student' AND status='active' LIMIT 1",[email]);
+   const student=q.rows[0];
+   if(!student){await client.query('ROLLBACK');return reply(res,404,{ok:false,error:'Verified student account was not found.'});}
+   const verified=await client.query("SELECT (coalesce(metadata->>'email_verified','false')='true' OR EXISTS(SELECT 1 FROM ai_trial_email_verifications v WHERE v.user_id=$1 AND v.verified_at IS NOT NULL)) AS ok FROM users WHERE id=$1",[student.id]);
+   if(verified.rows[0]?.ok!==true){await client.query('ROLLBACK');return reply(res,403,{ok:false,error:'Student must verify the EnglishLegalese account before class assignment.'});}
+   await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[COURSE+':'+student.id+':1']);
+   const existing=await client.query("SELECT id FROM class_sessions WHERE student_user_id=$1 AND metadata->>'course_key'=$2 AND metadata->>'lesson_number'='1' AND status<>'cancelled' LIMIT 1",[student.id,COURSE]);
+   if(existing.rows.length){await client.query('ROLLBACK');return reply(res,409,{ok:false,error:'The first class is already recorded. It was not duplicated.'});}
+   const id='EL-ENERGY-'+crypto.randomUUID();
+   const metadata={course_key:COURSE,lesson_number:1,duration_minutes:60,source_protection:'fictional_examples_only',recording:'disabled',historical_teacher_confirmation:true,pronunciation_focus:'crude_oil',pronunciation_progress:progress};
+   const q2=await client.query("INSERT INTO class_sessions (id,learner_name,teacher_name,student_user_id,teacher_user_id,scheduled_at,timezone,video_provider,video_join_url,status,readiness_status,closeout_status,metadata,created_at,updated_at) VALUES ($1,$2,$3,$4,$5,$6,$7,'Google Meet',NULL,'completed','historical_teacher_confirmed','teacher_confirmed',$8::jsonb,now(),now()) RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",[id,student.full_name,req.user.full_name,student.id,req.user.id,taughtOn,TIMEZONE,JSON.stringify(metadata)]);
+   await client.query('COMMIT');
+   return reply(res,201,{ok:true,session:outward(q2.rows[0],'teacher'),historical_record:true,meet_created:false,payment_taken:false,no_email_sent:true});
+  }catch{
+   if(client)await client.query('ROLLBACK').catch(()=>{});
+   return reply(res,503,{ok:false,error:'Previous lesson confirmation was not recorded.'});
+  }finally{if(client)client.release();}
+ });
  app.post('/api/v2150/private-energy/sessions',guard,managers,ready,async(req,res)=>{
   const body=req.body||{};
   const studentEmail=typeof body.student_email==='string'?body.student_email.trim().toLowerCase():'';
@@ -273,4 +311,4 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
   }catch{return reply(res,503,{ok:false,error:'Class completion was not recorded.'});}
  });
 }
-module.exports={install,COURSE,lessons,AGENDA,meetLink,nowTime,outward};
+module.exports={install,COURSE,lessons,AGENDA,meetLink,nowTime,pastTime,outward};
