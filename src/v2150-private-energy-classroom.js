@@ -22,7 +22,9 @@ const lessons=[
   homework:'Prepare three short spoken explanations of a draft payment term and one polite clarification question.'},
  {number:2,title:'Conforming bids and qualifying conditions',
   goal:'Explain qualification conditions and distinguish a compliant bid from a proposed exception.',
-  vocabulary:['conforming bid','approved buyer','unconditional offer','validity period','qualification'],
+  vocabulary:['conforming bid','approved buyer','unconditional offer','validity period','qualification','crude oil'],
+  pronunciation:'Crude oil /kruːd ɔɪl/: say crew, then crude, crude oil, crude oil sales, crude oil sales agreement. Blend /k/ into /r/, hold /uː/ and finish with /d/. Crude oil and condensate are related petroleum terms but not interchangeable.',
+  teacherPronunciationPrompt:'Use a short review at the beginning. Model crew → crude → crude oil → crude oil sales agreement. Invite one full sentence about a fictional draft. Correct no more than one sound at a time; praise improved intelligibility and return to professional conversation.',
   scenario:'A fictional buyer makes an offer but asks to change a condition in the sales invitation.',
   model:'We should review whether the revised offer meets the stated conditions before treating it as a conforming bid.',
   teacherPrompt:'Play buyer: If my price is highest, is my bid automatically conforming? Ask for two conditions and an approval-safe response.',
@@ -178,7 +180,7 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    const audience=req.user.role==='student'?'student':'teacher';
    return reply(res,200,{ok:true,role:audience,course:'Oil & Gas Contracts and Agreements — 60-minute private English classes',
     taught_by:'Human teacher',delivery:'Live Google Meet launched from EnglishLegalese; Meet may open in another tab',
-    agenda:AGENDA,lessons:lessons.map(x=>audience==='student'?Object.fromEntries(Object.entries(x).filter(([k])=>k!=='teacherPrompt')):x)});
+    agenda:AGENDA,lessons:lessons.map(x=>audience==='student'?Object.fromEntries(Object.entries(x).filter(([k])=>k!=='teacherPrompt'&&k!=='teacherPronunciationPrompt')):x)});
   }catch{return reply(res,503,{ok:false,error:'Private lessons are temporarily unavailable.'});}
  });
  app.get('/api/v2150/private-energy/sessions',guard,ready,async(req,res)=>{
