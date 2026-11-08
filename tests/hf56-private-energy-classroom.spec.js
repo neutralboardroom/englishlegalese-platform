@@ -1,0 +1,68 @@
+'use strict';
+const {test,expect}=require('@playwright/test');
+test('HF56 private classroom reveals no meeting link to visitors',async({page})=>{
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('/learn/private-energy-contracts/');
+ await expect(page.getByRole('heading',{name:'Energy Contracts & Agreements — Live English Classroom'})).toBeVisible();
+ await expect(page.locator('#energy-login-form')).toBeVisible();
+ await expect(page.locator('#energy-authorized')).toBeHidden();
+ await expect(page.locator('#energy-teacher-panel')).toBeHidden();
+ await expect(page.locator('a[href^="https://meet.google.com/"]')).toHaveCount(0);
+ const req=await page.request.get('/api/v2150/private-energy/sessions');
+ expect(req.status()).toBe(401);
+ const req2=await page.request.get('/api/v2150/private-energy/lessons');
+ expect(req2.status()).toBe(401);
+ // Inherited class-session demo routes must not circumvent private link access.
+ const legacyWrite=await page.request.post('/api/v118/class-sessions',{data:{id:'EL-ENERGY-test',metadata:{course_key:'energy-contracts-60-v1'}}});
+ expect(legacyWrite.status()).toBe(403);
+ const legacyRead=await page.request.get('/api/v120/class-sessions/EL-ENERGY-test/cockpit');
+ expect(legacyRead.status()).toBe(404);
+ const legacyCloseout=await page.request.post('/api/v120/class-sessions/EL-ENERGY-test/closeout',{data:{}});
+ expect(legacyCloseout.status()).toBe(404);
+ const dims=await page.evaluate(()=>[document.documentElement.scrollWidth,innerWidth]);
+ expect(dims[0]).toBeLessThanOrEqual(dims[1]+2);
+ expect(errors).toEqual([]);
+});
+test('HF56 student sees only assigned live session and generic lesson prompts',async({page})=>{
+ await page.addInitScript(()=>sessionStorage.setItem('el1940.student.session','TEST-only-fake-token'));
+ await page.route('**/api/v119/auth/me',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,user:{id:'student1',role:'student'}})}));
+ await page.route('**/api/v2150/private-energy/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,google_meet_auto_creation:false})}));
+ await page.route('**/api/v2150/private-energy/sessions',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,role:'student',sessions:[{id:'EL-ENERGY-test1',lesson_number:2,lesson_title:'Conforming bids and qualifying conditions',starts_at:'2026-11-16T12:00:00Z',status:'scheduled',provider:'Google Meet',meet_ready:true,meet_url:'https://meet.google.com/abc-defg-hij'}]})}));
+ await page.route('**/api/v2150/private-energy/lessons',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,role:'student',agenda:[{start:0,end:60,label:'Teacher-led speaking'}],lessons:[{number:2,title:'Conforming bids and qualifying conditions',goal:'Explain what has not been verified.',scenario:'A fictional buyer asks for an exception.',model:'The condition needs review.',vocabulary:['bid','buyer'],homework:'Prepare a short explanation.'}]})}));
+ await page.goto('/learn/private-energy-contracts/');
+ await expect(page.locator('#energy-authorized')).toBeVisible();
+ await expect(page.locator('#energy-teacher-panel')).toBeHidden();
+ await expect(page.locator('#energy-historical-panel')).toBeHidden();
+ await expect(page.locator('#energy-login-form')).toBeHidden();
+ await expect(page.getByRole('link',{name:'Join Google Meet from EnglishLegalese'})).toHaveAttribute('href','https://meet.google.com/abc-defg-hij');
+ await expect(page.locator('#energy-lessons')).not.toContainText('Teacher-only role-play prompts');
+});
+test('HF56 verified but unassigned student stays signed in; no invented meeting',async({page})=>{
+ await page.addInitScript(()=>sessionStorage.setItem('el1940.student.session','TEST-only-fake-token'));
+ await page.route('**/api/v119/auth/me',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,user:{id:'student1',role:'student'}})}));
+ await page.route('**/api/v2150/private-energy/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,google_meet_auto_creation:false})}));
+ await page.route('**/api/v2150/private-energy/sessions',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,role:'student',sessions:[]})}));
+ await page.route('**/api/v2150/private-energy/lessons',route=>route.abort('failed'));
+ await page.goto('/learn/private-energy-contracts/');
+ await expect(page.locator('#energy-authorized')).toBeVisible();
+ await expect(page.locator('#energy-login-form')).toBeHidden();
+ await expect(page.locator('#energy-schedule-status')).toContainText('No private class');
+ await expect(page.locator('a[href^="https://meet.google.com/"]')).toHaveCount(0);
+});
+test('HF56 teacher sees session setup, no real client source disclosure',async({page})=>{
+ await page.addInitScript(()=>sessionStorage.setItem('el2150.teacher.session','TEST-only-fake-token'));
+ await page.route('**/api/v119/auth/me',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,user:{id:'owner1',role:'owner'}})}));
+ await page.route('**/api/v2150/private-energy/capabilities',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,google_meet_auto_creation:false})}));
+ await page.route('**/api/v2150/private-energy/sessions',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,role:'teacher',sessions:[]})}));
+ await page.route('**/api/v2150/private-energy/lessons',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,role:'teacher',agenda:[{start:0,end:60,label:'Speaking and recap'}],lessons:[{number:2,title:'Conforming bids and qualifying conditions',goal:'Explain contract requirements.',scenario:'A fictional seller speaks to a buyer.',model:'This needs approval.',vocabulary:['bid','buyer'],teacherPrompt:'Ask how an exception is reviewed.',homework:'Explain approval.'}]})}));
+ await page.goto('/learn/private-energy-contracts/');
+ await expect(page.locator('#energy-teacher-panel')).toBeVisible();
+ await expect(page.locator('#energy-student-email')).toBeVisible();
+ await expect(page.locator('#energy-lessons')).toContainText('Teacher-only role-play prompts');
+ await expect(page.locator('#energy-historical-panel')).toBeVisible();
+ await page.locator('#energy-historical-panel > summary').click();
+ await expect(page.locator('#energy-history-email')).toBeVisible();
+ await expect(page.locator('#energy-pronunciation-progress option')).toHaveCount(3);
+ await expect(page.locator('#energy-create-lesson option')).toHaveCount(1);
+ await expect(page.locator('a[href^="https://meet.google.com/"]')).toHaveCount(0);
+});

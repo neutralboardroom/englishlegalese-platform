@@ -21,6 +21,16 @@ function mount(host,track){
  nav.append(cross);
  const request=el('a','Request a teacher-led class on this intensive →','v1950-request-class');request.href='/learn/enroll/';
  nav.append(request);
+ // HF56 opt-in Thailand/Vietnam-first adult professional enrollment, China third.
+ const region=el('a','Thailand, Vietnam & China · Professional English classes');
+ region.href='/learn/asia-professional-english/';
+ nav.append(el('span',' · '),region);
+ // HF56 additive gateway only: private adult energy-contracts lessons require account access.
+ if(track==='legal'){
+  const entry=el('a','Private Energy Contracts classroom (sign-in required)');
+  entry.href='/learn/private-energy-contracts/';
+  nav.append(el('span',' · '),entry);
+ }
  const list=el('div',undefined,'v1950-lessons');
  DATA[track].forEach((l,i)=>{
   const [name,goal,words,scenario,model,practice,teacher,question,choices,correct,explain]=l;
