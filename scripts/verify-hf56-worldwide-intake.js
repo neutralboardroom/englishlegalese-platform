@@ -24,5 +24,5 @@ assert.ok(enroll.includes("fetch('/api/v1850/enroll'"),'Keep original working in
 assert.ok(enroll.includes("No payment is taken, no automatic email is sent"),'Existing enrollment disclosure preserved');
 assert.ok(!enroll.includes('sendEmail(')&&!enroll.includes('window.location.href='),'No new outreach or geographical redirect');
 assert.ok(html.includes('id="v1850-enrollment-app"'),'Retain existing page mount and layout');
-assert.ok(html.includes('product-v1850-enrollment.js?v=1.85.0-hf7'),'Retain existing page script order; browser cache update separately before release');
+assert.ok(html.includes('product-v1850-enrollment.js?v=hf56-worldwide-th-vn-cn'),'Retain existing page script order; browser cache update separately before release');
 console.log('PASS HF56 worldwide: Thai/Vietnamese/Chinese functional intake preferences, worldwide default, unchanged enrollment API, no paid action/outreach.');
