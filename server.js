@@ -549,6 +549,8 @@ require('./src/v18510-role-workspaces').install(app,{services:productionServices
 require('./src/v1970-memberships').install(app,{services:productionServices,authMiddleware,requireRoles});
 require('./src/v18511-owner-triage').install(app,{services:productionServices,authMiddleware,requireRoles});
 require('./src/v18512-ops').install(app,{services:productionServices,authMiddleware,requireRoles});
+// HF56: private adult energy-contract classes; authenticated session-allocated Meet links only.
+require('./src/v2150-private-energy-classroom').install(app,{services:productionServices,authMiddleware,requireRoles,configured});
 const aiGuard=createAiSafetyGate();
 const trialGuard=createTrialRateGate();
 const ledger=new FreeTrialLedger({store:persistentStore,sendMail:async mail=>{
