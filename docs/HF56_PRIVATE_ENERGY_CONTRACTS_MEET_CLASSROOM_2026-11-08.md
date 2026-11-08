@@ -38,6 +38,6 @@ Added `learn/private-energy-contracts/index.html`, `src/v2150-private-energy-cla
 The old HF55 PR #99 release gate failed on an advanced-track test assertion that expected the introductory lesson's model, although the advanced track correctly rendered its own legal-research example. HF56 includes corrected test expectations. The HF56 combined acceptance run must pass before release; historical HF55 failure cannot be relabeled as success.
 
 ## Future incremental class feedback
-Use the verified EnglishLegalese session closeout and existing teacher-linked work once access is validated. A short oral intelligibility rubric can record confidence, accurate qualifying language and one next pronunciation target without storing actual client matters. The successful first-class observation about "crude" is stored only if a teacher explicitly selects it after authentication.
+Use the verified EnglishLegalese session closeout and existing teacher-linked work once access is validated. A short oral intelligibility rubric can record confidence, accurate qualifying language and one next pronunciation target without storing actual client matters. Individualized pronunciation progress is never published. A teacher may save a limited observation only after authenticating and explicitly confirming a real class session.
 
 **Status:** source-built feature branch, not merged or deployed. No class has been scheduled for any specific student, and no real Meet has been generated merely by the source commit.
