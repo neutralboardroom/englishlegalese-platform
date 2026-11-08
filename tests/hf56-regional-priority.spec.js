@@ -1,0 +1,37 @@
+'use strict';
+const {test,expect}=require('@playwright/test');
+test('HF56 Thailand and Vietnam first: public professional course overview, China access disclosed',async({page})=>{
+ const errors=[],writes=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ page.on('request',r=>{if(['POST','PUT','PATCH','DELETE'].includes(r.method()))writes.push(r.url());});
+ await page.goto('/learn/asia-professional-english/');
+ await expect(page.getByRole('heading',{name:'Worldwide Legal English and Business English — Thailand, Vietnam and China first'})).toBeVisible();
+ await expect(page.locator('#thailand')).toContainText('cross-border contracts');
+ await expect(page.locator('#vietnam')).toContainText('Ho Chi Minh City');
+ await expect(page.locator('#china')).toContainText('Google Meet is not assumed');
+ await expect(page.locator('#main')).toContainText('serves adult learners and employers worldwide');
+ await expect(page.getByRole('link',{name:'Worldwide enrollment inquiry'})).toHaveAttribute('href','/learn/enroll/?market=other&lang=en');
+ await expect(page.getByRole('link',{name:'Request a Thai-market class'})).toHaveAttribute('href','/learn/enroll/?market=th&lang=th');
+ await expect(page.getByRole('link',{name:'Request a Vietnam-market class'})).toHaveAttribute('href','/learn/enroll/?market=vn&lang=vi');
+ await expect(page.getByRole('link',{name:'Ask about China-market classes'})).toHaveAttribute('href','/learn/enroll/?market=cn&lang=zh-Hans');
+ await expect(page.getByRole('link',{name:'Private classroom for already assigned students (sign-in required)'})).toHaveAttribute('href','/learn/private-energy-contracts/');
+ await expect(page.locator('.v1840-topnav a[href="/learn/legal-english/"]')).toHaveCount(1);
+ await expect(page.locator('.v1840-topnav a[href="/learn/business-english/"]')).toHaveCount(1);
+ await expect(page.locator('footer.v1840-footer')).toBeVisible();
+ const dimensions=await page.evaluate(()=>[document.documentElement.scrollWidth,innerWidth]);
+ expect(dimensions[0]).toBeLessThanOrEqual(dimensions[1]+2);
+ expect(errors).toEqual([]);
+ expect(writes).toEqual([]);
+});
+test('HF56 existing contracts courses retain regular content and offer the regional opt-in',async({page})=>{
+ await page.goto('/learn/legal-english/');
+ await expect(page.locator('#v1950-legal-contracts')).toBeAttached();
+ const block=page.locator('#v1950-legal-contracts');
+ await expect(block.locator('a[href="/learn/asia-professional-english/"]')).toHaveCount(1);
+ await expect(block.locator('a[href="/learn/private-energy-contracts/"]')).toHaveCount(1);
+ await expect(block.locator('details.v1950-lesson')).toHaveCount(16);
+ await page.goto('/learn/business-english/');
+ const business=page.locator('#v1950-business-contracts');
+ await expect(business.locator('a[href="/learn/asia-professional-english/"]')).toHaveCount(1);
+ await expect(business.locator('details.v1950-lesson')).toHaveCount(8);
+});
