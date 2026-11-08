@@ -59,6 +59,11 @@ assert.ok(html.includes('product-v2170-energy-classroom.js?v=hf56'));
 assert.ok(!html.includes('meet.google.com/abc-defg-hij" class="join"'),'no hard-coded join link');
 assert.ok(legal.includes("entry.href='/learn/private-energy-contracts/'"),'Contracts & Agreements must link to private classroom');
 assert.ok(server.includes("require('./src/v2150-private-energy-classroom').install(app"),'API should be mounted via existing secure services');
+assert.ok(server.includes('const protectedPrivateClass = record =>'),'legacy privacy filter is required');
+assert.ok(server.includes('const publicClassSessions = async () =>'),'public session listing must exclude private pilot rows');
+assert.equal((server.match(/persistentStore\.listClassSessions\(\)/g)||[]).length,1,'only the protected wrapper may call legacy raw session listing');
+assert.ok(server.includes("app.use('/api/v120/class-sessions/:id'"),'legacy session details/closeouts must deny private IDs');
+assert.ok(server.includes('if(protectedPrivateClass(input))'),'legacy public class creation must reject private course injection');
 for(const p of ['index.html','styles.css','curriculum-v1800-data.js','assets/englishlegalese-logo.png']){
  assert.ok(fs.existsSync(p),'do not delete protected site source: '+p);
 }
