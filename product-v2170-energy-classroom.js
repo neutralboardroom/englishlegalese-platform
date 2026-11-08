@@ -76,12 +76,17 @@
   }
  }
  async function refresh(){
-  const courses=await call(API+'lessons');
   const sessionResult=await call(API+'sessions');
-  loadedLessons=courses.lessons||[];loadedSessions=sessionResult.sessions||[];
+  loadedSessions=sessionResult.sessions||[];
   authorized.hidden=false;teacherPanel.hidden=role==='student';
-  status.textContent=role==='student'?'Signed in — your assigned private lessons are available.':'Signed in — manage only classes attached to your EnglishLegalese account.';
   loginForm.hidden=true;signout.hidden=false;
+  if(role==='student'&&loadedSessions.length===0){
+   status.textContent='Signed in. Your teacher has not yet assigned a private class to this account.';
+   clear(lessonsView);showSessions(loadedSessions);return;
+  }
+  const courses=await call(API+'lessons');
+  loadedLessons=courses.lessons||[];
+  status.textContent=role==='student'?'Signed in — your assigned private lessons are available.':'Signed in — manage only classes attached to your EnglishLegalese account.';
   showCourse(loadedLessons,courses.agenda||[]);
   showSessions(loadedSessions);
  }
