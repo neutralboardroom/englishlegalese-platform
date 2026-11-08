@@ -69,6 +69,18 @@
 <button type="submit">Create private class in EnglishLegalese</button>
 </form>
 <p class="muted">Leave the Meet field blank to prepare a scheduled class first. If Google Calendar integration is ready, generate its meeting securely from the session below. Otherwise attach a valid Meet link here after creating it in Google Calendar. The student joins only through EnglishLegalese; creating a record does not email an invitation or charge a card.</p>
+<details id="energy-historical-panel" hidden>
+<summary>Record a previously taught first class (owner only)</summary>
+<p class="muted">The first lesson already took place. If you personally taught it, you may associate that completed class with a verified student account. Enter the actual date; the site will not invent a Meet event, send email, or claim payment.</p>
+<form id="energy-historical-form" class="teacher-form">
+<label>Verified student account email<input id="energy-history-email" type="email" required maxlength="254" autocomplete="off"></label>
+<label>Actual first class date and time (UTC+7)<input id="energy-history-date" type="datetime-local" required></label>
+<label>Teacher-only crude oil pronunciation observation
+<select id="energy-pronunciation-progress"><option value="not_recorded">Not recorded</option><option value="improved">Improved during the class</option><option value="needs_review">Needs follow-up practice</option></select></label>
+<label><input id="energy-history-confirm" type="checkbox" required> I confirm this one-hour class was genuinely taught at the time above.</label>
+<button type="submit">Record the previously taught first lesson</button>
+</form>
+</details>
 <p id="energy-teacher-status" role="status" aria-live="polite"></p>
 </section>
 </main>
