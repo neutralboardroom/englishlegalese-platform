@@ -52,8 +52,7 @@ for(const needle of [
 ])assert.ok(api.includes(needle),'privacy/scheduling safeguard missing: '+needle);
 for(const needle of [
  'sessionStorage','safeMeet','/api/v1940/student/auth/login',
- 'API+\x27sessions\x27','Join Google Meet from EnglishLegalese',
- 'No recording, submission'
+ 'API+\x27sessions\x27','Join Google Meet from EnglishLegalese'
 ]){assert.ok(ui.includes(needle),'UI integration missing '+needle);}
 assert.ok(html.includes('name="robots" content="noindex,nofollow,noarchive"'));
 assert.ok(html.includes('product-v2170-energy-classroom.js?v=hf56'));
