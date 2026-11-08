@@ -1,11 +1,12 @@
 'use strict';
-const fs=require('node:fs'), assert=require('node:assert/strict');
+const fs=require('node:fs'), assert=require('node:assert/strict'),vm=require('node:vm');
 const oldData=fs.readFileSync('product-v2120-practice-bridge-data.js','utf8');
 const prior=JSON.parse(oldData.match(/const cases=(\[[\s\S]*?\]);\n if\(cases.length/)[1]);
 const code=fs.readFileSync('product-v2160-audience-briefings.js','utf8');
 const match=code.match(/const briefings=(\[[\s\S]*?\]);\n if\(briefings.length/);
 assert.ok(match,'audience data must remain available for complete verification');
-const authored=JSON.parse(match[1]);
+const authored=JSON.parse(JSON.stringify(vm.runInNewContext('('+match[1]+')',{}, {timeout:1000})));
+assert.ok(Array.isArray(authored));
 assert.equal(authored.length,24,'24 distinct adult topics');
 assert.deepEqual(authored.map(r=>r.title),prior.map(r=>r.title),'no lesson drift');
 for(const c of authored){
