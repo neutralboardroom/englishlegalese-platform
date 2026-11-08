@@ -39,7 +39,7 @@ assert.equal(extractNav(html),extractNav(legal),'reuse original header navigatio
 const extractFooter=s=>s.slice(s.indexOf('<footer class="v1840-footer">'),s.indexOf('</footer>',s.indexOf('<footer class="v1840-footer">'))+9);
 assert.equal(extractFooter(html),extractFooter(legal),'reuse original footer without changes');
 const sourceCsv=fs.readFileSync('research/HF56_TH_VN_ADULT_PROFESSIONAL_TRAINING_PROSPECTS_RESEARCH_ONLY.csv','utf8');
-const dataRows=sourceCsv.trim().split('\\n').slice(1);
+const dataRows=sourceCsv.trim().split(/\r?\n/).slice(1);
 assert.equal(dataRows.length,20,'10 Thailand + 10 Vietnam public source candidates');
 assert.equal(dataRows.filter(row=>row.startsWith('"TH"')).length,10,'Thailand equal research candidates');
 assert.equal(dataRows.filter(row=>row.startsWith('"VN"')).length,10,'Vietnam equal research candidates');
