@@ -59,7 +59,6 @@
     make('p',turn.respond));
    previous.disabled=index===0;
    next.disabled=index===rounds.length-1;
-   next.textContent=index===rounds.length-1?'Last turn':'Next turn';
   }
   previous.addEventListener('click',()=>{if(index>0){index--;render();}});
   next.addEventListener('click',()=>{if(index<rounds.length-1){index++;render();}});
