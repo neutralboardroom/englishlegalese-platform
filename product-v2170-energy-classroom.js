@@ -121,6 +121,22 @@
     if(sel){sel.open=true;sel.scrollIntoView({behavior:'smooth',block:'start'});}
    });
    actions.append(lessonToggle);
+   const checkReady=node('button','Check class readiness');
+   checkReady.type='button';
+   const readinessStatus=node('p',undefined,'energy-readiness-status');
+   readinessStatus.setAttribute('role','status');
+   readinessStatus.setAttribute('aria-live','polite');
+   checkReady.addEventListener('click',async()=>{
+    checkReady.disabled=true;
+    readinessStatus.textContent='Checking the authenticated class record…';
+    try{
+     const result=await call(API+'sessions/'+encodeURIComponent(row.id)+'/readiness');
+     const label=result.join_available?'Ready for Google Meet':'Not ready to join';
+     readinessStatus.textContent=label+' · '+result.next_action+' The audio/video preview is tested in the video provider.';
+    }catch(e){readinessStatus.textContent=e.message;}
+    finally{checkReady.disabled=false;}
+   });
+   actions.append(checkReady);
    if(role!=='student'){
     if(row.status==='requested'){
      if(canAutoMeet&&row.starts_at){
@@ -160,7 +176,7 @@
      actions.append(complete);
     }
    }
-   section.append(actions);schedule.append(section);
+   section.append(actions,readinessStatus);schedule.append(section);
   }
  }
  async function perform(button,url,data,target){
