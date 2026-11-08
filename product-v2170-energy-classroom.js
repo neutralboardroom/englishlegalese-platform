@@ -68,6 +68,8 @@
    const p=(title,text)=>{const block=node('p');block.append(node('strong',title+': '),document.createTextNode(text));card.append(block);};
    p('Goal',lesson.goal);p('Fictional exercise',lesson.scenario);p('Practice language',lesson.model);
    p('Vocabulary',lesson.vocabulary.join(' · '));
+   if(lesson.pronunciation)p('Pronunciation and short speaking warm-up',lesson.pronunciation);
+   if(role!=='student'&&lesson.teacherPronunciationPrompt)p('Teacher-only pronunciation coaching',lesson.teacherPronunciationPrompt);
    const heading=node('h3','One-hour lesson agenda');card.append(heading);
    appendList(card,agenda.map(a=>String(a.start).padStart(2,'0')+'–'+String(a.end).padStart(2,'0')+' minutes · '+a.label));
    if(role!=='student'&&lesson.teacherPrompt)p('Teacher-only role-play prompts',lesson.teacherPrompt);
