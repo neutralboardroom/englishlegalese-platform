@@ -61,7 +61,9 @@ install(app,{services,authMiddleware,requireRoles,configured:()=>({google_calend
  const base='http://127.0.0.1:'+server.address().port+'/api/v2150/private-energy/';
  async function get(path,token){
   const r=await fetch(base+path,{headers:token?{Authorization:'Bearer '+token}:{}});
-  return {status:r.status,body:await r.json()};
+  const raw=await r.text();let parsed;
+  try{parsed=JSON.parse(raw);}catch{parsed={error:'non-json error page'};}
+  return {status:r.status,body:parsed};
  }
  try{
   const unauth=await get('sessions/'+READY+'/readiness');
