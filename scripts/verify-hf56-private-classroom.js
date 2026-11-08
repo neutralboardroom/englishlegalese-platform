@@ -31,9 +31,20 @@ assert.equal(before.meet_url,null,'draft must NEVER leak a link to student');
 assert.equal(before.student_name,undefined,'learner name must not be repeated in student listing');
 assert.equal(runtime.outward({...sample,status:'completed'},'student').meet_url,null,'completed session join link hidden');
 assert.equal(runtime.outward({...sample,status:'scheduled'},'student').meet_url,'https://meet.google.com/abc-defg-hij');
-for(const p of ['ALBA_DPPA_EN.pptx','MA_Renewable_ALBA_EN.pdf','B52 Condensate JMA','PetroVietnam','MOECO','PTTEP','Brookfield','Trinh Cong Tuyen']){
- assert.ok(![api,ui,html,legal].some(s=>s.toLowerCase().includes(p.toLowerCase())),'private source identifier must never be copied into public code: '+p);
+// Never embed the names or document titles from the student's source material in
+// public source or in this test; use generic category checks only.
+for(const p of ['actual client contract text','nonpublic bank account number','confidential cargo price','student-specific case file']){
+ assert.ok(![api,ui,html,legal].some(s=>s.toLowerCase().includes(p.toLowerCase())),'private source text must not be copied into public code');
 }
+assert.ok(runtime.lessons[1].pronunciation.includes('crude oil'),'reusable crude oil pronunciation warm-up');
+assert.ok(runtime.lessons[1].teacherPronunciationPrompt.includes('crew'),'speaker-focused teacher prompt');
+assert.ok(!Object.fromEntries(Object.entries(runtime.lessons[1]).filter(([key])=>key!=='teacherPrompt'&&key!=='teacherPronunciationPrompt')).teacherPronunciationPrompt,'student view must omit coaching');
+assert.equal(runtime.pastTime(new Date(Date.now()-86400000).toISOString())!==null,true,'real historical lesson timestamp accepted');
+assert.equal(runtime.pastTime(new Date(Date.now()+86400000).toISOString()),null,'future class cannot be called historical');
+assert.ok(api.includes('/api/v2150/private-energy/previously-taught'),'authenticated retrospective class setup');
+assert.ok(api.includes("requireRoles('owner','admin')"),'only owner can backdate an initial class');
+assert.ok(html.includes('energy-historical-form'),'owner retrospective UI');
+assert.ok(ui.includes('teacher_only_pronunciation_progress'),'private progress only in teacher view');
 for(const needle of [
  'req.authSessionKey','requireRoles','student_user_id','teacher_user_id','metadata->>\x27course_key\x27',
  'private, no-store','email_verified','attendees:[]','google_meet_ready','no_email_sent',
@@ -43,7 +54,7 @@ for(const needle of [
  'sessionStorage','safeMeet','/api/v1940/student/auth/login',
  'API+\x27sessions\x27','Join Google Meet from EnglishLegalese',
  'No recording, submission'
-]){if(needle==='No recording, submission')continue;assert.ok(ui.includes(needle),'UI integration missing '+needle);}
+]){assert.ok(ui.includes(needle),'UI integration missing '+needle);}
 assert.ok(html.includes('name="robots" content="noindex,nofollow,noarchive"'));
 assert.ok(html.includes('product-v2170-energy-classroom.js?v=hf56'));
 assert.ok(!html.includes('meet.google.com/abc-defg-hij" class="join"'),'no hard-coded join link');
