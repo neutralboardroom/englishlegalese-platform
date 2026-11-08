@@ -6,9 +6,7 @@ test('HF56 Thailand and Vietnam first: public professional course overview, Chin
  page.on('request',r=>{if(['POST','PUT','PATCH','DELETE'].includes(r.method()))writes.push(r.url());});
  await page.goto('/learn/asia-professional-english/');
  await expect(page.getByRole('heading',{name:'Legal English and Business English for professionals in Thailand, Vietnam and China'})).toBeVisible();
- await expect(page.locator('#thailand')).toContainText('Practicing lawyers').catch(async()=>{
-  await expect(page.locator('#thailand')).toContainText('cross-border contracts');
- });
+ await expect(page.locator('#thailand')).toContainText('cross-border contracts');
  await expect(page.locator('#vietnam')).toContainText('Ho Chi Minh City');
  await expect(page.locator('#china')).toContainText('Google Meet is not assumed');
  await expect(page.getByRole('link',{name:'Request a Thai-market class'})).toHaveAttribute('href','/learn/enroll/');
