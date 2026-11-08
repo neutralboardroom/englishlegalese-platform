@@ -75,6 +75,7 @@
    appendList(card,agenda.map(a=>String(a.start).padStart(2,'0')+'–'+String(a.end).padStart(2,'0')+' minutes · '+a.label));
    if(role!=='student'&&lesson.teacherPrompt)p('Teacher-only role-play prompts',lesson.teacherPrompt);
    p('Practice for next class',lesson.homework);
+   window.EnglishLegaleseEnergyLiveConductorV1?.mount(card,{lesson,role,agenda});
    lessonsView.append(card);
   }
  }
