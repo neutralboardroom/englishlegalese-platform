@@ -53,7 +53,8 @@ test('HF58 assigned student can request cancellation; does not silently charge o
 test('HF58 teacher can launch a student-only slide presentation without private prompt leakage',async({page,context})=>{
  const result=await setup(page,'teacher');
  await expect(page.getByRole('button',{name:'Check EnglishLegalese calendar conflicts'})).toBeVisible();
- await expect(page.getByRole('button',{name:'Open student presentation for Google Meet'})).toHaveCount(1);
+ await page.locator('details.energy-lesson').first().locator(':scope > summary').click();
+ await expect(page.getByRole('button',{name:'Open student presentation for Google Meet'})).toBeVisible();
  const popupEvent=context.waitForEvent('page');
  await page.getByRole('button',{name:'Open student presentation for Google Meet'}).click();
  const popup=await popupEvent;
