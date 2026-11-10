@@ -24,7 +24,7 @@ const learnerMarket=select('learner_market','Country / market for class arrangem
 const contactLanguage=select('preferred_contact_language','Preferred contact language (request only; availability to be confirmed)',[
  ['en','English'],['th','ไทย · Thai'],['vi','Tiếng Việt · Vietnamese'],['zh-Hans','简体中文 · Simplified Chinese']
 ]);
-const localeHelp=el('p');localeHelp.className='v1850-boundary';localeHelp.setAttribute('role','status');localeHelp.setAttribute('aria-live','polite');form.append(localeHelp);
+const localeHelp=el('p');localeHelp.className='el-enrollment-locale-note';localeHelp.setAttribute('role','status');localeHelp.setAttribute('aria-live','polite');form.append(localeHelp);
 function localeGuidance(){
  const text={
   th:'ภาษาอังกฤษสำหรับนักกฎหมายและผู้เชี่ยวชาญด้านธุรกิจ: เลือกหลักสูตร ใส่อีเมลและส่งคำขอ การลงทะเบียนยังไม่ถือเป็นการจองหรือชำระเงิน',
