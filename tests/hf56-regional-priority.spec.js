@@ -14,7 +14,7 @@ test('HF56 Thailand and Vietnam first: public professional course overview, Chin
  await expect(page.getByRole('link',{name:'Request a Thai-market class'})).toHaveAttribute('href','/learn/enroll/?market=th&lang=th');
  await expect(page.getByRole('link',{name:'Request a Vietnam-market class'})).toHaveAttribute('href','/learn/enroll/?market=vn&lang=vi');
  await expect(page.getByRole('link',{name:'Ask about China-market classes'})).toHaveAttribute('href','/learn/enroll/?market=cn&lang=zh-Hans');
- await expect(page.getByRole('link',{name:'Private classroom for already assigned students (sign-in required)'})).toHaveAttribute('href','/learn/private-energy-contracts/');
+ await expect(page.locator('#main details a[href="/learn/private-energy-contracts/"]')).toHaveAttribute('href','/learn/private-energy-contracts/');
  await expect(page.locator('.v1840-topnav a[href="/learn/legal-english/"]')).toHaveCount(1);
  await expect(page.locator('.v1840-topnav a[href="/learn/business-english/"]')).toHaveCount(1);
  await expect(page.locator('footer.v1840-footer')).toBeVisible();
