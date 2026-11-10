@@ -76,6 +76,7 @@
    if(role!=='student'&&lesson.teacherPrompt)p('Teacher-only role-play prompts',lesson.teacherPrompt);
    p('Practice for next class',lesson.homework);
    window.EnglishLegaleseEnergyLiveConductorV1?.mount(card,{lesson,role,agenda});
+   window.EnglishLegaleseEnergyPresentationV1?.mount(card,{lesson,role});
    lessonsView.append(card);
   }
  }
@@ -107,6 +108,11 @@
    const title=node('h3',rowLabel(row));section.append(title);
    section.append(node('p','Status: '+row.status+' · 60 minutes · '+row.provider,'muted'));
    if(role!=='student'&&row.teacher_only_pronunciation_progress) section.append(node('p','Private teaching observation — crude oil pronunciation: '+row.teacher_only_pronunciation_progress.replaceAll('_',' '),'muted'));
+   if(row.change_request?.status==='pending'){
+    section.append(node('p',role==='student'
+     ?'Your '+row.change_request.kind+' request is pending teacher review. The original appointment is unchanged. No fee, refund or credit decision has been made.'
+     :'Student requested '+row.change_request.kind+'. Review the agreed notice policy and external calendar event manually. No automatic email, fee or calendar action occurred.','notice'));
+   }
    const actions=node('div',undefined,'actions');
    const meeting=safeMeet(row.meet_url);
    if(row.meet_ready&&meeting){
@@ -137,6 +143,39 @@
     finally{checkReady.disabled=false;}
    });
    actions.append(checkReady);
+   if(role==='student'&&['requested','scheduled'].includes(row.status)&&row.starts_at&&new Date(row.starts_at).getTime()>Date.now()&&row.change_request?.status!=='pending'){
+    const form=node('form',undefined,'energy-change-form');
+    const kindLabel=node('label','Change my class');
+    const select=node('select');select.name='change-kind';
+    for(const [value,label] of [['cancel','Request cancellation'],['reschedule','Request another time']]){
+     const option=node('option',label);option.value=value;select.append(option);
+    }
+    kindLabel.append(select);
+    const dateLabel=node('label','Preferred new time (Vietnam / Thailand, UTC+7)');
+    const dateInput=node('input');dateInput.type='datetime-local';dateInput.name='proposed-time';
+    dateLabel.append(dateInput);dateLabel.hidden=true;
+    select.addEventListener('change',()=>{dateLabel.hidden=select.value!=='reschedule';dateInput.required=select.value==='reschedule';});
+    const policy=node('p',row.notice_policy_hours
+     ?'Requested notice period: '+row.notice_policy_hours+' hours. Your teacher must review credit and fee eligibility.'
+     :'Your notice period and credit/fee terms are not yet confirmed here. A request never charges or refunds a card.','muted');
+    const submit=node('button','Send change request for teacher review');submit.type='submit';
+    const info=node('p',undefined,'energy-change-status');info.setAttribute('role','status');info.setAttribute('aria-live','polite');
+    form.append(kindLabel,dateLabel,policy,submit,info);
+    form.addEventListener('submit',async event=>{
+     event.preventDefault();
+     let body={kind:select.value};
+     if(select.value==='reschedule'){
+      try{body.proposed_at=localStart(dateInput.value);}catch(e){info.textContent=e.message;return;}
+     }
+     submit.disabled=true;info.textContent='Sending your authenticated request…';
+     try{
+      const result=await call(API+'sessions/'+encodeURIComponent(row.id)+'/change-request','POST',body);
+      info.textContent=result.message||'Request recorded. Teacher review is required.';
+      await refresh();
+     }catch(e){info.textContent=e.message;}finally{submit.disabled=false;}
+    });
+    section.append(form);
+   }
    if(role!=='student'){
     if(row.status==='requested'){
      if(canAutoMeet&&row.starts_at){
@@ -231,9 +270,22 @@
   setSession(role==='student'?STUDENT_SESSION:TEACHER_SESSION,null);
   loggedOut('Signed out of this classroom on this device. Existing account security controls remain available in Account.');
  });
+ // Check EnglishLegalese conflicts; the teacher must independently review Google calendars.
+ const conflictButton=node('button','Check EnglishLegalese calendar conflicts');conflictButton.type='button';
+ const conflictResult=node('p',undefined,'energy-internal-conflict-result');conflictResult.setAttribute('role','status');
+ const teacherAck=node('label','I checked my Google calendars separately for overlapping appointments.');
+ const teacherAckInput=node('input');teacherAckInput.type='checkbox';teacherAck.append(teacherAckInput);
+ createForm.prepend(conflictButton,conflictResult,teacherAck);
+ conflictButton.addEventListener('click',async()=>{
+  let start;try{start=localStart(element('energy-start').value);}catch(e){conflictResult.textContent=e.message;return;}
+  conflictButton.disabled=true;
+  try{const result=await call(API+'teacher-conflicts?starts_at='+encodeURIComponent(start));conflictResult.textContent=result.notice+' External Google calendars were not checked by this tool.';}
+  catch(e){conflictResult.textContent=e.message;}finally{conflictButton.disabled=false;}
+ });
  createForm.addEventListener('submit',async event=>{
   event.preventDefault();
   if(role==='student'||!token)return;
+  if(!teacherAckInput.checked){teacherStatus.textContent='Check your Google calendars for conflicts before creating the class.';return;}
   const button=createForm.querySelector('button[type=submit]');
   const url=element('energy-link').value.trim();
   if(url&&!safeMeet(url)){teacherStatus.textContent='Enter only a verified Google Meet link, or leave the field empty.';return;}
