@@ -8,7 +8,7 @@ for(const token of ['seats>=11?15:seats>=6?10:5','Number.isInteger(seats)','new 
 for(const token of ['legal.length!==24||business.length!==24','Showing ','toLocaleLowerCase','Investor English','button'])assert(discovery.includes(token),'Incomplete course navigation '+token);
 for(const s of ['preProgram','prePackage','preSeats','preProgram===\'complete\'&&prePackage===\'full48\'','Organization is deliberately never prefilled'])assert(enroll.includes(s),'Handoff fails '+s);
 assert(pages[0].includes('id="v1880-group-estimator"')&&pages[1].includes('id="v1880-employer-estimate"'));
-assert(pages[2].includes('id="v1880-topic-discovery"')&&pages[3].includes('product-v1850-enrollment.js?v=1.85.0-hf7'));
+assert(pages[2].includes('id="v1880-topic-discovery"')&&pages[3].includes('product-v1850-enrollment.js?v=hf56-worldwide-th-vn-cn'));
 assert(rd('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md').includes('EL-RGR-023'));
 assert(rd('governance/ENGLISHLEGALESE_DURABLE_BUILDER_RULES_ADDENDUM_2026-10-24.md').includes('EL-DUR-011'));
 const price=rd('scripts/verify-v1860-prices.js');assert(price.includes('full48:[649,1599]')&&price.includes('eight:[149,319]'),'Do not modify owner-approved prices');
