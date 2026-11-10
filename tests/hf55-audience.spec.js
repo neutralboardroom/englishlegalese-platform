@@ -30,12 +30,12 @@ for(const route of ['/learn/continuing-practice/','/learn/continuing-practice/ad
   const sample=activity.locator('.v2160-example');
   await expect(sample).not.toHaveAttribute('open');
   await sample.locator('summary').click();
-  await expect(sample).toContainText(path.includes('/advanced/')?'We located a potentially relevant decision':'We have recorded your delivery concern');
+  await expect(sample).toContainText(route.includes('/advanced/')?'We located a potentially relevant decision':'We have recorded your delivery concern');
   await internalButton.click();
   await expect(sample).not.toHaveAttribute('open');
   await expect(internalButton).toHaveAttribute('aria-pressed','true');
   await sample.locator('summary').click();
-  await expect(sample).toContainText(path.includes('/advanced/')?'Do not describe a cited appellate decision':'Attribute the delay to the client report');
+  await expect(sample).toContainText(route.includes('/advanced/')?'Do not describe a cited appellate decision':'Attribute the delay to the client report');
   const checklist=activity.locator('.v2160-checklist input[type=checkbox]');
   await expect(checklist).toHaveCount(3);
   await checklist.first().check();
