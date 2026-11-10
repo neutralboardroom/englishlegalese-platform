@@ -128,6 +128,18 @@ function meetLink(input){
  const value=input.trim().replace(/\/$/,'');
  return MEET.test(value)?value:false;
 }
+function changeSummary(metadata){
+ const item=metadata?.student_change_request;
+ if(!item||typeof item!=='object'||!['cancel','reschedule'].includes(item.kind))return null;
+ return {kind:item.kind,status:['pending','declined','approved'].includes(item.status)?item.status:'pending',
+  requested_at:typeof item.requested_at==='string'?item.requested_at:null,
+  proposed_at:item.kind==='reschedule'&&typeof item.proposed_at==='string'?item.proposed_at:null,
+  policy_decision:'manual_review_required',payment_processed:false};
+}
+function approvedNoticeHours(){
+ const raw=process.env.ENGLISHLEGALESE_PRIVATE_CLASS_NOTICE_HOURS;
+ const n=Number(raw);return raw&&Number.isInteger(n)&&n>=1&&n<=168?n:null;
+}
 function outward(row,role){
  return{
   id:row.id,lesson_number:Number(row.metadata?.lesson_number),
@@ -139,6 +151,8 @@ function outward(row,role){
   student_name:role==='teacher'?row.learner_name:undefined,
   teacher_only_pronunciation_progress:role==='teacher'&&row.metadata?.pronunciation_focus==='crude_oil'?row.metadata?.pronunciation_progress||null:undefined,
   provider:'Google Meet',recording:'Off by default; any recording requires separate consent.',
+  change_request:changeSummary(row.metadata),
+  notice_policy_hours:approvedNoticeHours(),
   notes:'English-language teaching with fictional contract exercises, not live client advice.'
  };
 }
@@ -276,6 +290,11 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[COURSE+':'+student.id+':'+String(n)]);
    const duplicates=await client.query("SELECT id FROM class_sessions WHERE student_user_id=$1 AND metadata->>'course_key'=$2 AND metadata->>'lesson_number'=$3 AND status<>'cancelled' LIMIT 1",[student.id,COURSE,String(n)]);
    if(duplicates.rows.length){await client.query('ROLLBACK');return reply(res,409,{ok:false,error:'An active class record already exists for this lesson. Update that session instead of creating a duplicate.'});}
+   if(start){
+    await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[COURSE+':teacher-calendar:'+req.user.id]);
+    const overlap=await client.query("SELECT 1 FROM class_sessions WHERE teacher_user_id=$1 AND status IN ('requested','scheduled') AND scheduled_at IS NOT NULL AND scheduled_at<$2::timestamptz+interval '60 minutes' AND scheduled_at+interval '60 minutes'>$2::timestamptz LIMIT 1",[req.user.id,start]);
+    if(overlap.rows.length){await client.query('ROLLBACK');return reply(res,409,{ok:false,error:'An EnglishLegalese class overlaps. The new class was not created.'});}
+   }
    const id='EL-ENERGY-'+crypto.randomUUID();
    const metadata={course_key:COURSE,lesson_number:n,duration_minutes:60,source_protection:'fictional_examples_only',recording:'disabled',provider_confirmation:url?'teacher_entered':'unconfirmed'};
    const status=start&&url?'scheduled':'requested';
@@ -296,6 +315,7 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    if(!prior||prior.teacher_user_id!==req.user.id)return reply(res,404,{ok:false,error:'Assigned teacher classroom not found.'});
    if(prior.status==='completed'||prior.status==='cancelled')return reply(res,409,{ok:false,error:'Completed/cancelled classes cannot be reactivated.'});
    if(prior.metadata?.provider_confirmation==='google_calendar_created')return reply(res,409,{ok:false,error:'Calendar-managed meeting time cannot be changed here; reschedule via the calendar integration.'});
+   if(await internalConflicts(req.user.id,start,prior.id))return reply(res,409,{ok:false,error:'An EnglishLegalese class overlaps. No meeting link was attached.'});
    const rows=await services.query("UPDATE class_sessions SET scheduled_at=$3,video_join_url=$4,status='scheduled',readiness_status='ready',metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{provider_confirmation}',to_jsonb('teacher_entered'::text),true),updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$5 AND status NOT IN ('completed','cancelled') RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",[prior.id,req.user.id,start,url,COURSE]);
    return rows.rows.length?reply(res,200,{ok:true,session:outward(rows.rows[0],'teacher'),no_email_sent:true}):reply(res,404,{ok:false,error:'Session unavailable.'});
   }catch{return reply(res,503,{ok:false,error:'Meeting link could not be attached.'});}
@@ -308,6 +328,7 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    if(!prior||prior.teacher_user_id!==req.user.id)return reply(res,404,{ok:false,error:'Assigned teacher classroom not found.'});
    if(!prior.scheduled_at||prior.status==='completed'||prior.status==='cancelled'||prior.video_join_url)
     return reply(res,409,{ok:false,error:'A dated, link-free, active class is required to create a Google Meet.'});
+   if(await internalConflicts(req.user.id,prior.scheduled_at,prior.id))return reply(res,409,{ok:false,error:'An EnglishLegalese class overlaps. Google Meet was not created.'});
    const claim=await services.query("UPDATE class_sessions SET readiness_status='generating_meet',updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$3 AND video_join_url IS NULL AND scheduled_at IS NOT NULL AND status='requested' AND readiness_status='needs_meet' RETURNING id",[prior.id,req.user.id,COURSE]);
    if(claim.rows.length!==1)return reply(res,409,{ok:false,error:'A meeting may already be in preparation. Refresh the class record before retrying.'});
    claimed=true;
@@ -326,6 +347,48 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    if(claimed)await services.query("UPDATE class_sessions SET readiness_status='needs_meet',updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND readiness_status='generating_meet'",[req.params.id,req.user.id]).catch(()=>{});
    return reply(res,503,{ok:false,error:'Google Meet creation or durable save was not verified. Inspect Calendar before retrying to avoid duplicate events.'});
   }
+ });
+ // HF58: no policy guessing, automatic credits, charges, event changes, or email.
+ app.post('/api/v2150/private-energy/sessions/:id/change-request',guard,ready,async(req,res)=>{
+  if(req.user.role!=='student')return reply(res,403,{ok:false,error:'Only the assigned student can request a change.'});
+  const kind=req.body?.kind;
+  const proposed=kind==='reschedule'?nowTime(req.body?.proposed_at):null;
+  if(!['cancel','reschedule'].includes(kind)||(kind==='reschedule'&&!proposed))
+   return reply(res,400,{ok:false,error:'Choose cancellation or a valid future replacement class time.'});
+  try{
+   const prior=await accessible(req,req.params.id);
+   if(!prior||prior.student_user_id!==req.user.id)return reply(res,404,{ok:false,error:'No assigned private class was found.'});
+   if(!['requested','scheduled'].includes(prior.status)||!prior.scheduled_at||new Date(prior.scheduled_at).getTime()<=Date.now())
+    return reply(res,409,{ok:false,error:'Only upcoming assigned classes can be changed online. Contact the teacher for anything else.'});
+   if(changeSummary(prior.metadata)?.status==='pending')
+    return reply(res,409,{ok:false,error:'Your previous change request is already awaiting review.'});
+   if(kind==='reschedule'&&Math.abs(new Date(prior.scheduled_at).getTime()-new Date(proposed).getTime())<60000)
+    return reply(res,400,{ok:false,error:'Choose a different class time.'});
+   const request={kind,status:'pending',requested_at:new Date().toISOString(),proposed_at:proposed,policy_decision:'unassessed'};
+   const updated=await services.query(
+    "UPDATE class_sessions SET metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{student_change_request}',$3::jsonb,true),updated_at=now() WHERE id=$1 AND student_user_id=$2 AND metadata->>'course_key'=$4 AND status IN ('requested','scheduled') AND scheduled_at>now() AND (metadata->'student_change_request' IS NULL OR metadata->'student_change_request'->>'status'<>'pending') RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",
+    [prior.id,req.user.id,JSON.stringify(request),COURSE]);
+   if(updated.rows.length!==1)return reply(res,409,{ok:false,error:'The class or request changed. Refresh before retrying.'});
+   return reply(res,202,{ok:true,request:changeSummary(updated.rows[0].metadata),teacher_review_required:true,
+    calendar_event_changed:false,charge_applied:false,credit_decided:false,
+    message:'Request saved for teacher review. Your original appointment remains until confirmed. No charge was made.'});
+  }catch{return reply(res,503,{ok:false,error:'Class change request was not confirmed. No charge or calendar change was made.'});}
+ });
+ // Teacher-visible overlap check covers EnglishLegalese records, not all Google calendars.
+ async function internalConflicts(teacherId,start,excludeId){
+  const matches=await services.query(
+   "SELECT 1 FROM class_sessions WHERE teacher_user_id=$1 AND status IN ('requested','scheduled') AND scheduled_at IS NOT NULL AND scheduled_at<$2::timestamptz+interval '60 minutes' AND scheduled_at+interval '60 minutes'>$2::timestamptz AND id<>$3 LIMIT 1",
+   [teacherId,start,excludeId||'']);
+  return matches.rows.length>0;
+ }
+ app.get('/api/v2150/private-energy/teacher-conflicts',guard,managers,ready,async(req,res)=>{
+  const start=nowTime(req.query.starts_at);
+  if(!start)return reply(res,400,{ok:false,error:'A valid future class time is required.'});
+  try{
+   const overlap=await internalConflicts(req.user.id,start,null);
+   return reply(res,200,{ok:true,internal_conflict:overlap,google_calendars_checked:false,full_conflict_clearance:false,
+    notice:overlap?'An EnglishLegalese class already overlaps. Choose another time.':'No EnglishLegalese conflict found; check all Google calendars separately.'});
+  }catch{return reply(res,503,{ok:false,error:'Internal schedule could not be checked. Do not confirm an appointment.'});}
  });
  app.post('/api/v2150/private-energy/sessions/:id/complete',guard,managers,ready,async(req,res)=>{
   try{
