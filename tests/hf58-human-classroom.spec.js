@@ -55,7 +55,9 @@ test('HF58 teacher can launch a student-only slide presentation without private 
  await expect(page.getByRole('button',{name:'Check EnglishLegalese calendar conflicts'})).toBeVisible();
  await page.locator('details.energy-lesson').first().locator(':scope > summary').click();
  await expect(page.getByRole('button',{name:'Open student presentation for Google Meet'})).toBeVisible();
- const popupEvent=context.waitForEvent('page');
+ // A popup is an event of the originating page. Waiting on the full browser
+ // context can race with mobile-Chromium page activation and hang indefinitely.
+ const popupEvent=page.waitForEvent('popup',{timeout:15000});
  await page.getByRole('button',{name:'Open student presentation for Google Meet'}).click();
  const popup=await popupEvent;
  await expect(popup.getByRole('heading',{name:'Welcome'})).toBeVisible();
