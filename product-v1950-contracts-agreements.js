@@ -21,6 +21,17 @@ function mount(host,track){
  nav.append(cross);
  const request=el('a','Request a teacher-led class on this intensive →','v1950-request-class');request.href='/learn/enroll/';
  nav.append(request);
+ // HF56 opt-in Thailand/Vietnam-first adult professional enrollment, China third.
+ const marketLinks=el('p',undefined,'v1950-related-links');
+ const region=el('a','Thailand, Vietnam & China · Professional English classes');
+ region.href='/learn/asia-professional-english/';
+ marketLinks.append(region);
+ // HF56 additive gateway only: private adult energy-contracts lessons require account access.
+ if(track==='legal'){
+  const entry=el('a','Private Energy Contracts classroom (sign-in required)');
+  entry.href='/learn/private-energy-contracts/';
+  marketLinks.append(el('span',' · '),entry);
+ }
  const list=el('div',undefined,'v1950-lessons');
  DATA[track].forEach((l,i)=>{
   const [name,goal,words,scenario,model,practice,teacher,question,choices,correct,explain]=l;
@@ -61,7 +72,7 @@ function mount(host,track){
  const sources=el('p',undefined,'v1950-sources');sources.append(el('strong','Further reading and research basis: '));
  for(const [name,url] of [['Harvard Program on Negotiation: preparation','https://www.pon.harvard.edu/daily/negotiation-skills-daily/negotiation-preparation-checklist/'],['World Commerce & Contracting principles','https://www.worldcc.com/knowledge-insights/checklists-guides/contracting-principles.html'],['Harvard Program on Negotiation: seven elements','https://www.pon.harvard.edu/daily/negotiation-skills-daily/what-is-negotiation/']]){const a=el('a',name);a.href=url;a.rel='noopener noreferrer';a.target='_blank';sources.append(a,el('span',' · '))}
  const extra=el('p','These original fictional activities adapt general negotiation and contracting concepts into English-language practice; they do not reproduce third-party training content or constitute legal advice.','v1950-source-note');
- host.append(kicker,h,intro,status,glance,nav,list,pre,sources,extra);
+ host.append(kicker,h,intro,status,glance,nav,marketLinks,list,pre,sources,extra);
 }
 mount(document.getElementById('v1950-legal-contracts'),'legal');mount(document.getElementById('v1950-business-contracts'),'business');
 })();
