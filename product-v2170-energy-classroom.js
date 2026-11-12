@@ -113,6 +113,12 @@
      ?'Your '+row.change_request.kind+' request is pending teacher review. The original appointment is unchanged. No fee, refund or credit decision has been made.'
      :'Student requested '+row.change_request.kind+'. Review the agreed notice policy and external calendar event manually. No automatic email, fee or calendar action occurred.','notice'));
    }
+   if(row.change_request?.status==='coordination_required'){
+    section.append(node('p','Student change request: awaiting manual teacher/student coordination. This is NOT a confirmed cancellation or reschedule. Your original class time and Meet remain in effect; no fee or credit decision was made.','notice'));
+   }
+   if(row.change_request?.status==='declined'){
+    section.append(node('p','Student change request was declined after teacher review. The original class remains scheduled unless separately changed. No fee, credit, provider or email action was performed.','muted'));
+   }
    const actions=node('div',undefined,'actions');
    const meeting=safeMeet(row.meet_url);
    if(row.meet_ready&&meeting){
@@ -143,7 +149,7 @@
     finally{checkReady.disabled=false;}
    });
    actions.append(checkReady);
-   if(role==='student'&&['requested','scheduled'].includes(row.status)&&row.starts_at&&new Date(row.starts_at).getTime()>Date.now()&&row.change_request?.status!=='pending'){
+   if(role==='student'&&['requested','scheduled'].includes(row.status)&&row.starts_at&&new Date(row.starts_at).getTime()>Date.now()&&!['pending','coordination_required'].includes(row.change_request?.status)){
     const form=node('form',undefined,'energy-change-form');
     const kindLabel=node('label','Change my class');
     const select=node('select');select.name='change-kind';
@@ -177,6 +183,47 @@
     section.append(form);
    }
    if(role!=='student'){
+    if(row.change_request?.status==='pending'){
+     const review=node('section',undefined,'energy-review-queue');
+     review.append(node('h4','Review the student change request'));
+     const kind=row.change_request.kind==='cancel'?'cancellation':'rescheduling';
+     review.append(node('p','Request: '+kind+'. This review does not alter the confirmed class or Google Calendar.','muted'));
+     if(row.change_request.kind==='reschedule'&&row.change_request.proposed_at){
+      const proposed=new Date(row.change_request.proposed_at);
+      if(Number.isFinite(proposed.getTime()))review.append(node('p','Proposed new time: '+new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',dateStyle:'medium',timeStyle:'short'}).format(proposed)+' (UTC+7)'));
+     }
+     const reasonLabel=node('label','Reason for the teacher decision (no student or client details)');
+     const reason=node('select');
+     for(const [value,label] of [
+      ['manual_coordination','Requires discussion with student'],
+      ['schedule_conflict','Teacher calendar conflict'],
+      ['insufficient_information','More scheduling information required'],
+      ['other','Other non-confidential reason']
+     ]){const option=node('option',label);option.value=value;reason.append(option);}
+     reasonLabel.append(reason);
+     const decisionActions=node('div',undefined,'actions');
+     const decisionStatus=node('p',undefined,'energy-review-status');
+     decisionStatus.setAttribute('role','status');decisionStatus.setAttribute('aria-live','polite');
+     for(const [value,label] of [['coordinate','Mark for manual coordination'],['decline','Decline change request']]){
+      const button=node('button',label);button.type='button';
+      button.addEventListener('click',async()=>{
+       if(!window.confirm(value==='coordinate'
+        ?'Record that this change needs manual coordination? The original appointment and Google Meet will remain unchanged.'
+        :'Decline this request? The original class and Google Meet will remain unchanged.'))return;
+       for(const control of decisionActions.querySelectorAll('button'))control.disabled=true;
+       decisionStatus.textContent='Recording teacher decision without changing bookings, charges or calendars…';
+       try{
+        const result=await call(API+'sessions/'+encodeURIComponent(row.id)+'/review-change','POST',{decision:value,reason:reason.value});
+        decisionStatus.textContent=result.message;
+        await refresh();
+       }catch(e){decisionStatus.textContent=e.message;}
+       finally{for(const control of decisionActions.querySelectorAll('button'))control.disabled=false;}
+      });
+      decisionActions.append(button);
+     }
+     review.append(reasonLabel,decisionActions,decisionStatus);
+     section.append(review);
+    }
     if(row.status==='requested'){
      if(canAutoMeet&&row.starts_at){
       const gen=node('button','Create Google Meet in EnglishLegalese');gen.type='button';
