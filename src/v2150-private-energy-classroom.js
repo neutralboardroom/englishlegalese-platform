@@ -131,10 +131,14 @@ function meetLink(input){
 function changeSummary(metadata){
  const item=metadata?.student_change_request;
  if(!item||typeof item!=='object'||!['cancel','reschedule'].includes(item.kind))return null;
- return {kind:item.kind,status:['pending','declined','approved'].includes(item.status)?item.status:'pending',
+ const status=['pending','declined','approved','coordination_required'].includes(item.status)?item.status:'pending';
+ return {kind:item.kind,status,
   requested_at:typeof item.requested_at==='string'?item.requested_at:null,
   proposed_at:item.kind==='reschedule'&&typeof item.proposed_at==='string'?item.proposed_at:null,
-  policy_decision:'manual_review_required',payment_processed:false};
+  reviewed_at:typeof item.reviewed_at==='string'?item.reviewed_at:null,
+  review_reason:['schedule_conflict','manual_coordination','insufficient_information','other'].includes(item.review_reason)?item.review_reason:null,
+  policy_decision:'manual_review_required',payment_processed:false,
+  booking_changed:false,calendar_event_changed:false};
 }
 function approvedNoticeHours(){
  const raw=process.env.ENGLISHLEGALESE_PRIVATE_CLASS_NOTICE_HOURS;
@@ -360,8 +364,8 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    if(!prior||prior.student_user_id!==req.user.id)return reply(res,404,{ok:false,error:'No assigned private class was found.'});
    if(!['requested','scheduled'].includes(prior.status)||!prior.scheduled_at||new Date(prior.scheduled_at).getTime()<=Date.now())
     return reply(res,409,{ok:false,error:'Only upcoming assigned classes can be changed online. Contact the teacher for anything else.'});
-   if(changeSummary(prior.metadata)?.status==='pending')
-    return reply(res,409,{ok:false,error:'Your previous change request is already awaiting review.'});
+   if(['pending','coordination_required'].includes(changeSummary(prior.metadata)?.status))
+    return reply(res,409,{ok:false,error:'Your previous request is still under review or manual coordination. The original appointment remains until confirmed.'});
    if(kind==='reschedule'&&Math.abs(new Date(prior.scheduled_at).getTime()-new Date(proposed).getTime())<60000)
     return reply(res,400,{ok:false,error:'Choose a different class time.'});
    const request={kind,status:'pending',requested_at:new Date().toISOString(),proposed_at:proposed,policy_decision:'unassessed'};
@@ -373,6 +377,42 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
     calendar_event_changed:false,charge_applied:false,credit_decided:false,
     message:'Request saved for teacher review. Your original appointment remains until confirmed. No charge was made.'});
   }catch{return reply(res,503,{ok:false,error:'Class change request was not confirmed. No charge or calendar change was made.'});}
+ });
+
+ // HF59 teacher decision queue. An acceptance for coordination is NOT a completed
+ // reschedule/cancellation. Never mutate the meeting, fees, credits, provider or
+ // booking time from this endpoint. Decisions require an assigned real teacher.
+ app.post('/api/v2150/private-energy/sessions/:id/review-change',guard,managers,ready,async(req,res)=>{
+  const decision=req.body?.decision;
+  const reason=req.body?.reason;
+  if(!['decline','coordinate'].includes(decision)||!['schedule_conflict','manual_coordination','insufficient_information','other'].includes(reason))
+   return reply(res,400,{ok:false,error:'Choose a teacher decision and a standard, non-confidential reason.'});
+  try{
+   const prior=await accessible(req,req.params.id);
+   if(!prior||prior.teacher_user_id!==req.user.id)return reply(res,404,{ok:false,error:'Assigned teacher classroom not found.'});
+   if(!['requested','scheduled'].includes(prior.status))
+    return reply(res,409,{ok:false,error:'Only an active class request can be reviewed.'});
+   const pending=changeSummary(prior.metadata);
+   if(!pending||pending.status!=='pending'||!pending.requested_at)
+    return reply(res,409,{ok:false,error:'This request is no longer pending. Refresh before deciding.'});
+   const status=decision==='decline'?'declined':'coordination_required';
+   const reviewedAt=new Date().toISOString();
+   const next={...prior.metadata.student_change_request,status,reviewed_at:reviewedAt,review_reason:reason};
+   const log={kind:pending.kind,requested_at:pending.requested_at,decision:status,
+    reviewed_at:reviewedAt,reviewer_id:req.user.id,reason,booking_changed:false,
+    calendar_event_changed:false,credit_decided:false,charge_applied:false};
+   const updated=await services.query(
+    "UPDATE class_sessions SET metadata=jsonb_set(jsonb_set(coalesce(metadata,'{}'::jsonb),'{student_change_request}',$4::jsonb,true),'{student_change_review_history}',(CASE WHEN jsonb_typeof(metadata->'student_change_review_history')='array' THEN metadata->'student_change_review_history' ELSE '[]'::jsonb END)||jsonb_build_array($5::jsonb),true),updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$3 AND status IN ('requested','scheduled') AND metadata->'student_change_request'->>'status'='pending' AND metadata->'student_change_request'->>'requested_at'=$6 RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",
+    [prior.id,req.user.id,COURSE,JSON.stringify(next),JSON.stringify(log),pending.requested_at]);
+   if(updated.rows.length!==1)return reply(res,409,{ok:false,error:'Another decision changed this request. Refresh the class record.'});
+   return reply(res,200,{ok:true,request:changeSummary(updated.rows[0].metadata),
+    original_appointment_unchanged:true,calendar_event_changed:false,
+    charge_applied:false,credit_decided:false,transactional_email_sent:false,
+    teacher_followup_required:decision==='coordinate',
+    message:decision==='coordinate'
+     ?'Marked for manual coordination only. Original class and Meet remain unchanged until separately confirmed.'
+     :'Request declined. Original class and Meet remain unchanged. Inform the student through an approved channel.'});
+  }catch{return reply(res,503,{ok:false,error:'The teacher decision could not be saved. No appointment, charge or calendar change was made.'});}
  });
  // Teacher-visible overlap check covers EnglishLegalese records, not all Google calendars.
  async function internalConflicts(teacherId,start,excludeId){
