@@ -44,6 +44,15 @@ app.use((req,res,next)=>{
    return res.status(404).type('text/plain').send('Not found');
  next();
 });
+// HF65 public PWA endpoints: explicitly typed, revalidated scripts; never
+// cache private API, student lessons, classes, account data, or credentials.
+app.get('/manifest.webmanifest',(req,res)=>res.type('application/manifest+json')
+ .set('Cache-Control','no-cache, max-age=0, must-revalidate')
+ .sendFile(path.join(__dirname,'manifest.webmanifest')));
+app.get('/sw.js',(req,res)=>res.type('application/javascript')
+ .set('Cache-Control','no-cache, max-age=0, must-revalidate')
+ .set('Service-Worker-Allowed','/')
+ .sendFile(path.join(__dirname,'sw.js')));
 app.use(express.static(__dirname));
 
 app.get('/health', (req, res) => {
