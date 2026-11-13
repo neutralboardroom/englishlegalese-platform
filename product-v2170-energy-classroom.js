@@ -102,8 +102,29 @@
  }
  function showSessions(items){
   clear(schedule);
-  scheduleStatus.textContent=items.length?(items.length+' class record(s) accessible. Only scheduled classes with a verified Meet link can be joined.'):'No private class has been assigned/scheduled yet. Teacher setup is required.';
-  for(const row of items){
+  // Preserve historical records without counting former learners or past
+  // bookings as currently active students, lessons or attendance.
+  const now=Date.now();
+  const isHistorical=row=>{
+   if(['completed','cancelled'].includes(row.status))return true;
+   const start=row.starts_at?new Date(row.starts_at).getTime():NaN;
+   return Number.isFinite(start)&&start+90*60000<=now;
+  };
+  const history=items.filter(isHistorical);
+  const upcoming=items.filter(row=>!isHistorical(row)&&row.starts_at);
+  const unconfirmed=items.filter(row=>!isHistorical(row)&&!row.starts_at);
+  const pending=items.filter(row=>row.change_request?.status==='pending');
+  scheduleStatus.textContent=items.length
+   ?'Current/upcoming class records: '+upcoming.length+' · Awaiting a time: '+unconfirmed.length+
+    ' · Past or closed records: '+history.length+' · Pending change requests: '+pending.length+
+    '. A historical record is not an active student or a confirmed future booking.'
+   :'No private class has been assigned/scheduled yet. Teacher setup is required.';
+  const historicalDetails=node('details',undefined,'energy-history-list');
+  const historyHeading=node('summary','Past and closed class records ('+history.length+')');
+  const historicalContainer=node('div',undefined,'energy-history-items');
+  historicalDetails.append(historyHeading,historicalContainer);
+  for(const row of [...upcoming,...unconfirmed,...history]){
+   const historical=isHistorical(row);
    const section=node('section',undefined,'session');
    const title=node('h3',rowLabel(row));section.append(title);
    section.append(node('p','Status: '+row.status+' · 60 minutes · '+row.provider,'muted'));
@@ -121,11 +142,13 @@
    }
    const actions=node('div',undefined,'actions');
    const meeting=safeMeet(row.meet_url);
-   if(row.meet_ready&&meeting){
+   if(row.meet_ready&&meeting&&!historical){
     const anchor=node('a','Join Google Meet from EnglishLegalese','join');
     anchor.href=meeting;anchor.target='_blank';anchor.rel='noopener noreferrer';
     actions.append(anchor);
-   }else section.append(node('p','Meeting access will appear here after the teacher confirms both the time and Google Meet link.','muted'));
+   }else section.append(node('p',historical
+    ?'Past or closed class record. No live meeting link is offered here; the lesson history remains available.'
+    :'Meeting access will appear here after the teacher confirms both the time and Google Meet link.','muted'));
    const lessonToggle=node('button','Open lesson '+row.lesson_number);
    lessonToggle.type='button';
    lessonToggle.addEventListener('click',()=>{
@@ -252,18 +275,24 @@
      });
      section.append(form);
     }
-    if(row.status==='scheduled'){
-     const complete=node('button','Mark taught after the live class');
-     complete.type='button';
-     complete.addEventListener('click',()=>{
-      if(!confirm('Confirm that this 60-minute session has actually taken place? This does not issue a grade or certificate.'))return;
-      perform(complete,API+'sessions/'+encodeURIComponent(row.id)+'/complete',null,teacherStatus);
-     });
-     actions.append(complete);
+    if(row.status==='scheduled'&&!historical){
+     const start=row.starts_at?new Date(row.starts_at).getTime():NaN;
+     const elapsed=Number.isFinite(start)&&start+60*60000<=Date.now();
+     if(elapsed){
+      const complete=node('button','Mark taught after the live class');
+      complete.type='button';
+      complete.addEventListener('click',()=>{
+       if(!confirm('Confirm this class was actually taught for the scheduled 60-minute period? This does not issue a grade or certificate.'))return;
+       perform(complete,API+'sessions/'+encodeURIComponent(row.id)+'/complete',{confirmed_taught:true},teacherStatus);
+      });
+      actions.append(complete);
+     }else actions.append(node('p','Class completion becomes available after the scheduled 60-minute lesson ends.','muted'));
     }
    }
-   section.append(actions,readinessStatus);schedule.append(section);
+   section.append(actions,readinessStatus);
+   (historical?historicalContainer:schedule).append(section);
   }
+  if(history.length)schedule.append(historicalDetails);
  }
  async function perform(button,url,data,target){
   button.disabled=true;target.textContent='Checking the protected class record…';
