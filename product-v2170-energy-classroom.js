@@ -327,7 +327,7 @@
      review.append(reasonLabel,decisionActions,decisionStatus);
      section.append(review);
     }
-    if(row.status==='requested'){
+    if(row.status==='requested'&&!['pending','coordination_required'].includes(row.change_request?.status)){
      if(canAutoMeet&&row.starts_at){
       const gen=node('button','Create Google Meet in EnglishLegalese');gen.type='button';
       gen.addEventListener('click',()=>perform(gen,API+'sessions/'+encodeURIComponent(row.id)+'/create-meet',null,teacherStatus));
@@ -345,12 +345,17 @@
       timeInput.value=offset.toISOString().slice(0,16);
      }
      timeLabel.append(timeInput);
-     const submit=node('button','Save and enable class join');submit.type='submit';
-     form.append(label,timeLabel,submit);
+     const checkLabel=node('label','I checked my external Google calendars separately; no conflicting appointment is known. This site has not verified them.');
+     const checkInput=node('input');checkInput.type='checkbox';checkInput.className='energy-manual-meet-confirm';
+     checkLabel.prepend(checkInput);
+     const limitation=node('p','This is a one-time teacher confirmation for an unconfirmed class. A scheduled appointment or existing Google Meet link cannot be silently overwritten. No student invitation or payment is sent.','muted');
+     const submit=node('button','Confirm unbooked class and attach Meet');submit.type='submit';
+     form.append(label,timeLabel,checkLabel,limitation,submit);
      form.addEventListener('submit',async event=>{
       event.preventDefault();
       const url=safeMeet(input.value);
       if(!url){teacherStatus.textContent='Enter a genuine https://meet.google.com/abc-defg-hij meeting URL.';return;}
+      if(!checkInput.checked){teacherStatus.textContent='Check your external Google calendars before confirming this one-time booking. This site cannot verify them.';return;}
       try{await perform(submit,API+'sessions/'+encodeURIComponent(row.id)+'/attach-meet',{meet_url:url,starts_at:localStart(timeInput.value)},teacherStatus);}catch(e){teacherStatus.textContent=e.message;}
      });
      section.append(form);
