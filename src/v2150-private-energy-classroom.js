@@ -113,7 +113,10 @@ function reply(res,status,json){return res.status(status).set('Cache-Control','p
 function nowTime(value){
  if(typeof value!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d(?::\d\d(?:\.\d{1,3})?)?(?:Z|[+-]\d\d:\d\d)$/.test(value))return null;
  const t=new Date(value).getTime();
- if(!Number.isFinite(t)||t<Date.now()-15*60000||t>Date.now()+180*86400000)return null;
+ if(!Number.isFinite(t)||t<=Date.now()||t>Date.now()+180*86400000)return null;
+ // Do not normalize nonexistent calendar dates (for example February 30).
+ const offset=value.endsWith('Z')?0:(()=>{const m=value.match(/([+-])(\d\d):(\d\d)$/);return m?(m[1]==='-'?-1:1)*(Number(m[2])*60+Number(m[3]))*60000:0;})();
+ if(new Date(t+offset).toISOString().slice(0,16)!==value.slice(0,16))return null;
  return new Date(t).toISOString();
 }
 function pastTime(value){
@@ -383,20 +386,58 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    return reply(res,503,{ok:false,error:'Private class record was not created; no email was sent.'});
   }finally{if(client)client.release();}
  });
+ // HF63: write-once teacher confirmation with transaction-scoped overlap checks.
+ // Reuses the exact teacher-calendar advisory lock from class creation; never
+ // edits a scheduled booking or silently replaces a confirmed Google Meet.
  app.post('/api/v2150/private-energy/sessions/:id/attach-meet',guard,managers,ready,async(req,res)=>{
   const url=meetLink(req.body?.meet_url),start=nowTime(req.body?.starts_at);
-  if(!url||!start)return reply(res,400,{ok:false,error:'A valid Google Meet URL and future scheduled time are required.'});
+  if(!url||!start)return reply(res,400,{ok:false,error:'A real future class time and valid Google Meet URL are required.'});
+  const prior=await accessible(req,req.params.id).catch(()=>null);
+  if(!prior||prior.teacher_user_id!==req.user.id)return reply(res,404,{ok:false,error:'Assigned teacher classroom not found.'});
+  if(prior.status!=='requested'||prior.video_join_url)
+   return reply(res,409,{ok:false,error:'This class is already confirmed, completed or closed. A new time or meeting link needs separate teacher/student coordination; it cannot be replaced here.'});
+  if(prior.scheduled_at&&new Date(prior.scheduled_at).getTime()!==new Date(start).getTime())
+   return reply(res,409,{ok:false,error:'The proposed time differs from the existing tentative class time. Coordinate the time separately before confirmation.'});
+  if(['pending','coordination_required'].includes(changeSummary(prior.metadata)?.status))
+   return reply(res,409,{ok:false,error:'Resolve the student change request before confirming a Meet booking.'});
+  let client;
   try{
-   const prior=await accessible(req,req.params.id);
-   if(!prior||prior.teacher_user_id!==req.user.id)return reply(res,404,{ok:false,error:'Assigned teacher classroom not found.'});
-   if(prior.status==='completed'||prior.status==='cancelled')return reply(res,409,{ok:false,error:'Completed/cancelled classes cannot be reactivated.'});
-   if(prior.metadata?.provider_confirmation==='google_calendar_created')return reply(res,409,{ok:false,error:'Calendar-managed meeting time cannot be changed here; reschedule via the calendar integration.'});
-   if(['pending','coordination_required'].includes(changeSummary(prior.metadata)?.status))
-    return reply(res,409,{ok:false,error:'Resolve the student change request before attaching or changing a Meet booking.'});
-   if(await internalConflicts(req.user.id,start,prior.id))return reply(res,409,{ok:false,error:'An EnglishLegalese class overlaps. No meeting link was attached.'});
-   const rows=await services.query("UPDATE class_sessions SET scheduled_at=$3,video_join_url=$4,status='scheduled',readiness_status='ready',metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{provider_confirmation}',to_jsonb('teacher_entered'::text),true),updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$5 AND status NOT IN ('completed','cancelled') AND COALESCE(metadata->'student_change_request'->>'status','') NOT IN ('pending','coordination_required') RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",[prior.id,req.user.id,start,url,COURSE]);
-   return rows.rows.length?reply(res,200,{ok:true,session:outward(rows.rows[0],'teacher'),no_email_sent:true}):reply(res,404,{ok:false,error:'Session unavailable.'});
-  }catch{return reply(res,503,{ok:false,error:'Meeting link could not be attached.'});}
+   client=await services.persistentStore.pool.connect();
+   await client.query('BEGIN');
+   // The same advisory lock serializes new class inserts and manual confirmation.
+   await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[COURSE+':teacher-calendar:'+req.user.id]);
+   const state=await client.query(
+    "SELECT id,scheduled_at,status,video_join_url,readiness_status,metadata FROM class_sessions WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$3 FOR UPDATE",
+    [prior.id,req.user.id,COURSE]);
+   const current=state.rows[0];
+   if(!current||current.status!=='requested'||current.video_join_url||current.readiness_status==='generating_meet'||
+      ['pending','coordination_required'].includes(changeSummary(current.metadata)?.status)||
+      (current.scheduled_at&&new Date(current.scheduled_at).getTime()!==new Date(start).getTime())){
+    await client.query('ROLLBACK');
+    return reply(res,409,{ok:false,error:'Class time, meeting generation or student request changed. Refresh. No confirmed appointment was replaced.'});
+   }
+   const overlap=await client.query(
+    "SELECT 1 FROM class_sessions WHERE teacher_user_id=$1 AND status IN ('requested','scheduled') AND scheduled_at IS NOT NULL AND scheduled_at<$2::timestamptz+interval '60 minutes' AND scheduled_at+interval '60 minutes'>$2::timestamptz AND id<>$3 LIMIT 1",
+    [req.user.id,start,prior.id]);
+   if(overlap.rows.length){
+    await client.query('ROLLBACK');
+    return reply(res,409,{ok:false,error:'Another EnglishLegalese class overlaps the proposed time. No Meet booking was confirmed; external Google calendars must also be checked.'});
+   }
+   const updated=await client.query(
+    "UPDATE class_sessions SET scheduled_at=$3,video_join_url=$4,status='scheduled',readiness_status='ready',metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{provider_confirmation}',to_jsonb('teacher_entered'::text),true),updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$5 AND status='requested' AND video_join_url IS NULL AND readiness_status IS DISTINCT FROM 'generating_meet' AND (scheduled_at IS NULL OR scheduled_at=$3::timestamptz) AND COALESCE(metadata->'student_change_request'->>'status','') NOT IN ('pending','coordination_required') RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",
+    [prior.id,req.user.id,start,url,COURSE]);
+   if(updated.rows.length!==1){
+    await client.query('ROLLBACK');
+    return reply(res,409,{ok:false,error:'Class confirmation changed concurrently. No booking was replaced.'});
+   }
+   await client.query('COMMIT');
+   return reply(res,200,{ok:true,session:outward(updated.rows[0],'teacher'),
+    manual_meet_link_recorded:true,calendar_event_created:false,
+    external_calendars_checked:false,no_email_sent:true,payment_changed:false});
+  }catch{
+   if(client)await client.query('ROLLBACK').catch(()=>{});
+   return reply(res,503,{ok:false,error:'Class confirmation could not be verified. No external Calendar, email or billing action was performed.'});
+  }finally{if(client)client.release();}
  });
  app.post('/api/v2150/private-energy/sessions/:id/create-meet',guard,managers,ready,async(req,res)=>{
   if(!configured().google_calendar)return reply(res,503,{ok:false,error:'EnglishLegalese Google Calendar integration is not configured. A teacher may instead attach an existing Google Meet link.'});
@@ -404,8 +445,8 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
   try{
    const prior=await accessible(req,req.params.id);
    if(!prior||prior.teacher_user_id!==req.user.id)return reply(res,404,{ok:false,error:'Assigned teacher classroom not found.'});
-   if(!prior.scheduled_at||prior.status==='completed'||prior.status==='cancelled'||prior.video_join_url)
-    return reply(res,409,{ok:false,error:'A dated, link-free, active class is required to create a Google Meet.'});
+   if(!prior.scheduled_at||prior.status!=='requested'||prior.video_join_url)
+    return reply(res,409,{ok:false,error:'Only a dated, link-free unconfirmed class can create Google Meet. Existing meetings cannot be replaced.'});
    if(['pending','coordination_required'].includes(changeSummary(prior.metadata)?.status))
     return reply(res,409,{ok:false,error:'Resolve the student change request before creating a Meet booking.'});
    if(await internalConflicts(req.user.id,prior.scheduled_at,prior.id))return reply(res,409,{ok:false,error:'An EnglishLegalese class overlaps. Google Meet was not created.'});
@@ -433,7 +474,7 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
   if(req.user.role!=='student')return reply(res,403,{ok:false,error:'Only the assigned student can request a change.'});
   const kind=req.body?.kind;
   const proposed=kind==='reschedule'?nowTime(req.body?.proposed_at):null;
-  if(!['cancel','reschedule'].includes(kind)||(kind==='reschedule'&&!proposed))
+  if(!['cancel','reschedule'].includes(kind)||(kind==='reschedule'&&(!proposed||new Date(proposed).getTime()<=Date.now())))
    return reply(res,400,{ok:false,error:'Choose cancellation or a valid future replacement class time.'});
   try{
    const prior=await accessible(req,req.params.id);
