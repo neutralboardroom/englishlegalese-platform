@@ -75,7 +75,7 @@ runtime.install(app,{services,authMiddleware,requireRoles,configured:()=>({googl
   assert.equal(complete.status,200);assert.equal(complete.data.session.status,'completed');
   assert.equal(complete.data.session.meet_url,null);
   assert.equal(writes,1);assert.equal(externalCalls,0);
-  assert.ok(!JSON.stringify(complete.data).includes('PRIVATE_PSEUDONYM'));
+  assert.equal(complete.data.session.student_name,'PRIVATE_PSEUDONYM','only the assigned teacher may see the learner label');
   console.log('PASS HF60: expired meeting URLs, truthful readiness, verified teacher closeout and zero external side effects.');
  }finally{await new Promise(resolve=>server.close(resolve));}
 })().catch(e=>{console.error(e);process.exitCode=1;});
