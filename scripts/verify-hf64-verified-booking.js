@@ -36,7 +36,7 @@ const txDb={
    return{rows:overlap?[{present:1}]:[]};
   }
   if(sql.startsWith('INSERT INTO class_sessions')){
-   const meta=JSON.parse(args[11]);
+   const meta=JSON.parse(args[10]);
    assert.equal(meta.manual_external_calendar_review_attested,true);
    ackSeen=true;inserts++;
    return{rows:[{id:args[0],student_user_id:args[3],teacher_user_id:args[4],
