@@ -144,14 +144,21 @@ function approvedNoticeHours(){
  const raw=process.env.ENGLISHLEGALESE_PRIVATE_CLASS_NOTICE_HOURS;
  const n=Number(raw);return raw&&Number.isInteger(n)&&n>=1&&n<=168?n:null;
 }
+function withinClassWindow(row){
+ const start=new Date(row.scheduled_at||'').getTime();
+ // A formerly scheduled class is not an active invitation indefinitely.
+ // Allow a 30-minute post-class grace window for 60-minute live teaching.
+ return Number.isFinite(start)&&start+90*60000>Date.now();
+}
 function outward(row,role){
+ const activeMeet=row.status==='scheduled'&&withinClassWindow(row)&&MEET.test(String(row.video_join_url||''));
  return{
   id:row.id,lesson_number:Number(row.metadata?.lesson_number),
   lesson_title:lessons[Number(row.metadata?.lesson_number)-1]?.title||'Private class',
   starts_at:row.scheduled_at,status:row.status,
   duration_minutes:60,timezone:TIMEZONE,
-  meet_ready:row.status==='scheduled'&&MEET.test(String(row.video_join_url||'')),
-  meet_url:row.status==='scheduled'&&MEET.test(String(row.video_join_url||''))?row.video_join_url:null,
+  meet_ready:activeMeet,
+  meet_url:activeMeet?row.video_join_url:null,
   student_name:role==='teacher'?row.learner_name:undefined,
   teacher_only_pronunciation_progress:role==='teacher'&&row.metadata?.pronunciation_focus==='crude_oil'?row.metadata?.pronunciation_progress||null:undefined,
   provider:'Google Meet',recording:'Off by default; any recording requires separate consent.',
@@ -225,15 +232,18 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    const isTeacher=row.teacher_user_id===req.user.id;
    const scheduled=row.status==='scheduled';
    const hasStart=Boolean(row.scheduled_at)&&Number.isFinite(new Date(row.scheduled_at).getTime());
-   const providerReady=scheduled&&hasStart&&Boolean(meetLink(row.video_join_url));
-   const state=providerReady?'ready':row.status==='completed'?'completed':row.status==='cancelled'?'cancelled':!hasStart?'needs_time':'needs_meeting';
+   const expired=scheduled&&hasStart&&!withinClassWindow(row);
+   const providerReady=scheduled&&!expired&&hasStart&&Boolean(meetLink(row.video_join_url));
+   const state=providerReady?'ready':row.status==='completed'?'completed':row.status==='cancelled'?'cancelled':expired?'past_class':!hasStart?'needs_time':'needs_meeting';
    const nextAction=providerReady
     ?'Open Google Meet from your EnglishLegalese class card and test mic/speakers before joining.'
     :row.status==='completed'||row.status==='cancelled'
      ?'No active live class exists for this record.'
-     :isTeacher
-      ?'Confirm the lesson time and attach or securely create a valid meeting link.'
-      :'Your teacher must confirm the lesson time and meeting link before you can join.';
+     :expired
+      ?'This scheduled class time has passed. Keep the record for history; ask your teacher to arrange a new class if appropriate.'
+      :isTeacher
+       ?'Confirm the lesson time and attach or securely create a valid meeting link.'
+       :'Your teacher must confirm the lesson time and meeting link before you can join.';
    return reply(res,200,{ok:true,session_id:row.id,role:isTeacher?'teacher':'student',
     state,lesson_number:Number(row.metadata?.lesson_number)||null,duration_minutes:60,
     provider:'Google Meet',class_time_confirmed:hasStart,meeting_link_ready:providerReady,
@@ -435,9 +445,12 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    const prior=await accessible(req,req.params.id);
    if(!prior||prior.teacher_user_id!==req.user.id)return reply(res,404,{ok:false,error:'Assigned teacher classroom not found.'});
    if(prior.status!=='scheduled')return reply(res,409,{ok:false,error:'Only scheduled classes can be marked complete by their teacher.'});
-   const completed=await services.query("UPDATE class_sessions SET status='completed',closeout_status='teacher_confirmed',updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$3 AND status='scheduled' RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",[prior.id,req.user.id,COURSE]);
+   if(req.body?.confirmed_taught!==true)return reply(res,400,{ok:false,error:'Explicit teacher confirmation of an actually taught class is required.'});
+   if(!prior.scheduled_at||new Date(prior.scheduled_at).getTime()+3600000>Date.now())
+    return reply(res,409,{ok:false,error:'A class cannot be marked taught before its scheduled 60 minutes have elapsed.'});
+   const completed=await services.query("UPDATE class_sessions SET status='completed',closeout_status='teacher_confirmed',updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$3 AND status='scheduled' AND scheduled_at+interval '60 minutes'<=now() RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",[prior.id,req.user.id,COURSE]);
    return completed.rows.length?reply(res,200,{ok:true,session:outward(completed.rows[0],'teacher'),assessment_recorded:false}):reply(res,409,{ok:false,error:'Class status changed; refresh.'});
   }catch{return reply(res,503,{ok:false,error:'Class completion was not recorded.'});}
  });
 }
-module.exports={install,COURSE,lessons,AGENDA,meetLink,nowTime,pastTime,outward};
+module.exports={install,COURSE,lessons,AGENDA,meetLink,nowTime,pastTime,outward,withinClassWindow};
