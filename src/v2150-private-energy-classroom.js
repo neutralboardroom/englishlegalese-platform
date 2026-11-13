@@ -251,14 +251,38 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
  // HF61: separate teacher action queue even if the main class list is capped.
  // Read-only, identity-minimized, and never an external Calendar check.
  app.get('/api/v2150/private-energy/review-queue',guard,requireRoles('teacher','owner','admin'),ready,async(req,res)=>{
+  const input=req.query.offset==null?'0':String(req.query.offset);
+  if(!/^(?:0|[1-9][0-9]{0,4})$/.test(input)||Number(input)>10000)
+   return reply(res,400,{ok:false,error:'Use a valid teacher queue page offset.'});
+  const offset=Number(input);
   try{
-   const result=await services.query("SELECT id,scheduled_at,status,metadata FROM class_sessions WHERE teacher_user_id=$1 AND metadata->>'course_key'=$2 AND status IN ('requested','scheduled') AND metadata->'student_change_request'->>'status'='pending' ORDER BY metadata->'student_change_request'->>'requested_at' ASC NULLS LAST LIMIT 51",[req.user.id,COURSE]);
-   return reply(res,200,{ok:true,requests:result.rows.slice(0,50).map(row=>({
+   // The stable id tie-breaker avoids ambiguous sorting for same-second requests.
+   // Each page is bounded, and partial is disclosed rather than quietly losing
+   // review items beyond the original 50-row cap.
+   const result=await services.query("SELECT id,scheduled_at,status,metadata FROM class_sessions WHERE teacher_user_id=$1 AND metadata->>'course_key'=$2 AND status IN ('requested','scheduled') AND metadata->'student_change_request'->>'status'='pending' ORDER BY metadata->'student_change_request'->>'requested_at' ASC NULLS LAST, id ASC LIMIT 51 OFFSET $3",[req.user.id,COURSE,offset]);
+   const page=result.rows.slice(0,50);
+   return reply(res,200,{ok:true,requests:page.map(row=>({
     id:row.id,starts_at:row.scheduled_at,status:row.status,
     lesson_number:Number(row.metadata?.lesson_number)||null,
     change_request:changeSummary(row.metadata)
-   })),partial:result.rows.length>50,google_calendars_checked:false,no_messages_sent:true});
+   })),partial:result.rows.length>50,has_more:result.rows.length>50,
+    next_offset:offset+page.length,google_calendars_checked:false,no_messages_sent:true,
+    queue_snapshot_stable:false});
   }catch{return reply(res,503,{ok:false,error:'Teacher review queue unavailable. No class or provider change was made.'});}
+ });
+ // HF62: direct authenticated access to exactly one assigned classroom record.
+ // This allows a teacher to review requests beyond the first 50 on the summary.
+ // It does not grant administrator visibility across other teachers' learners.
+ app.get('/api/v2150/private-energy/sessions/:id',guard,ready,async(req,res)=>{
+  if(!['student','teacher','owner','admin'].includes(req.user.role))
+   return reply(res,403,{ok:false,error:'Classroom role required.'});
+  try{
+   const row=await accessible(req,req.params.id);
+   if(!row)return reply(res,404,{ok:false,error:'No private class is assigned to this account.'});
+   const isTeacher=row.teacher_user_id===req.user.id;
+   return reply(res,200,{ok:true,session:outward(row,isTeacher?'teacher':'student'),
+    student_record_unmodified:true,google_calendars_checked:false,no_messages_sent:true});
+  }catch{return reply(res,503,{ok:false,error:'Private class detail unavailable. No class or calendar was changed.'});}
  });
  // HF57 safe readiness check: uses the exact same revocable login and
  // student/teacher database ownership checks as actual meeting access.
