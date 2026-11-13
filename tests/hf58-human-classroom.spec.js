@@ -55,18 +55,33 @@ test('HF58 teacher can launch a student-only slide presentation without private 
  await expect(page.getByRole('button',{name:'Check EnglishLegalese calendar conflicts'})).toBeVisible();
  await page.locator('details.energy-lesson').first().locator(':scope > summary').click();
  await expect(page.getByRole('button',{name:'Open student presentation for Google Meet'})).toBeVisible();
- // A popup is an event of the originating page. Waiting on the full browser
- // context can race with mobile-Chromium page activation and hang indefinitely.
- const popupEvent=page.waitForEvent('popup',{timeout:15000});
- await page.getByRole('button',{name:'Open student presentation for Google Meet'}).click();
- const popup=await popupEvent;
- await expect(popup.getByRole('heading',{name:'Welcome'})).toBeVisible();
- await expect(popup.locator('body')).toContainText('HUMAN-LED CLASS');
- await expect(popup.locator('body')).not.toContainText('TEACHER_ONLY_PRIVATE_NEGOTIATION_PROMPT');
- await popup.getByRole('button',{name:'Next'}).click();
- await expect(popup.getByRole('heading',{name:'Today’s speaking goal'})).toBeVisible();
- await expect(popup.locator('footer')).toContainText('Slide 2 of 7');
- await popup.close();
+ const narrow=await page.evaluate(()=>matchMedia('(max-width: 700px)').matches);
+ if(narrow){
+  // A popup can be blocked by real mobile browsers. Verify the alternate
+  // full-screen screen-sharing view instead of waiting forever for a new page.
+  await page.getByRole('button',{name:'Open student presentation for Google Meet'}).click();
+  const slides=page.locator('.energy-slide-inline');
+  await expect(slides).toBeVisible();
+  await expect(slides.getByRole('heading',{name:'Welcome'})).toBeVisible();
+  await expect(slides).toContainText('HUMAN-LED CLASS');
+  await expect(slides).not.toContainText('TEACHER_ONLY_PRIVATE_NEGOTIATION_PROMPT');
+  await slides.getByRole('button',{name:'Next'}).click();
+  await expect(slides.getByRole('heading',{name:'Today’s speaking goal'})).toBeVisible();
+  await expect(slides.locator('footer')).toContainText('Slide 2 of 7');
+  await slides.getByRole('button',{name:'Close presentation'}).click();
+  await expect(slides).toHaveCount(0);
+ }else{
+  const popupEvent=page.waitForEvent('popup',{timeout:15000});
+  await page.getByRole('button',{name:'Open student presentation for Google Meet'}).click();
+  const popup=await popupEvent;
+  await expect(popup.getByRole('heading',{name:'Welcome'})).toBeVisible();
+  await expect(popup.locator('body')).toContainText('HUMAN-LED CLASS');
+  await expect(popup.locator('body')).not.toContainText('TEACHER_ONLY_PRIVATE_NEGOTIATION_PROMPT');
+  await popup.getByRole('button',{name:'Next'}).click();
+  await expect(popup.getByRole('heading',{name:'Today’s speaking goal'})).toBeVisible();
+  await expect(popup.locator('footer')).toContainText('Slide 2 of 7');
+  await popup.close();
+ }
  expect(result.writes).toEqual([]);
  expect(result.errors).toEqual([]);
 });
