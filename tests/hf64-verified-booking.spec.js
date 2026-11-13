@@ -43,7 +43,7 @@ test('HF64 human teacher requires manual external calendar attestation for class
  await expect(form).toBeVisible();
  const preflight=form.getByRole('button',{name:'Check this class for EnglishLegalese conflicts'});
  await preflight.click();
- await expect(form.locator('.energy-manual-meet-preflight-status')).toContainText('External Google calendars');
+ await expect(form.locator('.energy-manual-meet-preflight-status')).toContainText('All Google calendars');
  expect(preflights).toHaveLength(1);
  await form.locator('input[type=url]').fill('https://meet.google.com/abc-defg-hij');
  await form.getByRole('button',{name:'Confirm unbooked class and attach Meet'}).click();
