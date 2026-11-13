@@ -275,7 +275,7 @@
      });
      section.append(form);
     }
-    if(row.status==='scheduled'&&!historical){
+    if(row.status==='scheduled'){
      const start=row.starts_at?new Date(row.starts_at).getTime():NaN;
      const elapsed=Number.isFinite(start)&&start+60*60000<=Date.now();
      if(elapsed){
