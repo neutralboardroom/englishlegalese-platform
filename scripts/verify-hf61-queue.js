@@ -102,7 +102,7 @@ runtime.install(app,{services,authMiddleware,requireRoles,configured:()=>({googl
   assert.equal((await send('sessions/history?offset=99999','student')).status,400);
   assert.equal((await send('sessions/history?offset=0','student2')).data.sessions.length,0);
   assert.equal((await send('sessions/'+coordinating.id+'/change-request','student2','POST',{kind:'cancel'})).status,409);
-  assert.equal((await send('sessions/'+coordinating.id+'/attach-meet','teacher','POST',{meet_url:'https://meet.google.com/abc-defg-hij',starts_at:future})).status,409);
+  assert.equal((await send('sessions/'+coordinating.id+'/attach-meet','teacher','POST',{meet_url:'https://meet.google.com/abc-defg-hij',starts_at:future,external_calendar_acknowledged:true})).status,409);
   assert.equal((await send('sessions/'+coordinating.id+'/create-meet','teacher','POST',{})).status,409);
   assert.equal((await send('sessions/'+pending.id+'/complete','teacher','POST',{confirmed_taught:true})).status,409);
   assert.equal((await send('sessions/'+declined.id+'/change-request','student3','POST',{kind:'cancel'})).status,409,'fake DB detects atomic transition lost race');
