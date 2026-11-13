@@ -354,16 +354,18 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
   const n=Number(body.lesson_number),start=body.starts_at?nowTime(body.starts_at):null,url=meetLink(body.meet_url);
   if(!EMAIL.test(studentEmail)||!Number.isInteger(n)||n<1||n>12||(body.starts_at&&!start)||url===false||(url&&!start))
    return reply(res,400,{ok:false,error:'Enter a verified student email, valid lesson number, start time, and optional Google Meet URL.'});
+  if(start&&body.external_calendar_acknowledged!==true)
+   return reply(res,400,{ok:false,error:'The teacher must confirm separately checking external calendars before creating a dated class; EnglishLegalese has not checked them.'});
   if(n===1&&!start)return reply(res,400,{ok:false,error:'To record the earlier class, use a scheduled session date and mark it completed after verifying the record.'});
   let client;
   try{
    client=await services.persistentStore.pool.connect();
    await client.query('BEGIN');
-   const q=await client.query("SELECT id,full_name,email,role,status FROM users WHERE lower(email)=$1 AND role='student' AND status='active' LIMIT 1",[studentEmail]);
+   const q=await client.query("SELECT users.id,users.full_name,users.email,users.role,users.status,(COALESCE(users.metadata->>'email_verified','false')='true' OR EXISTS(SELECT 1 FROM ai_trial_email_verifications v WHERE v.user_id=users.id AND v.verified_at IS NOT NULL)) AS email_verified FROM users WHERE lower(users.email)=$1 AND users.role='student' AND users.status='active' LIMIT 1",[studentEmail]);
    const student=q.rows[0];
-   if(!student){await client.query('ROLLBACK');return reply(res,404,{ok:false,error:'No active student account was verified. Ask the learner to register and verify an EnglishLegalese student account.'});}
+   if(!student||student.email_verified!==true){await client.query('ROLLBACK');return reply(res,404,{ok:false,error:'No email-verified active student account was found. The learner must verify their account before a class is created.'});}
    if(req.user.role==='teacher'){
-    const prev=await client.query("SELECT 1 FROM class_sessions WHERE student_user_id=$1 AND teacher_user_id=$2 AND status NOT IN ('cancelled') LIMIT 1",[student.id,req.user.id]);
+    const prev=await client.query("SELECT 1 FROM class_sessions WHERE student_user_id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$3 AND status IN ('requested','scheduled') AND (scheduled_at IS NULL OR scheduled_at+interval '90 minutes'>now()) LIMIT 1",[student.id,req.user.id,COURSE]);
     if(!prev.rows.length){await client.query('ROLLBACK');return reply(res,403,{ok:false,error:'Initial private course assignment requires owner authorization.'});}
    }
    await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[COURSE+':'+student.id+':'+String(n)]);
@@ -375,12 +377,12 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
     if(overlap.rows.length){await client.query('ROLLBACK');return reply(res,409,{ok:false,error:'An EnglishLegalese class overlaps. The new class was not created.'});}
    }
    const id='EL-ENERGY-'+crypto.randomUUID();
-   const metadata={course_key:COURSE,lesson_number:n,duration_minutes:60,source_protection:'fictional_examples_only',recording:'disabled',provider_confirmation:url?'teacher_entered':'unconfirmed'};
+   const metadata={course_key:COURSE,lesson_number:n,duration_minutes:60,source_protection:'fictional_examples_only',recording:'disabled',provider_confirmation:url?'teacher_entered':'unconfirmed',manual_external_calendar_review_attested:body.external_calendar_acknowledged===true};
    const status=start&&url?'scheduled':'requested';
    const result=await client.query("INSERT INTO class_sessions (id,learner_name,teacher_name,student_user_id,teacher_user_id,scheduled_at,timezone,video_provider,video_join_url,status,readiness_status,metadata,created_at,updated_at) VALUES ($1,$2,$3,$4,$5,$6,$7,'Google Meet',$8,$9,$10,$11::jsonb,now(),now()) RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",[
      id,student.full_name,req.user.full_name,student.id,req.user.id,start,TIMEZONE,url,status,status==='scheduled'?'ready':'needs_meet',JSON.stringify(metadata)]);
    await client.query('COMMIT');
-   return reply(res,201,{ok:true,session:outward(result.rows[0],'teacher'),no_email_sent:true});
+   return reply(res,201,{ok:true,session:outward(result.rows[0],'teacher'),manual_external_calendar_review_attested:body.external_calendar_acknowledged===true,external_calendars_checked:false,no_email_sent:true,payment_changed:false});
   }catch{
    if(client)await client.query('ROLLBACK').catch(()=>{});
    return reply(res,503,{ok:false,error:'Private class record was not created; no email was sent.'});
@@ -392,6 +394,8 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
  app.post('/api/v2150/private-energy/sessions/:id/attach-meet',guard,managers,ready,async(req,res)=>{
   const url=meetLink(req.body?.meet_url),start=nowTime(req.body?.starts_at);
   if(!url||!start)return reply(res,400,{ok:false,error:'A real future class time and valid Google Meet URL are required.'});
+  if(req.body?.external_calendar_acknowledged!==true)
+   return reply(res,400,{ok:false,error:'The assigned teacher must acknowledge checking external calendars separately; this website cannot verify them.'});
   const prior=await accessible(req,req.params.id).catch(()=>null);
   if(!prior||prior.teacher_user_id!==req.user.id)return reply(res,404,{ok:false,error:'Assigned teacher classroom not found.'});
   if(prior.status!=='requested'||prior.video_join_url)
@@ -424,7 +428,7 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
     return reply(res,409,{ok:false,error:'Another EnglishLegalese class overlaps the proposed time. No Meet booking was confirmed; external Google calendars must also be checked.'});
    }
    const updated=await client.query(
-    "UPDATE class_sessions SET scheduled_at=$3,video_join_url=$4,status='scheduled',readiness_status='ready',metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{provider_confirmation}',to_jsonb('teacher_entered'::text),true),updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$5 AND status='requested' AND video_join_url IS NULL AND readiness_status IS DISTINCT FROM 'generating_meet' AND (scheduled_at IS NULL OR scheduled_at=$3::timestamptz) AND COALESCE(metadata->'student_change_request'->>'status','') NOT IN ('pending','coordination_required') RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",
+    "UPDATE class_sessions SET scheduled_at=$3,video_join_url=$4,status='scheduled',readiness_status='ready',metadata=jsonb_set(jsonb_set(coalesce(metadata,'{}'::jsonb),'{provider_confirmation}',to_jsonb('teacher_entered'::text),true),'{manual_external_calendar_review_attested}',to_jsonb(true),true),updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$5 AND status='requested' AND video_join_url IS NULL AND readiness_status IS DISTINCT FROM 'generating_meet' AND (scheduled_at IS NULL OR scheduled_at=$3::timestamptz) AND COALESCE(metadata->'student_change_request'->>'status','') NOT IN ('pending','coordination_required') RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",
     [prior.id,req.user.id,start,url,COURSE]);
    if(updated.rows.length!==1){
     await client.query('ROLLBACK');
@@ -433,7 +437,8 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    await client.query('COMMIT');
    return reply(res,200,{ok:true,session:outward(updated.rows[0],'teacher'),
     manual_meet_link_recorded:true,calendar_event_created:false,
-    external_calendars_checked:false,no_email_sent:true,payment_changed:false});
+    manual_external_calendar_review_attested:true,external_calendars_checked:false,
+    no_email_sent:true,payment_changed:false});
   }catch{
    if(client)await client.query('ROLLBACK').catch(()=>{});
    return reply(res,503,{ok:false,error:'Class confirmation could not be verified. No external Calendar, email or billing action was performed.'});
@@ -538,6 +543,26 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    [teacherId,start,excludeId||'']);
   return matches.rows.length>0;
  }
+ // HF64: authenticated, read-only class-specific conflict preflight.
+ // Excludes the tentative class itself; not an external Google Calendar query.
+ app.get('/api/v2150/private-energy/sessions/:id/confirmation-preflight',guard,managers,ready,async(req,res)=>{
+  const start=nowTime(req.query.starts_at);
+  if(!start)return reply(res,400,{ok:false,error:'Choose a valid future class time to check.'});
+  try{
+   const prior=await accessible(req,req.params.id);
+   if(!prior||prior.teacher_user_id!==req.user.id)return reply(res,404,{ok:false,error:'Assigned teacher classroom not found.'});
+   const eligible=prior.status==='requested'&&!prior.video_join_url&&prior.readiness_status!=='generating_meet'&&
+    !['pending','coordination_required'].includes(changeSummary(prior.metadata)?.status)&&
+    (!prior.scheduled_at||new Date(prior.scheduled_at).getTime()===new Date(start).getTime());
+   const internal_conflict=await internalConflicts(req.user.id,start,prior.id);
+   return reply(res,200,{ok:true,eligible_for_manual_confirmation:eligible,
+    internal_conflict,google_calendars_checked:false,full_conflict_clearance:false,
+    no_email_sent:true,no_booking_changed:true,
+    notice:!eligible?'The class state or tentative time no longer permits manual confirmation. Refresh.':
+     internal_conflict?'Another EnglishLegalese class overlaps. Do not confirm this time.':
+     'No other EnglishLegalese class overlaps this time. External Google calendars MUST be checked separately.'});
+  }catch{return reply(res,503,{ok:false,error:'Private class conflict preflight unavailable. Do not confirm the booking.'});}
+ });
  app.get('/api/v2150/private-energy/teacher-conflicts',guard,managers,ready,async(req,res)=>{
   const start=nowTime(req.query.starts_at);
   if(!start)return reply(res,400,{ok:false,error:'A valid future class time is required.'});
