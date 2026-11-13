@@ -218,9 +218,47 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
  app.get('/api/v2150/private-energy/sessions',guard,ready,async(req,res)=>{
   if(!['student','teacher','owner','admin'].includes(req.user.role))return reply(res,403,{ok:false,error:'Classroom role required.'});
   try{
-   const rows=await services.query(rowQuery+" AND (student_user_id=$2 OR teacher_user_id=$2) ORDER BY scheduled_at ASC NULLS LAST, created_at DESC LIMIT 50",[COURSE,req.user.id]);
-   return reply(res,200,{ok:true,role:req.user.role==='student'?'student':'teacher',sessions:rows.rows.map(x=>outward(x,req.user.role==='student'?'student':'teacher')),no_invitation_sent:true});
+   // Review requests first, then real upcoming appointments, then history. One
+   // extra row signals a partial list without claiming an exact full count.
+   const order=" ORDER BY CASE WHEN metadata->'student_change_request'->>'status'='pending' THEN 0 WHEN status IN ('requested','scheduled') AND (scheduled_at IS NULL OR scheduled_at+interval '90 minutes'>now()) THEN 1 ELSE 2 END ASC, CASE WHEN scheduled_at>now() THEN scheduled_at END ASC NULLS LAST, created_at DESC LIMIT 51";
+   const result=await services.query(rowQuery+" AND (student_user_id=$2 OR teacher_user_id=$2)"+order,[COURSE,req.user.id]);
+   const rows=result.rows.slice(0,50);
+   return reply(res,200,{ok:true,role:req.user.role==='student'?'student':'teacher',
+    sessions:rows.map(x=>outward(x,req.user.role==='student'?'student':'teacher')),
+    partial:result.rows.length>50,sort:'pending_first_upcoming_then_history',
+    no_invitation_sent:true});
   }catch{return reply(res,503,{ok:false,error:'Private class schedule is temporarily unavailable.'});}
+ });
+
+ // HF61: bounded, independently paged history. A long student/teacher history
+ // must not hide upcoming classes. No past Google Meet URL is returned.
+ app.get('/api/v2150/private-energy/sessions/history',guard,ready,async(req,res)=>{
+  if(!['student','teacher','owner','admin'].includes(req.user.role))return reply(res,403,{ok:false,error:'Classroom role required.'});
+  const input=req.query.offset==null?'0':String(req.query.offset);
+  if(!/^(?:0|[1-9][0-9]{0,4})$/.test(input)||Number(input)>10000)
+   return reply(res,400,{ok:false,error:'Use a valid history page offset.'});
+  const offset=Number(input);
+  try{
+   const result=await services.query(rowQuery+" AND (student_user_id=$2 OR teacher_user_id=$2) AND (status IN ('completed','cancelled') OR (scheduled_at IS NOT NULL AND scheduled_at+interval '90 minutes'<=now())) ORDER BY scheduled_at DESC NULLS LAST, created_at DESC LIMIT 26 OFFSET $3",[COURSE,req.user.id,offset]);
+   const page=result.rows.slice(0,25);
+   return reply(res,200,{ok:true,role:req.user.role==='student'?'student':'teacher',
+    sessions:page.map(x=>outward(x,req.user.role==='student'?'student':'teacher')),
+    next_offset:offset+page.length,has_more:result.rows.length>25,
+    includes_active_bookings:false,full_history_claimed:result.rows.length<=25,
+    no_invitation_sent:true});
+  }catch{return reply(res,503,{ok:false,error:'Past class records could not be loaded. No current booking was changed.'});}
+ });
+ // HF61: separate teacher action queue even if the main class list is capped.
+ // Read-only, identity-minimized, and never an external Calendar check.
+ app.get('/api/v2150/private-energy/review-queue',guard,requireRoles('teacher','owner','admin'),ready,async(req,res)=>{
+  try{
+   const result=await services.query("SELECT id,scheduled_at,status,metadata FROM class_sessions WHERE teacher_user_id=$1 AND metadata->>'course_key'=$2 AND status IN ('requested','scheduled') AND metadata->'student_change_request'->>'status'='pending' ORDER BY metadata->'student_change_request'->>'requested_at' ASC NULLS LAST LIMIT 51",[req.user.id,COURSE]);
+   return reply(res,200,{ok:true,requests:result.rows.slice(0,50).map(row=>({
+    id:row.id,starts_at:row.scheduled_at,status:row.status,
+    lesson_number:Number(row.metadata?.lesson_number)||null,
+    change_request:changeSummary(row.metadata)
+   })),partial:result.rows.length>50,google_calendars_checked:false,no_messages_sent:true});
+  }catch{return reply(res,503,{ok:false,error:'Teacher review queue unavailable. No class or provider change was made.'});}
  });
  // HF57 safe readiness check: uses the exact same revocable login and
  // student/teacher database ownership checks as actual meeting access.
@@ -329,8 +367,10 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    if(!prior||prior.teacher_user_id!==req.user.id)return reply(res,404,{ok:false,error:'Assigned teacher classroom not found.'});
    if(prior.status==='completed'||prior.status==='cancelled')return reply(res,409,{ok:false,error:'Completed/cancelled classes cannot be reactivated.'});
    if(prior.metadata?.provider_confirmation==='google_calendar_created')return reply(res,409,{ok:false,error:'Calendar-managed meeting time cannot be changed here; reschedule via the calendar integration.'});
+   if(['pending','coordination_required'].includes(changeSummary(prior.metadata)?.status))
+    return reply(res,409,{ok:false,error:'Resolve the student change request before attaching or changing a Meet booking.'});
    if(await internalConflicts(req.user.id,start,prior.id))return reply(res,409,{ok:false,error:'An EnglishLegalese class overlaps. No meeting link was attached.'});
-   const rows=await services.query("UPDATE class_sessions SET scheduled_at=$3,video_join_url=$4,status='scheduled',readiness_status='ready',metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{provider_confirmation}',to_jsonb('teacher_entered'::text),true),updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$5 AND status NOT IN ('completed','cancelled') RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",[prior.id,req.user.id,start,url,COURSE]);
+   const rows=await services.query("UPDATE class_sessions SET scheduled_at=$3,video_join_url=$4,status='scheduled',readiness_status='ready',metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{provider_confirmation}',to_jsonb('teacher_entered'::text),true),updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$5 AND status NOT IN ('completed','cancelled') AND COALESCE(metadata->'student_change_request'->>'status','') NOT IN ('pending','coordination_required') RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",[prior.id,req.user.id,start,url,COURSE]);
    return rows.rows.length?reply(res,200,{ok:true,session:outward(rows.rows[0],'teacher'),no_email_sent:true}):reply(res,404,{ok:false,error:'Session unavailable.'});
   }catch{return reply(res,503,{ok:false,error:'Meeting link could not be attached.'});}
  });
@@ -342,8 +382,10 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    if(!prior||prior.teacher_user_id!==req.user.id)return reply(res,404,{ok:false,error:'Assigned teacher classroom not found.'});
    if(!prior.scheduled_at||prior.status==='completed'||prior.status==='cancelled'||prior.video_join_url)
     return reply(res,409,{ok:false,error:'A dated, link-free, active class is required to create a Google Meet.'});
+   if(['pending','coordination_required'].includes(changeSummary(prior.metadata)?.status))
+    return reply(res,409,{ok:false,error:'Resolve the student change request before creating a Meet booking.'});
    if(await internalConflicts(req.user.id,prior.scheduled_at,prior.id))return reply(res,409,{ok:false,error:'An EnglishLegalese class overlaps. Google Meet was not created.'});
-   const claim=await services.query("UPDATE class_sessions SET readiness_status='generating_meet',updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$3 AND video_join_url IS NULL AND scheduled_at IS NOT NULL AND status='requested' AND readiness_status='needs_meet' RETURNING id",[prior.id,req.user.id,COURSE]);
+   const claim=await services.query("UPDATE class_sessions SET readiness_status='generating_meet',updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$3 AND video_join_url IS NULL AND scheduled_at IS NOT NULL AND status='requested' AND readiness_status='needs_meet' AND COALESCE(metadata->'student_change_request'->>'status','') NOT IN ('pending','coordination_required') RETURNING id",[prior.id,req.user.id,COURSE]);
    if(claim.rows.length!==1)return reply(res,409,{ok:false,error:'A meeting may already be in preparation. Refresh the class record before retrying.'});
    claimed=true;
    const start=new Date(prior.scheduled_at).toISOString();
@@ -380,7 +422,7 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
     return reply(res,400,{ok:false,error:'Choose a different class time.'});
    const request={kind,status:'pending',requested_at:new Date().toISOString(),proposed_at:proposed,policy_decision:'unassessed'};
    const updated=await services.query(
-    "UPDATE class_sessions SET metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{student_change_request}',$3::jsonb,true),updated_at=now() WHERE id=$1 AND student_user_id=$2 AND metadata->>'course_key'=$4 AND status IN ('requested','scheduled') AND scheduled_at>now() AND (metadata->'student_change_request' IS NULL OR metadata->'student_change_request'->>'status'<>'pending') RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",
+    "UPDATE class_sessions SET metadata=jsonb_set(coalesce(metadata,'{}'::jsonb),'{student_change_request}',$3::jsonb,true),updated_at=now() WHERE id=$1 AND student_user_id=$2 AND metadata->>'course_key'=$4 AND status IN ('requested','scheduled') AND scheduled_at>now() AND COALESCE(metadata->'student_change_request'->>'status','') NOT IN ('pending','coordination_required') RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",
     [prior.id,req.user.id,JSON.stringify(request),COURSE]);
    if(updated.rows.length!==1)return reply(res,409,{ok:false,error:'The class or request changed. Refresh before retrying.'});
    return reply(res,202,{ok:true,request:changeSummary(updated.rows[0].metadata),teacher_review_required:true,
@@ -446,9 +488,11 @@ function install(app,{services,authMiddleware,requireRoles,configured}){
    if(!prior||prior.teacher_user_id!==req.user.id)return reply(res,404,{ok:false,error:'Assigned teacher classroom not found.'});
    if(prior.status!=='scheduled')return reply(res,409,{ok:false,error:'Only scheduled classes can be marked complete by their teacher.'});
    if(req.body?.confirmed_taught!==true)return reply(res,400,{ok:false,error:'Explicit teacher confirmation of an actually taught class is required.'});
+   if(['pending','coordination_required'].includes(changeSummary(prior.metadata)?.status))
+    return reply(res,409,{ok:false,error:'Review the unresolved student change request before closing this class record.'});
    if(!prior.scheduled_at||new Date(prior.scheduled_at).getTime()+3600000>Date.now())
     return reply(res,409,{ok:false,error:'A class cannot be marked taught before its scheduled 60 minutes have elapsed.'});
-   const completed=await services.query("UPDATE class_sessions SET status='completed',closeout_status='teacher_confirmed',updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$3 AND status='scheduled' AND scheduled_at+interval '60 minutes'<=now() RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",[prior.id,req.user.id,COURSE]);
+   const completed=await services.query("UPDATE class_sessions SET status='completed',closeout_status='teacher_confirmed',updated_at=now() WHERE id=$1 AND teacher_user_id=$2 AND metadata->>'course_key'=$3 AND status='scheduled' AND scheduled_at+interval '60 minutes'<=now() AND COALESCE(metadata->'student_change_request'->>'status','') NOT IN ('pending','coordination_required') RETURNING id,learner_name,student_user_id,teacher_user_id,scheduled_at,status,video_join_url,metadata",[prior.id,req.user.id,COURSE]);
    return completed.rows.length?reply(res,200,{ok:true,session:outward(completed.rows[0],'teacher'),assessment_recorded:false}):reply(res,409,{ok:false,error:'Class status changed; refresh.'});
   }catch{return reply(res,503,{ok:false,error:'Class completion was not recorded.'});}
  });
