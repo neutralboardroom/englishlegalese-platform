@@ -1,0 +1,38 @@
+{
+  "id": "/",
+  "name": "EnglishLegalese — Legal & Business English",
+  "short_name": "EnglishLegalese",
+  "description": "Professional Legal English and Business English courses, teacher-led classes and independent practice.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0B1D33",
+  "theme_color": "#0B1D33",
+  "lang": "en",
+  "dir": "ltr",
+  "orientation": "any",
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "/assets/englishlegalese-app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/englishlegalese-app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
