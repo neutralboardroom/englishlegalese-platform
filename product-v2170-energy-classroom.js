@@ -44,7 +44,7 @@
  const localStart=value=>{
   if(typeof value!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d$/.test(value))throw Error('Enter the local class date and time.');
   const iso=new Date(value+':00+07:00');
-  if(Number.isNaN(iso.getTime()))throw Error('Enter a valid Vietnam / Thailand class time.');
+  if(Number.isNaN(iso.getTime())||new Date(iso.getTime()+7*3600000).toISOString().slice(0,16)!==value)throw Error('Enter a real, valid Vietnam / Thailand class time (UTC+7).');
   return iso.toISOString();
  };
  function appendList(parent,items){
@@ -109,32 +109,74 @@
  async function showReviewBoard(){
   document.getElementById('energy-hf61-review-board')?.remove();
   if(role==='student')return;
-  const board=node('details',undefined,'energy-review-board');
-  board.id='energy-hf61-review-board';
-  const summary=node('summary','Loading the protected teacher change-request queue…');
+  const board=node('details',undefined,'energy-review-board');board.id='energy-hf61-review-board';
+  const summary=node('summary','Loading your protected teacher review queue…');
   const contents=node('div',undefined,'energy-review-board-items');
-  board.append(summary,contents);teacherPanel.prepend(board);
-  try{
-   const data=await call(API+'review-queue');
-   summary.textContent='Pending student change requests ('+data.requests.length+
-    (data.partial?'+':'')+') · review your EnglishLegalese calendar and external calendars separately';
-   if(data.partial)contents.append(node('p','This queue displays only the first 50 pending requests. It is incomplete; the owner must review the remaining requests.','notice'));
-   if(data.requests.length===0){contents.append(node('p','No currently pending assigned change requests were returned.','muted'));return;}
-   for(const item of data.requests){
-    const card=node('section',undefined,'energy-review-board-item');
-    card.append(node('p','Lesson '+item.lesson_number+' · '+item.change_request?.kind+' request · '+(item.starts_at?new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',dateStyle:'medium',timeStyle:'short'}).format(new Date(item.starts_at))+' (UTC+7)':'Time unconfirmed')));
-    const view=node('button','Go to this class for review');view.type='button';
-    view.addEventListener('click',()=>{
-     const target=document.getElementById('energy-class-'+item.id);
-     if(target){board.open=false;target.scrollIntoView({behavior:'smooth',block:'start'});target.setAttribute('tabindex','-1');target.focus();}
-     else contents.append(node('p','The class is outside this limited class page. Refresh the page or contact the site owner; do not assume the request is resolved.','notice'));
-    });
-    card.append(view);contents.append(card);
-   }
-  }catch(e){
-   summary.textContent='Teacher change-request queue unavailable';
-   contents.append(node('p',e.message+' Do not assume there are no pending requests.','notice'));
+  const more=node('button','Load more pending change requests (50 per page)');
+  more.type='button';more.className='energy-review-board-more';
+  const progress=node('p',undefined,'energy-review-board-status');
+  progress.setAttribute('role','status');progress.setAttribute('aria-live','polite');
+  board.append(summary,contents,more,progress);
+  teacherPanel.prepend(board);
+  let offset=0,shown=0,hasMore=true,busy=false;
+  const seen=new Set();
+  async function openItem(item,button){
+   button.disabled=true;progress.textContent='Verifying your assignment to this class…';
+   try{
+    let target=document.getElementById('energy-class-'+item.id);
+    if(!target){
+     const detail=await call(API+'sessions/'+encodeURIComponent(item.id));
+     if(!detail.session||detail.session.id!==item.id)throw Error('Class record could not be verified.');
+     if(!loadedSessions.some(row=>row.id===item.id))loadedSessions.push(detail.session);
+     showSessions(loadedSessions);
+     target=document.getElementById('energy-class-'+item.id);
+    }
+    if(!target)throw Error('Class record could not be displayed.');
+    if(target.closest('.energy-history-items')){
+     const history=schedule.querySelector('.energy-history-list');if(history)history.open=true;
+    }
+    board.open=false;target.scrollIntoView({behavior:'smooth',block:'start'});
+    target.setAttribute('tabindex','-1');target.focus();
+    progress.textContent='Opened assigned class without modifying the booking.';
+   }catch(e){progress.textContent=e.message+' No Calendar, billing, email or class change was made.';}
+   finally{button.disabled=false;}
   }
+  async function loadPage(){
+   if(!hasMore||busy)return;
+   busy=true;more.disabled=true;progress.textContent='Loading another authorized queue page…';
+   try{
+    const data=await call(API+'review-queue'+(offset?'?offset='+offset:''));
+    const rows=Array.isArray(data.requests)?data.requests:[];
+    const next=Number(data.next_offset);
+    offset=Number.isInteger(next)&&next>offset?next:offset+rows.length;
+    hasMore=Boolean(data.has_more??data.partial);
+    for(const item of rows){
+     if(!item?.id||seen.has(item.id))continue;
+     seen.add(item.id);shown++;
+     const card=node('section',undefined,'energy-review-board-item');
+     let time='Time unconfirmed';
+     if(item.starts_at){
+      const date=new Date(item.starts_at);
+      if(Number.isFinite(date.getTime()))time=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',dateStyle:'medium',timeStyle:'short'}).format(date)+' (UTC+7)';
+     }
+     card.append(node('p','Lesson '+item.lesson_number+' · '+(item.change_request?.kind||'change')+' request · '+time));
+     const view=node('button','Go to this class for review');view.type='button';
+     view.addEventListener('click',()=>openItem(item,view));
+     card.append(view);contents.append(card);
+    }
+    summary.textContent='Pending student change requests ('+shown+(hasMore?'+':'')+') · check external calendars separately';
+    if(!shown)contents.append(node('p','No currently pending assigned change requests were returned.','muted'));
+    if(hasMore&&!contents.querySelector('.energy-review-page-warning')){
+     const warning=node('p','This queue displays only the first 50 pending requests per page. It is incomplete until the remaining pages are checked.','notice');
+     warning.classList.add('energy-review-page-warning');contents.prepend(warning);
+    }
+    progress.textContent='Showing '+shown+' distinct assigned request(s). '+(hasMore?'Further pages may remain.':'No more requests were returned. Refresh after teacher decisions.');
+    if(hasMore&&rows.length===0){hasMore=false;progress.textContent='Queue pagination could not advance. Refresh or request owner reconciliation.';}
+   }catch(e){summary.textContent='Teacher change-request queue unavailable';progress.textContent=e.message+' Do not assume the queue is empty.';}
+   finally{busy=false;more.hidden=!hasMore||offset>10000;more.disabled=false;}
+  }
+  more.addEventListener('click',loadPage);
+  await loadPage();
  }
  function showSessions(items){
   clear(schedule);
@@ -205,7 +247,7 @@
     try{
      const result=await call(API+'sessions/'+encodeURIComponent(row.id)+'/readiness');
      const label=result.join_available?'Ready for Google Meet':'Not ready to join';
-     readinessStatus.textContent=label+' · '+result.next_action+' The audio/video preview is tested in the video provider.';
+     readinessStatus.textContent=label+' · '+result.next_action+' EnglishLegalese has not tested your microphone, speakers, camera or the external provider connection.';
     }catch(e){readinessStatus.textContent=e.message;}
     finally{checkReady.disabled=false;}
    });
