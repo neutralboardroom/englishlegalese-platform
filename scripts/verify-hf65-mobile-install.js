@@ -56,7 +56,7 @@ assert.ok(sw.includes("url.pathname.startsWith('/api/')"));
 assert.ok(sw.includes('owner-dashboard')&&sw.includes('private-energy-contracts'));
 assert.ok(sw.includes("fetch(event.request,{cache:'no-store'})"));
 assert.ok(!sw.includes('cache.put(')&&!sw.includes('cache.addAll('),'never cache navigation/API');
-assert.ok(sw.includes('cache.add(new Request(PUBLIC_OFFLINE_PAGE')),'only offline page cached');
+assert.ok(sw.includes('cache.add(new Request(PUBLIC_OFFLINE_PAGE'),'only offline page cached');
 assert.ok(!/\b(localStorage|sessionStorage|indexedDB)\b/.test(sw),'no data persistence');
 assert.ok(offline.includes('generic offline message')&&offline.includes('not</strong> saved'));
 assert.ok(!offline.includes('/api/'));
