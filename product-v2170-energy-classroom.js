@@ -349,14 +349,28 @@
      const checkInput=node('input');checkInput.type='checkbox';checkInput.className='energy-manual-meet-confirm';
      checkLabel.prepend(checkInput);
      const limitation=node('p','This is a one-time teacher confirmation for an unconfirmed class. A scheduled appointment or existing Google Meet link cannot be silently overwritten. No student invitation or payment is sent.','muted');
+     const preflight=node('button','Check this class for EnglishLegalese conflicts');
+     preflight.type='button';preflight.className='energy-manual-meet-preflight';
+     const preflightStatus=node('p',undefined,'energy-manual-meet-preflight-status');
+     preflightStatus.setAttribute('role','status');preflightStatus.setAttribute('aria-live','polite');
+     preflight.addEventListener('click',async()=>{
+      let start;
+      try{start=localStart(timeInput.value);}catch(e){preflightStatus.textContent=e.message;return;}
+      preflight.disabled=true;preflightStatus.textContent='Checking assigned class and internal EnglishLegalese schedule…';
+      try{
+       const result=await call(API+'sessions/'+encodeURIComponent(row.id)+'/confirmation-preflight?starts_at='+encodeURIComponent(start));
+       preflightStatus.textContent=result.notice+' All Google calendars still require manual review.';
+      }catch(e){preflightStatus.textContent=e.message+' Do not confirm the booking before resolving this.';}
+      finally{preflight.disabled=false;}
+     });
      const submit=node('button','Confirm unbooked class and attach Meet');submit.type='submit';
-     form.append(label,timeLabel,checkLabel,limitation,submit);
+     form.append(label,timeLabel,preflight,preflightStatus,checkLabel,limitation,submit);
      form.addEventListener('submit',async event=>{
       event.preventDefault();
       const url=safeMeet(input.value);
       if(!url){teacherStatus.textContent='Enter a genuine https://meet.google.com/abc-defg-hij meeting URL.';return;}
       if(!checkInput.checked){teacherStatus.textContent='Check your external Google calendars before confirming this one-time booking. This site cannot verify them.';return;}
-      try{await perform(submit,API+'sessions/'+encodeURIComponent(row.id)+'/attach-meet',{meet_url:url,starts_at:localStart(timeInput.value)},teacherStatus);}catch(e){teacherStatus.textContent=e.message;}
+      try{await perform(submit,API+'sessions/'+encodeURIComponent(row.id)+'/attach-meet',{meet_url:url,starts_at:localStart(timeInput.value),external_calendar_acknowledged:true},teacherStatus);}catch(e){teacherStatus.textContent=e.message;}
      });
      section.append(form);
     }
@@ -473,7 +487,7 @@
   const url=element('energy-link').value.trim();
   if(url&&!safeMeet(url)){teacherStatus.textContent='Enter only a verified Google Meet link, or leave the field empty.';return;}
   let start;try{start=localStart(element('energy-start').value)}catch(e){teacherStatus.textContent=e.message;return;}
-  const data={student_email:element('energy-student-email').value.trim(),lesson_number:Number(courseSelect.value),starts_at:start,meet_url:url||null};
+  const data={student_email:element('energy-student-email').value.trim(),lesson_number:Number(courseSelect.value),starts_at:start,meet_url:url||null,external_calendar_acknowledged:true};
   await perform(button,API+'sessions',data,teacherStatus);
  });
  historicalForm.addEventListener('submit',async event=>{
