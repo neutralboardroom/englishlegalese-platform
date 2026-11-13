@@ -13,6 +13,7 @@
   schedule=element('energy-schedule'),lessonsView=element('energy-lessons'),
   courseSelect=element('energy-create-lesson');
  let token=null,role=null,canAutoMeet=false,loadedLessons=[],loadedSessions=[];
+ let listIsPartial=false,historyOffset=0,historyExhausted=false;
  const node=(tag,value,cls)=>{
   const x=document.createElement(tag);
   if(value!==undefined)x.textContent=value;
@@ -54,6 +55,8 @@
  function showError(e){status.textContent=e?.message||String(e);}
  function loggedOut(message='Sign in with your verified EnglishLegalese account.'){
   token=null;role=null;loadedLessons=[];loadedSessions=[];
+  listIsPartial=false;historyOffset=0;historyExhausted=false;
+  document.getElementById('energy-hf61-review-board')?.remove();
   authorized.hidden=true;teacherPanel.hidden=true;historicalPanel.hidden=true;
   signout.hidden=true;loginForm.hidden=false;status.textContent=message;
   clear(schedule);clear(lessonsView);clear(courseSelect);
@@ -83,6 +86,8 @@
  async function refresh(){
   const sessionResult=await call(API+'sessions');
   loadedSessions=sessionResult.sessions||[];
+  listIsPartial=Boolean(sessionResult.partial);
+  historyOffset=0;historyExhausted=false;
   authorized.hidden=false;teacherPanel.hidden=role==='student';historicalPanel.hidden=!['owner','admin'].includes(role);
   loginForm.hidden=true;signout.hidden=false;
   if(role==='student'&&loadedSessions.length===0){
@@ -94,11 +99,42 @@
   status.textContent=role==='student'?'Signed in — your assigned private lessons are available.':'Signed in — manage only classes attached to your EnglishLegalese account.';
   showCourse(loadedLessons,courses.agenda||[]);
   showSessions(loadedSessions);
+  if(role!=='student')await showReviewBoard();
  }
  function rowLabel(row){
   const date=row.starts_at?new Date(row.starts_at):null;
   return 'Session '+row.lesson_number+' · '+row.lesson_title+
     (date?' · '+new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(date)+' (UTC+7)':' · Time not confirmed');
+ }
+ async function showReviewBoard(){
+  document.getElementById('energy-hf61-review-board')?.remove();
+  if(role==='student')return;
+  const board=node('details',undefined,'energy-review-board');
+  board.id='energy-hf61-review-board';
+  const summary=node('summary','Loading the protected teacher change-request queue…');
+  const contents=node('div',undefined,'energy-review-board-items');
+  board.append(summary,contents);teacherPanel.prepend(board);
+  try{
+   const data=await call(API+'review-queue');
+   summary.textContent='Pending student change requests ('+data.requests.length+
+    (data.partial?'+':'')+') · review your EnglishLegalese calendar and external calendars separately';
+   if(data.partial)contents.append(node('p','This queue displays only the first 50 pending requests. It is incomplete; the owner must review the remaining requests.','notice'));
+   if(data.requests.length===0){contents.append(node('p','No currently pending assigned change requests were returned.','muted'));return;}
+   for(const item of data.requests){
+    const card=node('section',undefined,'energy-review-board-item');
+    card.append(node('p','Lesson '+item.lesson_number+' · '+item.change_request?.kind+' request · '+(item.starts_at?new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',dateStyle:'medium',timeStyle:'short'}).format(new Date(item.starts_at))+' (UTC+7)':'Time unconfirmed')));
+    const view=node('button','Go to this class for review');view.type='button';
+    view.addEventListener('click',()=>{
+     const target=document.getElementById('energy-class-'+item.id);
+     if(target){board.open=false;target.scrollIntoView({behavior:'smooth',block:'start'});target.setAttribute('tabindex','-1');target.focus();}
+     else contents.append(node('p','The class is outside this limited class page. Refresh the page or contact the site owner; do not assume the request is resolved.','notice'));
+    });
+    card.append(view);contents.append(card);
+   }
+  }catch(e){
+   summary.textContent='Teacher change-request queue unavailable';
+   contents.append(node('p',e.message+' Do not assume there are no pending requests.','notice'));
+  }
  }
  function showSessions(items){
   clear(schedule);
@@ -119,6 +155,7 @@
     ' · Past or closed records: '+history.length+' · Pending change requests: '+pending.length+
     '. A historical record is not an active student or a confirmed future booking.'
    :'No private class has been assigned/scheduled yet. Teacher setup is required.';
+  if(listIsPartial)scheduleStatus.textContent+=' Showing only the first 50 prioritized records; this is not a complete class count.';
   const historicalDetails=node('details',undefined,'energy-history-list');
   const historyHeading=node('summary','Past and closed class records ('+history.length+')');
   const historicalContainer=node('div',undefined,'energy-history-items');
@@ -126,6 +163,7 @@
   for(const row of [...upcoming,...unconfirmed,...history]){
    const historical=isHistorical(row);
    const section=node('section',undefined,'session');
+   section.id='energy-class-'+row.id;
    const title=node('h3',rowLabel(row));section.append(title);
    section.append(node('p','Status: '+row.status+' · 60 minutes · '+row.provider,'muted'));
    if(role!=='student'&&row.teacher_only_pronunciation_progress) section.append(node('p','Private teaching observation — crude oil pronunciation: '+row.teacher_only_pronunciation_progress.replaceAll('_',' '),'muted'));
@@ -292,7 +330,29 @@
    section.append(actions,readinessStatus);
    (historical?historicalContainer:schedule).append(section);
   }
-  if(history.length)schedule.append(historicalDetails);
+  if(!historyExhausted){
+   const loadMore=node('button','Load older class records (25 per page)');
+   loadMore.type='button';loadMore.className='energy-load-history';
+   const note=node('p',undefined,'energy-load-history-status');note.setAttribute('role','status');note.setAttribute('aria-live','polite');
+   loadMore.addEventListener('click',async()=>{
+    loadMore.disabled=true;note.textContent='Loading your authenticated history page…';
+    try{
+     const data=await call(API+'sessions/history?offset='+historyOffset);
+     historyOffset=data.next_offset;
+     historyExhausted=!data.has_more;
+     const seen=new Set(loadedSessions.map(x=>x.id));
+     const newItems=(data.sessions||[]).filter(x=>!seen.has(x.id));
+     loadedSessions.push(...newItems);
+     showSessions(loadedSessions);
+     const historyPanel=schedule.querySelector('.energy-history-list');
+     if(historyPanel){historyPanel.open=true;
+      const message=historyPanel.querySelector('.energy-load-history-status');
+      if(message)message.textContent=newItems.length+' additional class record(s) loaded. '+(historyExhausted?'No further historical records were reported.':'More pages may remain.');}
+    }catch(e){note.textContent=e.message;loadMore.disabled=false;}
+   });
+   historicalDetails.append(loadMore,note);
+  }else historicalDetails.append(node('p','No additional pages were reported by the authenticated history service.','muted'));
+  if(history.length||listIsPartial||!historyExhausted)schedule.append(historicalDetails);
  }
  async function perform(button,url,data,target){
   button.disabled=true;target.textContent='Checking the protected class record…';
