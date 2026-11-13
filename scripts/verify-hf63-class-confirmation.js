@@ -74,7 +74,7 @@ runtime.install(app,{services,authMiddleware,requireRoles,configured:()=>({googl
  const attach=async(n,token,at=start)=>{
   const response=await fetch(url+id(n)+'/attach-meet',{method:'POST',
    headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},
-   body:JSON.stringify({meet_url:'https://meet.google.com/abc-defg-hij',starts_at:at})});
+   body:JSON.stringify({meet_url:'https://meet.google.com/abc-defg-hij',starts_at:at,external_calendar_acknowledged:true})});
   return {status:response.status,data:await response.json()};
  };
  try{
