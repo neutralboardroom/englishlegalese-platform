@@ -25,12 +25,13 @@ for(const bad of ['https://meet.google.com.evil.example/abc-defg-hij','http://me
 }
 assert.equal(runtime.meetLink(''),null);
 assert.equal(runtime.nowTime('2026-11-08'),null);
-const sample={id:'EL-ENERGY-00000000-0000-0000-0000-000000000001',metadata:{lesson_number:2},scheduled_at:'2026-11-09T10:00:00Z',status:'requested',video_join_url:'https://meet.google.com/abc-defg-hij',learner_name:'PRIVATE NAME'};
+const sample={id:'EL-ENERGY-00000000-0000-0000-0000-000000000001',metadata:{lesson_number:2},scheduled_at:new Date(Date.now()+7*86400000).toISOString(),status:'requested',video_join_url:'https://meet.google.com/abc-defg-hij',learner_name:'PRIVATE NAME'};
 const before=runtime.outward(sample,'student');
 assert.equal(before.meet_url,null,'draft must NEVER leak a link to student');
 assert.equal(before.student_name,undefined,'learner name must not be repeated in student listing');
 assert.equal(runtime.outward({...sample,status:'completed'},'student').meet_url,null,'completed session join link hidden');
 assert.equal(runtime.outward({...sample,status:'scheduled'},'student').meet_url,'https://meet.google.com/abc-defg-hij');
+assert.equal(runtime.outward({...sample,status:'scheduled',scheduled_at:new Date(Date.now()-3*3600000).toISOString()},'student').meet_url,null,'past scheduled session cannot keep exposing a Join link');
 // Never embed the names or document titles from the student's source material in
 // public source or in this test; use generic category checks only.
 for(const p of ['actual client contract text','nonpublic bank account number','confidential cargo price','student-specific case file']){
