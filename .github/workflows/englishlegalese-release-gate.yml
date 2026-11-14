@@ -75,6 +75,28 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+      # HF66 owner recovery archive: exact tested Git commit, not a partial
+      # manifest/receipt packet. No workspace secrets, node_modules, ignored
+      # user data, browser traces or working-tree files enter git archive.
+      - name: Export cumulative HF66 source from exact Git commit
+        if: always()
+        run: |
+          test -d .git || exit 0
+          actual="$(git rev-parse HEAD)"
+          expected='${{ github.event.pull_request.head.sha || github.sha }}'
+          test "$actual" = "$expected" || { echo "Archive SHA mismatch" >&2; exit 1; }
+          mkdir -p release-artifacts
+          git archive --format=zip --output=release-artifacts/EnglishLegalese_HF66_Full_Source_Candidate.zip HEAD
+          test -s release-artifacts/EnglishLegalese_HF66_Full_Source_Candidate.zip
+      - name: Preserve exact HF66 cumulative source archive
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: englishlegalese-hf66-full-source-candidate
+          path: release-artifacts/EnglishLegalese_HF66_Full_Source_Candidate.zip
+          if-no-files-found: ignore
+          retention-days: 30
+
   verify-independent:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
