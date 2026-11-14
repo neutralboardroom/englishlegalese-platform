@@ -36,6 +36,26 @@ app.use((req,res,next)=>{
   }
   next();
 });
+// HF67: prevent intermediate/proxy/browser caching of sensitive API
+// responses and authenticated workspace shells. Do not alter persisted work.
+const HF67_PRIVATE_SHELLS=new Set([
+ '/learn/account','/learn/my-work','/learn/private-energy-contracts',
+ '/learn/owner-dashboard','/learn/teacher-submissions',
+ '/learn/employer-dashboard','/learn/teacher-dashboard',
+ '/learn/student-dashboard','/learn/progress'
+]);
+app.use((req,res,next)=>{
+ const pathname=req.path||'';
+ const shell=pathname.replace(/\/(?:index\.html)?$/,'');
+ if(pathname==='/api'||pathname.startsWith('/api/')||HF67_PRIVATE_SHELLS.has(shell)){
+  res.setHeader('Cache-Control','private, no-store, max-age=0');
+  res.setHeader('Pragma','no-cache');
+  res.setHeader('Expires','0');
+  res.setHeader('Vary','Cookie, Authorization');
+  res.setHeader('X-Content-Type-Options','nosniff');
+ }
+ next();
+});
 // Prevent public downloads of server code, credentials, databases, governance and build scripts.
 app.use((req,res,next)=>{
  const urlPath=req.path||'';
@@ -53,7 +73,17 @@ app.get('/sw.js',(req,res)=>res.type('application/javascript')
  .set('Cache-Control','no-cache, max-age=0, must-revalidate')
  .set('Service-Worker-Allowed','/')
  .sendFile(path.join(__dirname,'sw.js')));
-app.use(express.static(__dirname));
+// Static serving otherwise defaults to public caching. Reassert private
+// headers after serve-static applies its default cache policy.
+app.use(express.static(__dirname,{setHeaders(res){
+ const pathname=res.req.path||'';
+ const shell=pathname.replace(/\/(?:index\.html)?$/,'');
+ if(HF67_PRIVATE_SHELLS.has(shell)){
+  res.setHeader('Cache-Control','private, no-store, max-age=0');
+  res.setHeader('Pragma','no-cache');
+  res.setHeader('Expires','0');
+ }
+}}));
 
 app.get('/health', (req, res) => {
   res.json({
