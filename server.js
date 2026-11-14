@@ -15,6 +15,18 @@ const {AI_PLAN_DRAFTS,paidEntitlementVerified}=require('./src/aiCommercePolicy')
 const persistentStore = new PersistentStore();
 const productionServices = new ProductionServices(persistentStore);
 
+// HF56 private-energy defense in depth: legacy v118/v120/v142 inspection routes
+// predate role-based sessions and must not expose this course's learner or Meet URL.
+// Preserve legacy records unrelated to this new private course.
+const protectedPrivateClass = record => {
+ const id = String(record?.id || '');
+ if(id.startsWith('EL-ENERGY-')) return true;
+ let metadata = record?.metadata;
+ if(typeof metadata === 'string'){try{metadata=JSON.parse(metadata)}catch{metadata=null}}
+ return Boolean(metadata && typeof metadata==='object' && metadata.course_key==='energy-contracts-60-v1');
+};
+const publicClassSessions = async () => (await persistentStore.listClassSessions()).filter(row=>!protectedPrivateClass(row));
+
 // Revalidate the HTML shell on every revisit; versioned assets already use release-unique URLs.
 // Never apply public caching rules to private or API responses.
 app.use((req,res,next)=>{
@@ -24,6 +36,26 @@ app.use((req,res,next)=>{
   }
   next();
 });
+// HF67: prevent intermediate/proxy/browser caching of sensitive API
+// responses and authenticated workspace shells. Do not alter persisted work.
+const HF67_PRIVATE_SHELLS=new Set([
+ '/learn/account','/learn/my-work','/learn/private-energy-contracts',
+ '/learn/owner-dashboard','/learn/teacher-submissions',
+ '/learn/employer-dashboard','/learn/teacher-dashboard',
+ '/learn/student-dashboard','/learn/progress'
+]);
+app.use((req,res,next)=>{
+ const pathname=req.path||'';
+ const shell=pathname.replace(/\/(?:index\.html)?$/,'');
+ if(pathname==='/api'||pathname.startsWith('/api/')||HF67_PRIVATE_SHELLS.has(shell)){
+  res.setHeader('Cache-Control','private, no-store, max-age=0');
+  res.setHeader('Pragma','no-cache');
+  res.setHeader('Expires','0');
+  res.setHeader('Vary','Cookie, Authorization');
+  res.setHeader('X-Content-Type-Options','nosniff');
+ }
+ next();
+});
 // Prevent public downloads of server code, credentials, databases, governance and build scripts.
 app.use((req,res,next)=>{
  const urlPath=req.path||'';
@@ -32,7 +64,26 @@ app.use((req,res,next)=>{
    return res.status(404).type('text/plain').send('Not found');
  next();
 });
-app.use(express.static(__dirname));
+// HF65 public PWA endpoints: explicitly typed, revalidated scripts; never
+// cache private API, student lessons, classes, account data, or credentials.
+app.get('/manifest.webmanifest',(req,res)=>res.type('application/manifest+json')
+ .set('Cache-Control','no-cache, max-age=0, must-revalidate')
+ .sendFile(path.join(__dirname,'manifest.webmanifest')));
+app.get('/sw.js',(req,res)=>res.type('application/javascript')
+ .set('Cache-Control','no-cache, max-age=0, must-revalidate')
+ .set('Service-Worker-Allowed','/')
+ .sendFile(path.join(__dirname,'sw.js')));
+// Static serving otherwise defaults to public caching. Reassert private
+// headers after serve-static applies its default cache policy.
+app.use(express.static(__dirname,{setHeaders(res){
+ const pathname=res.req.path||'';
+ const shell=pathname.replace(/\/(?:index\.html)?$/,'');
+ if(HF67_PRIVATE_SHELLS.has(shell)){
+  res.setHeader('Cache-Control','private, no-store, max-age=0');
+  res.setHeader('Pragma','no-cache');
+  res.setHeader('Expires','0');
+ }
+}}));
 
 app.get('/health', (req, res) => {
   res.json({
@@ -449,7 +500,7 @@ app.get('/api/v118/data-model', (req, res) => {
 
 app.get('/api/v118/class-sessions', async (req, res) => {
   try {
-    const records = await persistentStore.listClassSessions();
+    const records = await publicClassSessions();
     res.json({ ok: true, version: VERSION, count: records.length, records });
   } catch (error) {
     res.status(500).json({ ok: false, error: error.message });
@@ -458,7 +509,9 @@ app.get('/api/v118/class-sessions', async (req, res) => {
 
 app.post('/api/v118/class-sessions', async (req, res) => {
   try {
-    const record = await persistentStore.createClassSession(req.body || {});
+    const input = req.body || {};
+    if(protectedPrivateClass(input))return res.status(403).set('Cache-Control','no-store').json({ok:false,error:'Use authenticated private classroom setup for this course.'});
+    const record = await persistentStore.createClassSession(input);
     res.status(201).json({ ok: true, version: VERSION, record });
   } catch (error) {
     res.status(500).json({ ok: false, error: error.message });
@@ -549,6 +602,8 @@ require('./src/v18510-role-workspaces').install(app,{services:productionServices
 require('./src/v1970-memberships').install(app,{services:productionServices,authMiddleware,requireRoles});
 require('./src/v18511-owner-triage').install(app,{services:productionServices,authMiddleware,requireRoles});
 require('./src/v18512-ops').install(app,{services:productionServices,authMiddleware,requireRoles});
+// HF56: private adult energy-contract classes; authenticated session-allocated Meet links only.
+require('./src/v2150-private-energy-classroom').install(app,{services:productionServices,authMiddleware,requireRoles,configured});
 const aiGuard=createAiSafetyGate();
 const trialGuard=createTrialRateGate();
 const ledger=new FreeTrialLedger({store:persistentStore,sendMail:async mail=>{
@@ -715,6 +770,13 @@ app.get('/api/v120/role-dashboard/:role', (req, res) => {
   res.json({ ok: true, version: VERSION, role, dashboard: dashboards[role] || dashboards.student });
 });
 
+// Legacy class-session detail and closeout endpoints are open demo APIs.
+// Never allow this new private course's IDs to flow through those endpoints.
+app.use('/api/v120/class-sessions/:id',(req,res,next)=>{
+ if(protectedPrivateClass({id:req.params.id}))return res.status(404).set('Cache-Control','no-store').json({ok:false,error:'Class session not found.'});
+ next();
+});
+
 app.get('/api/v120/booking-requests', async (req, res) => {
   try { const records = await persistentStore.listBookingRequests(); res.json({ ok: true, version: VERSION, count: records.length, records }); }
   catch (error) { res.status(500).json({ ok: false, version: VERSION, error: error.message }); }
@@ -747,7 +809,7 @@ app.post('/api/v120/class-sessions/:id/closeout', async (req, res) => {
 
 app.get('/api/v120/class-sessions/:id/cockpit', async (req, res) => {
   try {
-    const [sessions, savedWork, homework, closeouts] = await Promise.all([persistentStore.listClassSessions(), persistentStore.listSavedWork(), persistentStore.listHomeworkAssignments(), persistentStore.listSessionCloseouts()]);
+    const [sessions, savedWork, homework, closeouts] = await Promise.all([publicClassSessions(), persistentStore.listSavedWork(), persistentStore.listHomeworkAssignments(), persistentStore.listSessionCloseouts()]);
     const session = sessions.find(s => s.id === req.params.id) || { id: req.params.id, status: 'not_found_in_demo_store', note: 'Create a class session first or connect PostgreSQL production data.' };
     res.json({
       ok: true,
@@ -766,7 +828,7 @@ app.get('/api/v120/class-sessions/:id/cockpit', async (req, res) => {
 
 app.get('/api/v120/staff-command-center', async (req, res) => {
   try {
-    const [bookings, sessions, homework, closeouts, tasks] = await Promise.all([persistentStore.listBookingRequests(), persistentStore.listClassSessions(), persistentStore.listHomeworkAssignments(), persistentStore.listSessionCloseouts(), persistentStore.listStaffTasks()]);
+    const [bookings, sessions, homework, closeouts, tasks] = await Promise.all([persistentStore.listBookingRequests(), publicClassSessions(), persistentStore.listHomeworkAssignments(), persistentStore.listSessionCloseouts(), persistentStore.listStaffTasks()]);
     res.json({
       ok: true,
       version: VERSION,
@@ -968,7 +1030,7 @@ app.get('/api/v122/seamless-readiness', async (req, res) => {
   const gates = v122CredentialGates();
   const blockers = gates.filter(g => g.required && !g.ok);
   const [sessions, bookings, closeouts, staffTasks, marketingAssets, supportThreads, readinessReviews] = await Promise.all([
-    persistentStore.listClassSessions().catch(()=>[]),
+    publicClassSessions().catch(()=>[]),
     persistentStore.listBookingRequests().catch(()=>[]),
     persistentStore.listSessionCloseouts().catch(()=>[]),
     persistentStore.listStaffTasks().catch(()=>[]),
@@ -1047,7 +1109,7 @@ async function v123OperatingSummary() {
     persistentStore.listClassroomReadinessReviews().catch(()=>[]),
     persistentStore.listSupportThreads().catch(()=>[]),
     persistentStore.listTeacherMarketingAssets().catch(()=>[]),
-    persistentStore.listClassSessions().catch(()=>[]),
+    publicClassSessions().catch(()=>[]),
     persistentStore.listHomeworkAssignments().catch(()=>[]),
     persistentStore.listSessionCloseouts().catch(()=>[])
   ]);
@@ -2520,7 +2582,7 @@ app.get('/api/v142/continuity-command-center', (req, res) => {
 app.get('/api/v142/continuity-records', async (req, res) => {
   try {
     const [classSessions, savedWork, teacherReviews, employerReports, actionItems, marketingAssets, supportThreads, deployments] = await Promise.all([
-      persistentStore.listClassSessions(),
+      publicClassSessions(),
       persistentStore.listSavedWork(),
       persistentStore.listTeacherReviewHandoffs(),
       persistentStore.listEmployerRoiSnapshots(),
