@@ -34,5 +34,25 @@
       "type": "image/svg+xml",
       "purpose": "any"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Legal English",
+      "short_name": "Legal",
+      "url": "/learn/legal-english/",
+      "description": "Go to EnglishLegalese Legal English courses"
+    },
+    {
+      "name": "Business English",
+      "short_name": "Business",
+      "url": "/learn/business-english/",
+      "description": "Go to EnglishLegalese Business English courses"
+    },
+    {
+      "name": "My learning account",
+      "short_name": "Account",
+      "url": "/learn/account/",
+      "description": "Sign in to your own learning workspace"
+    }
   ]
 }
