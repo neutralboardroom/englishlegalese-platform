@@ -8,6 +8,9 @@
  const updateApply=document.getElementById('el-update-apply');
  const updateStatus=document.getElementById('el-update-status');
  const networkStatus=document.getElementById('el-app-network-status');
+ const deviceCheck=document.getElementById('el-device-check');
+ const deviceCheckStatus=document.getElementById('el-device-check-status');
+ const deviceCheckResults=document.getElementById('el-device-check-results');
  if(!button||!status)return;
  let deferredPrompt=null,registration=null,requestedReload=false;
  const installed=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
@@ -25,6 +28,53 @@
  updateConnection();
  window.addEventListener('online',updateConnection);
  window.addEventListener('offline',updateConnection);
+ // HF67: manual checks of only public same-origin install assets. Do not
+ // read authentication, call an API, log user identifiers, prompt or reload.
+ if(deviceCheck&&deviceCheckStatus&&deviceCheckResults){
+  deviceCheck.addEventListener('click',async()=>{
+   deviceCheck.disabled=true;
+   deviceCheckStatus.textContent='Checking the public app files on this device…';
+   deviceCheckResults.replaceChildren();
+   const results=[];
+   const record=(name,message)=>results.push(name+': '+message);
+   record('Secure connection',window.isSecureContext?'Available':'Not available; HTTPS is required for most browser app installation');
+   record('Installed window',installed()?'EnglishLegalese appears to be open as an installed web app':'This page is not currently running in standalone mode');
+   record('Browser support','serviceWorker' in navigator?'Service workers are supported':'Service workers are unavailable in this browser');
+   async function publicFile(url,expected){
+    try{
+     const response=await fetch(url,{method:'GET',cache:'no-store',credentials:'omit',redirect:'error'});
+     const type=response.headers.get('content-type')||'';
+     if(!response.ok||!type.includes(expected))return {ok:false,reason:'Could not validate this public app file'};
+     return {ok:true,response};
+    }catch{return {ok:false,reason:'Public file unavailable or network check blocked'};}
+   }
+   const manifestResult=await publicFile('/manifest.webmanifest','application/manifest+json');
+   if(!manifestResult.ok)record('App manifest',manifestResult.reason);
+   else{
+    try{
+     const data=await manifestResult.response.json();
+     const valid=data.scope==='/'&&data.start_url==='/'&&data.display==='standalone'&&
+      Array.isArray(data.icons)&&['192x192','512x512'].every(size=>
+       data.icons.some(icon=>icon.sizes===size&&icon.type==='image/png'));
+     record('App manifest',valid?'Present and configured':'Present but missing required app settings');
+    }catch{record('App manifest','Could not read the public manifest');}
+   }
+   for(const size of [192,512]){
+    const icon=await publicFile('/assets/englishlegalese-app-icon-'+size+'.png','image/png');
+    record('App icon '+size+'px',icon.ok?'Public PNG available':icon.reason);
+   }
+   if('serviceWorker' in navigator){
+    try{
+     const reg=await navigator.serviceWorker.getRegistration('/');
+     record('App setup',reg?'A service worker is registered in this browser':'No service worker registration found yet; visit this page over HTTPS');
+    }catch{record('App setup','Registration status unavailable');}
+   }else record('App setup','This browser cannot register a service worker');
+   for(const item of results){const li=document.createElement('li');li.textContent=item;deviceCheckResults.append(li);}
+   deviceCheckStatus.textContent='Device and public-file check finished. Results describe this browser only; they do not guarantee that an installation prompt will appear.';
+   deviceCheck.disabled=false;
+  });
+ }
+
  if(installed()){
   show('EnglishLegalese is already open as an installed app. You can check for updates below.');
   button.hidden=true;
