@@ -33,7 +33,7 @@ assert.ok(current.includes('ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-
  'Current HF release must name controlling no-drift contract');
 assert.ok(pkg.scripts.check.includes('node scripts/verify-el-release-continuity.js'),
  'The no-drift rule must remain in mandatory inherited source/security gates');
-assert.ok(workflow.includes('verify-independent')&&workflow.includes('name: verify'),
+assert.ok(workflow.includes('  verify-independent:')&&workflow.includes('  verify:'),
  'Both independent release gate jobs remain required');
 assert.ok(workflow.includes('git archive'),'Exact cumulative app source recovery must remain configured');
 for(const p of [
