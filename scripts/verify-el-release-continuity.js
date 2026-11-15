@@ -10,7 +10,17 @@ const base=path.resolve(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(base,p),'utf8');
 const owner=read('governance/ENGLISHLEGALESE_OWNER_DIRECTIVES_ADDENDUM_2026-10-22.md');
 const contract=read('governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md');
-const current=read('docs/HF68_MOBILE_INSTALL_INTEGRITY_PRIVATE_CACHE_2026-11-15.md');
+// Automatically inspect the newest HF-numbered release documents, not
+// a frozen HF68 filename. Future HF69/HF70 handoffs cannot bypass this test
+// by leaving an older compliant document in the repository.
+const releases=fs.readdirSync(path.join(base,'docs'))
+ .map(name=>({name,match:/^HF(\\d+)_.*\\.md$/i.exec(name)}))
+ .filter(item=>item.match)
+ .map(item=>({name:item.name,version:Number(item.match[1])}));
+assert.ok(releases.length>0,'Must have current version release documents');
+const newestHF=Math.max(...releases.map(x=>x.version));
+const newestDocs=releases.filter(x=>x.version===newestHF)
+ .map(x=>({name:x.name,text:read('docs/'+x.name)}));
 const workflow=read('.github/workflows/englishlegalese-release-gate.yml');
 const pkg=JSON.parse(read('package.json'));
 assert.ok(owner.includes('## EL-RGR-020 — Deploy every completed version live'),'Original owner rule must remain intact');
@@ -25,12 +35,14 @@ for(const fact of [
 }
 assert.ok(contract.includes('No repeated owner authorization is required'),
  'Do not silently reintroduce a per-version permission prompt');
-assert.ok(!current.includes('Production rollout requires explicit user authorization'),
- 'Current release documentation must not contradict the standing owner rule');
-assert.ok(current.includes('EL-RGR-020'),
- 'Current HF release must carry forward exact original rule ID');
-assert.ok(current.includes('ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md'),
- 'Current HF release must name controlling no-drift contract');
+for(const doc of newestDocs){
+ assert.ok(!/production rollout requires explicit user authorization|no merge or deploy without owner authorization|per-release approval is required/i.test(doc.text),
+  'Newest HF'+newestHF+' document contradicts standing auto-deploy: '+doc.name);
+}
+assert.ok(newestDocs.some(doc=>doc.text.includes('EL-RGR-020')),
+ 'Newest HF'+newestHF+' release must carry original live-deploy rule EL-RGR-020');
+assert.ok(newestDocs.some(doc=>doc.text.includes('ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md')),
+ 'Newest HF'+newestHF+' release must link to canonical no-drift contract');
 assert.ok(pkg.scripts.check.includes('node scripts/verify-el-release-continuity.js'),
  'The no-drift rule must remain in mandatory inherited source/security gates');
 assert.ok(workflow.includes('  verify-independent:')&&workflow.includes('  verify:'),
