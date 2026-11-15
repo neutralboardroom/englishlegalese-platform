@@ -29,18 +29,33 @@ test('HF68 corrupt icon cannot be reported as install-ready, with no account or 
  const writes=[],errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  page.on('request',r=>{if(['POST','PUT','PATCH','DELETE'].includes(r.method()))writes.push(r.url());});
+ // Intercept the app's *explicit fetch*, not a network request already
+ // satisfied from WebKit's icon/service-worker cache. A Playwright route
+ // added after navigation can be bypassed on tablet WebKit. This injection
+ // guarantees the readiness checker receives the corrupt PNG across engines.
+ await page.addInitScript(()=>{
+  const nativeFetch=window.fetch.bind(window);
+  window.__hf68CorruptIconFetchCount=0;
+  window.fetch=(input,options)=>{
+   const url=typeof input==='string'?input:input?.url;
+   if(url==='/assets/englishlegalese-app-icon-192.png'){
+    window.__hf68CorruptIconFetchCount++;
+    return Promise.resolve(new Response('INVALID_PNG_HF68',{
+     status:200,headers:{'content-type':'image/png'}
+    }));
+   }
+   return nativeFetch(input,options);
+  };
+ });
  await page.goto('/learn/install/');
- await page.route('**/assets/englishlegalese-app-icon-192.png',route=>
-  route.fulfill({status:200,contentType:'image/png',body:'INVALID_PNG_HF68'}));
  const button=page.getByRole('button',{name:'Check my device and public app files'});
  await button.click();
  await expect(page.locator('#el-device-check-status')).toContainText('check finished');
  const iconResult=page.locator('#el-device-check-results li').filter({hasText:'App icon 192px:'});
  await expect(iconResult).toHaveCount(1);
- // WebKit may reject a corrupt image body before PNG parsing. Either
- // browser-specific failure is safe; a fake "valid" icon is NEVER safe.
- await expect(iconResult).toContainText(/did not match|unavailable|timed out|network check blocked|Could not validate/);
+ await expect(iconResult).toContainText('Public file did not match the expected PNG dimensions');
  await expect(iconResult).not.toContainText('Valid 192×192 PNG');
+ expect(await page.evaluate(()=>window.__hf68CorruptIconFetchCount)).toBe(1);
  // Browser may OFFER installation, but this test never clicks or prompts it.
  expect(writes).toEqual([]);expect(errors).toEqual([]);
 });
