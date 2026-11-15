@@ -44,10 +44,19 @@ const HF67_PRIVATE_SHELLS=new Set([
  '/learn/employer-dashboard','/learn/teacher-dashboard',
  '/learn/student-dashboard','/learn/progress'
 ]);
+// HF68: no-store applies to all descendants of a private workspace, not
+// merely its initial directory/index shell. Decode/normalize route spellings
+// before matching; prefix matching MUST honor a slash boundary so public
+// routes like /learn/accounting cannot be mislabeled private.
+function hf68IsPrivateWorkspace(pathname){
+ let p=String(pathname||'');
+ try{p=decodeURIComponent(p)}catch{}
+ p=p.replace(/\\/g,'/').replace(/\/+/g,'/').replace(/\/(?:index\.html)?$/,'');
+ return [...HF67_PRIVATE_SHELLS].some(base=>p===base||p.startsWith(base+'/'));
+}
 app.use((req,res,next)=>{
  const pathname=req.path||'';
- const shell=pathname.replace(/\/(?:index\.html)?$/,'');
- if(pathname==='/api'||pathname.startsWith('/api/')||HF67_PRIVATE_SHELLS.has(shell)){
+ if(pathname==='/api'||pathname.startsWith('/api/')||hf68IsPrivateWorkspace(pathname)){
   res.setHeader('Cache-Control','private, no-store, max-age=0');
   res.setHeader('Pragma','no-cache');
   res.setHeader('Expires','0');
@@ -77,8 +86,7 @@ app.get('/sw.js',(req,res)=>res.type('application/javascript')
 // headers after serve-static applies its default cache policy.
 app.use(express.static(__dirname,{setHeaders(res){
  const pathname=res.req.path||'';
- const shell=pathname.replace(/\/(?:index\.html)?$/,'');
- if(HF67_PRIVATE_SHELLS.has(shell)){
+ if(hf68IsPrivateWorkspace(pathname)){
   res.setHeader('Cache-Control','private, no-store, max-age=0');
   res.setHeader('Pragma','no-cache');
   res.setHeader('Expires','0');
