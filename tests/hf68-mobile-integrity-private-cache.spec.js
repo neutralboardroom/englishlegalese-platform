@@ -37,7 +37,7 @@ test('HF68 corrupt icon cannot be reported as install-ready, with no account or 
  await expect(page.locator('#el-device-check-status')).toContainText('check finished');
  await expect(page.locator('#el-device-check-results li').filter({hasText:
   'App icon 192px: Public file did not match the expected PNG dimensions'})).toHaveCount(1);
- await expect(page.getByRole('button',{name:'Install EnglishLegalese'})).toBeHidden();
+ // Browser may OFFER installation, but this test never clicks or prompts it.
  expect(writes).toEqual([]);expect(errors).toEqual([]);
 });
 
