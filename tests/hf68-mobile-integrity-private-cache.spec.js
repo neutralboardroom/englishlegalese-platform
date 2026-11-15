@@ -35,8 +35,12 @@ test('HF68 corrupt icon cannot be reported as install-ready, with no account or 
  const button=page.getByRole('button',{name:'Check my device and public app files'});
  await button.click();
  await expect(page.locator('#el-device-check-status')).toContainText('check finished');
- await expect(page.locator('#el-device-check-results li').filter({hasText:
-  'App icon 192px: Public file did not match the expected PNG dimensions'})).toHaveCount(1);
+ const iconResult=page.locator('#el-device-check-results li').filter({hasText:'App icon 192px:'});
+ await expect(iconResult).toHaveCount(1);
+ // WebKit may reject a corrupt image body before PNG parsing. Either
+ // browser-specific failure is safe; a fake "valid" icon is NEVER safe.
+ await expect(iconResult).toContainText(/did not match|unavailable|timed out|network check blocked|Could not validate/);
+ await expect(iconResult).not.toContainText('Valid 192×192 PNG');
  // Browser may OFFER installation, but this test never clicks or prompts it.
  expect(writes).toEqual([]);expect(errors).toEqual([]);
 });
