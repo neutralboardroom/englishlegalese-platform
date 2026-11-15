@@ -40,28 +40,56 @@
    record('Secure connection',window.isSecureContext?'Available':'Not available; HTTPS is required for most browser app installation');
    record('Installed window',installed()?'EnglishLegalese appears to be open as an installed web app':'This page is not currently running in standalone mode');
    record('Browser support','serviceWorker' in navigator?'Service workers are supported':'Service workers are unavailable in this browser');
+   // HF68: fail closed for stalled, redirected, mislabeled or oversized
+   // public install assets. Requests never include authentication cookies.
    async function publicFile(url,expected){
+    const controller=typeof AbortController==='function'?new AbortController():null;
+    const opts={method:'GET',cache:'no-store',credentials:'omit',redirect:'error'};
+    if(controller)opts.signal=controller.signal;
+    const timer=controller&&typeof setTimeout==='function'
+     ?setTimeout(()=>controller.abort(),7000):null;
     try{
-     const response=await fetch(url,{method:'GET',cache:'no-store',credentials:'omit',redirect:'error'});
-     const type=response.headers.get('content-type')||'';
-     if(!response.ok||!type.includes(expected))return {ok:false,reason:'Could not validate this public app file'};
+     const response=await fetch(url,opts);
+     const type=(response.headers.get('content-type')||'').split(';')[0].trim().toLowerCase();
+     const claimedLength=Number(response.headers.get('content-length')||0);
+     if(!response.ok||response.redirected||type!==expected||
+       (Number.isFinite(claimedLength)&&claimedLength>1024*1024))
+      return {ok:false,reason:'Could not validate this public app file'};
      return {ok:true,response};
-    }catch{return {ok:false,reason:'Public file unavailable or network check blocked'};}
+    }catch{return {ok:false,reason:'Public file unavailable, timed out or network check blocked'};}
+    finally{if(timer!==null)clearTimeout(timer);}
+   }
+   async function validPng(response,size){
+    // PNG signature + mandatory IHDR dimensions; MIME alone cannot prove
+    // an icon is valid, and a corrupt/missing icon must not show as ready.
+    try{
+     const bytes=new Uint8Array(await response.arrayBuffer());
+     if(bytes.length<33||bytes.length>1024*1024)return false;
+     const signature=[137,80,78,71,13,10,26,10];
+     if(!signature.every((part,i)=>bytes[i]===part))return false;
+     if(String.fromCharCode(...bytes.slice(12,16))!=='IHDR')return false;
+     const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
+     return view.getUint32(16)===size&&view.getUint32(20)===size;
+    }catch{return false;}
    }
    const manifestResult=await publicFile('/manifest.webmanifest','application/manifest+json');
    if(!manifestResult.ok)record('App manifest',manifestResult.reason);
    else{
     try{
      const data=await manifestResult.response.json();
-     const valid=data.scope==='/'&&data.start_url==='/'&&data.display==='standalone'&&
-      Array.isArray(data.icons)&&['192x192','512x512'].every(size=>
-       data.icons.some(icon=>icon.sizes===size&&icon.type==='image/png'));
+     const valid=data.id==='/'&&data.scope==='/'&&data.start_url==='/'&&
+      data.display==='standalone'&&Array.isArray(data.icons)&&
+      [192,512].every(size=>data.icons.some(icon=>
+       icon.src==='/assets/englishlegalese-app-icon-'+size+'.png'&&
+       icon.sizes===size+'x'+size&&icon.type==='image/png'));
      record('App manifest',valid?'Present and configured':'Present but missing required app settings');
     }catch{record('App manifest','Could not read the public manifest');}
    }
    for(const size of [192,512]){
     const icon=await publicFile('/assets/englishlegalese-app-icon-'+size+'.png','image/png');
-    record('App icon '+size+'px',icon.ok?'Public PNG available':icon.reason);
+    const valid=icon.ok&&await validPng(icon.response,size);
+    record('App icon '+size+'px',valid?'Valid '+size+'×'+size+' PNG':icon.ok?
+     'Public file did not match the expected PNG dimensions':icon.reason);
    }
    if('serviceWorker' in navigator){
     try{
