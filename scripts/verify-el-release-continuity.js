@@ -14,7 +14,7 @@ const contract=read('governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026
 // a frozen HF68 filename. Future HF69/HF70 handoffs cannot bypass this test
 // by leaving an older compliant document in the repository.
 const releases=fs.readdirSync(path.join(base,'docs'))
- .map(name=>({name,match:/^HF(\\d+)_.*\\.md$/i.exec(name)}))
+ .map(name=>({name,match:/^HF([0-9]+)_.*[.]md$/i.exec(name)}))
  .filter(item=>item.match)
  .map(item=>({name:item.name,version:Number(item.match[1])}));
 assert.ok(releases.length>0,'Must have current version release documents');
