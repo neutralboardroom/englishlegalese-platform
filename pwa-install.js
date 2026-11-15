@@ -16,9 +16,17 @@
  const installed=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
  function show(message){status.textContent=message;}
  function showUpdate(message){if(updateStatus)updateStatus.textContent=message;}
+ // HF68 R3: an existing waiting worker on iPad/WebKit is legitimate, but
+ // the opt-in control must never advertise a non-existent or uncontrolled
+ // update. Do not automatically activate/reload merely because one waits.
  function showPendingUpdate(){
+  if(!registration?.waiting||!navigator.serviceWorker?.controller){
+   if(updateApply)updateApply.hidden=true;
+   return false;
+  }
   if(updateApply)updateApply.hidden=false;
   showUpdate('An updated EnglishLegalese app is ready. Apply it only when you have finished any class or unsaved work.');
+  return true;
  }
  function updateConnection(){
   if(networkStatus)networkStatus.textContent=navigator.onLine
@@ -141,7 +149,10 @@
   if(!worker)return;
   const watch=()=>{
    if(worker.state==='installed'&&navigator.serviceWorker.controller&&registration?.waiting)showPendingUpdate();
-   else if(worker.state==='redundant')showUpdate('The update did not finish installing. You may check again.');
+   else if(worker.state==='redundant'){
+    if(!registration?.waiting&&updateApply)updateApply.hidden=true;
+    showUpdate('The update did not finish installing. You may check again.');
+   }
   };
   worker.addEventListener('statechange',watch);
   watch();
@@ -161,7 +172,10 @@
    await registration.update();
    if(registration.waiting&&navigator.serviceWorker.controller)showPendingUpdate();
    else if(registration.installing)showUpdate('The browser is preparing the update. You may continue studying.');
-   else showUpdate('No waiting update was found. Your next visit still checks live website content.');
+   else{
+    if(updateApply)updateApply.hidden=true;
+    showUpdate('No waiting update was found. Your next visit still checks live website content.');
+   }
   }catch{showUpdate('The update check could not finish. Your existing app and learning records are unchanged.');}
   finally{updateCheck.disabled=false;}
  });
@@ -172,7 +186,13 @@
   updateApply.hidden=true;
   requestedReload=true;
   showUpdate('You chose to apply the update. This installation page will reload when the browser activates it.');
-  registration.waiting.postMessage({type:'ENGLISHLEGALESE_APPLY_UPDATE'});
+  try{registration.waiting.postMessage({type:'ENGLISHLEGALESE_APPLY_UPDATE'});}
+  catch{
+   // The worker may disappear between checking and posting. Never authorize
+   // a later controllerchange to reload a visitor's unsaved work.
+   requestedReload=false;
+   showUpdate('The update request could not be sent. No page was reloaded. Check for app updates and try again.');
+  }
  });
  // A service worker is registered only on the visitor-opened install page.
  // Its cache holds only a public generic offline notice, never account data.
@@ -182,6 +202,7 @@
     registration=reg;
     if(updateCheck){updateCheck.disabled=false;updateCheck.hidden=false;}
     if(reg.waiting&&navigator.serviceWorker.controller)showPendingUpdate();
+    else if(updateApply)updateApply.hidden=true;
     reg.addEventListener('updatefound',watchInstalling);
     watchInstalling();
     if(!deferredPrompt&&!installed())show('App setup is available. Use the browser menu to Install app/Add to Home Screen if a button does not appear.');
