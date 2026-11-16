@@ -1,4 +1,4 @@
-/* EnglishLegalese HF71 (cumulative, opt-in safety unchanged): opt-in app installation and opt-in PWA updates.
+/* EnglishLegalese HF72 (cumulative, opt-in safety unchanged): opt-in app installation and opt-in PWA updates.
  * Installation or update/reload never runs without a visitor click.
  * No cookies, tokens, storage, analytics or private work is read here. */
 (()=>{'use strict';
@@ -44,7 +44,15 @@
    deviceCheckStatus.textContent='Checking the public app files on this device…';
    deviceCheckResults.replaceChildren();
    const results=[];
-   const record=(name,message)=>results.push(name+': '+message);
+   // HF72: announce every completed check immediately instead of leaving the
+   // visitor with an apparently frozen blank list on a slow mobile network.
+   const record=(name,message)=>{
+    const item=name+': '+message;
+    results.push(item);
+    const li=document.createElement('li');li.textContent=item;deviceCheckResults.append(li);
+    deviceCheckStatus.textContent='Public-file check in progress: '+name+' completed…';
+   };
+   try{
    record('Secure connection',window.isSecureContext?'Available':'Not available; HTTPS is required for most browser app installation');
    record('Installed window',installed()?'EnglishLegalese appears to be open as an installed web app':'This page is not currently running in standalone mode');
    record('Browser support','serviceWorker' in navigator?'Service workers are supported':'Service workers are unavailable in this browser');
@@ -64,8 +72,12 @@
      const rawLength=response.headers.get('content-length');
      const length=rawLength===null?null:String(rawLength).trim();
      if(!response.ok||response.redirected||type!==expected||
-       (length!==null&&(!/^\d{1,7}$/.test(length)||Number(length)>1024*1024)))
+       (length!==null&&(!/^\d{1,7}$/.test(length)||Number(length)>1024*1024))){
+      // HF72: release the rejected response rather than allowing an invalid
+      // streamed response to keep consuming mobile network resources.
+      try{if(controller)controller.abort();}catch{}
       return {ok:false,reason:'Could not validate this public app file'};
+     }
      return {ok:true,response,controller};
     }catch{return {ok:false,reason:'Public file unavailable, timed out or network check blocked'};}
     finally{if(timer!==null)clearTimeout(timer);}
@@ -186,7 +198,20 @@
         type.charCodeAt(0)>=65&&type.charCodeAt(0)<=90)return false;
       pos=stop;
      }
-     return ihdr&&idat&&iend&&(color!==3||plte);
+     const structurallyValid=ihdr&&idat&&iend&&(color!==3||plte);
+     if(!structurallyValid)return false;
+     // HF72: CRC-correct PNG bytes can still contain broken compressed image
+     // pixels. Where available, let the real browser decode them and validate
+     // dimensions; never trust a synthetic CRC alone. Close bitmap resources.
+     if(typeof createImageBitmap==='function'&&typeof Blob==='function'){
+      let bitmap=null;
+      try{
+       bitmap=await boundedBody(createImageBitmap(new Blob([bytes],{type:'image/png'})),controller);
+       return !!bitmap&&bitmap.width===size&&bitmap.height===size;
+      }catch{return false;}
+      finally{try{if(bitmap&&typeof bitmap.close==='function')bitmap.close();}catch{}}
+     }
+     return true; // Older browser: structural/CRC proof only, not pixel decode.
     }catch{return false;}
    }
    const manifestResult=await publicFile('/manifest.webmanifest','application/manifest+json');
@@ -194,11 +219,16 @@
    else{
     try{
      const data=await publicManifest(manifestResult);
-     const valid=data.id==='/'&&data.scope==='/'&&data.start_url==='/'&&
+     const valid=data&&data.id==='/'&&data.scope==='/'&&data.start_url==='/'&&
       data.display==='standalone'&&Array.isArray(data.icons)&&
-      [192,512].every(size=>data.icons.some(icon=>
-       icon.src==='/assets/englishlegalese-app-icon-'+size+'.png'&&
-       icon.sizes===size+'x'+size&&icon.type==='image/png'));
+      [192,512].every(size=>{
+       // HF72: an ambiguous duplicate icon-size record might mislead the
+       // installer; require one exact, local PNG candidate for each size.
+       const candidates=data.icons.filter(icon=>icon&&icon.sizes===size+'x'+size);
+       return candidates.length===1&&
+        candidates[0].src==='/assets/englishlegalese-app-icon-'+size+'.png'&&
+        candidates[0].type==='image/png';
+      });
      record('App manifest',valid?'Present and configured':'Present but missing required app settings');
     }catch{record('App manifest','Could not read the public manifest');}
    }
@@ -214,9 +244,12 @@
      record('App setup',reg?'A service worker is registered in this browser':'No service worker registration found yet; visit this page over HTTPS');
     }catch{record('App setup','Registration status unavailable');}
    }else record('App setup','This browser cannot register a service worker');
-   for(const item of results){const li=document.createElement('li');li.textContent=item;deviceCheckResults.append(li);}
    deviceCheckStatus.textContent='Device and public-file check finished. Results describe this browser only; they do not guarantee that an installation prompt will appear.';
-   deviceCheck.disabled=false;
+   }catch{
+    // A malformed browser shim, inaccessible response property, or unexpected
+    // DOM exception must not leave the check button permanently disabled.
+    deviceCheckStatus.textContent='The public-file check could not finish. No private work or account data was accessed.';
+   }finally{deviceCheck.disabled=false;}
   });
  }
 
