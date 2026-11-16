@@ -1,4 +1,4 @@
-/* EnglishLegalese HF70 (cumulative, opt-in safety unchanged): opt-in app installation and opt-in PWA updates.
+/* EnglishLegalese HF71 (cumulative, opt-in safety unchanged): opt-in app installation and opt-in PWA updates.
  * Installation or update/reload never runs without a visitor click.
  * No cookies, tokens, storage, analytics or private work is read here. */
 (()=>{'use strict';
@@ -83,11 +83,67 @@
     })]);}
     finally{if(timer!==null)clearTimeout(timer);}
    }
+   // HF71: read public manifest and PNG bodies incrementally when the
+   // browser supports response.body. Enforce the 1 MiB limit *before*
+   // accumulating chunks, validate the actual Content-Length, cap unusually
+   // fragmented streams, and retain HF70's body timeout + AbortController.
+   // Older WebViews without a response reader retain a bounded fallback.
+   async function publicBytes(response,controller){
+    const maxBytes=1024*1024;
+    const declaredValue=response.headers.get('content-length');
+    const declared=declaredValue===null?null:Number(String(declaredValue).trim());
+    if(response.body&&typeof response.body.getReader==='function'){
+     const reader=response.body.getReader();
+     const consume=async()=>{
+      let received=0,chunkCount=0;
+      const chunks=[];
+      while(true){
+       const next=await reader.read();
+       if(next.done)break;
+       const chunk=next.value;
+       if(!chunk||typeof chunk.byteLength!=='number'||
+          chunk.byteLength<0||++chunkCount>4096)
+        throw new Error('Malformed public file stream');
+       received+=chunk.byteLength;
+       if(received>maxBytes)throw new Error('Oversized public app file');
+       if(chunk.byteLength)chunks.push(chunk);
+      }
+      if(declared!==null&&received!==declared)
+       throw new Error('Public app file length mismatch');
+      const bytes=new Uint8Array(received);
+      let at=0;
+      for(const chunk of chunks){bytes.set(chunk,at);at+=chunk.byteLength;}
+      return bytes;
+     };
+     try{return await boundedBody(consume(),controller);}
+     catch(error){
+      try{if(controller)controller.abort();}catch{}
+      try{if(typeof reader.cancel==='function')reader.cancel();}catch{}
+      throw error;
+     }finally{
+      try{if(typeof reader.releaseLock==='function')reader.releaseLock();}catch{}
+     }
+    }
+    // Fallback for older browsers / existing deterministic HF65-HF70 tests.
+    const bytes=new Uint8Array(await boundedBody(response.arrayBuffer(),controller));
+    if(bytes.length>maxBytes||declared!==null&&bytes.length!==declared)
+     throw new Error('Public app file length mismatch or too large');
+    return bytes;
+   }
+   async function publicManifest(result){
+    const response=result.response;
+    if(response.body&&typeof response.body.getReader==='function'){
+     const bytes=await publicBytes(response,result.controller);
+     if(typeof TextDecoder!=='function')throw new Error('UTF-8 decoding unavailable');
+     return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
+    }
+    return boundedBody(response.json(),result.controller);
+   }
    // HF70 strengthens HF69 structural/CRC checks with PNG chunk ordering,
    // palette validity, IHDR flags and contiguous IDAT. No user/secret APIs.
    async function validPng(response,size,controller){
     try{
-     const bytes=new Uint8Array(await boundedBody(response.arrayBuffer(),controller));
+     const bytes=await publicBytes(response,controller);
      if(bytes.length<45||bytes.length>1024*1024)return false;
      const signature=[137,80,78,71,13,10,26,10];
      if(!signature.every((part,i)=>bytes[i]===part))return false;
@@ -137,7 +193,7 @@
    if(!manifestResult.ok)record('App manifest',manifestResult.reason);
    else{
     try{
-     const data=await boundedBody(manifestResult.response.json(),manifestResult.controller);
+     const data=await publicManifest(manifestResult);
      const valid=data.id==='/'&&data.scope==='/'&&data.start_url==='/'&&
       data.display==='standalone'&&Array.isArray(data.icons)&&
       [192,512].every(size=>data.icons.some(icon=>
