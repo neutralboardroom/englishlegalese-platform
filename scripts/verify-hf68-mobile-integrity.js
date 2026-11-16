@@ -45,11 +45,16 @@ async function scenario(mode){
   const redirect=mode==='redirect'&&url==='/manifest.webmanifest';
   const missing=mode==='missing'&&size===512;
   const ctype=url.endsWith('.webmanifest')?'application/manifest+json':'image/png';
+  // HF71 regression-fixture repair: a declared Content-Length of zero for
+  // real 192/512 PNG bytes contradicted this test's own valid-file assertion.
+  // Advertise the actual fixture bytes; all original assertions remain.
+  const supplied=mode==='corrupt'&&size===192?Buffer.from('not a png'):
+   size?iconBytes.get(size):Buffer.from(JSON.stringify(manifest));
   return {
    ok:!missing,redirected:redirect,
-   headers:{get:key=>key==='content-type'?ctype:key==='content-length'?'0':null},
+   headers:{get:key=>key==='content-type'?ctype:key==='content-length'?String(supplied.length):null},
    json:async()=>mode==='badmanifest'?{...manifest,icons:manifest.icons.map(x=>({...x,src:'/wrong.png'}))}:manifest,
-   arrayBuffer:async()=>cloneBuffer(mode==='corrupt'&&size===192?Buffer.from('not a png'):iconBytes.get(size))
+   arrayBuffer:async()=>cloneBuffer(supplied)
   };
  };
  const document={getElementById:id=>els[id]||null,createElement:()=>new E()};
