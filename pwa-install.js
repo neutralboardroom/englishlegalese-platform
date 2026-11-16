@@ -1,4 +1,4 @@
-/* EnglishLegalese HF66: opt-in app installation and opt-in PWA updates.
+/* EnglishLegalese HF69 (cumulative, opt-in safety unchanged): opt-in app installation and opt-in PWA updates.
  * Installation or update/reload never runs without a visitor click.
  * No cookies, tokens, storage, analytics or private work is read here. */
 (()=>{'use strict';
@@ -67,17 +67,54 @@
     }catch{return {ok:false,reason:'Public file unavailable, timed out or network check blocked'};}
     finally{if(timer!==null)clearTimeout(timer);}
    }
+   // HF69: verify full PNG chunk boundaries and CRC32, not merely PNG
+   // signature and dimensions. A truncated or tampered icon must fail closed.
+   // This is a structural integrity check, not a pixel decoder or proof of
+   // a trustworthy website, and makes no private or authenticated requests.
    async function validPng(response,size){
-    // PNG signature + mandatory IHDR dimensions; MIME alone cannot prove
-    // an icon is valid, and a corrupt/missing icon must not show as ready.
     try{
      const bytes=new Uint8Array(await response.arrayBuffer());
-     if(bytes.length<33||bytes.length>1024*1024)return false;
+     if(bytes.length<45||bytes.length>1024*1024)return false;
      const signature=[137,80,78,71,13,10,26,10];
      if(!signature.every((part,i)=>bytes[i]===part))return false;
-     if(String.fromCharCode(...bytes.slice(12,16))!=='IHDR')return false;
      const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
-     return view.getUint32(16)===size&&view.getUint32(20)===size;
+     let pos=8,ihdr=false,idat=false,iend=false;
+     while(pos+12<=bytes.length){
+      const len=view.getUint32(pos);
+      if(len>bytes.length-pos-12)return false;
+      const type=String.fromCharCode(bytes[pos+4],bytes[pos+5],bytes[pos+6],bytes[pos+7]);
+      // PNG chunk tags must be alphabetic ASCII. Unknown critical chunks
+      // cannot be asserted valid by this bounded structural validator.
+      if(!/^[A-Za-z]{4}$/.test(type))return false;
+      const stop=pos+12+len;
+      let crc=0xFFFFFFFF;
+      for(let i=pos+4;i<pos+8+len;i++){
+       crc^=bytes[i];
+       for(let bit=0;bit<8;bit++)crc=(crc>>>1)^((crc&1)?0xEDB88320:0);
+      }
+      if(((crc^0xFFFFFFFF)>>>0)!==view.getUint32(pos+8+len))return false;
+      if(!ihdr){
+       if(type!=='IHDR'||len!==13||view.getUint32(pos+8)!==size||view.getUint32(pos+12)!==size)return false;
+       const depth=bytes[pos+16],color=bytes[pos+17];
+       // HF65's shipped real indexed icons are 8-bit. Allow standard RGB
+       // and RGBA if a later legitimate, checked icon is substituted.
+       if(depth!==8||![2,3,6].includes(color)||bytes[pos+18]!==0||bytes[pos+19]!==0||bytes[pos+20]>1)return false;
+       ihdr=true;
+      }else if(type==='IHDR'||type==='PLTE'&&idat)return false;
+      if(type==='IDAT'){
+       if(iend||len===0)return false;
+       idat=true;
+      }
+      if(type==='IEND'){
+       if(!idat||len!==0||stop!==bytes.length)return false;
+       iend=true;
+       break;
+      }
+      if(type!=='IHDR'&&type!=='PLTE'&&type!=='IDAT'&&type!=='IEND'&&
+        type.charCodeAt(0)>=65&&type.charCodeAt(0)<=90)return false;
+      pos=stop;
+     }
+     return ihdr&&idat&&iend;
     }catch{return false;}
    }
    const manifestResult=await publicFile('/manifest.webmanifest','application/manifest+json');
