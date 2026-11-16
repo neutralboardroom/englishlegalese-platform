@@ -1,4 +1,4 @@
-/* EnglishLegalese HF69 (cumulative, opt-in safety unchanged): opt-in app installation and opt-in PWA updates.
+/* EnglishLegalese HF70 (cumulative, opt-in safety unchanged): opt-in app installation and opt-in PWA updates.
  * Installation or update/reload never runs without a visitor click.
  * No cookies, tokens, storage, analytics or private work is read here. */
 (()=>{'use strict';
@@ -59,33 +59,47 @@
     try{
      const response=await fetch(url,opts);
      const type=(response.headers.get('content-type')||'').split(';')[0].trim().toLowerCase();
-     const claimedLength=Number(response.headers.get('content-length')||0);
+     // HF70: reject malformed or unbounded advertised body lengths, not just
+     // a numeric >1MiB value. Response bodies are checked separately too.
+     const rawLength=response.headers.get('content-length');
+     const length=rawLength===null?null:String(rawLength).trim();
      if(!response.ok||response.redirected||type!==expected||
-       (Number.isFinite(claimedLength)&&claimedLength>1024*1024))
+       (length!==null&&(!/^\d{1,7}$/.test(length)||Number(length)>1024*1024)))
       return {ok:false,reason:'Could not validate this public app file'};
-     return {ok:true,response};
+     return {ok:true,response,controller};
     }catch{return {ok:false,reason:'Public file unavailable, timed out or network check blocked'};}
     finally{if(timer!==null)clearTimeout(timer);}
    }
-   // HF69: verify full PNG chunk boundaries and CRC32, not merely PNG
-   // signature and dimensions. A truncated or tampered icon must fail closed.
-   // This is a structural integrity check, not a pixel decoder or proof of
-   // a trustworthy website, and makes no private or authenticated requests.
-   async function validPng(response,size){
+   // HF70: headers alone must not end the timeout. Abort slow body reads
+   // after seven seconds too, so the opt-in check cannot hang indefinitely.
+   async function boundedBody(promise,controller){
+    if(typeof setTimeout!=='function')return promise;
+    let timer=null;
+    try{return await Promise.race([promise,new Promise((_,reject)=>{
+     timer=setTimeout(()=>{
+      try{if(controller)controller.abort();}catch{}
+      reject(new Error('Public app file read timed out'));
+     },7000);
+    })]);}
+    finally{if(timer!==null)clearTimeout(timer);}
+   }
+   // HF70 strengthens HF69 structural/CRC checks with PNG chunk ordering,
+   // palette validity, IHDR flags and contiguous IDAT. No user/secret APIs.
+   async function validPng(response,size,controller){
     try{
-     const bytes=new Uint8Array(await response.arrayBuffer());
+     const bytes=new Uint8Array(await boundedBody(response.arrayBuffer(),controller));
      if(bytes.length<45||bytes.length>1024*1024)return false;
      const signature=[137,80,78,71,13,10,26,10];
      if(!signature.every((part,i)=>bytes[i]===part))return false;
      const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
-     let pos=8,ihdr=false,idat=false,iend=false;
+     let pos=8,ihdr=false,idat=false,iend=false,plte=false,afterIdat=false,color=-1;
      while(pos+12<=bytes.length){
       const len=view.getUint32(pos);
       if(len>bytes.length-pos-12)return false;
       const type=String.fromCharCode(bytes[pos+4],bytes[pos+5],bytes[pos+6],bytes[pos+7]);
-      // PNG chunk tags must be alphabetic ASCII. Unknown critical chunks
-      // cannot be asserted valid by this bounded structural validator.
-      if(!/^[A-Za-z]{4}$/.test(type))return false;
+      // PNG reserved third character is always uppercase; unknown critical
+      // chunks are rejected. Ancillary chunks may surround but not split IDAT.
+      if(!/^[A-Za-z]{2}[A-Z][A-Za-z]$/.test(type))return false;
       const stop=pos+12+len;
       let crc=0xFFFFFFFF;
       for(let i=pos+4;i<pos+8+len;i++){
@@ -95,33 +109,35 @@
       if(((crc^0xFFFFFFFF)>>>0)!==view.getUint32(pos+8+len))return false;
       if(!ihdr){
        if(type!=='IHDR'||len!==13||view.getUint32(pos+8)!==size||view.getUint32(pos+12)!==size)return false;
-       const depth=bytes[pos+16],color=bytes[pos+17];
-       // HF65's shipped real indexed icons are 8-bit. Allow standard RGB
-       // and RGBA if a later legitimate, checked icon is substituted.
+       const depth=bytes[pos+16];color=bytes[pos+17];
        if(depth!==8||![2,3,6].includes(color)||bytes[pos+18]!==0||bytes[pos+19]!==0||bytes[pos+20]>1)return false;
        ihdr=true;
-      }else if(type==='IHDR'||type==='PLTE'&&idat)return false;
-      if(type==='IDAT'){
-       if(iend||len===0)return false;
-       idat=true;
+      }else if(type==='IHDR')return false;
+      if(type==='PLTE'){
+       if(plte||idat||len<3||len>768||len%3!==0)return false;
+       plte=true;
       }
+      if(type==='IDAT'){
+       if(afterIdat||iend||len===0||color===3&&!plte)return false;
+       idat=true;
+      }else if(idat)afterIdat=true;
       if(type==='IEND'){
        if(!idat||len!==0||stop!==bytes.length)return false;
-       iend=true;
-       break;
+       iend=true;break;
       }
+      if(type==='tRNS'&&(idat||color===6))return false;
       if(type!=='IHDR'&&type!=='PLTE'&&type!=='IDAT'&&type!=='IEND'&&
         type.charCodeAt(0)>=65&&type.charCodeAt(0)<=90)return false;
       pos=stop;
      }
-     return ihdr&&idat&&iend;
+     return ihdr&&idat&&iend&&(color!==3||plte);
     }catch{return false;}
    }
    const manifestResult=await publicFile('/manifest.webmanifest','application/manifest+json');
    if(!manifestResult.ok)record('App manifest',manifestResult.reason);
    else{
     try{
-     const data=await manifestResult.response.json();
+     const data=await boundedBody(manifestResult.response.json(),manifestResult.controller);
      const valid=data.id==='/'&&data.scope==='/'&&data.start_url==='/'&&
       data.display==='standalone'&&Array.isArray(data.icons)&&
       [192,512].every(size=>data.icons.some(icon=>
@@ -132,7 +148,7 @@
    }
    for(const size of [192,512]){
     const icon=await publicFile('/assets/englishlegalese-app-icon-'+size+'.png','image/png');
-    const valid=icon.ok&&await validPng(icon.response,size);
+    const valid=icon.ok&&await validPng(icon.response,size,icon.controller);
     record('App icon '+size+'px',valid?'Valid '+size+'×'+size+' PNG':icon.ok?
      'Public file did not match the expected PNG dimensions':icon.reason);
    }
