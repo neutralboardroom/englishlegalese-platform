@@ -1,0 +1,53 @@
+'use strict';
+const {test,expect}=require('@playwright/test');
+for(const route of ['/learn/continuing-practice/','/learn/continuing-practice/advanced/']){
+ test('HF55: 12 private audience-adaptation tools, accessible choices, no layout drift '+route,async({page})=>{
+  const writes=[],errors=[],external=[];
+  page.on('request',request=>{
+   if(['POST','PUT','PATCH','DELETE'].includes(request.method()))writes.push(request.url());
+   if(/tr-clone|teacherroger|recording|speech-analytics/i.test(request.url()))external.push(request.url());
+  });
+  page.on('pageerror',error=>errors.push(error.message));
+  await page.goto(route);
+  await expect(page.locator('article.v1971-lesson')).toHaveCount(12);
+  await expect(page.locator('details.v2150-mediation-turns')).toHaveCount(12);
+  await expect(page.locator('details.v2160-audience-briefing')).toHaveCount(12);
+  await expect(page.locator('details.v2100-more-tools').first()).not.toHaveAttribute('open');
+  const originalWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
+  const first=page.locator('article.v1971-lesson').first();
+  await first.locator('details.v1990-speaking > summary').click();
+  await first.locator('details.v2100-more-tools > summary').click();
+  const activity=first.locator('.v2160-audience-briefing');
+  await activity.locator('summary').first().click();
+  await expect(activity).toContainText('No recording, submission');
+  await expect(activity.locator('.v2160-steps')).toContainText('Sentence 1');
+  await expect(activity.locator('.v2160-steps')).toContainText('Sentence 2');
+  await expect(activity.locator('.v2160-steps')).toContainText('Sentence 3');
+  const externalButton=activity.getByRole('button',{name:'External stakeholder'});
+  const internalButton=activity.getByRole('button',{name:'Internal colleague'});
+  await expect(externalButton).toHaveAttribute('aria-pressed','true');
+  await expect(internalButton).toHaveAttribute('aria-pressed','false');
+  const sample=activity.locator('.v2160-example');
+  await expect(sample).not.toHaveAttribute('open');
+  await sample.locator('summary').click();
+  await expect(sample).toContainText(route.includes('/advanced/')?'We located a potentially relevant decision':'We have recorded your delivery concern');
+  await internalButton.click();
+  await expect(sample).not.toHaveAttribute('open');
+  await expect(internalButton).toHaveAttribute('aria-pressed','true');
+  await sample.locator('summary').click();
+  await expect(sample).toContainText(route.includes('/advanced/')?'Do not describe a cited appellate decision':'Attribute the delay to the client report');
+  const checklist=activity.locator('.v2160-checklist input[type=checkbox]');
+  await expect(checklist).toHaveCount(3);
+  await checklist.first().check();
+  await expect(checklist.first()).toBeChecked();
+  await activity.getByRole('button',{name:'Clear self-check and rehearse again'}).click();
+  await expect(checklist.first()).not.toBeChecked();
+  await expect(sample).not.toHaveAttribute('open');
+  const widths=await page.evaluate(()=>[document.documentElement.scrollWidth,window.innerWidth]);
+  expect(originalWidth).toBeLessThanOrEqual(widths[1]+2);
+  expect(widths[0]).toBeLessThanOrEqual(widths[1]+2);
+  expect(writes).toEqual([]);
+  expect(external).toEqual([]);
+  expect(errors).toEqual([]);
+ });
+}
