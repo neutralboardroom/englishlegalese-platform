@@ -1,4 +1,4 @@
-/* EnglishLegalese HF73 (cumulative, opt-in safety unchanged): opt-in app installation and opt-in PWA updates.
+/* EnglishLegalese HF74 (cumulative, opt-in safety unchanged): opt-in app installation and opt-in PWA updates.
  * Installation or update/reload never runs without a visitor click.
  * No cookies, tokens, storage, analytics or private work is read here. */
 (()=>{'use strict';
@@ -12,8 +12,30 @@
  const deviceCheckStatus=document.getElementById('el-device-check-status');
  const deviceCheckResults=document.getElementById('el-device-check-results');
  const deviceCheckHelp=document.getElementById('el-device-check-help');
+ const deviceCheckCopy=document.getElementById('el-device-check-copy');
+ const deviceCheckCopyStatus=document.getElementById('el-device-check-copy-status');
  if(!button||!status)return;
  let deferredPrompt=null,registration=null,requestedReload=false;
+ let deviceCheckRunning=false;
+ let completedPublicRows=[];
+ // The clipboard is never touched automatically: an explicit second user
+ // click copies only the seven public installation statuses (no device ID,
+ // user-agent, account, URL query, cookie, class, or learning data).
+ if(deviceCheckCopy&&deviceCheckCopyStatus){
+  deviceCheckCopy.addEventListener('click',async()=>{
+   if(!completedPublicRows.length||deviceCheckRunning)return;
+   if(!navigator.clipboard||typeof navigator.clipboard.writeText!=='function'){
+    deviceCheckCopyStatus.textContent='Copying is unavailable in this browser. You can read the public results above.';
+    return;
+   }
+   deviceCheckCopy.disabled=true;
+   try{
+    await navigator.clipboard.writeText('EnglishLegalese public app readiness (no private data)\n'+completedPublicRows.join('\n'));
+    deviceCheckCopyStatus.textContent='The seven public app-file results were copied. No private learning data was included.';
+   }catch{deviceCheckCopyStatus.textContent='Copying was not allowed. The results remain visible above.';}
+   finally{deviceCheckCopy.disabled=false;}
+  });
+ }
  const installed=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
  function show(message){status.textContent=message;}
  function showUpdate(message){if(updateStatus)updateStatus.textContent=message;}
@@ -41,6 +63,13 @@
  // read authentication, call an API, log user identifiers, prompt or reload.
  if(deviceCheck&&deviceCheckStatus&&deviceCheckResults){
   deviceCheck.addEventListener('click',async()=>{
+   // An automated/synthetic click may arrive even while disabled. Prevent
+   // overlapping network requests and cross-run result mixing as well.
+   if(deviceCheckRunning)return;
+   deviceCheckRunning=true;
+   completedPublicRows=[];
+   if(deviceCheckCopy)deviceCheckCopy.hidden=true;
+   if(deviceCheckCopyStatus)deviceCheckCopyStatus.textContent='';
    deviceCheck.disabled=true;
    deviceCheckStatus.textContent='Checking the public app files on this device…';
    deviceCheckResults.replaceChildren();
@@ -239,8 +268,24 @@
    else{
     try{
      const data=await publicManifest(manifestResult);
+     // HF74: a manifest with required local icons can still contain *extra*
+     // third-party icon URLs or shortcut destinations. Do not mark it safe
+     // when installation could later request/navigate off the approved site.
+     const safeIconNames={
+      '/assets/englishlegalese-app-icon-192.png':'image/png',
+      '/assets/englishlegalese-app-icon-512.png':'image/png',
+      '/assets/favicon.svg':'image/svg+xml'
+     };
+     const iconsLocal=Array.isArray(data?.icons)&&data.icons.every(icon=>
+      icon&&typeof icon.src==='string'&&
+      Object.prototype.hasOwnProperty.call(safeIconNames,icon.src)&&
+      icon.type===safeIconNames[icon.src]);
+     const shortcutsLocal=typeof data?.shortcuts==='undefined'||
+      (Array.isArray(data.shortcuts)&&data.shortcuts.every(shortcut=>
+       shortcut&&typeof shortcut.url==='string'&&
+       ['/learn/legal-english/','/learn/business-english/','/learn/account/'].includes(shortcut.url)));
      const valid=data&&data.id==='/'&&data.scope==='/'&&data.start_url==='/'&&
-      data.display==='standalone'&&Array.isArray(data.icons)&&
+      data.display==='standalone'&&iconsLocal&&shortcutsLocal&&
       [192,512].every(size=>{
        // HF72: an ambiguous duplicate icon-size record might mislead the
        // installer; require one exact, local PNG candidate for each size.
@@ -279,12 +324,18 @@
      const li=document.createElement('li');li.textContent=item;deviceCheckHelp.append(li);
     }
    }
+   // A complete check is seven public status rows. Reuse a frozen copy of
+   // these text-only rows only if the visitor clicks the separate copy button.
+   if(results.length===7){
+    completedPublicRows=results.slice();
+    if(deviceCheckCopy)deviceCheckCopy.hidden=false;
+   }
    deviceCheckStatus.textContent='Device and public-file check finished. Results describe this browser only; they do not guarantee that an installation prompt will appear.';
    }catch{
     // A malformed browser shim, inaccessible response property, or unexpected
     // DOM exception must not leave the check button permanently disabled.
     deviceCheckStatus.textContent='The public-file check could not finish. No private work or account data was accessed.';
-   }finally{deviceCheck.disabled=false;}
+   }finally{deviceCheck.disabled=false;deviceCheckRunning=false;}
   });
  }
 
