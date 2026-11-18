@@ -101,6 +101,7 @@ const CONTENT={
   }
 };
 const FIELD_NAMES=Object.freeze(['intro','explain','practice','feedback','close']);
+const {bilingualDirections,bilingualDefinitions}=require('./trcfBilingualTeachingContent');
 for(const locale of Object.keys(CONTENT)){
   for(const profile of PROFILES)Object.freeze(CONTENT[locale][profile]);
   Object.freeze(CONTENT[locale]);
@@ -117,7 +118,16 @@ function getStaticLesson({explanationLocale='en-US',profile}={}){
     instructorTarget:'Teacher Roger Avatar',instructorDeployment:'PLANNED_NOT_LIVE',
     provenance:'STATIC_AUTHORED_REHEARSAL_NOT_GENERATIVE',nativeReviewerApproved:false,
     adultFictionalOnly:true, teacherOversightRequired:true, modelEnglish:ENGLISH_MODELS[profile],
-    stages:Object.freeze(FIELD_NAMES.map((phase,i)=>Object.freeze({index:i+1,phase,explanation:p[phase]})))
+    glossary:bilingualDefinitions(explanationLocale,profile),
+    classroomInspiration:'READ_ONLY_V105_ENGLISH_FIRST_NATIVE_SUPPORT_ADULT_ADAPTATION',
+    bilingualTeachingReady:'STATIC_SCRIPTED_TRANSLATIONS_PENDING_NATIVE_QA',
+    stages:Object.freeze(FIELD_NAMES.map((phase,i)=>Object.freeze({
+      index:i+1,phase,explanation:p[phase],
+      englishExplanation:CONTENT['en-US'][profile][phase],nativeExplanation:p[phase],
+      directionsEnglish:bilingualDirections(explanationLocale,phase).english,
+      directionsNative:bilingualDirections(explanationLocale,phase).native,
+      nativeLang:explanationLocale
+    })))
   });
 }
 module.exports=Object.freeze({
