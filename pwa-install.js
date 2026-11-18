@@ -1,4 +1,4 @@
-/* EnglishLegalese HF72 (cumulative, opt-in safety unchanged): opt-in app installation and opt-in PWA updates.
+/* EnglishLegalese HF73 (cumulative, opt-in safety unchanged): opt-in app installation and opt-in PWA updates.
  * Installation or update/reload never runs without a visitor click.
  * No cookies, tokens, storage, analytics or private work is read here. */
 (()=>{'use strict';
@@ -11,6 +11,7 @@
  const deviceCheck=document.getElementById('el-device-check');
  const deviceCheckStatus=document.getElementById('el-device-check-status');
  const deviceCheckResults=document.getElementById('el-device-check-results');
+ const deviceCheckHelp=document.getElementById('el-device-check-help');
  if(!button||!status)return;
  let deferredPrompt=null,registration=null,requestedReload=false;
  const installed=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
@@ -43,7 +44,9 @@
    deviceCheck.disabled=true;
    deviceCheckStatus.textContent='Checking the public app files on this device…';
    deviceCheckResults.replaceChildren();
+   if(deviceCheckHelp)deviceCheckHelp.replaceChildren();
    const results=[];
+   const issues=[];
    // HF72: announce every completed check immediately instead of leaving the
    // visitor with an apparently frozen blank list on a slow mobile network.
    const record=(name,message)=>{
@@ -54,8 +57,10 @@
    };
    try{
    record('Secure connection',window.isSecureContext?'Available':'Not available; HTTPS is required for most browser app installation');
+   if(!window.isSecureContext)issues.push('Open this page using HTTPS on a secure connection.');
    record('Installed window',installed()?'EnglishLegalese appears to be open as an installed web app':'This page is not currently running in standalone mode');
    record('Browser support','serviceWorker' in navigator?'Service workers are supported':'Service workers are unavailable in this browser');
+   if(!('serviceWorker' in navigator))issues.push('Try an up-to-date browser that supports service workers; the website still works without installation.');
    // HF68: fail closed for stalled, redirected, mislabeled or oversized
    // public install assets. Requests never include authentication cookies.
    async function publicFile(url,expected){
@@ -118,7 +123,10 @@
         throw new Error('Malformed public file stream');
        received+=chunk.byteLength;
        if(received>maxBytes)throw new Error('Oversized public app file');
-       if(chunk.byteLength)chunks.push(chunk);
+       // A reader may reuse its backing buffer for later chunks. Snapshot each
+       // bounded chunk before the next read so PNG CRC/UTF-8 checks examine the
+       // exact wire bytes, not a subsequently mutated buffer.
+       if(chunk.byteLength)chunks.push(Uint8Array.from(chunk));
       }
       if(declared!==null&&received!==declared)
        throw new Error('Public app file length mismatch');
@@ -144,11 +152,18 @@
    }
    async function publicManifest(result){
     const response=result.response;
-    if(response.body&&typeof response.body.getReader==='function'){
+    // HF73: real older browsers without ReadableStream still have arrayBuffer.
+    // Never bypass the 1 MiB actual-byte and Content-Length checks by trusting
+    // response.json(), and apply strict UTF-8 decoding on both supported paths.
+    if(typeof response.arrayBuffer==='function'&&typeof TextDecoder==='function'){
      const bytes=await publicBytes(response,result.controller);
-     if(typeof TextDecoder!=='function')throw new Error('UTF-8 decoding unavailable');
      return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
     }
+    // Compatibility for historical fake fetch objects which expose json()
+    // only. Real browsers lacking these APIs cannot prove byte boundedness;
+    // reject rather than claim a validated manifest.
+    if(typeof response.json!=='function'||typeof window.Response==='function')
+     throw new Error('Verified manifest parsing unavailable');
     return boundedBody(response.json(),result.controller);
    }
    // HF70 strengthens HF69 structural/CRC checks with PNG chunk ordering,
@@ -204,14 +219,19 @@
      // pixels. Where available, let the real browser decode them and validate
      // dimensions; never trust a synthetic CRC alone. Close bitmap resources.
      if(typeof createImageBitmap==='function'&&typeof Blob==='function'){
-      let bitmap=null;
+      let bitmap=null,finished=false;
+      const close=resource=>{try{if(resource&&typeof resource.close==='function')resource.close();}catch{}};
       try{
-       bitmap=await boundedBody(createImageBitmap(new Blob([bytes],{type:'image/png'})),controller);
+       // HF73: late bitmap completion after a timeout must also be released,
+       // otherwise a rejected diagnostic can leak decoded image memory.
+       const decode=Promise.resolve(createImageBitmap(new Blob([bytes],{type:'image/png'})))
+        .then(resource=>{if(finished){close(resource);return null;}return resource;});
+       bitmap=await boundedBody(decode,controller);
        return !!bitmap&&bitmap.width===size&&bitmap.height===size;
       }catch{return false;}
-      finally{try{if(bitmap&&typeof bitmap.close==='function')bitmap.close();}catch{}}
+      finally{finished=true;close(bitmap);}
      }
-     return true; // Older browser: structural/CRC proof only, not pixel decode.
+     return 'structural'; // Truthful: browser cannot decode pixels here.
     }catch{return false;}
    }
    const manifestResult=await publicFile('/manifest.webmanifest','application/manifest+json');
@@ -230,13 +250,19 @@
         candidates[0].type==='image/png';
       });
      record('App manifest',valid?'Present and configured':'Present but missing required app settings');
-    }catch{record('App manifest','Could not read the public manifest');}
+     if(!valid)issues.push('The public app manifest is not configured correctly. Try again online or continue on the regular website.');
+    }catch{
+     record('App manifest','Could not read the public manifest');
+     issues.push('The public app manifest could not be verified. Check your connection and try again.');
+    }
    }
    for(const size of [192,512]){
     const icon=await publicFile('/assets/englishlegalese-app-icon-'+size+'.png','image/png');
     const valid=icon.ok&&await validPng(icon.response,size,icon.controller);
-    record('App icon '+size+'px',valid?'Valid '+size+'×'+size+' PNG':icon.ok?
-     'Public file did not match the expected PNG dimensions':icon.reason);
+    record('App icon '+size+'px',valid===true?'Valid '+size+'×'+size+' PNG (pixels decoded)':
+     valid==='structural'?'Valid '+size+'×'+size+' PNG structure and CRC (pixel decoding unavailable)':
+     icon.ok?'Public file did not match the expected PNG dimensions or integrity requirements':icon.reason);
+    if(!valid)issues.push('The '+size+'px app icon did not pass verification. Try again with a stable connection; the website remains available.');
    }
    if('serviceWorker' in navigator){
     try{
@@ -244,6 +270,15 @@
      record('App setup',reg?'A service worker is registered in this browser':'No service worker registration found yet; visit this page over HTTPS');
     }catch{record('App setup','Registration status unavailable');}
    }else record('App setup','This browser cannot register a service worker');
+   if(deviceCheckHelp){
+    const suggestions=issues.length?issues:[
+     'Public app files passed the available checks. Your browser still decides whether to offer installation.',
+     'You can keep studying on the website; installation and updates remain optional.'
+    ];
+    for(const item of suggestions){
+     const li=document.createElement('li');li.textContent=item;deviceCheckHelp.append(li);
+    }
+   }
    deviceCheckStatus.textContent='Device and public-file check finished. Results describe this browser only; they do not guarantee that an installation prompt will appear.';
    }catch{
     // A malformed browser shim, inaccessible response property, or unexpected
