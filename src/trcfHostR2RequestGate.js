@@ -11,7 +11,7 @@ const CONSENT=new Set(['adult_fictional_fixture','audio_capture_authorized','ret
 const OPTS=new Set(['mute','avatar_enabled','max_estimated_cost_usd']);
 const VERSIONS=new Set(['teaching_engine','voice_identity','avatar_identity']);
 const ID=/^[A-Za-z0-9_-]{8,128}$/;
-function record(obj,allowed){return !!obj&&typeof obj==='object'&&!Array.isArray(obj)&&Object.keys(obj).every(k=>allowed.has(k));}
+function record(obj,allowed){return !!obj&&typeof obj==='object'&&!Array.isArray(obj)&&(Object.getPrototypeOf(obj)===Object.prototype||Object.getPrototypeOf(obj)===null)&&Object.keys(obj).every(k=>allowed.has(k));}
 function deny(reason){return Object.freeze({allowed:false,mode:'DISABLED_STAGING_ONLY',reason});}
 function validateCorrectedR2Request(wire,trusted){
  if(!record(wire,ROOT))return deny('invalid_top_level');
