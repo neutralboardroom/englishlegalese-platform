@@ -6,6 +6,7 @@
 'use strict';
 const crypto = require('node:crypto');
 const {validateCorrectedR2Request} = require('./trcfHostR2RequestGate');
+const {getStaticLesson,isKnownLocale} = require('./trcfAdultLessonLocales');
 const MAX_TURNS = 8;
 const MAX_TEXT_CHARS = 600;
 const MAX_MOCK_BUDGET_USD = 2;
@@ -23,22 +24,23 @@ const SAFE_FEEDBACK = Object.freeze({
 });
 function safe(result) { return Object.freeze(result); }
 function deny(code) { return safe({ok:false,code,mode:'MOCK_ONLY',generated:false}); }
-function createMockAdultSession({maxTurns=MAX_TURNS,maxMockBudgetUsd=MAX_MOCK_BUDGET_USD}={}) {
+function createMockAdultSession({maxTurns=MAX_TURNS,maxMockBudgetUsd=MAX_MOCK_BUDGET_USD,explanationLocale='en-US'}={}) {
+  if(!isKnownLocale(explanationLocale))throw new RangeError('unsupported_explanation_locale');
   if(!Number.isSafeInteger(maxTurns)||maxTurns<1||maxTurns>MAX_TURNS||!Number.isFinite(maxMockBudgetUsd)||maxMockBudgetUsd<0||maxMockBudgetUsd>MAX_MOCK_BUDGET_USD) throw new TypeError('invalid_mock_limits');
   const key=crypto.randomBytes(32); // ephemeral only; never persisted or emitted
   let bound=null,epoch=0,muted=true,stopped=false,erased=false,turns=0,reservedMockUsd=0;
   const ids = new Map(), pending = new Map();
-  function digest(wire, trusted){
-    const l=wire.lesson_context;
-    return crypto.createHmac('sha256',key).update(JSON.stringify([
-      wire.interface_version,wire.session_id,wire.request_id,wire.host,
-      l.lesson_id,l.source_version,l.profile,l.authorized_excerpt,
-      wire.learner_turn.text,wire.learner_turn.interrupt===true,
-      wire.request_options?.max_estimated_cost_usd??0,
-      trusted.tenantId,trusted.accountId,trusted.role
-    ])).digest('hex');
+  function canonical(value){
+    if(Array.isArray(value))return value.map(canonical);
+    if(value && typeof value==='object')return Object.keys(value).sort().map(k=>[k,canonical(value[k])]);
+    return value;
   }
-  function status(){return safe({mode:'MOCK_ONLY',generated:false,live:false,active:!!bound&&!stopped&&!erased,muted,stopped,erased,turns,reservedMockUsd,remainingMockUsd:Math.max(0,maxMockBudgetUsd-reservedMockUsd),teacherReviewRequired:true,transcriptsStored:0,providerCalls:0,audioCaptures:0,avatarFrames:0});}
+  function digest(wire,trusted){
+    // Entire validated request AND server-trusted policy: no partial dedupe loopholes.
+    // Keep only a keyed HMAC; never persist learner text, locale-specific PII or context.
+    return crypto.createHmac('sha256',key).update(JSON.stringify([canonical(wire),canonical(trusted),explanationLocale])).digest('hex');
+  }
+  function status(){return safe({mode:'MOCK_ONLY',generated:false,live:false,active:!!bound&&!stopped&&!erased,muted,stopped,erased,turns,reservedMockUsd,remainingMockUsd:Math.max(0,maxMockBudgetUsd-reservedMockUsd),teacherReviewRequired:true,transcriptsStored:0,providerCalls:0,audioCaptures:0,avatarFrames:0,explanationLocale,avatarPrimaryDesign:true,realAvatarActive:false});}
   function cancelPending(){epoch++;pending.clear();}
   return Object.freeze({
     accept(wire,trusted){
@@ -51,7 +53,11 @@ function createMockAdultSession({maxTurns=MAX_TURNS,maxMockBudgetUsd=MAX_MOCK_BU
       if(crypto.createHmac('sha256',key).update(wire.lesson_context.authorized_excerpt).digest('hex')!==bound.excerptFingerprint||v.sessionId!==bound.sessionId||crypto.createHmac('sha256',key).update(trusted.tenantId).digest('hex')!==bound.tenantHash||crypto.createHmac('sha256',key).update(trusted.accountId).digest('hex')!==bound.accountHash||trusted.role!==bound.role||v.lessonId!==bound.lessonId||v.profile!==bound.profile||v.sourceVersion!==bound.sourceVersion)return deny('cross_session_or_tenant_mismatch');
       const fp=digest(wire,trusted);
       const prior=ids.get(v.requestId);
-      if(prior)return prior.fingerprint===fp?safe({...prior.reply,replayed:true}):deny('request_id_reused_with_different_input');
+      if(prior){
+        if(prior.fingerprint!==fp)return deny('request_id_reused_with_different_input');
+        if(prior.epoch!==epoch||!pending.has(prior.reply.token))return deny('request_no_longer_pending');
+        return safe({...prior.reply,replayed:true});
+      }
       if(v.interrupt)cancelPending();
       if(muted||v.muted)return deny('text_muted');
       if(turns>=maxTurns)return deny('turn_limit');
@@ -60,7 +66,7 @@ function createMockAdultSession({maxTurns=MAX_TURNS,maxMockBudgetUsd=MAX_MOCK_BU
       turns++;reservedMockUsd=Number((reservedMockUsd+cost).toFixed(4));
       const token=crypto.randomBytes(16).toString('hex');
       const reply=safe({ok:true,code:'MOCK_TURN_QUEUED',mode:'MOCK_ONLY',generated:false,token,turn:turns,replayed:false,estimatedMockReservedUsd:cost,teacherReviewRequired:true});
-      pending.set(token,epoch);ids.set(v.requestId,{fingerprint:fp,reply});
+      pending.set(token,epoch);ids.set(v.requestId,{fingerprint:fp,reply,epoch});
       return reply;
     },
     completeMock(token){
@@ -69,7 +75,8 @@ function createMockAdultSession({maxTurns=MAX_TURNS,maxMockBudgetUsd=MAX_MOCK_BU
       if(erased||stopped||muted||capturedEpoch!==epoch)return deny('canceled_or_muted');
       // Static, authored fictional example only — never process or quote learner text.
       const guide=SAFE_FEEDBACK[bound.profile];
-      return safe({ok:true,code:'STATIC_FICTIONAL_EXAMPLE',mode:'MOCK_ONLY',generated:false,voiceGenerated:false,avatarGenerated:false,teacherReviewRequired:true,feedback:guide});
+      const lesson=getStaticLesson({explanationLocale,profile:bound.profile});
+      return safe({ok:true,code:'STATIC_FICTIONAL_EXAMPLE',mode:'MOCK_ONLY',generated:false,voiceGenerated:false,avatarGenerated:false,teacherReviewRequired:true,feedback:guide,localizedLesson:lesson});
     },
     interrupt(){if(erased)return deny('session_erased');cancelPending();return safe({ok:true,code:'INTERRUPTED',mode:'MOCK_ONLY',generated:false});},
     mute(){if(erased)return deny('session_erased');muted=true;cancelPending();return safe({ok:true,code:'MUTED',mode:'MOCK_ONLY',generated:false});},
