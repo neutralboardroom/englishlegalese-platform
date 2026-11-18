@@ -16,7 +16,7 @@ const ALLOWED_CONTEXT=new Set(['contract','host','track','lessonId','sourceVersi
 const ALLOWED_TRUST=new Set(['issuer','audience','verifiedAdult','role','tenantId','accountId','authorizedLessonIds','approvedPermissions','quotaRemainingUsd','budgetCapUsd','serverConsentVerified']);
 const SIMPLE_ID=/^[a-z0-9][a-z0-9_-]{1,63}$/;
 const VERSION=/^v\d+\.\d+\.\d+(?:-[a-z0-9.-]+)?$/;
-function ownFields(obj,allow){return !!obj&&typeof obj==='object'&&!Array.isArray(obj)&&Object.keys(obj).every(x=>allow.has(x));}
+function ownFields(obj,allow){return !!obj&&typeof obj==='object'&&!Array.isArray(obj)&&(Object.getPrototypeOf(obj)===Object.prototype||Object.getPrototypeOf(obj)===null)&&Object.keys(obj).every(x=>allow.has(x));}
 function deny(reason){return Object.freeze({allowed:false,reason,mode:'DISABLED_STAGING_ONLY'});}
 function validateContext(context,trusted){
  if(!ownFields(context,ALLOWED_CONTEXT)||!ownFields(trusted,ALLOWED_TRUST))return deny('unknown_or_malformed_field');
