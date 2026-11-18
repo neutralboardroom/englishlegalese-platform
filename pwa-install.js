@@ -283,12 +283,21 @@
       icon&&typeof icon.src==='string'&&
       Object.prototype.hasOwnProperty.call(safeIconNames,icon.src)&&
       icon.type===safeIconNames[icon.src]);
+     // HF75: shortcut icons, screenshots and extra web-app handlers can
+     // reference destinations not verified by the three consent-only GETs.
+     // This release does not ship those optional features. Reject them
+     // rather than claiming that an uninspected manifest is fully safe.
+     const unverifiedFeatures=['screenshots','share_target','protocol_handlers',
+      'file_handlers','related_applications','serviceworker','launch_handler'];
+     const noUnverifiedFeatures=unverifiedFeatures.every(key=>
+      !Object.prototype.hasOwnProperty.call(data||{},key));
      const shortcutsLocal=typeof data?.shortcuts==='undefined'||
       (Array.isArray(data.shortcuts)&&data.shortcuts.every(shortcut=>
        shortcut&&typeof shortcut.url==='string'&&
-       ['/learn/legal-english/','/learn/business-english/','/learn/account/'].includes(shortcut.url)));
+       ['/learn/legal-english/','/learn/business-english/','/learn/account/'].includes(shortcut.url)&&
+       !Object.prototype.hasOwnProperty.call(shortcut,'icons')));
      const valid=data&&data.id==='/'&&data.scope==='/'&&data.start_url==='/'&&
-      data.display==='standalone'&&iconsLocal&&shortcutsLocal&&
+      data.display==='standalone'&&iconsLocal&&shortcutsLocal&&noUnverifiedFeatures&&
       [192,512].every(size=>{
        // HF72: an ambiguous duplicate icon-size record might mislead the
        // installer; require one exact, local PNG candidate for each size.
