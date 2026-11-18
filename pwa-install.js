@@ -18,22 +18,33 @@
  let deferredPrompt=null,registration=null,requestedReload=false;
  let deviceCheckRunning=false;
  let completedPublicRows=[];
+ // A prior explicitly approved clipboard write can settle after a visitor
+ // starts a fresh check. Keep old completion from overwriting new advice.
+ let publicCheckGeneration=0,clipboardInFlight=false;
  // The clipboard is never touched automatically: an explicit second user
  // click copies only the seven public installation statuses (no device ID,
  // user-agent, account, URL query, cookie, class, or learning data).
  if(deviceCheckCopy&&deviceCheckCopyStatus){
   deviceCheckCopy.addEventListener('click',async()=>{
-   if(!completedPublicRows.length||deviceCheckRunning)return;
+   if(completedPublicRows.length!==7||deviceCheckRunning||clipboardInFlight)return;
    if(!navigator.clipboard||typeof navigator.clipboard.writeText!=='function'){
     deviceCheckCopyStatus.textContent='Copying is unavailable in this browser. You can read the public results above.';
     return;
    }
+   // Freeze this expressly requested report. Never silently copy a later run
+   // or let a late clipboard result overwrite that run's accessible status.
+   const generation=publicCheckGeneration;
+   const publicRows=completedPublicRows.slice();
+   clipboardInFlight=true;
    deviceCheckCopy.disabled=true;
    try{
-    await navigator.clipboard.writeText('EnglishLegalese public app readiness (no private data)\n'+completedPublicRows.join('\n'));
-    deviceCheckCopyStatus.textContent='The seven public app-file results were copied. No private learning data was included.';
-   }catch{deviceCheckCopyStatus.textContent='Copying was not allowed. The results remain visible above.';}
-   finally{deviceCheckCopy.disabled=false;}
+    await navigator.clipboard.writeText('EnglishLegalese public app readiness (no private data)\n'+publicRows.join('\n'));
+    if(generation===publicCheckGeneration&&!deviceCheckRunning)
+     deviceCheckCopyStatus.textContent='The seven public app-file results were copied. No private learning data was included.';
+   }catch{
+    if(generation===publicCheckGeneration&&!deviceCheckRunning)
+     deviceCheckCopyStatus.textContent='Copying was not allowed. The results remain visible above.';
+   }finally{clipboardInFlight=false;deviceCheckCopy.disabled=false;}
   });
  }
  const installed=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
@@ -70,6 +81,7 @@
    // overlapping network requests and cross-run result mixing as well.
    if(deviceCheckRunning)return;
    deviceCheckRunning=true;
+   publicCheckGeneration++;
    completedPublicRows=[];
    if(deviceCheckCopy)deviceCheckCopy.hidden=true;
    if(deviceCheckCopyStatus)deviceCheckCopyStatus.textContent='';
@@ -341,6 +353,11 @@
    if(results.length===7){
     completedPublicRows=results.slice();
     if(deviceCheckCopy)deviceCheckCopy.hidden=false;
+    // Explicitly state the second consent boundary: merely making the
+    // report available has not copied or shared it. This also supplies the
+    // accessible status expected by the actual Chromium/WebKit browser test.
+    if(deviceCheckCopyStatus)
+     deviceCheckCopyStatus.textContent='Copying these seven public results requires another click. Nothing has been copied or shared.';
    }
    deviceCheckStatus.textContent='Device and public-file check finished. Results describe this browser only; they do not guarantee that an installation prompt will appear.';
    }catch{
