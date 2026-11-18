@@ -5,6 +5,7 @@
 **Exact predecessor:** HF72 PR #116 on `feature/hf72-decoded-mobile-icons-progress-20261116`, SHA `c50521d1673a8a17d86176b0db81dace48618c91`.  
 **Governing Universal Builder:** V3.2 R2 optimized PDF, SHA256 `c686f6b1e782d4391a87b1192e909c21926657fcda82cb2395982582cb9dc092`, 138 pages and 25 embedded recovery files.  
 **Other authoritative files:** HF72 GitHub Git archive exact SHA, distinct reconstructed 807-file source ZIP, permanent EL-RGR-020 no-drift governance contract.
+**Canonical standing release contract:** `governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md`. The standing qualified-release auto-deployment instruction remains active without repeated owner authorization after every required independent acceptance and backup gate passes. This candidate is blocked; it is not a cancellation of that policy.
 
 ## Material cumulative improvements
 
