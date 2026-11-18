@@ -48,7 +48,10 @@
    return false;
   }
   if(updateApply)updateApply.hidden=false;
-  showUpdate('An updated EnglishLegalese app is ready. Apply it only when you have finished any class or unsaved work.');
+  // Preserve a just-failed explicit postMessage diagnostic while syncing
+  // WebKit's actual button visibility. A new Check or Apply click replaces it.
+  if(!updateStatus?.textContent?.includes('The update request could not be sent.'))
+   showUpdate('An updated EnglishLegalese app is ready. Apply it only when you have finished any class or unsaved work.');
   return true;
  }
  function updateConnection(){
@@ -385,14 +388,28 @@
   worker.addEventListener('statechange',watch);
   watch();
  }
+ // HF74 R2: WebKit can obtain a controller *after* register() resolves
+ // while a new worker is already waiting. Keep the button bound to actual
+ // waiting+controlled state on controllerchange. Never activate or reload
+ // unless the visitor explicitly requested an update first.
  navigator.serviceWorker.addEventListener('controllerchange',()=>{
   if(requestedReload){
    requestedReload=false;
    // This page alone is reloaded, and only after the user explicitly
    // chose "Apply update". Never reload a live classroom in the background.
    window.location.reload();
+   return;
   }
+  if(registration)showPendingUpdate();
  });
+ // iPad may suspend/resume an install page while the registration changes.
+ // Resynchronize on return without fetching, messaging a worker or reloading.
+ window.addEventListener('focus',()=>{if(registration)showPendingUpdate();});
+ if(typeof document.addEventListener==='function'){
+  document.addEventListener('visibilitychange',()=>{
+   if(registration&&document.visibilityState==='visible')showPendingUpdate();
+  });
+ }
  if(updateCheck)updateCheck.addEventListener('click',async()=>{
   if(!registration){showUpdate('App setup is not ready. Try again in a moment.');return;}
   updateCheck.disabled=true;showUpdate('Checking for an app update without changing classes or saved work…');
