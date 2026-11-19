@@ -16,6 +16,8 @@ HF82 allows fictional adult Legal and Business English learners to **author thei
 
 Baseline HF81 GitHub draft PR #126 immutable HEAD `8944924bb905dcafeae07695ed67427b33168593`, complete source SHA-256 `f6f57a8ee181a606411c64d21ec2cb939a87aa391ace9b30318da55840b42758` (852 files), cumulative Builder V4.1 SHA-256 `947c9c9109b40347a15b04aa91e22fc6527f87a2562faeaa43f6c7a76211619f` (182 pages / 77 attachments). Preserve the original HF81 file and all other ancestors byte-for-byte except additive `package.json` check script. Add six files: this document, source module, deterministic builder, mandatory script test, Playwright specification and self-contained HTML.
 
+**Canonical binding release/no-drift contract:** `governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md` (EL-RGR-020). No repeated owner authorization is required after all independent release gates pass; this does not waive any verification, backup, device, professional review, real avatar or Render gate.
+
 **Do not merge or deploy** without *all* EL-RGR-020 protections: exact candidate dual independent GitHub green CI, independent complete GitHub source archive, SHA-verified full source and Builder in Google Drive and ChatGPT Library, direct physical Android Chrome/iPhone Safari checks, native legal/business translation signoff, independent TR-ControlCenter review, approved real avatar/voice/privacy and Render rollback/live proof. Existing Render production, Classroom and other sibling builders are read-only and unchanged. This is scripted fictional adult professional education, not live teacher, AI legal advice or legal assessment.
 
 ### Outstanding scope
