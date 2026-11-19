@@ -1,0 +1,21 @@
+# HF79 · Avatar-first multilingual professional English rehearsal · 18 November 2026
+
+**Status: DRAFT / NOT LIVE.** EnglishLegalese host-owned offline development only; no other Teacher Roger app edited, no real students, no provider/voice/avatar, no production route, login, payment, grade, certificate or outbound email.
+
+## Owner intent and language support
+The owner reaffirmed Teacher Roger Avatar from **TR-CloneFusion** as the **primary intended instructor** of the full Legal/Business English lesson, with optional live human Teacher Roger and other human teachers. Native-language lesson support must initially include Thai, Vietnamese, Mandarin Chinese and specifically Korean in South Korea (`ko-KR`) in addition to English. Teaching-language remains English. Avatar voice, live video, dialogue, lip-sync and real semantic AI are NOT implemented or verified by this source.
+
+New `src/trcfAdultLessonLocales.js` supplies five short stages (introduction, explanation, practice, review, wrap-up) for each English track in all five locales, including Korean Hangul and Korean-speaking professional examples. Each includes the same English model sentence; outputs are `STATIC_AUTHORED_REHEARSAL_NOT_GENERATIVE`, flagged as requiring native-language/subject review.
+
+`src/trcfMockAdultSession.js` accepts a separate host-side validated `explanationLocale` (default `en-US`), exposing only a scripted localized stage after the original verified fictional adult wire request. The *proposed* corrected R2 wire schema bytes remain unchanged, and `lesson_context.language` stays `en` or `en-US`. Unsupported locales fail closed, voice/avatar remains disabled. No pupil content or real provider calls.
+
+`labs/hf79-avatar-first-offline-rehearsal.html` is a responsive, accessible, standalone internal preview with selectable course and five explanation languages, complete five-stage lesson, Next/Previous/Stop/Restart controls, an obvious unconnected-avatar placeholder and no network/storage/media API. It is deliberately NOT linked from the production website.
+
+HF79 closes mock idempotency loopholes by HMAC-binding the **entire canonical request including mute, consent, settings, lesson/excerpt, and full trusted server policy plus locale**. Exact duplicate pending requests do not double-count, but canceled/completed request IDs cannot replay stale token responses. Existing role/tenant/turn limits and immutable elder records remain.
+
+## Fresh ControlCenter checks and cumulative rollback
+Mandatory current shared checkpoint before this amended build: https://drive.google.com/drive/folders/1Oxqe2wERedJP6sNNTHf8ycYIUT7fRk-8. Original pin master SHA `bb92111c72f3231a82e8a32c3f72f2357fd5e0d61849319a8863c1c0b8fb5101`, original registry pin `183ccb67318e92b5c817edc5c80e52d73a4ec698c268347cff98004eb899bc75`, plus freshly updated registry SHA `0572177380937aa690bb12d250aee7fa46dc645f6035e8b31d4cccc5913099bb`; CC V1.37/V4.2 existence and CloneFusion V4.7/experimental prerecorded still portrait/voice demonstrations checked read-only. Previous HF79 preflight backed up and corrected original shared-folder upload. New avatar/Korean scope PREBUILD is independently posted before source changes.
+
+Source predecessor HF78 GitHub draft PR #123 SHA `594b71fca781f917f6c931a533889da83a54c253`, complete 831-file ZIP SHA `bb619b7a9389e116f18ae580f0967691d7ad4d5f54355e8b6910ab3e2b3ad25f` and Builder V3.8 168-page 57-attachment PDF SHA `29b158ecba2b856f158abef5d265f82f291f3759059d59c458fe0ae38acc32c1`. Two HF78 CI jobs PASS on exact SHA. Preserve all original ZIP bytes except intentional narrow file edits and all prior PDF pages/embedded recovery bytes.
+
+**Standing release gates** still mandatory (`EL-RGR-020`, `EL-TRCC-001`, canonical `governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md`): both independent exact-head GitHub CI jobs, actual physical Android Chrome/iPhone Safari, source archive and complete Builder independently in both Google Drive + ChatGPT Library, full rollback/privacy checks, real authenticated avatar provider/voice/consent/tenant verification for any live integration, and final Render exact LIVE receipt. No per-release approval loop once fully qualified, but do not merge/deploy an unqualified draft.
