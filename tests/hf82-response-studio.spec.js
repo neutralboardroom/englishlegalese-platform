@@ -1,0 +1,38 @@
+/* HF82 local draft practice is explicit, keyboard-usable and never stored or uploaded. */
+'use strict';
+const {test,expect}=require('@playwright/test');const fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.resolve(__dirname,'../labs/hf82-private-response-studio-offline.html'),'utf8');
+test('HF82 private writing can be drafted, compared and erased without a network request',async({page})=>{
+ const requests=[],errors=[];page.on('request',r=>requests.push(r.url()));page.on('pageerror',e=>errors.push(e.message));
+ await page.setContent(html,{waitUntil:'load'});
+ await expect(page.getByText('Avatar not connected')).toBeVisible();
+ for(let i=0;i<3;i++)await page.locator('#next').click();
+ await expect(page.locator('#writing-workshop')).toBeVisible();
+ await page.locator('#writing-workshop summary').click();
+ await page.locator('#writing-draft').fill('I can explain that this fictional clause requests a written response by Friday.');
+ await expect(page.locator('#writing-word-count')).toContainText('words');
+ await expect(page.locator('#writing-model')).toBeHidden();
+ await page.locator('#writing-checklist input').first().check();
+ await page.locator('#writing-compare').click();
+ await expect(page.locator('#writing-model')).toContainText('English model:');
+ await expect(page.locator('#writing-model p[lang="ko-KR"]')).toHaveCount(3);
+ await expect(page.locator('#writing-model p[lang="ko-KR"]').first()).toBeVisible();
+ await page.locator('#writing-draft').fill('A different draft after review');
+ await expect(page.locator('#writing-model')).toBeHidden();
+ await page.locator('#writing-clear').click();
+ await expect(page.locator('#writing-draft')).toHaveValue('');
+ await page.locator('#writing-draft').fill('Sensitive only fictional words');
+ await page.locator('#dialogue-scene').selectOption('1');
+ await expect(page.locator('#writing-draft')).toHaveValue('');
+ await page.locator('#writing-workshop summary').click();
+ await page.locator('#locale').selectOption('th-TH');
+ await expect(page.locator('#writing-workshop')).toBeHidden();
+ for(let i=0;i<3;i++)await page.locator('#next').click();
+ await expect(page.locator('#writing-direction-native')).toHaveAttribute('lang','th-TH');
+ await page.locator('#writing-workshop summary').click();
+ await page.locator('#writing-draft').fill('Draft that stops');
+ await page.locator('#stop').click();
+ await expect(page.locator('#writing-draft')).toHaveValue('');
+ await expect(page.locator('#writing-workshop')).toBeHidden();
+ expect(requests).toEqual([]);expect(errors).toEqual([]);
+});
