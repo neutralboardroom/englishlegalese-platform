@@ -1,0 +1,47 @@
+/* Scripted, offline fictional-adult skill builder. No external requests or learner persistence. */
+'use strict';
+const {test,expect}=require('@playwright/test'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.resolve(__dirname,'../labs/hf83-structured-professional-reply-builder-offline.html'),'utf8');
+test('HF83 guided three-part reply is explicit and never silently overwrites existing writing',async({page})=>{
+ const requests=[],errors=[];page.on('request',r=>requests.push(r.url()));page.on('pageerror',e=>errors.push(e.message));
+ await page.setContent(html,{waitUntil:'load'});
+ await expect(page.getByText('Avatar not connected')).toBeVisible();
+ for(let i=0;i<3;i++)await page.locator('#next').click();
+ await page.locator('#writing-workshop > summary').click();
+ await page.locator('#reply-builder summary').click();
+ await expect(page.locator('#reply-intro-native')).toHaveAttribute('lang','ko-KR');
+ await expect(page.locator('#reply-insert')).toBeDisabled();
+ await expect(page.locator('#reply-steps .reply-phrase').first()).toBeHidden();
+ for(let i=0;i<3;i++)await page.locator('#reply-steps button[data-index="'+i+'"]').click();
+ await expect(page.locator('#reply-insert')).toBeEnabled();
+ await expect(page.locator('#reply-steps .reply-phrase')).toHaveCount(3);
+ await expect(page.locator('#reply-steps .reply-phrase').first()).toBeVisible();
+ await page.locator('#writing-draft').fill('I would like to keep my existing thoughtful draft.');
+ await page.locator('#reply-insert').click();
+ await expect(page.locator('#writing-draft')).toHaveValue('I would like to keep my existing thoughtful draft.');
+ await expect(page.locator('#reply-insert')).toContainText('Confirm replacement');
+ await page.locator('#reply-insert').click();
+ await expect(page.locator('#writing-draft')).toHaveValue(/Thank you for asking about that clause/);
+ await page.locator('#writing-draft').fill('My own wording is now private.');
+ await page.locator('#writing-compare').click();
+ await expect(page.locator('#writing-model')).toContainText('English model:');
+ await expect(page.locator('#writing-model p[lang="ko-KR"]')).toHaveCount(3);
+ await expect(page.locator('#writing-model p[lang="ko-KR"]').first()).toBeVisible();
+ await page.locator('#dialogue-scene').selectOption('1');
+ await expect(page.locator('#writing-draft')).toHaveValue('');
+ await expect(page.locator('#reply-insert')).toBeDisabled();
+ await page.locator('#locale').selectOption('th-TH');
+ await expect(page.locator('#writing-workshop')).toBeHidden();
+ for(let i=0;i<3;i++)await page.locator('#next').click();
+ await page.locator('#writing-workshop > summary').click();
+ await page.locator('#reply-builder summary').click();
+ await expect(page.locator('#reply-intro-native')).toHaveAttribute('lang','th-TH');
+ // For tablet WebKit, close the long disclosure and activate STOP by real keyboard input.
+ await page.locator('#writing-workshop > summary').click();
+ await expect(page.locator('#writing-workshop')).not.toHaveAttribute('open','');
+ await page.locator('#stop').focus();await page.keyboard.press('Enter');
+ await expect(page.locator('#writing-draft')).toHaveValue('');
+ await expect(page.locator('#writing-workshop')).toBeHidden();
+ expect(errors).toEqual([]);expect(requests).toEqual([]);
+ const dims=await page.evaluate(()=>({w:innerWidth,x:document.documentElement.scrollWidth}));expect(dims.x).toBeLessThanOrEqual(dims.w+2);
+});

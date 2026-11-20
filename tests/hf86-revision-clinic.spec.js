@@ -1,0 +1,41 @@
+/* HF86 authored adult revision practice, genuine UI/STOP/reset checks; no network. */
+'use strict';
+const {test,expect}=require('@playwright/test'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.resolve(__dirname,'../labs/hf86-private-professional-revision-clinic-offline.html'),'utf8');
+test('HF86 private response revision is deliberate, editable, and protects earlier writing',async({page})=>{
+ const requests=[],errors=[];page.on('request',r=>requests.push(r.url()));page.on('pageerror',e=>errors.push(e.message));
+ await page.setContent(html,{waitUntil:'load'});
+ await expect(page.getByText('Avatar not connected')).toBeVisible();
+ for(let i=0;i<3;i++)await page.locator('#next').click();
+ await page.locator('#writing-workshop > summary').click();await page.locator('#revision-clinic > summary').click();
+ await expect(page.locator('#revision-native-intro')).toHaveAttribute('lang','ko-KR');
+ await expect(page.locator('#revision-goals .revision-goal')).toHaveCount(3);
+ await expect(page.locator('#revision-model')).toBeHidden();
+ await page.locator('#revision-compare').click();await expect(page.locator('#revision-model')).toBeHidden();
+ await page.locator('#revision-draft').fill('I will explain the Friday requirement in this fictional example while avoiding a legal guarantee.');
+ await expect(page.locator('#revision-count')).toContainText('words');
+ await page.locator('#revision-compare').click();await expect(page.locator('#revision-model')).toContainText('Example English response:');
+ await expect(page.locator('#revision-model p[lang="ko-KR"]')).toHaveCount(2);
+ await page.locator('#revision-draft').fill('This is my own improved English, not a model answer.');
+ await expect(page.locator('#revision-model')).toBeHidden();
+ await page.locator('#revision-copy').click();await expect(page.locator('#writing-draft')).toHaveValue('This is my own improved English, not a model answer.');
+ await page.locator('#writing-draft').fill('My other first draft is protected.');
+ await page.locator('#revision-copy').click();await expect(page.locator('#writing-draft')).toHaveValue('My other first draft is protected.');
+ await expect(page.locator('#revision-copy')).toContainText('Confirm replacement');
+ await page.locator('#revision-draft').fill('My new revision invalidates any old overwrite confirmation.');
+ await expect(page.locator('#revision-copy')).not.toContainText('Confirm replacement');
+ await page.locator('#revision-copy').click();await expect(page.locator('#writing-draft')).toHaveValue('My other first draft is protected.');
+ await page.locator('#revision-copy').click();await expect(page.locator('#writing-draft')).toHaveValue('My new revision invalidates any old overwrite confirmation.');
+ await page.locator('#dialogue-scene').selectOption('1');await expect(page.locator('#revision-draft')).toHaveValue('');
+ await expect(page.locator('#revision-clinic')).not.toHaveAttribute('open','');
+ await page.locator('#locale').selectOption('th-TH');for(let i=0;i<3;i++)await page.locator('#next').click();
+ await page.locator('#writing-workshop > summary').click();await page.locator('#revision-clinic > summary').click();
+ await expect(page.locator('#revision-native-intro')).toHaveAttribute('lang','th-TH');
+ await page.locator('#revision-draft').fill('Only fictional details.');
+ // Collapse an explicitly opened long-form disclosure to reach STOP through a true pointer click.
+ await page.locator('#writing-workshop > summary').click();
+ await page.locator('#stop').click();await expect(page.locator('#revision-draft')).toHaveValue('');
+ await expect(page.locator('#writing-workshop')).toBeHidden();
+ expect(requests).toEqual([]);expect(errors).toEqual([]);
+ const sizes=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:innerWidth}));expect(sizes.scroll).toBeLessThanOrEqual(sizes.viewport+2);
+});
