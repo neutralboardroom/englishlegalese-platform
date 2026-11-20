@@ -15,7 +15,8 @@ test('HF82 private writing can be drafted, compared and erased without a network
  await page.locator('#writing-checklist input').first().check();
  await page.locator('#writing-compare').click();
  await expect(page.locator('#writing-model')).toContainText('English model:');
- await expect(page.locator('#writing-model p[lang="ko-KR"]')).toBeVisible();
+ await expect(page.locator('#writing-model p[lang="ko-KR"]')).toHaveCount(3);
+ await expect(page.locator('#writing-model p[lang="ko-KR"]').first()).toBeVisible();
  await page.locator('#writing-draft').fill('A different draft after review');
  await expect(page.locator('#writing-model')).toBeHidden();
  await page.locator('#writing-clear').click();
