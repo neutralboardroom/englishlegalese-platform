@@ -1,0 +1,13 @@
+# HF86 — Private Professional Revision Clinic (EnglishLegalese only)
+
+**Development-only; not deployed; EL-RGR-020 strict no-drift applies.**
+
+HF86 is a strictly additive adult Legal English and Business English exercise based on the complete HF85 scripted lesson. Each of the existing 12 professional exchanges now has three authored editing goals, one contextual English model and explanatory text in English plus the current Thai, Vietnamese, Simplified Chinese, Korean or English explanation language. Every learner must author a draft before intentionally revealing a model, and any changes hide that model. The model is an illustration, not proof that another reasonable answer is incorrect.
+
+The learner may copy the revised text into the previous writing area. An existing nonempty draft cannot be replaced until a second deliberate click; editing the revision or original writing cancels pending confirmation. The revision is erased on STOP, course/locale/scenario/lesson changes, or explicit reset. No actual AI, voice, student record, legal advice, provider calls, automated scoring, microphone, network or persistence. All translated teaching material awaits independent native subject-matter review.
+
+Inherited unchanged: page layout, registration, pricing, billing, certificates, curriculum, historical lessons, all other script tests and owner governance. One HF85 browser regression test is *strengthened* to verify that the disclosure collapses before a real STOP pointer click, addressing HF85 tablet-WebKit CI timeout without skipping STOP or loosening privacy gates. The older v1830-browser intermittent failure must be checked independently and is not waived.
+
+Next version must start from the *newest independently verified complete source* AND separate cumulative Universal Builder; recheck the mandatory TR-ControlCenter master, mutable registry, protocol and owner EL-RGR-020. Preserve all previous 197 PDF pages, all 102 native PDF recovery attachments and the complete 877-file HF85 source baseline. Full new version always needs a new independent PDF, cumulative full source ZIP, Git exact HEAD, both CI jobs, two destination SHA readback, honest missing human/device/Library gates, unique PREBUILD and POSTBUILD receipts, and NO production release on incomplete acceptance.
+
+**Owner's standing qualified automatic-release rule:** `EL-RGR-020` remains unchanged, with its canonical permanent contract at `governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md`. No new per-version owner approval is imposed. Deployment is automatic **only when** every existing full security, backup, native-language, physical-device, exact-commit, independent CI and live/rollback gate actually passes; otherwise development stays blocked.
