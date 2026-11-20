@@ -21,6 +21,9 @@ test('HF82 private writing can be drafted, compared and erased without a network
  await expect(page.locator('#writing-model')).toBeHidden();
  await page.locator('#writing-clear').click();
  await expect(page.locator('#writing-draft')).toHaveValue('');
+ // Clear intentionally closes the parent <details>; reopen before typing.
+ await expect(page.locator('#writing-workshop')).not.toHaveAttribute('open', '');
+ await page.locator('#writing-workshop > summary').click();
  await page.locator('#writing-draft').fill('Sensitive only fictional words');
  await page.locator('#dialogue-scene').selectOption('1');
  await expect(page.locator('#writing-draft')).toHaveValue('');
