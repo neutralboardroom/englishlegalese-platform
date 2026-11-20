@@ -1,0 +1,54 @@
+name: EnglishLegalese HF53 LIVE exact-commit preservation
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/englishlegalese-hf53-live-preservation.yml
+
+permissions:
+  contents: read
+
+jobs:
+  preserve-current-live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout EXACT Render LIVE commit without altering main
+        uses: actions/checkout@v4
+        with:
+          ref: 05da0352355dbc3fd6eb8b472c49289d594a8e6e
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Fail closed unless checkout and GitHub main exactly equal the recorded LIVE SHA
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "05da0352355dbc3fd6eb8b472c49289d594a8e6e"
+          git fetch --no-tags --depth=1 origin main
+          test "$(git rev-parse FETCH_HEAD)" = "05da0352355dbc3fd6eb8b472c49289d594a8e6e"
+      - name: Export immutable complete source ZIP and independent integrity receipt
+        run: |
+          set -euo pipefail
+          mkdir -p release-artifacts
+          git archive --format=zip --output=release-artifacts/EnglishLegalese_HF53_LIVE_exact_05da0352355dbc3fd6eb8b472c49289d594a8e6e.zip 05da0352355dbc3fd6eb8b472c49289d594a8e6e
+          python3 - <<'PY'
+          import hashlib,json,pathlib,subprocess,zipfile
+          sha="05da0352355dbc3fd6eb8b472c49289d594a8e6e"
+          p=pathlib.Path("release-artifacts/EnglishLegalese_HF53_LIVE_exact_"+sha+".zip")
+          tracked=subprocess.check_output(["git","ls-tree","-r","--name-only",sha],text=True).splitlines()
+          with zipfile.ZipFile(p) as z:
+              assert z.testzip() is None,"ZIP CRC error"
+              contents=[i.filename for i in z.infolist() if not i.is_dir()]
+              assert sorted(contents)==sorted(tracked),"Archive does not exactly match tracked Git tree"
+          manifest={"type":"VERIFIED_GITHUB_EXACT_COMMIT_LIVE_SOURCE","commit_sha":sha,"git_tree_sha":subprocess.check_output(["git","rev-parse",sha+"^{tree}"],text=True).strip(),"sha256":hashlib.sha256(p.read_bytes()).hexdigest(),"bytes":p.stat().st_size,"file_count":len(tracked),"zip_crc":"PASS","main_at_backup":sha,"status":"SOURCE_ONLY_NO_DATABASE_OR_SECRETS","source":"github git archive"}
+          q=p.with_suffix(".receipt.json")
+          q.write_text(json.dumps(manifest,indent=2)+"\n")
+          print(json.dumps(manifest))
+          PY
+      - name: Upload exact LIVE source and SHA-256 receipt for permanent Google Drive backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: EnglishLegalese-HF53-LIVE-exact-commit-source-20261120
+          path: release-artifacts/*
+          if-no-files-found: error
+          retention-days: 90
