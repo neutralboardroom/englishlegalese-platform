@@ -19,7 +19,7 @@ test('HF88 meeting minutes preserve facts, explicitly distinguish proposal, and 
  await expect(page.locator('#minutes-model')).toContainText('Authored English model');
  await expect(page.locator('#minutes-model p[lang="ko-KR"]')).toHaveCount(2);
  await page.locator('#minutes-agreement').selectOption('confirmed');await expect(page.locator('#minutes-model')).toBeHidden();
- await page.locator('#minutes-preview').focus();await page.keyboard.press('Enter');await expect(page.locator('#minutes-output')).toContainText('FICTIONAL practice');
+ await page.locator('#minutes-preview').focus();await page.keyboard.press('Enter');await expect(page.locator('#minutes-output')).toContainText('Confirmed only in this FICTIONAL exercise');
  await page.locator('#minutes-insert').focus();await page.keyboard.press('Enter');await expect(page.locator('#writing-draft')).toHaveValue(/Fictional clause review meeting/);
  await page.locator('#writing-draft').fill('Protected earlier fictional answer.');
  await page.locator('#minutes-insert').focus();await page.keyboard.press('Enter');await expect(page.locator('#writing-draft')).toHaveValue('Protected earlier fictional answer.');
