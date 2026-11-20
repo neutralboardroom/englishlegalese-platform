@@ -7,8 +7,8 @@ test('HF83 guided three-part reply is explicit and never silently overwrites exi
  await page.setContent(html,{waitUntil:'load'});
  await expect(page.getByText('Avatar not connected')).toBeVisible();
  for(let i=0;i<3;i++)await page.locator('#next').click();
- await page.locator('#writing-workshop > summary').click();
- await page.locator('#reply-builder summary').click();
+ await page.locator('#writing-workshop > summary').focus();await page.keyboard.press('Enter');
+ await page.locator('#reply-builder summary').focus();await page.keyboard.press('Enter');
  await expect(page.locator('#reply-intro-native')).toHaveAttribute('lang','ko-KR');
  await expect(page.locator('#reply-insert')).toBeDisabled();
  await expect(page.locator('#reply-steps .reply-phrase').first()).toBeHidden();
@@ -33,11 +33,11 @@ test('HF83 guided three-part reply is explicit and never silently overwrites exi
  await page.locator('#locale').selectOption('th-TH');
  await expect(page.locator('#writing-workshop')).toBeHidden();
  for(let i=0;i<3;i++)await page.locator('#next').click();
- await page.locator('#writing-workshop > summary').click();
- await page.locator('#reply-builder summary').click();
+ await page.locator('#writing-workshop > summary').focus();await page.keyboard.press('Enter');
+ await page.locator('#reply-builder summary').focus();await page.keyboard.press('Enter');
  await expect(page.locator('#reply-intro-native')).toHaveAttribute('lang','th-TH');
  // For tablet WebKit, close the long disclosure and activate STOP by real keyboard input.
- await page.locator('#writing-workshop > summary').click();
+ await page.locator('#writing-workshop > summary').focus();await page.keyboard.press('Enter');
  await expect(page.locator('#writing-workshop')).not.toHaveAttribute('open','');
  await page.locator('#stop').focus();await page.keyboard.press('Enter');
  await expect(page.locator('#writing-draft')).toHaveValue('');
