@@ -38,6 +38,7 @@ test('HF85 three stakeholder reactions branch without network or unwanted writin
  await expect(page.locator('#branch-intro-native')).toHaveAttribute('lang','th-TH');
  await page.locator('#branch-choices input[value="0"]').check();await page.locator('#branch-check').click();
  await expect(page.locator('#branch-outcome p[lang="th-TH"]')).toHaveCount(3);
+ await page.locator('#writing-workshop > summary').click();await expect(page.locator('#writing-workshop')).not.toHaveAttribute('open','');
  await page.locator('#stop').click();await expect(page.locator('#writing-draft')).toHaveValue('');await expect(page.locator('#writing-workshop')).toBeHidden();
  expect(requests).toEqual([]);expect(errors).toEqual([]);
  const d=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:innerWidth}));expect(d.scroll).toBeLessThanOrEqual(d.viewport+2);
