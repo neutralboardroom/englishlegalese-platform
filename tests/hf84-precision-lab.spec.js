@@ -6,9 +6,9 @@ test('HF84 option checking never leaks model on wrong answer; reveal and resets 
  const requests=[],errors=[];page.on('request',r=>requests.push(r.url()));page.on('pageerror',e=>errors.push(e.message));
  await page.setContent(html,{waitUntil:'load'});
  await expect(page.getByText('Avatar not connected')).toBeVisible();
- for(let i=0;i<3;i++)await page.locator('#next').click();
- await page.locator('#writing-workshop > summary').click();
- await page.locator('#precision-lab > summary').click();
+ for(let i=0;i<3;i++){await page.locator('#next').focus();await page.keyboard.press('Enter');};
+ await page.locator('#writing-workshop > summary').focus();await page.keyboard.press('Enter');
+ await page.locator('#precision-lab > summary').focus();await page.keyboard.press('Enter');
  await expect(page.locator('#precision-intro-native')).toHaveAttribute('lang','ko-KR');
  await expect(page.locator('#precision-feedback')).toBeHidden();
  await page.locator('#precision-check').click();await expect(page.locator('#precision-feedback')).toBeHidden();
@@ -27,10 +27,10 @@ test('HF84 option checking never leaks model on wrong answer; reveal and resets 
  await expect(page.locator('#precision-lab')).not.toHaveAttribute('open','');
  await expect(page.locator('#precision-feedback')).toBeHidden();
  await page.locator('#locale').selectOption('th-TH');
- for(let i=0;i<3;i++)await page.locator('#next').click();
- await page.locator('#writing-workshop > summary').click();await page.locator('#precision-lab > summary').click();
+ for(let i=0;i<3;i++){await page.locator('#next').focus();await page.keyboard.press('Enter');};
+ await page.locator('#writing-workshop > summary').focus();await page.keyboard.press('Enter');await page.locator('#precision-lab > summary').focus();await page.keyboard.press('Enter');
  await expect(page.locator('#precision-intro-native')).toHaveAttribute('lang','th-TH');
- await page.locator('#stop').click();await expect(page.locator('#writing-workshop')).toBeHidden();
+ await page.locator('#writing-workshop > summary').focus();await page.keyboard.press('Enter');await expect(page.locator('#writing-workshop')).not.toHaveAttribute('open','');await page.locator('#stop').focus();await page.keyboard.press('Enter');await expect(page.locator('#writing-workshop')).toBeHidden();
  expect(requests).toEqual([]);expect(errors).toEqual([]);
  const d=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:innerWidth}));expect(d.scroll).toBeLessThanOrEqual(d.viewport+2);
 });
