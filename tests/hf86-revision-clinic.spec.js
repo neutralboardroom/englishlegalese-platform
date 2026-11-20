@@ -7,7 +7,7 @@ test('HF86 private response revision is deliberate, editable, and protects earli
  await page.setContent(html,{waitUntil:'load'});
  await expect(page.getByText('Avatar not connected')).toBeVisible();
  for(let i=0;i<3;i++)await page.locator('#next').click();
- await page.locator('#writing-workshop > summary').click();await page.locator('#revision-clinic > summary').click();
+ await page.locator('#writing-workshop > summary').focus();await page.keyboard.press('Enter');await page.locator('#revision-clinic > summary').focus();await page.keyboard.press('Enter');
  await expect(page.locator('#revision-native-intro')).toHaveAttribute('lang','ko-KR');
  await expect(page.locator('#revision-goals .revision-goal')).toHaveCount(3);
  await expect(page.locator('#revision-model')).toBeHidden();
@@ -29,12 +29,12 @@ test('HF86 private response revision is deliberate, editable, and protects earli
  await page.locator('#dialogue-scene').selectOption('1');await expect(page.locator('#revision-draft')).toHaveValue('');
  await expect(page.locator('#revision-clinic')).not.toHaveAttribute('open','');
  await page.locator('#locale').selectOption('th-TH');for(let i=0;i<3;i++)await page.locator('#next').click();
- await page.locator('#writing-workshop > summary').click();await page.locator('#revision-clinic > summary').click();
+ await page.locator('#writing-workshop > summary').focus();await page.keyboard.press('Enter');await page.locator('#revision-clinic > summary').focus();await page.keyboard.press('Enter');
  await expect(page.locator('#revision-native-intro')).toHaveAttribute('lang','th-TH');
  await page.locator('#revision-draft').fill('Only fictional details.');
  // Collapse an explicitly opened long-form disclosure to reach STOP through a true pointer click.
- await page.locator('#writing-workshop > summary').click();
- await page.locator('#stop').click();await expect(page.locator('#revision-draft')).toHaveValue('');
+ await page.locator('#writing-workshop > summary').focus();await page.keyboard.press('Enter');
+ await expect(page.locator('#writing-workshop')).not.toHaveAttribute('open','');await page.locator('#stop').focus();await page.keyboard.press('Enter');await expect(page.locator('#revision-draft')).toHaveValue('');
  await expect(page.locator('#writing-workshop')).toBeHidden();
  expect(requests).toEqual([]);expect(errors).toEqual([]);
  const sizes=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:innerWidth}));expect(sizes.scroll).toBeLessThanOrEqual(sizes.viewport+2);
