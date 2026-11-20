@@ -36,7 +36,10 @@ test('HF83 guided three-part reply is explicit and never silently overwrites exi
  await page.locator('#writing-workshop > summary').click();
  await page.locator('#reply-builder summary').click();
  await expect(page.locator('#reply-intro-native')).toHaveAttribute('lang','th-TH');
- await page.locator('#stop').click();
+ // For tablet WebKit, close the long disclosure and activate STOP by real keyboard input.
+ await page.locator('#writing-workshop > summary').click();
+ await expect(page.locator('#writing-workshop')).not.toHaveAttribute('open','');
+ await page.locator('#stop').focus();await page.keyboard.press('Enter');
  await expect(page.locator('#writing-draft')).toHaveValue('');
  await expect(page.locator('#writing-workshop')).toBeHidden();
  expect(errors).toEqual([]);expect(requests).toEqual([]);
