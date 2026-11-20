@@ -1,0 +1,36 @@
+/* HF84 factual, scripted adult precision lab; no learner data/network. */
+'use strict';
+const {test,expect}=require('@playwright/test');const fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.resolve(__dirname,'../labs/hf84-professional-precision-challenge-offline.html'),'utf8');
+test('HF84 option checking never leaks model on wrong answer; reveal and resets are explicit',async({page})=>{
+ const requests=[],errors=[];page.on('request',r=>requests.push(r.url()));page.on('pageerror',e=>errors.push(e.message));
+ await page.setContent(html,{waitUntil:'load'});
+ await expect(page.getByText('Avatar not connected')).toBeVisible();
+ for(let i=0;i<3;i++)await page.locator('#next').click();
+ await page.locator('#writing-workshop > summary').click();
+ await page.locator('#precision-lab > summary').click();
+ await expect(page.locator('#precision-intro-native')).toHaveAttribute('lang','ko-KR');
+ await expect(page.locator('#precision-feedback')).toBeHidden();
+ await page.locator('#precision-check').click();await expect(page.locator('#precision-feedback')).toBeHidden();
+ await page.locator('#precision-options input[value="1"]').check();await page.locator('#precision-check').click();
+ await expect(page.locator('#precision-feedback')).not.toContainText('English example:');
+ await expect(page.locator('#precision-check')).toBeEnabled();
+ await page.locator('#precision-options input[value="0"]').check();await page.locator('#precision-check').click();
+ await expect(page.locator('#precision-feedback')).toContainText('English example:');
+ await expect(page.locator('#precision-feedback p[lang="ko-KR"]')).toHaveCount(2);
+ await expect(page.locator('#precision-check')).toBeDisabled();
+ await page.locator('#precision-retry').click();
+ await expect(page.locator('#precision-lab')).toHaveAttribute('open','');
+ await expect(page.locator('#precision-feedback')).toBeHidden();
+ await page.locator('#precision-reveal').click();await expect(page.locator('#precision-feedback')).toContainText('English example:');
+ await page.locator('#dialogue-scene').selectOption('1');
+ await expect(page.locator('#precision-lab')).not.toHaveAttribute('open','');
+ await expect(page.locator('#precision-feedback')).toBeHidden();
+ await page.locator('#locale').selectOption('th-TH');
+ for(let i=0;i<3;i++)await page.locator('#next').click();
+ await page.locator('#writing-workshop > summary').click();await page.locator('#precision-lab > summary').click();
+ await expect(page.locator('#precision-intro-native')).toHaveAttribute('lang','th-TH');
+ await page.locator('#stop').click();await expect(page.locator('#writing-workshop')).toBeHidden();
+ expect(requests).toEqual([]);expect(errors).toEqual([]);
+ const d=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:innerWidth}));expect(d.scroll).toBeLessThanOrEqual(d.viewport+2);
+});
