@@ -14,6 +14,33 @@ interest.value='extended';
 const topic=select('topic','Preferred topic for 1 or 4 lessons',[['','Choose a subject']]);
 const format=select('format','Classroom format',[['group','Small-group class'],['private','Private lesson']]);
 const schedule=select('schedule_id','Schedule',[]);
+// HF56 worldwide enrollment; first three market/readiness pilots are NOT a geographic restriction.
+const learnerMarket=select('learner_market','Country / market for class arrangements',[
+ ['other','Another country — worldwide EnglishLegalese enrollment'],
+ ['th','Thailand'],
+ ['vn','Vietnam'],
+ ['cn','China']
+]);
+const contactLanguage=select('preferred_contact_language','Preferred contact language (request only; availability to be confirmed)',[
+ ['en','English'],['th','ไทย · Thai'],['vi','Tiếng Việt · Vietnamese'],['zh-Hans','简体中文 · Simplified Chinese']
+]);
+const localeHelp=el('p');localeHelp.className='el-enrollment-locale-note';localeHelp.setAttribute('role','status');localeHelp.setAttribute('aria-live','polite');form.append(localeHelp);
+function localeGuidance(){
+ const text={
+  th:'ภาษาอังกฤษสำหรับนักกฎหมายและผู้เชี่ยวชาญด้านธุรกิจ: เลือกหลักสูตร ใส่อีเมลและส่งคำขอ การลงทะเบียนยังไม่ถือเป็นการจองหรือชำระเงิน',
+  vi:'Tiếng Anh pháp lý và thương mại: chọn khóa học, nhập email và gửi yêu cầu. Chưa đặt lịch hoặc thanh toán cho đến khi được xác nhận.',
+  'zh-Hans':'法律英语与商务英语：选择课程，填写电子邮箱并提交咨询。提交不代表课程已预约或费用已支付。',
+  en:'EnglishLegalese welcomes adult professionals worldwide. Choose a program and request an available time; confirmation is not automatic.'
+ };
+ const lang=contactLanguage.value;
+ localeHelp.textContent=(text[lang]||text.en)+' Contact-language assistance and any live-class video platform require individual confirmation. '+(learnerMarket.value==='cn'?'Mainland China video access must be checked before confirming a class.':learnerMarket.value==='other'?'Learners from every country may submit an inquiry.':'Time zone and teacher availability are confirmed before scheduling.');
+ localeHelp.lang=lang;
+}
+learnerMarket.addEventListener('change',()=>{
+ contactLanguage.value=({th:'th',vn:'vi',cn:'zh-Hans'}[learnerMarket.value]||'en');
+ localeGuidance();
+});
+contactLanguage.addEventListener('change',localeGuidance);
 const base=window.ELCURRICULUM_V1800?.records||[],business=window.ELBUSINESS_V1850_CATALOG||[];
 const legal=base.filter(c=>c.group!=='Professional & Business English');
 const prices={one:{group:24,private:45},four:{group:79,private:169},eight:{group:149,private:319},extended:{group:249,private:599},full24:{group:349,private:849},full48:{group:649,private:1599}};
@@ -53,6 +80,11 @@ interest.addEventListener('change',update);format.addEventListener('change',upda
 // Only accept nonpersonal, preapproved plan choices from the informational estimator.
 const qs=new URLSearchParams(window.location.search);
 const preProgram=qs.get('program'),prePackage=qs.get('package'),preSeats=qs.get('seats');
+const preMarket=qs.get('market'),preLanguage=qs.get('lang');
+if(['th','vn','cn','other'].includes(preMarket))learnerMarket.value=preMarket;
+const marketLanguage={th:'th',vn:'vi',cn:'zh-Hans',other:'en'};
+contactLanguage.value=['en','th','vi','zh-Hans'].includes(preLanguage)?preLanguage:(marketLanguage[learnerMarket.value]||'en');
+localeGuidance();
 if(['legal','business','complete'].includes(preProgram)&&['eight','extended','full24','full48'].includes(prePackage)&&
   ((preProgram==='complete'&&prePackage==='full48')||(preProgram!=='complete'&&prePackage!=='full48'))){
  program.value=preProgram;interest.value=prePackage;
@@ -75,7 +107,8 @@ form.addEventListener('submit',async event=>{
  const prefix=interest.value==='one'||interest.value==='four'
  ?'[Topic-specific inquiry: '+topic.value+' | '+(topic.selectedOptions[0]?.textContent||'')+'; sessions='+sessions[interest.value]+'; format='+format.value+']'
  :'[Program package inquiry: program='+program.value+'; sessions='+sessions[interest.value]+'; format='+format.value+(employer.checked?'; employer_seats='+seats.value+'; organization='+organization.value.trim().replace(/[;\]<>]/g,' '):'')+']';
- info.note=(prefix+(employer.checked&&(interest.value==='one'||interest.value==='four')?' [Employer seats='+seats.value+'; organization='+organization.value.trim().replace(/[;\\]<>]/g,' ')+']':'')+' '+note.value).slice(0,500);
+ const localeNote=' [Learner market='+learnerMarket.value+'; preferred contact language='+contactLanguage.value+'; language/video support not yet confirmed]';
+ info.note=(prefix+localeNote+(employer.checked&&(interest.value==='one'||interest.value==='four')?' [Employer seats='+seats.value+'; organization='+organization.value.trim().replace(/[;\\]<>]/g,' ')+']':'')+' '+note.value).slice(0,500);
  delete info.topic;delete info.interest;delete info.employer_interest;delete info.organization;delete info.employee_seats;
  info.client_request_id=crypto.randomUUID();
  submit.disabled=true;status.textContent='Saving enrollment inquiry…';
