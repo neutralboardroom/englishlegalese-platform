@@ -1,0 +1,35 @@
+/* HF87 user-owned email composer, real keyboard/pointer controls, no sends. */
+'use strict';
+const {test,expect}=require('@playwright/test'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.resolve(__dirname,'../labs/hf87-private-professional-followup-email-offline.html'),'utf8');
+test('HF87 fictional professional follow-up email stays unsent; model and replacement are deliberate',async({page})=>{
+ const requests=[],errors=[];page.on('request',r=>requests.push(r.url()));page.on('pageerror',e=>errors.push(e.message));
+ await page.setContent(html,{waitUntil:'load'});await expect(page.getByText('Avatar not connected')).toBeVisible();
+ for(let i=0;i<3;i++)await page.locator('#next').click();
+ await page.locator('#writing-workshop > summary').click();await page.locator('#followup-lab > summary').click();
+ await expect(page.locator('#followup-native-intro')).toHaveAttribute('lang','ko-KR');
+ await expect(page.locator('#followup-model')).toBeHidden();await page.locator('#followup-compare').click();await expect(page.locator('#followup-model')).toBeHidden();
+ await page.locator('#followup-subject').fill('Invented clause clarification');
+ await page.locator('#followup-context').fill('Thank you for discussing the fictional Friday requirement.');
+ await page.locator('#followup-request').fill('Could you please confirm which fictional provision we should examine?');
+ await page.locator('#followup-preview').click();await expect(page.locator('#followup-result')).toContainText('Subject: Invented clause clarification');
+ await expect(page.locator('#followup-model')).toBeHidden();await page.locator('#followup-compare').click();
+ await expect(page.locator('#followup-model')).toContainText('Authored English model');await expect(page.locator('#followup-model p[lang="ko-KR"]')).toHaveCount(2);
+ await page.locator('#followup-context').fill('A revised fictional context paragraph.');await expect(page.locator('#followup-model')).toBeHidden();
+ await page.locator('#followup-insert').click();await expect(page.locator('#writing-draft')).toHaveValue(/Subject: Invented clause clarification/);
+ await page.locator('#writing-draft').fill('Protect my first fictional draft.');
+ await page.locator('#followup-insert').click();await expect(page.locator('#writing-draft')).toHaveValue('Protect my first fictional draft.');
+ await expect(page.locator('#followup-insert')).toContainText('Confirm replacing');
+ await page.locator('#followup-request').fill('A different fictional next step invalidates confirmation.');
+ await expect(page.locator('#followup-insert')).not.toContainText('Confirm replacing');
+ await page.locator('#followup-insert').focus();await page.keyboard.press('Enter');await expect(page.locator('#writing-draft')).toHaveValue('Protect my first fictional draft.');
+ await page.locator('#followup-insert').focus();await page.keyboard.press('Enter');await expect(page.locator('#writing-draft')).toHaveValue(/A different fictional next step/);
+ await page.locator('#dialogue-scene').selectOption('1');await expect(page.locator('#followup-subject')).toHaveValue('');await expect(page.locator('#followup-lab')).not.toHaveAttribute('open','');
+ await page.locator('#locale').selectOption('th-TH');for(let i=0;i<3;i++)await page.locator('#next').click();
+ await page.locator('#writing-workshop > summary').click();await page.locator('#followup-lab > summary').click();await expect(page.locator('#followup-native-intro')).toHaveAttribute('lang','th-TH');
+ await page.locator('#followup-subject').fill('Private fictional context');
+ await page.locator('#writing-workshop > summary').click();await page.locator('#stop').focus();await page.keyboard.press('Enter');
+ await expect(page.locator('#followup-subject')).toHaveValue('');await expect(page.locator('#writing-workshop')).toBeHidden();
+ expect(requests).toEqual([]);expect(errors).toEqual([]);
+ const viewport=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));expect(viewport.scroll).toBeLessThanOrEqual(viewport.width+2);
+});
