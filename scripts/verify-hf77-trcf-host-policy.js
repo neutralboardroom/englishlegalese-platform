@@ -1,0 +1,36 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const {CONTRACT,HOST,validateContext,createMockStopController}=require('../src/trcfAdultHostPolicy');
+let passed=0;
+function scenario(name,fn){fn();passed++;console.log('PASS',name);}
+const context={contract:CONTRACT,host:HOST,track:'legal-english',lessonId:'contract-drafting',sourceVersion:'v1.0.0',publicExcerpt:'This fictional contract is subject to the following terms.',excerptLicensed:true,fictionalFixture:true};
+const trusted={issuer:'englishlegalese-server',audience:'tr-englishlegalese-host',verifiedAdult:true,role:'student',tenantId:'test-firm-1',accountId:'adult-1',authorizedLessonIds:['contract-drafting'],approvedPermissions:['text'],quotaRemainingUsd:1,budgetCapUsd:2,serverConsentVerified:true};
+function deny(name,ctx={},auth={}){scenario(name,()=>{const r=validateContext({...context,...ctx},{...trusted,...auth});assert.equal(r.allowed,false,name);assert.equal(r.mode,'DISABLED_STAGING_ONLY')})}
+scenario('accepted fictional authorized licensed Legal English only',()=>{let r=validateContext(context,trusted);assert.equal(r.allowed,true);assert.equal(r.mode,'MOCK_ONLY');assert.deepEqual(r.permissions,['text'])});
+scenario('accepted fictional authorized Business English only',()=>{let r=validateContext({...context,track:'business-english'},trusted);assert.equal(r.allowed,true)});
+deny('reject real production use',{fictionalFixture:false});
+deny('reject unknown context keys',{studentAudio:'none'});
+deny('reject raw private pupil references',{pupilId:'123'});
+deny('reject external provider endpoint injection',{providerUrl:'https://example.com'});
+deny('reject unknown trusted claims',{}, {rawStudentTranscript:'no'});
+deny('reject mismatched contract',{contract:'trcf.host.v1.0.0'});
+deny('reject other product host',{host:'TR-Online'});
+deny('reject non-adult',{}, {verifiedAdult:false});
+deny('reject invalid issuer',{}, {issuer:'TR-Online-server'});
+deny('reject invalid audience',{}, {audience:'global-teacher-clone'});
+deny('reject cross-tenant invalid format',{}, {tenantId:'../../company'});
+deny('reject unassigned lesson',{}, {authorizedLessonIds:['other-lesson']});
+deny('reject missing consent',{}, {serverConsentVerified:false});
+deny('reject malformed permissions',{}, {approvedPermissions:['camera','text']});
+deny('reject duplicate permissions',{}, {approvedPermissions:['text','text']});
+deny('reject unlicensed excerpt',{excerptLicensed:false});
+deny('reject excessive context',{publicExcerpt:'x'.repeat(501)});
+deny('reject oversized budget',{}, {budgetCapUsd:100});
+deny('reject negative remaining budget',{}, {quotaRemainingUsd:-1});
+scenario('STOP invalidates previous turn and stays muted',()=>{const s=createMockStopController();let a=s.start();assert.equal(s.canPublish(a),false);assert.equal(s.unmute(),true);assert.equal(s.canPublish(a),true);s.stop();assert.equal(s.canPublish(a),false);assert.equal(s.unmute(),false);assert.equal(s.state().stopped,true)});
+scenario('new turn cannot replay stopped tokens',()=>{const s=createMockStopController(),a=s.start();s.unmute();s.stop();const b=s.start();s.unmute();assert.equal(s.canPublish(a),false);assert.equal(s.canPublish(b),true);s.mute();assert.equal(s.canPublish(b),false)});
+scenario('module contains no network provider or persistence',()=>{let a=fs.readFileSync(path.join(__dirname,'../src/trcfAdultHostPolicy.js'),'utf8');for(const text of ['fetch(','https.request','http.request','WebSocket(','localStorage','process.env','require(\'openai'])assert.equal(a.includes(text),false,text)});
+scenario('mandatory persistent ControlCenter governance and receipt exist',()=>{let s=fs.readFileSync(path.join(__dirname,'../governance/EL_TRCC_MANDATORY_PREBUILD_NO_DRIFT_2026-11-18.md'),'utf8');for(const t of ['MANDATORY BEFORE EVERY BUILD','TR-ControlCenter','TR-CloneFusion','TR-EnglishLegalese','TRCF-20261118-ENGLISHLEGALESE-001','NO ACK','EL-RGR-020','read-only','currentness'])assert.ok(s.includes(t),t);let p=fs.readFileSync(path.join(__dirname,'../docs/HF77_TRCF_HOST_MAPPING_AND_ACK_2026-11-18.md'),'utf8');assert.ok(p.includes('PENDING_CONTROL_CENTER_VERIFICATION'));assert.ok(p.includes('trcf.host.v0.1.0'))});
+console.log('HF77 HOST CONTROLCENTER GATE PASS',passed,'tests');

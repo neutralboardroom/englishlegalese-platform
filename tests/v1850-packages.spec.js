@@ -32,7 +32,8 @@ test('Enrollment supports 8, 24 and 48 topics with lower per-lesson prices',asyn
  await expect(f.locator('select[name=schedule_id]')).toHaveValue('topic-time-request');
 });
 test('Employer quote stores only organization and employee count in mocked request',async({page})=>{
- let sent;await page.route('**/api/v1850/enroll',route=>{sent=route.request().postDataJSON();return route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,reference:'EMPLOYER-MOCK-ONLY'})})});
+ let sent;await page.route('**/api/v1850/intake-status?channel=enroll',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,ready:true,channel:'enroll',stripe_enabled:false})}));
+ await page.route('**/api/v1850/enroll',route=>{sent=route.request().postDataJSON();return route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,reference:'EMPLOYER-MOCK-ONLY'})})});
  await page.goto('/learn/enroll/');const f=page.locator('#v1850-enroll-form');
  await f.locator('select[name=program]').selectOption('complete');
  await f.locator('input[name=employer_interest]').check();
