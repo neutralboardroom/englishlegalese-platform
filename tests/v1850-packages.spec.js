@@ -39,7 +39,7 @@ test('Employer quote stores only organization and employee count in mocked reque
  await f.locator('input[name=employer_interest]').check();
  await f.locator('input[name=organization]').fill('Fictional Learning Group');
  await f.locator('input[name=employee_seats]').fill('12');
- await expect(f.locator('.v1850-boundary').first()).toContainText('15%');
+ await expect(f.locator('p.v1850-boundary').filter({hasText:'Indicative multi-seat discount'})).toContainText('15%');
  await f.locator('input[name=full_name]').fill('Fictional Human');
  await f.locator('input[name=email]').fill('fictional@example.org');
  await f.getByRole('button',{name:'Submit enrollment inquiry'}).click();

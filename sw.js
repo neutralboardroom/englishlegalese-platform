@@ -11,7 +11,7 @@ const PUBLIC_OFFLINE_PAGE='/learn/install/offline.html';
 // private-energy-contracts, plus all other routes, stay network-only.
 const PUBLIC_FALLBACK_PATHS=new Set([
  '/','/index.html','/learn/install/','/learn/start/','/learn/courses/',
- '/learn/legal-english/','/learn/business-english/','/learn/legal-resources/',
+ '/learn/legal-english/','/learn/business-english/','/learn/app/','/learn/legal-resources/',
  '/learn/business-resources/','/pricing/'
 ]);
 self.addEventListener('install',event=>{
