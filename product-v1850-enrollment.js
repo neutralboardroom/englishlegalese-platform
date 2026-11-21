@@ -100,8 +100,10 @@ const note=el('textarea');note.name='note';note.maxLength=180;note.rows=3;noteLa
 const honeypot=field('website','Website (leave blank)');honeypot.parentElement.classList.add('v1850-hp');honeypot.required=false;honeypot.tabIndex=-1;
 const disclaimer=el('p','Inquiry only. Teacher, class timetable and group size require individual confirmation. No payment is taken, no automatic email is sent, and employer discounts are estimates pending a written quote.');disclaimer.className='v1850-boundary';form.append(disclaimer);
 const submit=el('button','Submit enrollment inquiry');submit.type='submit';submit.className='v1840-button';const status=el('p');status.className='v1850-feedback';status.setAttribute('role','status');form.append(submit,status);mount.append(form);
+const intakeReadiness=window.ELPublicIntakeReadiness?.install(form,'enroll');
 form.addEventListener('submit',async event=>{
  event.preventDefault();if(!form.reportValidity())return;
+ if(!intakeReadiness||!(await intakeReadiness.check())){status.textContent='Request NOT sent. Please check service availability and try again when available.';return;}
  if(interest.value==='full48'&&program.value!=='complete'){status.textContent='Select the Complete Professional English program for 48 subjects.';return;}
  const info=Object.fromEntries(new FormData(form));
  const prefix=interest.value==='one'||interest.value==='four'
