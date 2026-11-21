@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B1D33"><meta name="apple-mobile-web-app-title" content="EnglishLegalese">
+<meta name="description" content="EnglishLegalese mobile learning home: Legal English, Business English, free practice, and teacher-led learning inquiries.">
+<meta name="robots" content="index,follow">
+<title>EnglishLegalese mobile learning home | Legal &amp; Business English</title>
+<link rel="canonical" href="https://englishlegalese.com/learn/app/">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/englishlegalese-app-icon-192.png">
+<style>
+:root{color-scheme:light;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:1rem}
+body{margin:0;background:#f3f7fa;color:#15354c;font-size:16px;line-height:1.6;padding-bottom:calc(5.3rem + env(safe-area-inset-bottom))}
+a{color:#14536d}a:focus-visible{outline:3px solid #ba7818;outline-offset:4px}
+.skip{position:absolute;top:-100px;left:1rem;background:#fff;padding:.5rem;z-index:10}.skip:focus{top:1rem}
+.site-head{background:#0B1D33;color:#fff;padding:1rem max(1.1rem,env(safe-area-inset-left));display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.site-head img{display:block;max-width:min(58vw,220px);height:auto;max-height:54px;object-fit:contain}
+.site-head a:not(:has(img)){font-size:.9rem;color:#fff;font-weight:650}
+main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
+.hero{background:linear-gradient(130deg,#113e58,#0B1D33);color:#fff;margin:1rem 0;padding:clamp(1.25rem,5vw,2.6rem);border-radius:1.1rem}
+.hero h1{font-size:clamp(1.75rem,5vw,2.7rem);line-height:1.2;margin:.4rem 0 1rem}
+.eyebrow{font-size:.78rem;letter-spacing:.11em;text-transform:uppercase;font-weight:750;color:#b8e1ec}
+.hero p{max-width:65ch}.hero a{color:#0B1D33;background:#fff;display:inline-flex;padding:.65rem 1.15rem;border-radius:.65rem;text-decoration:none;font-weight:800;min-height:46px;align-items:center}
+.feature{margin:2rem 0}.feature>h2{font-size:1.32rem;line-height:1.3;margin-bottom:.6rem}.feature>p{margin-top:0;color:#435e70}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+.tile{display:flex;flex-direction:column;gap:.3rem;text-decoration:none;background:#fff;color:#12344a;border:1px solid #cfdee5;border-radius:.9rem;padding:1.2rem;min-height:130px;box-shadow:0 1px 3px #0b1d3310}
+.tile:hover{border-color:#197391}.tile strong{font-size:1.07rem;line-height:1.35}.tile span:last-child{font-size:.87rem;color:#486475}
+.tile .symbol{font-size:1.5rem;line-height:1.4}
+.notice{border-left:4px solid #237a92;background:#e7f4f7;border-radius:.45rem;padding:.9rem 1rem;margin:1.5rem 0}
+.notice p{margin:.2rem 0}.foot{font-size:.85rem;color:#506777;border-top:1px solid #d2e1e8;padding-top:1rem;margin-top:2rem}
+.bottom-nav{position:fixed;inset:auto 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;background:#fff;border-top:1px solid #c4d4db;padding:.5rem max(.35rem,env(safe-area-inset-right)) calc(.5rem + env(safe-area-inset-bottom)) max(.35rem,env(safe-area-inset-left));z-index:5;box-shadow:0 -3px 18px #112e461a}
+.bottom-nav a{color:#123e55;text-decoration:none;text-align:center;font-size:.79rem;font-weight:700;display:flex;flex-direction:column;gap:0;align-items:center;justify-content:center;min-height:45px;padding:.2rem .1rem}
+.bottom-nav span{font-size:1.18rem;line-height:1.1}
+@media(max-width:400px){.cards{grid-template-columns:1fr}.tile{min-height:105px}.bottom-nav a{font-size:.72rem}}
+@media(min-width:800px){body{padding-bottom:0}.cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.bottom-nav{position:static;max-width:1080px;margin:0 auto 1rem;border:1px solid #c4d4db;border-radius:.9rem;box-shadow:none}.bottom-nav a{flex-direction:row;gap:.5rem}.hero{margin-top:1.2rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Cumulative dedicated navigation: accessible on demand; mobile bottom navigation stays primary. */
+.catalog-nav{flex-basis:100%;background:#e6f0f5;border-bottom:1px solid #c4d4db;padding:.35rem 1rem;color:#15354c}
+.catalog-nav>summary{font-weight:750;cursor:pointer;padding:.55rem .25rem;min-height:44px;list-style-position:inside}
+.catalog-nav .v1840-topnav{display:flex;flex-wrap:wrap;gap:.45rem;padding:.6rem 0 .9rem;align-items:flex-start}
+.catalog-nav .v1840-topnav>a,.catalog-nav .v1840-resource-menu{display:block;border:1px solid #d1e0e6;border-radius:.5rem;padding:.35rem .5rem;background:#fff}
+.catalog-nav .v1840-topnav a{font-size:.87rem}
+.catalog-nav .v1840-resource-menu{width:min(100%,340px)}
+.catalog-nav .v1840-resource-menu>summary{cursor:pointer;font-weight:650}
+.catalog-nav .v1840-resource-items{display:grid;gap:.4rem;padding:.65rem .1rem}
+.catalog-nav .v1850-nav-heading{font-size:.77rem;font-weight:750;color:#435e70}
+
+/* HF93: genuine sentence-level mobile rehearsal; no audio analysis or learner storage. */
+#hf93-conversation-lab{background:#fff;border:1px solid #cbdde5;border-radius:1rem;padding:clamp(1rem,4vw,1.6rem);box-shadow:0 2px 8px #0b1d3312}
+#hf93-conversation-lab h2{margin:.1rem 0 .45rem;font-size:1.38rem}
+.hf93-intro{color:#36546a}
+.hf93-choice{border:0;margin:.7rem 0 1rem;padding:0;display:flex;gap:.8rem;flex-wrap:wrap}
+.hf93-choice legend{font-weight:750;margin-bottom:.5rem}
+.hf93-choice label{display:flex;gap:.5rem;align-items:center;background:#eff6f9;border:1px solid #c0d7e1;border-radius:.55rem;padding:.55rem .9rem;cursor:pointer;min-height:44px}
+.hf93-choice input{width:1rem;height:1rem;accent-color:#0b607c}
+.hf93-controls{display:flex;flex-wrap:wrap;gap:.55rem;margin:.8rem 0}
+.hf93-controls button,.hf93-answers button{font:inherit;min-height:44px;cursor:pointer;border-radius:.55rem;border:1px solid #155974;padding:.55rem .95rem;background:#14526c;color:white;font-weight:700}
+.hf93-controls button:disabled{background:#cad4da;color:#53636b;border-color:#b1bdc4;cursor:not-allowed}
+.hf93-controls .hf93-stop{background:#fff;color:#893719;border-color:#ad6249}
+.hf93-controls .hf93-neutral{background:#fff;color:#14526c}
+#hf93-conversation-lab button:focus-visible,#hf93-conversation-lab input:focus-visible{outline:3px solid #be8528;outline-offset:3px}
+.hf93-case{border-top:1px solid #cbdde5;margin-top:1.2rem;padding-top:1rem}
+.hf93-case h3{margin:0 0 .5rem;font-size:1.1rem}
+.hf93-turns{margin:1rem 0;background:#f0f6f9;border-radius:.7rem;padding:.8rem 1rem}
+.hf93-turns p{margin:.4rem 0}
+.hf93-answers{display:grid;gap:.6rem;margin:.8rem 0}
+.hf93-answers button{background:#fff;color:#16445c;text-align:left;font-weight:550}
+.hf93-answers button[aria-pressed="true"]{border:3px solid #117b66;padding:calc(.55rem - 2px) calc(.95rem - 2px);background:#eaf8f3}
+.hf93-answers button:disabled{cursor:default;opacity:.7}
+.hf93-feedback{padding:.7rem .9rem;border-left:4px solid #277189;background:#e9f3f7;border-radius:.3rem;margin:.7rem 0}
+.hf93-feedback:empty{display:none}
+.hf93-model{background:#f1faf4;border:1px solid #bddccc;padding:.85rem 1rem;border-radius:.55rem}
+.hf93-model h4{margin:0 0 .35rem}
+.hf93-model p{margin:.35rem 0}
+.hf93-small{font-size:.85rem;color:#526879}
+/* HF94 optional audio: readable, accessible, and nonblocking when disabled. */
+.hf94-audio{padding:.9rem 1rem;background:#f3f8fc;border:1px solid #c2d9e6;border-radius:.7rem;margin:.8rem 0}
+.hf94-audio h3{font-size:1rem;margin:.1rem 0 .35rem}
+.hf94-audio p{margin:.4rem 0 .6rem}
+.hf94-audio-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem}
+.hf94-audio-actions label{font-weight:700;font-size:.88rem}
+.hf94-audio-actions select,.hf94-audio-actions button{font:inherit;border:1px solid #27708c;border-radius:.5rem;padding:.48rem .55rem;min-height:44px}
+.hf94-audio-actions select{background:#fff;color:#123e55}
+.hf94-audio-actions button{background:#155a72;color:#fff;font-weight:700;cursor:pointer}
+.hf94-audio-actions button:disabled{background:#e4eaf0;color:#536c7d;cursor:not-allowed}
+.hf94-audio-actions #hf94-audio-stop{background:#fff;color:#963e22;border-color:#b77054}
+.hf94-audio-actions #hf94-audio-stop:disabled{background:#e4eaf0;color:#536c7d}
+.hf94-audio-actions button:focus-visible,.hf94-audio-actions select:focus-visible{outline:3px solid #be8528;outline-offset:3px}
+@media(max-width:420px){.hf94-audio-actions button{flex:1 1 135px}}
+[hidden]{display:none!important}
+@media(max-width:420px){.hf93-controls button{flex:1 1 120px}.hf93-choice{display:block}.hf93-choice label{margin:.4rem 0}}
+</style></head><body>
+<a class="skip" href="#main">Skip to learning options</a>
+<header class="site-head"><a href="/" aria-label="EnglishLegalese website home"><img src="/assets/englishlegalese-logo.png" alt="EnglishLegalese.com"></a><a href="/learn/install/">Install options</a>
+<details class="catalog-nav"><summary>Full website navigation and all free tools</summary><nav class="v1840-topnav" aria-label="Main navigation"><a href="/learn/start/">Start</a><a href="/learn/courses/">Courses</a><a href="/learn/legal-english/">Legal English</a><a href="/learn/business-english/">Business English</a><details class="v1840-resource-menu"><summary>Free learning resources ▾</summary><nav class="v1840-resource-items" aria-label="Free Legal English and Business English tools"><span class="v1850-nav-heading">Explore both resource libraries</span><a href="/learn/legal-resources/">Legal English · all free tools</a><a href="/learn/business-resources/">Business English · all free tools</a><span class="v1850-nav-heading">14 Legal English tools</span><a href="/learn/free-writing-exercise/" data-v1840-current="free-writing-exercise">Free Legal English Writing Exercise</a>
+<a href="/learn/ai-draft-review/" data-v1840-current="ai-draft-review">Free AI Draft Review Lab</a>
+<a href="/learn/clause-reading/" data-v1840-current="clause-reading">Free Contract Clause Reading Lab</a>
+<a href="/learn/meeting-followup/" data-v1840-current="meeting-followup">Free Meeting Follow-up Lab</a>
+<a href="/learn/email-clarity/" data-v1840-current="email-clarity">Free Professional Email Clarity Lab</a>
+<a href="/learn/guided-practice/" data-v1840-current="guided-practice">Free Guided Legal English Practice Path</a>
+<a href="/learn/case-brief/" data-v1840-current="case-brief">Free Case Brief Reading Lab</a>
+<a href="/learn/legal-vocabulary/" data-v1840-current="legal-vocabulary">Legal English Vocabulary Guide</a>
+<a href="/learn/revision-studio/" data-v1840-current="revision-studio">Free Professional Revision Studio</a>
+<a href="/learn/professional-message/" data-v1840-current="professional-message">Free Professional Message Builder</a>
+<a href="/learn/listening-clarification/" data-v1840-current="listening-clarification">Free Listening & Clarification Lab</a>
+<a href="/learn/conversation-rehearsal/" data-v1840-current="conversation-rehearsal">Free Professional Conversation Rehearsal</a>
+<a href="/learn/reading-precision/" data-v1840-current="reading-precision">Free Reading Precision Lab</a>
+<a href="/learn/smartteacher-free-trial/" data-v1840-current="smartteacher-free-trial">Free SmartTeacher AI Trial</a><span class="v1850-nav-heading">8 Business English tools</span><a href="/learn/business-resources/business-email/">Email Writing</a><a href="/learn/business-resources/business-meetings/">Meetings</a><a href="/learn/business-resources/business-negotiations/">Negotiations</a><a href="/learn/business-resources/business-presentations/">Presentations</a><a href="/learn/business-resources/business-interviews/">Interviews</a><a href="/learn/business-resources/business-global/">Global Communication</a><a href="/learn/business-resources/investor-earnings/">Earnings Calls</a><a href="/learn/business-resources/investor-markets/">Markets</a></nav></details><details class="v1840-resource-menu"><summary>Teachers &amp; Classes ▾</summary><nav class="v1840-resource-items" aria-label="Teachers and live classroom programs"><a href="/learn/teachers/">Teachers</a><a href="/learn/teach-with-us/">Teach with us</a><a href="/learn/live-classes/">Class schedules</a><a href="/learn/classroom-programs/">16-session lesson plans</a><a href="/learn/enroll/">Enroll in a class</a><a href="/learn/employers/">Employer training</a><a href="/learn/study-planner/">Study planner</a><a href="/learn/language-support/">Languages</a><a href="/learn/trust/">Trust &amp; privacy</a><a href="/learn/smartteacher/">SmartTeacher AI</a></nav></details><a href="/pricing/">Pricing</a><a href="/learn/enroll/">Enroll</a><a href="/learn/account/">Account</a></nav></details></header>
+<main id="main">
+<section class="hero" aria-labelledby="mobile-title"><p class="eyebrow">Mobile learning | HF94 development preview</p>
+<h1 id="mobile-title">Professional English, wherever you learn.</h1>
+<p>Build confidence in Legal English and Business English. Choose a lesson, try a free activity, or request teacher-led learning.</p>
+<a href="#learn">Explore learning options</a></section>
+<section class="feature" id="learn" aria-labelledby="learn-title"><h2 id="learn-title">Choose your subject</h2><p>The same courses as the desktop website. No separate account or purchase is required to explore.</p>
+<div class="cards"><a class="tile" href="/learn/legal-english/"><span class="symbol" aria-hidden="true">⚖</span><strong>Legal English</strong><span>Contracts, legal writing and professional conversations</span></a>
+<a class="tile" href="/learn/business-english/"><span class="symbol" aria-hidden="true">▤</span><strong>Business English</strong><span>Meetings, management, presentations and investors</span></a>
+<a class="tile" href="/learn/courses/"><span class="symbol" aria-hidden="true">◎</span><strong>All courses</strong><span>Browse the full course catalog</span></a></div></section>
+<section class="feature" id="practice" aria-labelledby="practice-title"><h2 id="practice-title">Try a free learning exercise</h2><p>Practice with fictional examples. Never paste confidential client or employer information into public practice tools.</p>
+<div class="cards"><a class="tile" href="/learn/free-writing-exercise/"><span class="symbol" aria-hidden="true">✎</span><strong>Writing practice</strong><span>Improve clarity with structured exercises</span></a>
+<a class="tile" href="/learn/reading-precision/"><span class="symbol" aria-hidden="true">⌕</span><strong>Reading precision</strong><span>Spot meaning and qualification</span></a>
+<a class="tile" href="/learn/conversation-rehearsal/"><span class="symbol" aria-hidden="true">◉</span><strong>Speaking rehearsal</strong><span>Prepare professional dialogue</span></a>
+<a class="tile" href="/learn/business-resources/"><span class="symbol" aria-hidden="true">▦</span><strong>Business resources</strong><span>Explore practical workplace English</span></a></div></section>
+
+<section class="feature" id="hf93-conversation-lab" aria-labelledby="hf93-title">
+ <p class="eyebrow" style="color:#14516c">Original free mobile lesson · HF94</p>
+ <h2 id="hf93-title">Understand and say real professional English</h2>
+ <p class="hf93-intro">Work through a short fictional professional conversation. First check what the speaker means, then rehearse a complete reply and use the language in a different situation. No sign-in, microphone, typed personal details, or payment.</p>
+ <fieldset class="hf93-choice" id="hf93-tracks"><legend>Choose a professional context</legend>
+  <label><input type="radio" name="hf93-subject" value="legal" checked> Legal English</label>
+  <label><input type="radio" name="hf93-subject" value="business"> Business English</label>
+ </fieldset>
+ <div class="hf93-controls"><button type="button" id="hf93-start">Start conversation practice</button><button type="button" id="hf93-stop" class="hf93-stop" disabled>Stop</button><button type="button" id="hf93-restart" class="hf93-neutral">Restart</button></div>
+ <section id="hf94-audio" class="hf94-audio" aria-label="Optional listening and shadowing practice">
+  <h3>Listen, understand, then speak</h3>
+  <p>Listen to the fictional exchange and, once you understand it, hear the complete reply. Repeat aloud in your own voice. Audio is optional: all written exercises work without it.</p>
+  <div class="hf94-audio-actions"><label for="hf94-audio-rate">Playback speed</label><select id="hf94-audio-rate"><option value="slow">Slower (practice)</option><option value="normal">Normal</option></select>
+   <button id="hf94-audio-dialogue" type="button" disabled>Listen to exchange</button>
+   <button id="hf94-audio-model" type="button" disabled>Listen to model reply</button>
+   <button id="hf94-audio-transfer" type="button" disabled>Listen to new-context reply</button>
+   <button id="hf94-audio-stop" type="button" disabled>Stop audio</button>
+  </div>
+  <p class="hf93-small">Uses your browser or device voice when available; some system voices may use online services. This website does not listen to you, request microphone permission, record speech, or evaluate pronunciation.</p>
+  <p id="hf94-audio-status" class="hf93-small" role="status" aria-live="polite">Checking device voice availability. The written exercise is always available.</p>
+ </section>
+ <div id="hf93-status" class="hf93-small" role="status" aria-live="polite">Choose a subject and select Start. Nothing is saved or sent.</div>
+ <div id="hf93-case" class="hf93-case" hidden>
+  <h3 id="hf93-case-title" tabindex="-1"></h3><p id="hf93-context"></p>
+  <div id="hf93-turns" class="hf93-turns" aria-label="Fictional professional exchange"></div>
+  <fieldset id="hf93-question"><legend id="hf93-question-text"></legend><div class="hf93-answers" id="hf93-answers"></div></fieldset>
+  <div id="hf93-feedback" class="hf93-feedback" role="status" aria-live="polite"></div>
+  <div id="hf93-speak" class="hf93-model" hidden><h4>Say a complete reply aloud</h4><p id="hf93-speak-prompt"></p><p><strong>A natural model reply:</strong> <span id="hf93-speak-model"></span></p><p class="hf93-small">Practice speaking with your own voice. This page cannot hear, record, or assess pronunciation.</p><div class="hf93-controls"><button type="button" id="hf93-to-transfer">Continue to a different situation</button></div></div>
+  <div id="hf93-transfer" class="hf93-model" hidden><h4>Transfer to a new situation</h4><p id="hf93-transfer-prompt"></p><div class="hf93-controls"><button type="button" id="hf93-reveal" class="hf93-neutral">Show a possible complete reply</button></div><p id="hf93-transfer-answer" hidden></p><div class="hf93-controls"><button type="button" id="hf93-next" disabled>Next conversation</button></div></div>
+ </div>
+ <p class="hf93-small">These fictional adult examples teach communication, not legal or investment advice. A correct multiple-choice answer checks reading comprehension only; it does not certify speaking ability.</p>
+ <noscript><p>JavaScript is required for the interactive steps. The existing free conversation resources remain available: <a href="/learn/conversation-rehearsal/">Professional Conversation Rehearsal</a>.</p></noscript>
+</section>
+
+<section class="feature" id="classes" aria-labelledby="classes-title"><h2 id="classes-title">Learn with a teacher</h2><p>Explore teaching options and request information. An inquiry does not reserve a class or make a payment.</p>
+<div class="cards"><a class="tile" href="/learn/teachers/"><span class="symbol" aria-hidden="true">♧</span><strong>Meet the teachers</strong><span>Learn about teacher-led instruction</span></a>
+<a class="tile" href="/learn/enroll/"><span class="symbol" aria-hidden="true">✉</span><strong>Request enrollment</strong><span>Availability is checked before information is sent</span></a>
+<a class="tile" href="/pricing/"><span class="symbol" aria-hidden="true">◇</span><strong>Pricing</strong><span>Compare packages and published terms</span></a></div></section>
+<section class="feature" id="account" aria-labelledby="account-title"><h2 id="account-title">Your account and app</h2><div class="cards">
+<a class="tile" href="/learn/account/"><span class="symbol" aria-hidden="true">◈</span><strong>Account</strong><span>Use the existing website sign-in and account controls</span></a>
+<a class="tile" href="/learn/install/"><span class="symbol" aria-hidden="true">⬇</span><strong>Install on your device</strong><span>Optional browser-app installation and safe updates</span></a>
+<a class="tile" href="/learn/trust/"><span class="symbol" aria-hidden="true">✓</span><strong>Privacy and trust</strong><span>Read how personal data and learning records are handled</span></a></div></section>
+<div class="notice" role="note"><p><strong>Connection needed:</strong> Classes, accounts and saved work require internet access. Offline mode shows only a generic connection message; no private learning data is cached.</p></div>
+<footer class="foot"><p>This is the browser-based mobile app experience. Native iOS and Android applications are in development; there is no App Store or Google Play release yet.</p>
+<p><a href="/">Full EnglishLegalese website</a> · <a href="/learn/business-english/">Business English</a> · <a href="/learn/trust/">Privacy and trust</a></p></footer>
+</main>
+<nav class="bottom-nav" aria-label="Mobile app sections"><a href="#learn"><span aria-hidden="true">▦</span>Learn</a><a href="#practice"><span aria-hidden="true">✎</span>Practice</a><a href="#classes"><span aria-hidden="true">◉</span>Classes</a><a href="#account"><span aria-hidden="true">◈</span>Account</a></nav>
+<script src="/assets/hf93-mobile-conversations.js" defer></script>
+<script src="/assets/hf94-listen-shadow.js" defer></script>
+</body></html>
