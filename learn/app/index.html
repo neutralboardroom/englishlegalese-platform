@@ -16,7 +16,7 @@ html{scroll-behavior:smooth;scroll-padding-top:1rem}
 body{margin:0;background:#f3f7fa;color:#15354c;font-size:16px;line-height:1.6;padding-bottom:calc(5.3rem + env(safe-area-inset-bottom))}
 a{color:#14536d}a:focus-visible{outline:3px solid #ba7818;outline-offset:4px}
 .skip{position:absolute;top:-100px;left:1rem;background:#fff;padding:.5rem;z-index:10}.skip:focus{top:1rem}
-.site-head{background:#0B1D33;color:#fff;padding:1rem max(1.1rem,env(safe-area-inset-left));display:flex;gap:1rem;align-items:center;justify-content:space-between}
+.site-head{background:#0B1D33;color:#fff;padding:1rem max(1.1rem,env(safe-area-inset-left));display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .site-head img{display:block;max-width:min(58vw,220px);height:auto;max-height:54px;object-fit:contain}
 .site-head a:not(:has(img)){font-size:.9rem;color:#fff;font-weight:650}
 main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
@@ -37,9 +37,34 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 @media(max-width:400px){.cards{grid-template-columns:1fr}.tile{min-height:105px}.bottom-nav a{font-size:.72rem}}
 @media(min-width:800px){body{padding-bottom:0}.cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.bottom-nav{position:static;max-width:1080px;margin:0 auto 1rem;border:1px solid #c4d4db;border-radius:.9rem;box-shadow:none}.bottom-nav a{flex-direction:row;gap:.5rem}.hero{margin-top:1.2rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Cumulative dedicated navigation: accessible on demand; mobile bottom navigation stays primary. */
+.catalog-nav{flex-basis:100%;background:#e6f0f5;border-bottom:1px solid #c4d4db;padding:.35rem 1rem;color:#15354c}
+.catalog-nav>summary{font-weight:750;cursor:pointer;padding:.55rem .25rem;min-height:44px;list-style-position:inside}
+.catalog-nav .v1840-topnav{display:flex;flex-wrap:wrap;gap:.45rem;padding:.6rem 0 .9rem;align-items:flex-start}
+.catalog-nav .v1840-topnav>a,.catalog-nav .v1840-resource-menu{display:block;border:1px solid #d1e0e6;border-radius:.5rem;padding:.35rem .5rem;background:#fff}
+.catalog-nav .v1840-topnav a{font-size:.87rem}
+.catalog-nav .v1840-resource-menu{width:min(100%,340px)}
+.catalog-nav .v1840-resource-menu>summary{cursor:pointer;font-weight:650}
+.catalog-nav .v1840-resource-items{display:grid;gap:.4rem;padding:.65rem .1rem}
+.catalog-nav .v1850-nav-heading{font-size:.77rem;font-weight:750;color:#435e70}
 </style></head><body>
 <a class="skip" href="#main">Skip to learning options</a>
-<header class="site-head"><a href="/" aria-label="EnglishLegalese website home"><img src="/assets/englishlegalese-logo.png" alt="EnglishLegalese.com"></a><a href="/learn/install/">Install options</a></header>
+<header class="site-head"><a href="/" aria-label="EnglishLegalese website home"><img src="/assets/englishlegalese-logo.png" alt="EnglishLegalese.com"></a><a href="/learn/install/">Install options</a>
+<details class="catalog-nav"><summary>Full website navigation and all free tools</summary><nav class="v1840-topnav" aria-label="Main navigation"><a href="/learn/start/">Start</a><a href="/learn/courses/">Courses</a><a href="/learn/legal-english/">Legal English</a><a href="/learn/business-english/">Business English</a><details class="v1840-resource-menu"><summary>Free learning resources ▾</summary><nav class="v1840-resource-items" aria-label="Free Legal English and Business English tools"><span class="v1850-nav-heading">Explore both resource libraries</span><a href="/learn/legal-resources/">Legal English · all free tools</a><a href="/learn/business-resources/">Business English · all free tools</a><span class="v1850-nav-heading">14 Legal English tools</span><a href="/learn/free-writing-exercise/" data-v1840-current="free-writing-exercise">Free Legal English Writing Exercise</a>
+<a href="/learn/ai-draft-review/" data-v1840-current="ai-draft-review">Free AI Draft Review Lab</a>
+<a href="/learn/clause-reading/" data-v1840-current="clause-reading">Free Contract Clause Reading Lab</a>
+<a href="/learn/meeting-followup/" data-v1840-current="meeting-followup">Free Meeting Follow-up Lab</a>
+<a href="/learn/email-clarity/" data-v1840-current="email-clarity">Free Professional Email Clarity Lab</a>
+<a href="/learn/guided-practice/" data-v1840-current="guided-practice">Free Guided Legal English Practice Path</a>
+<a href="/learn/case-brief/" data-v1840-current="case-brief">Free Case Brief Reading Lab</a>
+<a href="/learn/legal-vocabulary/" data-v1840-current="legal-vocabulary">Legal English Vocabulary Guide</a>
+<a href="/learn/revision-studio/" data-v1840-current="revision-studio">Free Professional Revision Studio</a>
+<a href="/learn/professional-message/" data-v1840-current="professional-message">Free Professional Message Builder</a>
+<a href="/learn/listening-clarification/" data-v1840-current="listening-clarification">Free Listening & Clarification Lab</a>
+<a href="/learn/conversation-rehearsal/" data-v1840-current="conversation-rehearsal">Free Professional Conversation Rehearsal</a>
+<a href="/learn/reading-precision/" data-v1840-current="reading-precision">Free Reading Precision Lab</a>
+<a href="/learn/smartteacher-free-trial/" data-v1840-current="smartteacher-free-trial">Free SmartTeacher AI Trial</a><span class="v1850-nav-heading">8 Business English tools</span><a href="/learn/business-resources/business-email/">Email Writing</a><a href="/learn/business-resources/business-meetings/">Meetings</a><a href="/learn/business-resources/business-negotiations/">Negotiations</a><a href="/learn/business-resources/business-presentations/">Presentations</a><a href="/learn/business-resources/business-interviews/">Interviews</a><a href="/learn/business-resources/business-global/">Global Communication</a><a href="/learn/business-resources/investor-earnings/">Earnings Calls</a><a href="/learn/business-resources/investor-markets/">Markets</a></nav></details><details class="v1840-resource-menu"><summary>Teachers &amp; Classes ▾</summary><nav class="v1840-resource-items" aria-label="Teachers and live classroom programs"><a href="/learn/teachers/">Teachers</a><a href="/learn/teach-with-us/">Teach with us</a><a href="/learn/live-classes/">Class schedules</a><a href="/learn/classroom-programs/">16-session lesson plans</a><a href="/learn/enroll/">Enroll in a class</a><a href="/learn/employers/">Employer training</a><a href="/learn/study-planner/">Study planner</a><a href="/learn/language-support/">Languages</a><a href="/learn/trust/">Trust &amp; privacy</a><a href="/learn/smartteacher/">SmartTeacher AI</a></nav></details><a href="/pricing/">Pricing</a><a href="/learn/enroll/">Enroll</a><a href="/learn/account/">Account</a></nav></details></header>
 <main id="main">
 <section class="hero" aria-labelledby="mobile-title"><p class="eyebrow">Mobile learning | HF92 preview</p>
 <h1 id="mobile-title">Professional English, wherever you learn.</h1>
@@ -64,7 +89,7 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <a class="tile" href="/learn/trust/"><span class="symbol" aria-hidden="true">✓</span><strong>Privacy and trust</strong><span>Read how personal data and learning records are handled</span></a></div></section>
 <div class="notice" role="note"><p><strong>Connection needed:</strong> Classes, accounts and saved work require internet access. Offline mode shows only a generic connection message; no private learning data is cached.</p></div>
 <footer class="foot"><p>This is the browser-based mobile app experience. Native iOS and Android applications are in development; there is no App Store or Google Play release yet.</p>
-<p><a href="/">Full EnglishLegalese website</a> · <a href="/learn/trust/">Privacy and trust</a></p></footer>
+<p><a href="/">Full EnglishLegalese website</a> · <a href="/learn/business-english/">Business English</a> · <a href="/learn/trust/">Privacy and trust</a></p></footer>
 </main>
 <nav class="bottom-nav" aria-label="Mobile app sections"><a href="#learn"><span aria-hidden="true">▦</span>Learn</a><a href="#practice"><span aria-hidden="true">✎</span>Practice</a><a href="#classes"><span aria-hidden="true">◉</span>Classes</a><a href="#account"><span aria-hidden="true">◈</span>Account</a></nav>
 </body></html>
