@@ -77,6 +77,20 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 .hf93-model h4{margin:0 0 .35rem}
 .hf93-model p{margin:.35rem 0}
 .hf93-small{font-size:.85rem;color:#526879}
+/* HF94 optional audio: readable, accessible, and nonblocking when disabled. */
+.hf94-audio{padding:.9rem 1rem;background:#f3f8fc;border:1px solid #c2d9e6;border-radius:.7rem;margin:.8rem 0}
+.hf94-audio h3{font-size:1rem;margin:.1rem 0 .35rem}
+.hf94-audio p{margin:.4rem 0 .6rem}
+.hf94-audio-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem}
+.hf94-audio-actions label{font-weight:700;font-size:.88rem}
+.hf94-audio-actions select,.hf94-audio-actions button{font:inherit;border:1px solid #27708c;border-radius:.5rem;padding:.48rem .55rem;min-height:44px}
+.hf94-audio-actions select{background:#fff;color:#123e55}
+.hf94-audio-actions button{background:#155a72;color:#fff;font-weight:700;cursor:pointer}
+.hf94-audio-actions button:disabled{background:#e4eaf0;color:#536c7d;cursor:not-allowed}
+.hf94-audio-actions #hf94-audio-stop{background:#fff;color:#963e22;border-color:#b77054}
+.hf94-audio-actions #hf94-audio-stop:disabled{background:#e4eaf0;color:#536c7d}
+.hf94-audio-actions button:focus-visible,.hf94-audio-actions select:focus-visible{outline:3px solid #be8528;outline-offset:3px}
+@media(max-width:420px){.hf94-audio-actions button{flex:1 1 135px}}
 [hidden]{display:none!important}
 @media(max-width:420px){.hf93-controls button{flex:1 1 120px}.hf93-choice{display:block}.hf93-choice label{margin:.4rem 0}}
 </style></head><body>
@@ -97,7 +111,7 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <a href="/learn/reading-precision/" data-v1840-current="reading-precision">Free Reading Precision Lab</a>
 <a href="/learn/smartteacher-free-trial/" data-v1840-current="smartteacher-free-trial">Free SmartTeacher AI Trial</a><span class="v1850-nav-heading">8 Business English tools</span><a href="/learn/business-resources/business-email/">Email Writing</a><a href="/learn/business-resources/business-meetings/">Meetings</a><a href="/learn/business-resources/business-negotiations/">Negotiations</a><a href="/learn/business-resources/business-presentations/">Presentations</a><a href="/learn/business-resources/business-interviews/">Interviews</a><a href="/learn/business-resources/business-global/">Global Communication</a><a href="/learn/business-resources/investor-earnings/">Earnings Calls</a><a href="/learn/business-resources/investor-markets/">Markets</a></nav></details><details class="v1840-resource-menu"><summary>Teachers &amp; Classes ▾</summary><nav class="v1840-resource-items" aria-label="Teachers and live classroom programs"><a href="/learn/teachers/">Teachers</a><a href="/learn/teach-with-us/">Teach with us</a><a href="/learn/live-classes/">Class schedules</a><a href="/learn/classroom-programs/">16-session lesson plans</a><a href="/learn/enroll/">Enroll in a class</a><a href="/learn/employers/">Employer training</a><a href="/learn/study-planner/">Study planner</a><a href="/learn/language-support/">Languages</a><a href="/learn/trust/">Trust &amp; privacy</a><a href="/learn/smartteacher/">SmartTeacher AI</a></nav></details><a href="/pricing/">Pricing</a><a href="/learn/enroll/">Enroll</a><a href="/learn/account/">Account</a></nav></details></header>
 <main id="main">
-<section class="hero" aria-labelledby="mobile-title"><p class="eyebrow">Mobile learning | HF92 preview</p>
+<section class="hero" aria-labelledby="mobile-title"><p class="eyebrow">Mobile learning | HF94 development preview</p>
 <h1 id="mobile-title">Professional English, wherever you learn.</h1>
 <p>Build confidence in Legal English and Business English. Choose a lesson, try a free activity, or request teacher-led learning.</p>
 <a href="#learn">Explore learning options</a></section>
@@ -112,7 +126,7 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <a class="tile" href="/learn/business-resources/"><span class="symbol" aria-hidden="true">▦</span><strong>Business resources</strong><span>Explore practical workplace English</span></a></div></section>
 
 <section class="feature" id="hf93-conversation-lab" aria-labelledby="hf93-title">
- <p class="eyebrow" style="color:#14516c">Original free mobile lesson · HF93</p>
+ <p class="eyebrow" style="color:#14516c">Original free mobile lesson · HF94</p>
  <h2 id="hf93-title">Understand and say real professional English</h2>
  <p class="hf93-intro">Work through a short fictional professional conversation. First check what the speaker means, then rehearse a complete reply and use the language in a different situation. No sign-in, microphone, typed personal details, or payment.</p>
  <fieldset class="hf93-choice" id="hf93-tracks"><legend>Choose a professional context</legend>
@@ -120,6 +134,18 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
   <label><input type="radio" name="hf93-subject" value="business"> Business English</label>
  </fieldset>
  <div class="hf93-controls"><button type="button" id="hf93-start">Start conversation practice</button><button type="button" id="hf93-stop" class="hf93-stop" disabled>Stop</button><button type="button" id="hf93-restart" class="hf93-neutral">Restart</button></div>
+ <section id="hf94-audio" class="hf94-audio" aria-label="Optional listening and shadowing practice">
+  <h3>Listen, understand, then speak</h3>
+  <p>Listen to the fictional exchange and, once you understand it, hear the complete reply. Repeat aloud in your own voice. Audio is optional: all written exercises work without it.</p>
+  <div class="hf94-audio-actions"><label for="hf94-audio-rate">Playback speed</label><select id="hf94-audio-rate"><option value="slow">Slower (practice)</option><option value="normal">Normal</option></select>
+   <button id="hf94-audio-dialogue" type="button" disabled>Listen to exchange</button>
+   <button id="hf94-audio-model" type="button" disabled>Listen to model reply</button>
+   <button id="hf94-audio-transfer" type="button" disabled>Listen to new-context reply</button>
+   <button id="hf94-audio-stop" type="button" disabled>Stop audio</button>
+  </div>
+  <p class="hf93-small">Uses your browser or device voice when available; some system voices may use online services. This website does not listen to you, request microphone permission, record speech, or evaluate pronunciation.</p>
+  <p id="hf94-audio-status" class="hf93-small" role="status" aria-live="polite">Checking device voice availability. The written exercise is always available.</p>
+ </section>
  <div id="hf93-status" class="hf93-small" role="status" aria-live="polite">Choose a subject and select Start. Nothing is saved or sent.</div>
  <div id="hf93-case" class="hf93-case" hidden>
   <h3 id="hf93-case-title" tabindex="-1"></h3><p id="hf93-context"></p>
@@ -147,4 +173,5 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 </main>
 <nav class="bottom-nav" aria-label="Mobile app sections"><a href="#learn"><span aria-hidden="true">▦</span>Learn</a><a href="#practice"><span aria-hidden="true">✎</span>Practice</a><a href="#classes"><span aria-hidden="true">◉</span>Classes</a><a href="#account"><span aria-hidden="true">◈</span>Account</a></nav>
 <script src="/assets/hf93-mobile-conversations.js" defer></script>
+<script src="/assets/hf94-listen-shadow.js" defer></script>
 </body></html>
