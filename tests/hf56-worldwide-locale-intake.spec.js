@@ -10,7 +10,8 @@ for(const mode of [
  test('HF56 worldwide enrollment accepts '+mode.country+' inquiry with preferred language preserved',async({page})=>{
   const inbound=[],errors=[];
   page.on('pageerror',e=>errors.push(e.message));
-  await page.route('**/api/v1850/enroll',async route=>{
+  await page.route('**/api/v1850/intake-status?channel=enroll',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,ready:true,channel:'enroll',stripe_enabled:false})}));
+ await page.route('**/api/v1850/enroll',async route=>{
    inbound.push(JSON.parse(route.request().postData()||'{}'));
    await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,reference:'LOCAL-TEST-ONLY',received:true})});
   });
