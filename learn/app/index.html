@@ -100,6 +100,20 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 .hf96-meaning h5{font-size:1rem;margin:.15rem 0 .35rem;line-height:1.4}
 .hf96-meaning p{margin:.4rem 0 .65rem}
 .hf96-meaning-example{border-left:4px solid #137b69;background:#effaf3;color:#153b32;padding:.65rem .85rem;border-radius:.25rem;overflow-wrap:anywhere}
+/* HF97: private, ephemeral sentence-writing practice. All text remains in this tab. */
+.hf97-write{margin-top:1rem;padding:.8rem 0 0;border-top:1px solid #c5dce6}
+.hf97-write h5{margin:.15rem 0 .35rem;font-size:1rem}
+.hf97-write label{display:block;font-weight:700;margin:.55rem 0 .3rem}
+.hf97-write textarea{display:block;width:100%;min-height:6rem;resize:vertical;padding:.65rem .7rem;border:1px solid #7e9bab;border-radius:.5rem;background:#fff;color:#19374b;font:inherit;line-height:1.55}
+.hf97-write textarea:disabled{background:#eef2f5;color:#425d6d}
+.hf97-write textarea:focus-visible,.hf97-write button:focus-visible{outline:3px solid #b87819;outline-offset:3px}
+.hf97-write .hf97-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0}
+.hf97-write button{font:inherit;font-weight:700;min-height:44px;background:#155a72;border:1px solid #155a72;border-radius:.48rem;color:#fff;padding:.45rem .75rem;cursor:pointer}
+.hf97-write button:disabled{background:#e4eaf0;color:#536c7d;border-color:#b7c5cf;cursor:not-allowed}
+.hf97-write .hf97-clear{background:#fff;color:#814f2b;border-color:#af8060}
+.hf97-write [role=status]{font-size:.9rem;line-height:1.45}
+.hf97-write .hf97-review{background:#f1f8fa;border-left:4px solid #24738b;padding:.65rem .85rem;border-radius:.35rem}
+.hf97-write .hf97-review ul{margin:.3rem 0 .25rem;padding-left:1.35rem}
 [hidden]{display:none!important}
 @media(max-width:420px){.hf93-controls button{flex:1 1 120px}.hf93-choice{display:block}.hf93-choice label{margin:.4rem 0}}
 </style></head><body>
@@ -171,6 +185,19 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
     <div class="hf93-controls"><button type="button" id="hf96-meaning-reveal" class="hf93-neutral" aria-controls="hf96-meaning-example" disabled>Show sample meaning</button></div>
     <p id="hf96-meaning-status" class="hf93-small" role="status" aria-live="polite">Focus on a speaker turn to practise explaining its meaning.</p>
     <p id="hf96-meaning-example" class="hf96-meaning-example" lang="en-US" dir="ltr" hidden></p>
+   <section id="hf97-write" class="hf97-write" aria-labelledby="hf97-write-title">
+    <h5 id="hf97-write-title">Write your own complete English sentence</h5>
+    <p class="hf93-small">Optional private writing practice: explain this speaker's meaning in your own words. Your draft stays in this page and disappears when you change turns, stop, restart, or leave. It is never sent, saved, or automatically graded.</p>
+    <label for="hf97-draft">My meaning sentence (optional)</label>
+    <textarea id="hf97-draft" lang="en-US" dir="ltr" placeholder="First select a speaker turn. Then explain its meaning in your own full English sentence." maxlength="600" rows="3" autocomplete="off" spellcheck="false" disabled aria-describedby="hf97-draft-status"></textarea>
+    <p id="hf97-draft-status" role="status" aria-live="polite">Choose a speaker turn to begin writing. No draft is stored.</p>
+    <div class="hf97-actions"><button type="button" id="hf97-review" aria-controls="hf97-review-guide" disabled>Self-review my sentence</button><button type="button" id="hf97-clear" class="hf97-clear" disabled>Clear my sentence</button></div>
+    <div id="hf97-review-guide" class="hf97-review" hidden>
+     <p><strong>Three questions for your own review (not an automatic grade):</strong></p>
+     <ul><li>Did I write a complete English sentence with a clear subject and verb?</li><li>Did I keep the speaker's intended meaning, including any uncertainty or conditions?</li><li>Did I preserve who does what and any important time or deadline?</li></ul>
+     <p>After checking, compare your wording with <strong>Show sample meaning</strong> above. You can revise your own draft; no answer is uploaded.</p>
+    </div>
+   </section>
    </section>
   </section>
  </section>
@@ -203,4 +230,5 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <script src="/assets/hf93-mobile-conversations.js" defer></script>
 <script src="/assets/hf94-listen-shadow.js" defer></script>
 <script src="/assets/hf96-meaning-guide.js" defer></script>
+<script src="/assets/hf97-private-paraphrase.js" defer></script>
 </body></html>
