@@ -1,0 +1,55 @@
+'use strict';
+const {test,expect}=require('@playwright/test');
+// Honors the site's reduced-motion accessibility preference without changing app behavior.
+test.use({reducedMotion:'reduce'});
+test('HF97 learner writes private full English sentence, self-reviews, revises and clears without network writes',async({page})=>{
+ const effects=[];page.on('request',req=>{if(req.method()!=='GET'||req.url().includes('/api/'))effects.push(req.method()+' '+req.url())});
+ await page.goto('/learn/app/');
+ await expect(page.locator('#hf97-draft')).toBeDisabled();
+ await page.locator('#hf93-start').click();await page.locator('#hf95-turn-first').click();
+ await expect(page.locator('#hf97-draft')).toBeEnabled();
+ await expect(page.locator('#hf97-review')).toBeDisabled();
+ await page.locator('#hf97-draft').fill('The client asks whether it is necessary to sign today.');
+ await expect(page.locator('#hf97-review')).toBeEnabled();
+ await page.locator('#hf97-review').click();
+ await expect(page.locator('#hf97-review-guide')).toBeVisible();
+ await expect(page.locator('#hf96-meaning-example')).toBeHidden();
+ await page.locator('#hf96-meaning-reveal').click();
+ await expect(page.locator('#hf96-meaning-example')).toContainText('whether they must sign');
+ await page.locator('#hf97-draft').fill('The client wants to learn whether signing is required today.');
+ await expect(page.locator('#hf97-review-guide')).toBeHidden();
+ await page.locator('#hf97-clear').click();
+ await expect(page.locator('#hf97-draft')).toHaveValue('');
+ await expect(page.locator('#hf97-clear')).toBeDisabled();
+ expect(effects).toEqual([]);
+});
+test('HF97 draft is erased on a new speaker, a new case, STOP, and restart',async({page})=>{
+ await page.goto('/learn/app/');
+ await page.locator('#hf93-start').click();await page.locator('#hf95-turn-first').click();
+ await page.locator('#hf97-draft').fill('First private full-sentence interpretation.');
+ await page.locator('#hf95-turn-next').click();
+ await expect(page.locator('#hf97-draft')).toHaveValue('');
+ await page.locator('#hf97-draft').fill('Second private full-sentence interpretation.');
+ await page.locator('#hf93-stop').click();
+ await expect(page.locator('#hf97-draft')).toBeDisabled();
+ await expect(page.locator('#hf97-draft')).toHaveValue('');
+ await page.locator('#hf93-restart').click();
+ await page.locator('input[name="hf93-subject"][value="business"]').check();
+ await page.locator('#hf93-start').click();await page.locator('#hf95-turn-first').click();
+ await expect(page.locator('#hf97-draft')).toBeEnabled();
+ await page.locator('#hf97-draft').fill('My confidential draft remains only in page memory.');
+ await page.evaluate(()=>window.dispatchEvent(new Event('pagehide')));
+ await expect(page.locator('#hf97-draft')).toHaveValue('');
+ await expect(page.locator('#hf97-review-guide')).toBeHidden();
+});
+test('HF97 keeps optional writing usable on a device with no speech engine or network',async({page})=>{
+ const posts=[];page.on('request',req=>{if(req.method()!=='GET')posts.push(req.method())});
+ await page.addInitScript(()=>{Object.defineProperty(window,'speechSynthesis',{configurable:true,value:undefined});Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:undefined});});
+ await page.goto('/learn/app/');await page.locator('#hf93-start').click();await page.locator('#hf95-turn-first').click();
+ await expect(page.locator('#hf95-turn-listen')).toBeDisabled();
+ await page.locator('#hf97-draft').fill('A natural complete sentence in English.');
+ await page.locator('#hf97-review').click();await expect(page.locator('#hf97-review-guide')).toContainText('not an automatic grade');
+ await page.locator('#hf96-meaning-reveal').click();await expect(page.locator('#hf96-meaning-example')).toBeVisible();
+ const widths=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:innerWidth}));
+ expect(widths.scroll).toBeLessThanOrEqual(widths.viewport+1);expect(posts).toEqual([]);
+});

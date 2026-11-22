@@ -1,0 +1,64 @@
+{
+  "release": "HF98",
+  "status": "ENGLISH_ONLY_UNREVIEWED_SOURCE_STRING_INVENTORY",
+  "owner": "TR-EnglishLegaleseWebsite",
+  "locale_targets": [
+    "en-US",
+    "th-TH",
+    "vi-VN",
+    "zh-Hans-CN",
+    "zh-Hant-HK",
+    "zh-Hant-TW",
+    "ja-JP",
+    "ko-KR",
+    "id-ID",
+    "ms-MY",
+    "es",
+    "pt-BR",
+    "ar"
+  ],
+  "public_locale_implementations_added": [],
+  "native_human_reviews_completed": [],
+  "ai_voice_locale_activation": [],
+  "market_approvals": [],
+  "source_paths": [
+    "learn/app/index.html",
+    "learn/teachers/index.html",
+    "assets/hf98-conversation-followup.js"
+  ],
+  "new_module_authorized_case_count": 6,
+  "new_module_fields": [
+    "title",
+    "source",
+    "question",
+    "model",
+    "note"
+  ],
+  "ui_source_labels": [
+    "New information: continue the conversation",
+    "My complete professional reply (optional)",
+    "Self-review my reply",
+    "Show a possible full reply",
+    "Clear my reply",
+    "Teacher identities and permissions: who is actually teaching?",
+    "Human Teacher Roger",
+    "AI Teacher Roger",
+    "Owner/Admin"
+  ],
+  "dynamic_text_candidates": [
+    "follow-up wait/unlock status",
+    "new context confirmation",
+    "draft-length status",
+    "self-review guide status",
+    "model reveal status",
+    "Stop/Restart erase status",
+    "pagehide erase status"
+  ],
+  "rtl_bidirectional_qa_pending": true,
+  "Chinese_market_distinctions_retained": true,
+  "original_free_guest_policy_retained": true,
+  "actual_AI_Teacher_Roger_connected": false,
+  "real_owner_admin_role_changes": false,
+  "legal_advice": false,
+  "purpose": "Track new source strings, not claim translated or public 13-locale coverage."
+}
