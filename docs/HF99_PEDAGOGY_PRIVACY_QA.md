@@ -23,3 +23,5 @@
 
 ## Durable release and roles
 Original owner RDR-001, RDR-002, EL-RGR-020 unchanged. Human Teacher Roger is the human live teacher; AI Teacher Roger is the authorized separate clone, absent from this scripted lab; Owner/Admin has independent authenticated privileges and no blanket teacher/AI delegation. Native language review remains pending; 13 frozen market language targets are NOT declared live. No sibling project or production change.
+
+**Canonical owner release continuity:** `governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md` is preserved byte-for-byte. The original EL-RGR-020 automatic qualified-release rule remains valid only after all inherited gates pass; no new owner approval is invented.
