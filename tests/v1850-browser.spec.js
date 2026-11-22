@@ -53,6 +53,7 @@ test('v1.85 Business English is independently accessible from header/footer of l
 });
 
 test('v1.85 enrollment submits a valid intake request without payment',async({page})=>{
+ await page.route('**/api/v1850/intake-status?channel=enroll',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,ready:true,channel:'enroll',stripe_enabled:false})}));
  await page.route('**/api/v1850/enroll',route=>route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,received:true,reference:'TEST-RECEIVED-ONLY'})}));
  await page.goto('/learn/enroll/');await page.locator('#v1850-enroll-form input[name="full_name"]').fill('Fictional Learner');
  await page.locator('#v1850-enroll-form input[name="email"]').fill('example@example.net');
@@ -63,6 +64,7 @@ test('v1.85 enrollment submits a valid intake request without payment',async({pa
  await expect(page.locator('#v1850-enrollment-app')).toContainText('No payment was taken');
 });
 test('v1.85 teacher application submits for staffing review',async({page})=>{
+ await page.route('**/api/v1850/intake-status?channel=teacher',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,ready:true,channel:'teacher',stripe_enabled:false})}));
  await page.route('**/api/v1850/teacher-applications',route=>route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,received:true,reference:'TEACHER-TEST-ONLY'})}));
  await page.goto('/learn/teach-with-us/');await page.locator('#v1850-staff-form input[name="full_name"]').fill('Fictional Teacher');
  await page.locator('#v1850-staff-form input[name="email"]').fill('teacher@example.net');
