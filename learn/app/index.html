@@ -114,6 +114,26 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 .hf97-write [role=status]{font-size:.9rem;line-height:1.45}
 .hf97-write .hf97-review{background:#f1f8fa;border-left:4px solid #24738b;padding:.65rem .85rem;border-radius:.35rem}
 .hf97-write .hf97-review ul{margin:.3rem 0 .25rem;padding-left:1.35rem}
+
+/* HF98: an actual second role-play round, source-bound, ephemeral and honest. */
+.hf98-challenge{margin:1rem 0 .25rem;padding:.95rem;background:#fff;border:1px solid #abcbd8;border-radius:.65rem}
+.hf98-challenge h5{font-size:1.03rem;line-height:1.35;margin:.1rem 0 .5rem}
+.hf98-challenge label{display:block;font-weight:700;margin:.6rem 0 .35rem}
+.hf98-challenge textarea{width:100%;min-height:6.1rem;display:block;resize:vertical;border:1px solid #7896a7;border-radius:.48rem;font:inherit;padding:.65rem;color:#17364c;line-height:1.5}
+.hf98-challenge textarea:focus-visible,.hf98-challenge button:focus-visible{outline:3px solid #b27b26;outline-offset:3px}
+.hf98-challenge button{min-height:44px;background:#155a72;border:1px solid #155a72;color:#fff;border-radius:.5rem;font:inherit;font-weight:700;cursor:pointer;padding:.45rem .85rem}
+.hf98-challenge button:disabled{background:#e4eaf0;color:#536c7d;border-color:#b7c5cf;cursor:not-allowed}
+.hf98-challenge button.hf98-clear{background:#fff;color:#844923;border-color:#a97958}
+.hf98-challenge .hf98-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0}
+.hf98-challenge .hf98-prompt{background:#eaf4f9;border-left:4px solid #236d8d;padding:.75rem;border-radius:.25rem}
+.hf98-challenge .hf98-model{background:#effaf3;border-left:4px solid #148064;padding:.65rem .8rem;border-radius:.3rem;overflow-wrap:anywhere}
+.hf98-challenge .hf98-review{background:#f1f7fa;padding:.7rem;border-radius:.35rem}
+.hf98-identity{margin:.85rem 0;padding:.8rem;background:#eef6fa;border:1px solid #bbd3df;border-radius:.6rem}
+.hf98-identity summary{font-weight:750;min-height:44px;cursor:pointer}
+.hf98-identity dt{font-weight:750;margin-top:.7rem}
+.hf98-identity dd{margin:.15rem 0 .6rem;color:#36546a}
+@media(max-width:420px){.hf98-challenge .hf98-actions button{flex:1 1 100%}}
+
 [hidden]{display:none!important}
 @media(max-width:420px){.hf93-controls button{flex:1 1 120px}.hf93-choice{display:block}.hf93-choice label{margin:.4rem 0}}
 </style></head><body>
@@ -134,7 +154,7 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <a href="/learn/reading-precision/" data-v1840-current="reading-precision">Free Reading Precision Lab</a>
 <a href="/learn/smartteacher-free-trial/" data-v1840-current="smartteacher-free-trial">Free SmartTeacher AI Trial</a><span class="v1850-nav-heading">8 Business English tools</span><a href="/learn/business-resources/business-email/">Email Writing</a><a href="/learn/business-resources/business-meetings/">Meetings</a><a href="/learn/business-resources/business-negotiations/">Negotiations</a><a href="/learn/business-resources/business-presentations/">Presentations</a><a href="/learn/business-resources/business-interviews/">Interviews</a><a href="/learn/business-resources/business-global/">Global Communication</a><a href="/learn/business-resources/investor-earnings/">Earnings Calls</a><a href="/learn/business-resources/investor-markets/">Markets</a></nav></details><details class="v1840-resource-menu"><summary>Teachers &amp; Classes ▾</summary><nav class="v1840-resource-items" aria-label="Teachers and live classroom programs"><a href="/learn/teachers/">Teachers</a><a href="/learn/teach-with-us/">Teach with us</a><a href="/learn/live-classes/">Class schedules</a><a href="/learn/classroom-programs/">16-session lesson plans</a><a href="/learn/enroll/">Enroll in a class</a><a href="/learn/employers/">Employer training</a><a href="/learn/study-planner/">Study planner</a><a href="/learn/language-support/">Languages</a><a href="/learn/trust/">Trust &amp; privacy</a><a href="/learn/smartteacher/">SmartTeacher AI</a></nav></details><a href="/pricing/">Pricing</a><a href="/learn/enroll/">Enroll</a><a href="/learn/account/">Account</a></nav></details></header>
 <main id="main">
-<section class="hero" aria-labelledby="mobile-title"><p class="eyebrow">Mobile learning | HF95 development preview</p>
+<section class="hero" aria-labelledby="mobile-title"><p class="eyebrow">Mobile learning | HF98 development preview</p>
 <h1 id="mobile-title">Professional English, wherever you learn.</h1>
 <p>Build confidence in Legal English and Business English. Choose a lesson, try a free activity, or request teacher-led learning.</p>
 <a href="#learn">Explore learning options</a></section>
@@ -149,7 +169,7 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <a class="tile" href="/learn/business-resources/"><span class="symbol" aria-hidden="true">▦</span><strong>Business resources</strong><span>Explore practical workplace English</span></a></div></section>
 
 <section class="feature" id="hf93-conversation-lab" aria-labelledby="hf93-title">
- <p class="eyebrow" style="color:#14516c">Original free mobile lesson · HF96</p>
+ <p class="eyebrow" style="color:#14516c">Original free mobile lesson · HF98</p>
  <h2 id="hf93-title">Understand and say real professional English</h2>
  <p class="hf93-intro">Work through a short fictional professional conversation. First check what the speaker means, then rehearse a complete reply and use the language in a different situation. No sign-in, microphone, typed personal details, or payment.</p>
  <fieldset class="hf93-choice" id="hf93-tracks"><legend>Choose a professional context</legend>
@@ -208,13 +228,30 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
   <fieldset id="hf93-question"><legend id="hf93-question-text"></legend><div class="hf93-answers" id="hf93-answers"></div></fieldset>
   <div id="hf93-feedback" class="hf93-feedback" role="status" aria-live="polite"></div>
   <div id="hf93-speak" class="hf93-model" hidden><h4>Say a complete reply aloud</h4><p id="hf93-speak-prompt"></p><p><strong>A natural model reply:</strong> <span id="hf93-speak-model"></span></p><p class="hf93-small">Practice speaking with your own voice. This page cannot hear, record, or assess pronunciation.</p><div class="hf93-controls"><button type="button" id="hf93-to-transfer">Continue to a different situation</button></div></div>
-  <div id="hf93-transfer" class="hf93-model" hidden><h4>Transfer to a new situation</h4><p id="hf93-transfer-prompt"></p><div class="hf93-controls"><button type="button" id="hf93-reveal" class="hf93-neutral">Show a possible complete reply</button></div><p id="hf93-transfer-answer" hidden></p><div class="hf93-controls"><button type="button" id="hf93-next" disabled>Next conversation</button></div></div>
+  <div id="hf93-transfer" class="hf93-model" hidden><h4>Transfer to a new situation</h4><p id="hf93-transfer-prompt"></p><div class="hf93-controls"><button type="button" id="hf93-reveal" class="hf93-neutral">Show a possible complete reply</button></div><p id="hf93-transfer-answer" hidden></p><div class="hf93-controls"><button type="button" id="hf93-next" disabled>Next conversation</button></div>
+  <section id="hf98-challenge" class="hf98-challenge" aria-labelledby="hf98-title" hidden>
+   <h5 id="hf98-title">New information: continue the conversation</h5>
+   <p class="hf93-small">A fictional client or colleague asks one more question. Answer in a <strong>complete natural English sentence</strong> before revealing an authored example. This is a scripted self-study exercise, not a live class with Human Teacher Roger or a session with AI Teacher Roger.</p>
+   <p id="hf98-question" class="hf98-prompt" lang="en-US" dir="ltr"></p>
+   <label for="hf98-draft">My complete professional reply (optional)</label>
+   <textarea id="hf98-draft" lang="en-US" dir="ltr" maxlength="550" rows="3" autocomplete="off" spellcheck="false" disabled placeholder="Write a clear, courteous, complete sentence. Avoid real client or employer details." aria-describedby="hf98-status"></textarea>
+   <p id="hf98-status" class="hf93-small" role="status" aria-live="polite">Complete the earlier transfer step to unlock this follow-up. No response is recorded or saved.</p>
+   <div class="hf98-actions"><button type="button" id="hf98-self-review" aria-controls="hf98-review-guide" disabled>Self-review my reply</button><button type="button" id="hf98-show-model" aria-controls="hf98-model" disabled>Show a possible full reply</button><button type="button" id="hf98-clear" class="hf98-clear" disabled>Clear my reply</button></div>
+   <div id="hf98-review-guide" class="hf98-review" hidden><p><strong>Review your own writing, not an automated grade:</strong></p><ul><li>Does my answer have a clear subject and verb?</li><li>Does it directly respond to the new question without pretending a condition, deadline or outcome is certain?</li><li>Have I kept the tone professional and explained the next action clearly?</li></ul></div>
+   <div id="hf98-model" class="hf98-model" lang="en-US" dir="ltr" hidden><strong>One possible reply:</strong> <span id="hf98-model-text"></span><p class="hf93-small" id="hf98-coaching-note"></p></div>
+   <p class="hf93-small">Drafts exist only on this page and clear on a new case, subject, Stop, Restart or leaving this page. No microphone, AI grading, server submission or new account is used.</p>
+  </section></div>
  </div>
  <p class="hf93-small">These fictional adult examples teach communication, not legal or investment advice. A correct multiple-choice answer checks reading comprehension only; it does not certify speaking ability.</p>
  <noscript><p>JavaScript is required for the interactive steps. The existing free conversation resources remain available: <a href="/learn/conversation-rehearsal/">Professional Conversation Rehearsal</a>.</p></noscript>
 </section>
 
 <section class="feature" id="classes" aria-labelledby="classes-title"><h2 id="classes-title">Learn with a teacher</h2><p>Explore teaching options and request information. An inquiry does not reserve a class or make a payment.</p>
+<details id="hf98-identity" class="hf98-identity"><summary>Teacher identities and permissions: who is actually teaching?</summary>
+ <dl><dt>Human Teacher Roger</dt><dd>Roger Gillman personally teaching a live classroom or online lesson. This self-study page is not a booked live class.</dd>
+ <dt>AI Teacher Roger</dt><dd>Roger Gillman's authorized AI clone developed by TR-CloneFusion. It is <strong>not connected to this scripted practice</strong>; generic browser voice playback is not AI Teacher Roger.</dd>
+ <dt>Owner/Admin</dt><dd>A separate authenticated administrative role held by Roger Gillman, not a student-facing teacher mode. Human instruction and the AI clone never automatically grant administrator privileges or access to private learner records.</dd></dl>
+ <p class="hf93-small">Availability, access and permissions must be independently verified. An inquiry does not reserve instruction.</p></details>
 <div class="cards"><a class="tile" href="/learn/teachers/"><span class="symbol" aria-hidden="true">♧</span><strong>Meet the teachers</strong><span>Learn about teacher-led instruction</span></a>
 <a class="tile" href="/learn/enroll/"><span class="symbol" aria-hidden="true">✉</span><strong>Request enrollment</strong><span>Availability is checked before information is sent</span></a>
 <a class="tile" href="/pricing/"><span class="symbol" aria-hidden="true">◇</span><strong>Pricing</strong><span>Compare packages and published terms</span></a></div></section>
@@ -231,4 +268,5 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <script src="/assets/hf94-listen-shadow.js" defer></script>
 <script src="/assets/hf96-meaning-guide.js" defer></script>
 <script src="/assets/hf97-private-paraphrase.js" defer></script>
+<script src="/assets/hf98-conversation-followup.js" defer></script>
 </body></html>
