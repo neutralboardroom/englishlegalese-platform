@@ -24,5 +24,6 @@ for(const p of ['--project=desktop-chromium','--project=tablet-chromium','--proj
 ok(!/--grep(-invert)?\b|--last-failed|--retries\b|--max-failures\b/.test(workflow.slice(workflow.indexOf('HF97:'))),'No bypass, last-failed-only or retry gate');
 const ids=JSON.parse(read('docs/HF96_LOCALE_READINESS_INVENTORY.json')).frozen_target_locales;
 ok(JSON.stringify(ids)===JSON.stringify(['en-US','th-TH','vi-VN','zh-Hans-CN','zh-Hant-HK','zh-Hant-TW','ja-JP','ko-KR','id-ID','ms-MY','es','pt-BR','ar']),'Exactly 13 frozen target locale IDs');
+for(const filename of ['HF97_RELEASE_NOTES.md','docs/HF97_WEBKIT_CI_AND_WRITING_QA.md'])ok(read(filename).includes('governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md'),'Newest HF97 release references exact original no-drift contract in '+filename);
 ok(!read('sw.js').includes('hf97-private-paraphrase'),'Original PWA private caching untouched');
 console.log('HF97 private written English self-review and WebKit no-dilution gates: '+count+' PASS');

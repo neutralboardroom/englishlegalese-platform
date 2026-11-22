@@ -10,3 +10,5 @@ The actual HF96 GitHub full run had 1,383 passing and **five tablet-WebKit timeo
 
 ## Compatibility and honest limitations
 Full original EnglishLegalese Legal/Business teaching, mobile exercise, authored meaning examples, previous optional TTS/text-only mode, all original free resources and privacy/account/payment guards preserved. Frozen exact 13-locale target list still unreviewed; no public Arabic or Chinese claims. Live EnglishLegalese/Render remains HF53; actual PWA/Neon/Android/iOS not modified. Release requires original double-storage recovery, physical device/browser QA, professional native review, independent ACK and real deployment/restore evidence. No cleanup or destructive overwrite.
+
+**Original qualified-release continuity contract:** `governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md`. Read this exact original alongside EL-RGR-020. Do not change either.

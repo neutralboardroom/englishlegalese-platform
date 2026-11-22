@@ -23,3 +23,5 @@ HF97 changes both independent `.github/workflows/englishlegalese-release-gate.ym
 3. Physical iPhone Safari, Android Chrome and optional device audio testing, including actual mobile focus, STOP, route change and offline fallback; simulated Chromium does **not** replace this.
 4. Native-language/professional content review for any claimed localized Legal/Business English UI, real Render/Neon security and restore, and verified independent owner/provider/ControlCenter acknowledgments where originally required.
 5. Keep PR draft, no merging or production deployment until all original EL-RGR-020 conditions verifiably pass. Production main HF53 remains unchanged and all rollback artifacts preserved.
+
+**Original qualified-release continuity contract:** `governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md`. Read this exact original alongside EL-RGR-020. Do not change either.
