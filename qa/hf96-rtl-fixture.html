@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HF96 development-only RTL and mixed-script QA fixture</title>
+<style>
+:root{font:16px/1.6 system-ui,sans-serif;color:#152f41;background:#f5f8fa}
+body{margin:0 auto;max-width:880px;padding:1rem}
+section{padding:1rem;margin:1rem 0;border:1px solid #bdcfdb;border-radius:.7rem;background:white}
+[dir=rtl]{text-align:start}
+.ltr{direction:ltr;unicode-bidi:isolate;text-align:start;background:#e5f3fa;padding:.65rem;overflow-wrap:anywhere}
+label,input,button{font:inherit;display:block;max-width:100%}
+input{padding:.55rem;width:100%;max-width:25rem;min-height:44px}
+button{margin-top:.5rem;min-height:44px;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid #a56916;outline-offset:3px}
+code{overflow-wrap:anywhere}
+</style></head><body>
+<header><h1>HF96 development-only mixed-script fixture</h1><p><strong>NOT A PUBLIC TRANSLATION OR LIVE PRODUCT.</strong> Illustrative RTL direction test only; requires independent native-language and accessibility review before any localized launch.</p></header>
+<section lang="ar" dir="rtl" aria-label="RTL technical sample, not a reviewed translation"><h2>العربية</h2><p>RTL text test: <bdi dir="auto">العربية</bdi>. Mixed numbers: <bdi dir="ltr">123 / 2026-11-22</bdi>.</p>
+<p class="ltr" lang="en-US" dir="ltr">English lesson sentence: We can send the draft by Wednesday, but the reviewed report is due Friday.</p>
+<label for="practice">English practice response (no submission)</label><input id="practice" type="text" lang="en-US" dir="ltr" autocomplete="off" placeholder="No data is saved or submitted"><button type="button" onclick="this.textContent='Local focus-only example; no grading'">Local-only sample control</button>
+<p>Example URL: <bdi dir="ltr"><code>https://englishlegalese.com/learn/app/</code></bdi></p></section>
+<section><h2>QA reminder</h2><p>No real market eligibility, provider voice, payment, pronunciation, or reviewed professional translation follows from correctly displayed RTL text. English teaching remains LTR and full sentence.</p></section>
+</body></html>
