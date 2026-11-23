@@ -53,7 +53,8 @@ test('Three scenario-specific knowledge checks grade locally, and draft disappea
  await expect(c.locator('.v1880-progress')).toContainText('0 of 3');
 });
 test('Subject-specific group requests allow one/four lesson options without misrepresenting confirmed bookings',async({page})=>{
- let submitted=null;await page.route('**/api/v1850/enroll',route=>{submitted=route.request().postDataJSON();return route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,received:true,reference:'TOPIC-TEST-ONLY'})})});
+ let submitted=null;await page.route('**/api/v1850/intake-status?channel=enroll',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,ready:true,channel:'enroll',stripe_enabled:false})}));
+ await page.route('**/api/v1850/enroll',route=>{submitted=route.request().postDataJSON();return route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,received:true,reference:'TOPIC-TEST-ONLY'})})});
  await page.goto('/learn/enroll/');
  await expect(page.locator('.v1870-topic-enrollment')).toContainText('24 Legal English');
  const form=page.locator('#v1850-enroll-form');

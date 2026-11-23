@@ -1,0 +1,15 @@
+# EnglishLegalese HF102 R2 — Single-File Offline Pocket Lab
+
+**Status:** Complete local development candidate, not authorized for merge/deployment.
+
+**Exactly grounded predecessor:** HF101 R1 / Builder V6.1, Git commit `d325a987c174251e7798a52980b92fe0efe71ac4`. Separate unmerged draft PR #148; preserve entire 973-file original, all prior teaching modules, the original owner release policy and rollback history.
+
+**Educational improvement:** Original offline-ready HTML file `assets/EnglishLegalese_Offline_Pocket_Lab_HF102.html` embeds all written teaching material, CSS and program logic in 1 file; downloadable from the mobile learning page with a real `download` attribute. Learners save it while online and can then practice six authentic fictional professional English scenarios without internet, paid accounts, database, OpenAI, speech synthesis, mic, asset request, or service worker. Three stages per case: read and interpret dialogue, choose one truthful clarifying question, and privately speak/write a careful note with self-review and a model. The source is English-only. No account/PWA offline guarantee or credential claim.
+
+**Security:** All optional text stays in transient page memory and clears on explicit clear, subject/case change, restart, pagehide, unload. No storage/cookies, networking, clipboard, analytics, user input uploads, remote references or permissions. Inline CSP `connect-src 'none'; form-action 'none'`. Download does not alter account/private caching or service worker. Original owner policies RDR-001/RDR-002/EL-RGR-020 unchanged. Original three-role identity separation and 13-locale freeze unchanged.
+
+**Testing:** Complete original standalone HTML inserted into Chromium at four screen widths x six complete cases PASS; direct `file://` navigation locally blocked by administrator, not falsely reported as a pass. Separate Playwright `file://` tests added for the GitHub runner, plus source static checks and inherited HF101/HF100/HF99/... gates. Exact-head dual GitHub CI with isolated WebKit and actual physical-device trials remain independent mandatory release requirements. Source, cumulative Builder PDF, manifests, recovery notes and postbuild receipt are versioned independently.
+
+## R2 no-drift correction
+
+HF102 R1 original GitHub release run failed because the new `learn/offline-practice/index.html` was correctly subject to the permanent V1.85 dedicated-navigation validator. R2 moves exactly the same offline content into a public `assets/EnglishLegalese_Offline_Pocket_Lab_HF102.html` file and updates its link/test/reference without modifying or bypassing that validator. This standalone file remains self-contained. All original 979-source-file counts remain unchanged. Retest entire exact-head run.
