@@ -157,6 +157,31 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 .hf99-sample{background:#eff9f1;border-left-color:#197c69;overflow-wrap:anywhere}
 @media(max-width:420px){.hf99-actions button{flex:1 1 100%}}
 
+
+/* HF100: source-bound professional confirmation note, private in-page writing. */
+.hf100-note{margin-top:1rem;padding:clamp(.85rem,3vw,1.2rem);background:#f6fafc;border:1px solid #a8cbd8;border-radius:.75rem}
+.hf100-note h5{font-size:1.1rem;margin:.1rem 0 .6rem;line-height:1.4}
+.hf100-flawed{background:#fff0e5;border-left:4px solid #ab6335;padding:.8rem .9rem;border-radius:.3rem;overflow-wrap:anywhere;white-space:pre-wrap}
+.hf100-choices{display:grid;gap:.55rem;margin:.7rem 0}
+.hf100-choice{font:inherit;display:block;text-align:left;min-height:48px;background:#fff;color:#163a50;border:1px solid #a0b9c8;border-radius:.5rem;padding:.7rem .8rem;cursor:pointer;overflow-wrap:anywhere}
+.hf100-choice[aria-pressed=true]{border:3px solid #167861;background:#ebf8f2;padding:calc(.7rem - 2px) calc(.8rem - 2px)}
+.hf100-choice:disabled{cursor:default}
+.hf100-note label{display:block;font-weight:750;margin:.8rem 0 .25rem}
+.hf100-note input,.hf100-note textarea{display:block;width:100%;font:inherit;color:#12394d;background:#fff;border:1px solid #809eae;border-radius:.5rem;padding:.6rem .7rem;line-height:1.55}
+.hf100-note textarea{min-height:7rem;resize:vertical}
+.hf100-note input:disabled,.hf100-note textarea:disabled{color:#516c7b;background:#edf2f4}
+.hf100-note :is(button,input,textarea):focus-visible{outline:3px solid #b77926;outline-offset:3px}
+.hf100-buttons{display:flex;flex-wrap:wrap;gap:.55rem;margin:.75rem 0}
+.hf100-buttons button{min-height:44px;font:inherit;cursor:pointer;background:#145770;color:#fff;border:1px solid #145770;border-radius:.5rem;padding:.55rem .8rem;font-weight:750}
+.hf100-buttons button:disabled{background:#d3dce1;border-color:#b6c5ce;color:#536a79;cursor:not-allowed}
+.hf100-buttons .hf100-clear{background:#fff;border-color:#aa6c4f;color:#87381f}
+.hf100-feedback,.hf100-review,.hf100-model{padding:.75rem .85rem;border-radius:.4rem;margin:.7rem 0;border-left:4px solid #21758b;background:#ecf6f9;overflow-wrap:anywhere}
+.hf100-feedback:empty{display:none}
+.hf100-model{background:#effaf2;border-left-color:#168060}
+.hf100-model p{margin:.35rem 0;white-space:pre-wrap}
+.hf100-review ul{margin:.4rem 0;padding-left:1.35rem}
+@media(max-width:420px){.hf100-buttons button{flex:1 1 100%}}
+
 [hidden]{display:none!important}
 @media(max-width:420px){.hf93-controls button{flex:1 1 120px}.hf93-choice{display:block}.hf93-choice label{margin:.4rem 0}}
 </style></head><body>
@@ -176,8 +201,9 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <a href="/learn/conversation-rehearsal/" data-v1840-current="conversation-rehearsal">Free Professional Conversation Rehearsal</a>
 <a href="/learn/reading-precision/" data-v1840-current="reading-precision">Free Reading Precision Lab</a>
 <a href="/learn/smartteacher-free-trial/" data-v1840-current="smartteacher-free-trial">Free SmartTeacher AI Trial</a><span class="v1850-nav-heading">8 Business English tools</span><a href="/learn/business-resources/business-email/">Email Writing</a><a href="/learn/business-resources/business-meetings/">Meetings</a><a href="/learn/business-resources/business-negotiations/">Negotiations</a><a href="/learn/business-resources/business-presentations/">Presentations</a><a href="/learn/business-resources/business-interviews/">Interviews</a><a href="/learn/business-resources/business-global/">Global Communication</a><a href="/learn/business-resources/investor-earnings/">Earnings Calls</a><a href="/learn/business-resources/investor-markets/">Markets</a></nav></details><details class="v1840-resource-menu"><summary>Teachers &amp; Classes ▾</summary><nav class="v1840-resource-items" aria-label="Teachers and live classroom programs"><a href="/learn/teachers/">Teachers</a><a href="/learn/teach-with-us/">Teach with us</a><a href="/learn/live-classes/">Class schedules</a><a href="/learn/classroom-programs/">16-session lesson plans</a><a href="/learn/enroll/">Enroll in a class</a><a href="/learn/employers/">Employer training</a><a href="/learn/study-planner/">Study planner</a><a href="/learn/language-support/">Languages</a><a href="/learn/trust/">Trust &amp; privacy</a><a href="/learn/smartteacher/">SmartTeacher AI</a></nav></details><a href="/pricing/">Pricing</a><a href="/learn/enroll/">Enroll</a><a href="/learn/account/">Account</a></nav></details></header>
+<!-- HF99 development preview: preserved original predecessor baseline; HF100 is the current development draft. -->
 <main id="main">
-<section class="hero" aria-labelledby="mobile-title"><p class="eyebrow">Mobile learning | HF99 development preview</p>
+<section class="hero" aria-labelledby="mobile-title"><p class="eyebrow">Mobile learning | HF100 development preview</p>
 <h1 id="mobile-title">Professional English, wherever you learn.</h1>
 <p>Build confidence in Legal English and Business English. Choose a lesson, try a free activity, or request teacher-led learning.</p>
 <a href="#learn">Explore learning options</a></section>
@@ -192,7 +218,7 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <a class="tile" href="/learn/business-resources/"><span class="symbol" aria-hidden="true">▦</span><strong>Business resources</strong><span>Explore practical workplace English</span></a></div></section>
 
 <section class="feature" id="hf93-conversation-lab" aria-labelledby="hf93-title">
- <p class="eyebrow" style="color:#14516c">Original free mobile lesson · HF99</p>
+ <p class="eyebrow" style="color:#14516c">Original free mobile lesson · HF100</p>
  <h2 id="hf93-title">Understand and say real professional English</h2>
  <p class="hf93-intro">Work through a short fictional professional conversation. First check what the speaker means, then rehearse a complete reply and use the language in a different situation. No sign-in, microphone, typed personal details, or payment.</p>
  <fieldset class="hf93-choice" id="hf93-tracks"><legend>Choose a professional context</legend>
@@ -278,9 +304,32 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
     <div id="hf99-check-guide" class="hf99-guide" hidden><strong>My own three-question review (not an automated grade)</strong><ul><li>Did I state a specific next action in a complete English sentence?</li><li>Did I preserve the correct owner, timing, scope and any conditions?</li><li>Is my request polite and clear without promising an unconfirmed outcome?</li></ul></div>
     <div id="hf99-sample" class="hf99-sample" hidden><strong>One possible next-action sentence:</strong> <span id="hf99-sample-text" lang="en-US" dir="ltr"></span><p class="hf93-small" id="hf99-coaching"></p></div>
     <p class="hf93-small">All six scenarios are authored, fictional and English-only. Your optional draft stays in this tab and is erased by Stop, Restart, a new lesson, Clear, or leaving the page. There are no AI calls, microphone requests, grades, stored answers or new permissions.</p>
+
    </section>
    <p class="hf93-small">Drafts exist only on this page and clear on a new case, subject, Stop, Restart or leaving this page. No microphone, AI grading, server submission or new account is used.</p>
-  </section></div>
+  </section>
+   <section id="hf100-note" class="hf100-note" aria-labelledby="hf100-title" hidden>
+    <h5 id="hf100-title">Put it in writing: the professional confirmation note</h5>
+    <p class="hf93-small">After correcting the spoken misunderstanding, practise a short, accurate written follow-up. First identify what is risky in an example note; then write a subject line and two or three complete English sentences. Fictional English-only teaching material, not advice or an actual email.</p>
+    <p><strong>Draft note to improve:</strong></p>
+    <p id="hf100-flawed" class="hf100-flawed" lang="en-US" dir="ltr"></p>
+    <p id="hf100-question" lang="en-US" dir="ltr"></p>
+    <div id="hf100-choices" class="hf100-choices" role="group" aria-label="Identify the communication risk"></div>
+    <p id="hf100-feedback" class="hf100-feedback" role="status" aria-live="polite"></p>
+    <div id="hf100-compose" hidden>
+     <p id="hf100-task" lang="en-US" dir="ltr"></p>
+     <label for="hf100-subject">Subject line (optional private writing)</label>
+     <input id="hf100-subject" type="text" lang="en-US" dir="ltr" maxlength="120" autocomplete="off" spellcheck="false" disabled placeholder="Write a specific, careful subject line" aria-describedby="hf100-status">
+     <label for="hf100-body">Two or three professional sentences (optional private writing)</label>
+     <textarea id="hf100-body" lang="en-US" dir="ltr" maxlength="850" rows="4" autocomplete="off" spellcheck="false" disabled placeholder="Say it aloud or write it here: confirmed facts, responsible next action, and any condition or timing. Do not enter real client details." aria-describedby="hf100-status"></textarea>
+    </div>
+    <p id="hf100-status" class="hf93-small" role="status" aria-live="polite">Complete the professional correction and reveal its authored next-action sample to unlock this exercise. No message is saved or sent.</p>
+    <div class="hf100-buttons"><button id="hf100-review" type="button" aria-controls="hf100-checklist" disabled>Review my note</button><button id="hf100-model-button" type="button" aria-controls="hf100-model" disabled>Reveal authored note</button><button id="hf100-clear" type="button" class="hf100-clear" disabled>Clear my note</button></div>
+    <div id="hf100-checklist" class="hf100-review" hidden><strong>Self-review (not an automatic grade)</strong><ul><li>Does the subject identify this specific matter without suggesting an unconfirmed result?</li><li>Do complete sentences separate what is known, proposed, and still conditional?</li><li>Have I identified the real next action, responsible person and timing when supplied?</li><li>Is the tone courteous and concise, without turning a target into a guarantee?</li><li>Have I removed any real names, confidential details or unsupported claims?</li></ul></div>
+    <div id="hf100-model" class="hf100-model" hidden lang="en-US" dir="ltr"><strong>One authored example for comparison — not a message you sent:</strong><p><strong>Subject:</strong> <span id="hf100-model-subject"></span></p><p id="hf100-model-body"></p><p class="hf93-small" id="hf100-coaching"></p></div>
+    <p class="hf93-small">Optional writing stays only in this page while you practise and is cleared by Clear, Stop, Restart, switching subjects or cases, or leaving the page. Nothing is emailed, uploaded, stored, graded by AI, or given to a live teacher. No microphone is used.</p>
+   </section>
+ </div>
  </div>
  <p class="hf93-small">These fictional adult examples teach communication, not legal or investment advice. A correct multiple-choice answer checks reading comprehension only; it does not certify speaking ability.</p>
  <noscript><p>JavaScript is required for the interactive steps. The existing free conversation resources remain available: <a href="/learn/conversation-rehearsal/">Professional Conversation Rehearsal</a>.</p></noscript>
@@ -310,4 +359,5 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <script src="/assets/hf97-private-paraphrase.js" defer></script>
 <script src="/assets/hf98-conversation-followup.js" defer></script>
 <script src="/assets/hf99-misunderstanding-repair.js" defer></script>
+<script src="/assets/hf100-confirmation-note.js" defer></script>
 </body></html>
