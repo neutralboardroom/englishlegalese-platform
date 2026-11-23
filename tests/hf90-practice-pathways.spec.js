@@ -1,0 +1,42 @@
+/* Real HTML, scripted adult private self-reported progression, no provider/network. */
+'use strict';
+const {test,expect}=require('@playwright/test'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.resolve(__dirname,'../labs/hf90-guided-professional-practice-pathways-offline.html'),'utf8');
+async function activate(page,selector){await page.locator(selector).focus();await page.keyboard.press('Enter')}
+test('HF90 three-step pathways open all seven intact activities and preserve drafts until STOP',async({page})=>{
+ const req=[],err=[];page.on('request',r=>req.push(r.url()));page.on('pageerror',e=>err.push(e.message));
+ await page.setContent(html,{waitUntil:'load'});
+ await expect(page.getByText('Avatar not connected')).toBeVisible();
+ await expect(page.locator('#practice-pathways')).toBeHidden();
+ for(let i=0;i<3;i++)await activate(page,'#next');
+ await expect(page.locator('#pathway-choice option')).toHaveCount(3);
+ await expect(page.locator('#pathway-native-intro')).toHaveAttribute('lang','ko-KR');
+ await expect(page.locator('#pathway-next')).toBeDisabled();
+ await activate(page,'#pathway-open');await expect(page.locator('#reply-builder')).toHaveAttribute('open','');
+ await page.locator('#writing-draft').fill('Protected learner English draft.');
+ await page.locator('#pathway-choice').selectOption('conversation');
+ await expect(page.locator('#pathway-progress')).toContainText('Step 1 of 3');
+ await activate(page,'#pathway-open');await expect(page.locator('#writing-workshop')).toHaveAttribute('open','');
+ await expect(page.locator('#writing-draft')).toHaveValue('Protected learner English draft.');
+ await activate(page,'#pathway-mark');await expect(page.locator('#pathway-next')).toBeEnabled();
+ await activate(page,'#pathway-next');await expect(page.locator('#branch-lab')).toHaveAttribute('open','');
+ await expect(page.locator('#pathway-progress')).toContainText('Step 2 of 3');
+ await activate(page,'#pathway-mark');await activate(page,'#pathway-next');
+ await expect(page.locator('#followup-lab')).toHaveAttribute('open','');
+ await activate(page,'#pathway-mark');await expect(page.locator('#pathway-next')).toBeDisabled();
+ await expect(page.locator('#pathway-status')).toContainText('표시');
+ await expect(page.locator('#writing-draft')).toHaveValue('Protected learner English draft.');
+ await activate(page,'#pathway-restart');await expect(page.locator('#pathway-mark')).toBeEnabled();
+ await page.locator('#dialogue-scene').selectOption('1');
+ await expect(page.locator('#pathway-choice')).toHaveValue('clarity');
+ await expect(page.locator('#writing-draft')).toHaveValue('');
+ await page.locator('#locale').selectOption('th-TH');for(let i=0;i<3;i++)await activate(page,'#next');
+ await expect(page.locator('#pathway-native-intro')).toHaveAttribute('lang','th-TH');
+ await page.locator('#pathway-choice').selectOption('documentation');
+ await activate(page,'#pathway-mark');await activate(page,'#stop');
+ await expect(page.locator('#practice-pathways')).toBeHidden();
+ await expect(page.locator('#writing-draft')).toHaveValue('');
+ await expect(page.locator('#pathway-choice')).toHaveValue('clarity');
+ expect(req).toEqual([]);expect(err).toEqual([]);
+ const sizes=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:innerWidth}));expect(sizes.scroll).toBeLessThanOrEqual(sizes.viewport+2);
+});
