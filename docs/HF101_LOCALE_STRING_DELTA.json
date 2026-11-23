@@ -1,0 +1,12 @@
+{
+  "release": "HF101",
+  "status": "ENGLISH_ONLY_DRAFT_UNTRANSLATED",
+  "source": "learn/app/index.html and assets/hf101-practice-route.js",
+  "scope": "new six-step guide, statuses and navigation only",
+  "message_ids": ["hf101-route-title","hf101-route-status","hf101-route-focus","hf101-step-1","hf101-step-2","hf101-step-3","hf101-step-4","hf101-step-5","hf101-step-6"],
+  "new_public_locales": [],
+  "original_13_target_locale_policy": "UNCHANGED_FROZEN_UNTIL_NATIVE_REVIEW",
+  "regional_naming_policy": "PRESERVE_PREVIOUS_OWNER_APPROVED_DIRECTIVES_NO_AUTO_PUBLICATION",
+  "rtl_language_testing": "PENDING",
+  "qa": "docs/HF101_PRACTICE_ROUTE_QA.md"
+}
