@@ -1,0 +1,9 @@
+{
+  "appId": "com.englishlegalese.prototype",
+  "appName": "EnglishLegalese Preview",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {}
+}

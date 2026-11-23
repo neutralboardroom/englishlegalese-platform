@@ -1,0 +1,7 @@
+# EnglishLegalese HF106 R1 — Paper Partner Rotation Cards
+
+**Development only**, no merge/deployment. Exact source predecessor HF105 R2 Git `601a795d36b4e96f457594619c6a2b5bdce7c9c6`, draft PR #154. R2 CI run 45131148008: verify-independent SUCCESS; verify FAILURE due to an inherited v1.76 mobile test's 30-second timeout after 1,196 tests passed. We did not weaken this test.
+
+HF106 adds two original-source-based printable role cards to the existing one-file Offline Pocket Lab, not a separate paid/account feature. Students get different fictional information and must genuinely ask questions, clarify the remaining unknowns and swap roles. Original five-stage study, complete HF105 worksheet (default), zero-network privacy and optional off-by-default separate facilitator answer key remain intact. No new locale or authorized AI/avatar features activated.
+
+Immutable original governance: `governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md`, owner RDR-001/RDR-002, EL-RGR-020; Human Teacher Roger / unconnected AI Teacher Roger / Owner/Admin roles independent. All 13 target locales frozen. Original fully-qualified-only automatic release gate stands. Dual exact-HEAD CI, physical phone local-file printing, expert and native review, Render/Neon recovery, independent receipt, verified full source and append-only cumulative Builder backup in BOTH Drive and ChatGPT Library, verified rollback/live receipts mandatory. The file runtime was unavailable during this edit; do not claim HF106's separately sealed ZIP or cumulative PDF Builder yet.
