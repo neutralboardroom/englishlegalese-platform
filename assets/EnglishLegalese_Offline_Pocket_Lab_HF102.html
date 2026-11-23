@@ -3,7 +3,8 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="robots" content="noindex,nofollow">
 <!-- Historical predecessor identification for inherited source continuity: EnglishLegalese · Offline Pocket Lab · HF103; EnglishLegalese · Offline Pocket Lab · HF104 -->
-<title>EnglishLegalese Offline Practice Pocket Lab | HF105</title>
+<!-- Historic HF105 release label: EnglishLegalese · Offline Pocket Lab · HF105 -->
+<title>EnglishLegalese Offline Practice Pocket Lab | HF106</title>
 <style>
 :root{color-scheme:light;font:16px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif}
 *{box-sizing:border-box}body{margin:0;background:#f3f7fa;color:#15354c}main{max-width:820px;margin:0 auto;padding:1rem 1rem 3rem}
@@ -54,13 +55,30 @@ footer{color:#5b7281;font-size:.8rem;margin:1.5rem 0} [hidden]{display:none!impo
  .hf105-sheet .hf105-line{height:13mm;border-bottom:1px solid #888}
  .hf105-sheet .hf105-dialogue{background:none!important;border-left:2px solid #888}
 }
+
+/* HF106: student-only split role cards, using existing authored fictional case data. */
+#hf105-sheet[data-format="cards"] > :not(#hf106-cards):not(#hf105-key){display:none!important}
+.hf106-card{border:2px solid #528ba0;border-radius:.55rem;padding:.8rem;margin:.9rem 0;break-inside:avoid}
+.hf106-card h3{margin:.2rem 0 .55rem}.hf106-card p{margin:.45rem 0}
+.hf106-card + .hf106-card{border-top:2px dashed #627b8d}
+.hf106-line{border-bottom:1px solid #9eb4c2;height:1.6rem}
+.hf106-instruction{font-size:.86rem;color:#496575}
+#hf106-paper-format{max-width:100%;width:min(100%,390px);background:white}
+@media print{
+ #hf105-sheet[data-format="cards"] > :not(#hf106-cards):not(#hf105-key){display:none!important}
+ #hf106-cards[hidden]{display:none!important}
+ .hf106-card{border:1px solid #333!important;border-radius:0!important;break-inside:avoid!important}
+ .hf106-instruction{color:#111!important}
+}
 </style></head><body>
-<header><div class="tag">EnglishLegalese · Offline Pocket Lab · HF105</div><h1>Professional English without an internet connection</h1><p>Six original, fictional Legal English and Business English cases, with changed facts, evidence-backed role-play and printable partner worksheets. Save this one file and practise anywhere.</p></header>
+<header><div class="tag">EnglishLegalese · Offline Pocket Lab · HF106</div><h1>Professional English without an internet connection</h1><p>Six original, fictional Legal English and Business English cases, with changed facts, evidence-backed role-play and printable partner worksheets. Save this one file and practise anywhere.</p></header>
 <main><aside class="notice" role="note"><p><strong>This copy runs locally:</strong> No account, online lesson, audio service, AI, advertisement, analytics, microphone, cookie or network access is needed. It does not submit, grade, save or send your writing.</p><p class="small">Save the file once while connected, then open the saved .html file in a browser. This is separate from the website’s PWA and cannot restore classes or private account work offline. Do not enter real confidential client or employer information.</p></aside>
 <section class="card" aria-labelledby="choose"><h2 id="choose">Choose one fictional practice case</h2><div class="controls"><div><label for="subject">Subject</label><select id="subject"><option value="legal">Legal English</option><option value="business">Business English</option></select></div><div><label for="case">Conversation</label><select id="case"></select></div></div><div class="controls"><button type="button" id="start">Start practice</button><button type="button" id="clear" class="warn">Clear &amp; restart</button></div><p class="status" id="status" role="status" aria-live="polite">Select a case to begin. No activity is saved.</p>
 <section id="hf105-print-controls" class="hf105-print-controls" aria-labelledby="hf105-print-title">
  <h3 id="hf105-print-title">Paper partner practice — works without a student device</h3>
  <p class="small">Create a print-ready learner worksheet for the selected fictional case. It includes the exchange, accuracy questions, changed facts, evidence decision, speaking roles and writing space. You do not need to finish the online steps first.</p>
+ <label for="hf106-paper-format">Paper format</label><select id="hf106-paper-format"><option value="worksheet">Full student worksheet (default)</option><option value="cards">Separate Partner A and Partner B speaking cards</option></select>
+ <p class="small">For pair speaking, cut or fold the role cards before sharing them. The separate facilitator answer key remains off by default.</p>
  <label for="hf105-key-toggle"><input id="hf105-key-toggle" type="checkbox"> Include the separate authored answer key for self-study or facilitator reference (off by default)</label>
  <div class="controls"><button id="hf105-preview" type="button">Preview paper worksheet</button><button id="hf105-print" type="button">Print selected worksheet</button><button id="hf105-close" class="quiet" type="button">Hide preview</button></div>
  <p id="hf105-print-status" class="small" role="status" aria-live="polite">Select a fictional case above; no learner writing is included in a worksheet or sent anywhere. Printing uses your device's own print dialog.</p>
@@ -120,6 +138,26 @@ footer{color:#5b7281;font-size:.8rem;margin:1.5rem 0} [hidden]{display:none!impo
  <h3>5. Support a professional claim with evidence</h3><p id="hf105-sheet-q5"></p><ol id="hf105-sheet-a5" type="A"></ol>
  <h3>Partner speaking and short written follow-up</h3><p id="hf105-sheet-role-a"></p><p>Partner B: Respond in a complete English sentence, then swap roles. Explain what is confirmed and what still needs evidence.</p><div class="hf105-line"></div><div class="hf105-line"></div>
  <p class="small">Fictional adult-English teaching material, not legal or investment advice. Do not add real client/employer details. No answers, grades or speaking recordings are saved.</p>
+ <section id="hf106-cards" aria-label="Separate student role cards" hidden>
+  <h2>Professional English — Partner A and B role cards</h2>
+  <p><strong>Case:</strong> <span id="hf106-case"></span> · <strong>Subject:</strong> <span id="hf106-subject"></span></p>
+  <p class="hf106-instruction">Cut or fold the cards and give each student only their own role. The cards are fictional and contain no teacher answer key or private learner writing.</p>
+  <article class="hf106-card" aria-label="Partner A card">
+   <h3>Partner A — request clear supporting evidence</h3>
+   <p><strong>Situation:</strong> <span id="hf106-a-context"></span></p>
+   <p><strong>Ask Partner B:</strong> <span id="hf106-a-question"></span></p>
+   <p>Listen, then ask what is confirmed, which evidence is missing, and who will confirm the next action.</p>
+   <p><strong>My follow-up question:</strong></p><div class="hf106-line"></div><div class="hf106-line"></div>
+  </article>
+  <article class="hf106-card" aria-label="Partner B card">
+   <h3>Partner B — explain changed facts carefully</h3>
+   <p><strong>Earlier professional explanation:</strong> <span id="hf106-b-original"></span></p>
+   <p><strong>New information:</strong> <span id="hf106-b-fact"></span></p>
+   <p>Respond in two complete English sentences. Explain the new facts, identify what remains unconfirmed, and avoid a promise without evidence.</p>
+   <p><strong>My careful reply:</strong></p><div class="hf106-line"></div><div class="hf106-line"></div>
+  </article>
+  <p class="hf106-instruction">After the first dialogue, swap roles and use a different question. No microphone, online connection, grade, account or teacher session is included.</p>
+ </section>
  <section id="hf105-key" class="hf105-key" aria-label="Optional authored answer key" hidden>
   <h2>Facilitator / self-study answer key — fictional example</h2>
   <p><strong>Understand:</strong> <span id="hf105-key-a1"></span></p><p id="hf105-key-r1"></p>
@@ -132,7 +170,7 @@ footer{color:#5b7281;font-size:.8rem;margin:1.5rem 0} [hidden]{display:none!impo
   <p class="small">These are authored examples, not an automated evaluation or professional advice. Independent teachers may adapt exercises for their classes.</p>
  </section>
 </section>
-<footer>HF105 development copy. EnglishLegalese.com has not certified your spoken or written English. A live lesson with Human Teacher Roger, an authorized AI Teacher Roger session, and a separately authenticated Owner/Admin workspace are distinct services not included in this file. This standalone file is not legal or investment advice.</footer></main>
+<footer>HF106 development copy. EnglishLegalese.com has not certified your spoken or written English. A live lesson with Human Teacher Roger, an authorized AI Teacher Roger session, and a separately authenticated Owner/Admin workspace are distinct services not included in this file. This standalone file is not legal or investment advice.</footer></main>
 <script>
 'use strict';
 (()=>{
@@ -188,10 +226,10 @@ window.addEventListener('pagehide',()=>{reset();});
 window.addEventListener('beforeunload',clearSensitive);
 
 // HF105 paper partner worksheets: authored fictional data only; never read a learner textarea.
-const paper={sheet:$('hf105-sheet'),key:$('hf105-key'),toggle:$('hf105-key-toggle'),status:$('hf105-print-status')};
+const paper={sheet:$('hf105-sheet'),key:$('hf105-key'),toggle:$('hf105-key-toggle'),status:$('hf105-print-status'),format:$('hf106-paper-format'),cards:$('hf106-cards')};
 function paperText(id,value){$(id).textContent=value||'';}
 function paperOptions(id,items){const target=$(id);target.replaceChildren();for(const item of items){const li=document.createElement('li');li.textContent=item;target.appendChild(li);}}
-function paperReset(){paper.sheet.hidden=true;paper.key.hidden=true;paper.toggle.checked=false;paper.status.textContent='Select a fictional case above; no learner writing is included in a worksheet or sent anywhere. Printing uses your device\'s own print dialog.';}
+function paperReset(){paper.sheet.hidden=true;paper.key.hidden=true;paper.cards.hidden=true;paper.sheet.removeAttribute('data-format');paper.toggle.checked=false;for(const id of ['hf106-case','hf106-subject','hf106-a-context','hf106-a-question','hf106-b-original','hf106-b-fact'])paperText(id,'');paper.status.textContent='Select a fictional case above; no learner writing is included in a worksheet or sent anywhere. Printing uses your device\'s own print dialog.';}
 function paperBuild(){
  const c=available()[Number(els.caseSelect.value)];if(!c)return false;
  paperText('hf105-sheet-case',c.title);paperText('hf105-sheet-subject',c.track==='legal'?'Legal English':'Business English');
@@ -209,14 +247,20 @@ function paperBuild(){
  paperText('hf105-key-a4',letter(c.change.right)+' — '+c.change.options[c.change.right]);paperText('hf105-key-r4',c.change.why);
  paperText('hf105-key-a5',letter(c.evidence.right)+' — '+c.evidence.options[c.evidence.right]);paperText('hf105-key-r5',c.evidence.why);
  paperText('hf105-key-role-b',c.evidence.roleB);paperText('hf105-key-m5',c.evidence.model);
+ // HF106 cards use authored source-only fields; never inspect student textarea values.
+ paperText('hf106-case',c.title);paperText('hf106-subject',c.track==='legal'?'Legal English':'Business English');
+ paperText('hf106-a-context',c.context);paperText('hf106-a-question',c.evidence.roleA);
+ paperText('hf106-b-original',c.b);paperText('hf106-b-fact',c.change.fact);
+ paper.cards.hidden=paper.format.value!=='cards';paper.sheet.dataset.format=paper.format.value;
  paper.key.hidden=!paper.toggle.checked;paper.sheet.hidden=false;
- paper.status.textContent=paper.toggle.checked?'Worksheet preview includes an authored answer key on a separate print page.':'Learner worksheet preview is ready; the answer key is excluded.';
+ paper.status.textContent=paper.format.value==='cards'?(paper.toggle.checked?'Two role cards plus separate opt-in facilitator key are ready.':'Two separate student role cards are ready. No answer key is included.'):(paper.toggle.checked?'Worksheet preview includes an authored answer key on a separate print page.':'Learner worksheet preview is ready; the answer key is excluded.');
  return true;
 }
 $('hf105-preview').addEventListener('click',paperBuild);
 $('hf105-print').addEventListener('click',()=>{if(paperBuild())window.print();});
 $('hf105-close').addEventListener('click',paperReset);
 paper.toggle.addEventListener('change',()=>{if(!paper.sheet.hidden)paperBuild();});
+paper.format.addEventListener('change',()=>{paper.toggle.checked=false;if(!paper.sheet.hidden)paperBuild();});
 els.subject.addEventListener('change',paperReset);els.caseSelect.addEventListener('change',paperReset);
 els.clear.addEventListener('click',paperReset);els.start.addEventListener('click',paperReset);els.next.addEventListener('click',paperReset);
 window.addEventListener('pagehide',paperReset);
