@@ -182,6 +182,22 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 .hf100-review ul{margin:.4rem 0;padding-left:1.35rem}
 @media(max-width:420px){.hf100-buttons button{flex:1 1 100%}}
 
+/* HF101: in-page, zero-storage six-step learning route. Not a grade or credential. */
+.hf101-route{margin:1rem 0;padding:clamp(.9rem,3vw,1.2rem);border:1px solid #bfd5df;background:#f7fbfd;border-radius:.8rem}
+.hf101-route h3{font-size:1.12rem;margin:.1rem 0 .45rem;line-height:1.4}
+.hf101-route p{margin:.45rem 0;color:#3c596e}
+.hf101-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.45rem;margin:.8rem 0;padding:0;list-style:none}
+.hf101-steps li{display:flex;align-items:flex-start;gap:.45rem;padding:.6rem;border:1px solid #d0dfe6;background:#fff;border-radius:.55rem;color:#465e6e;min-width:0;font-size:.88rem}
+.hf101-steps li strong{font-size:.8rem;border:1px solid #94b2c1;background:#edf5f8;color:#15526e;border-radius:50%;flex:0 0 1.5rem;text-align:center;line-height:1.5rem}
+.hf101-steps li[aria-current=step]{background:#e5f3f6;border:2px solid #18718b;padding:calc(.6rem - 1px);color:#123c52;font-weight:750}
+.hf101-steps li[data-passed=true]{background:#f0f7f4;border-color:#99cbbb}
+.hf101-steps li[data-passed=true] strong{border-color:#397e69;color:#176149;background:#e1f3eb}
+.hf101-action{font:inherit;min-height:44px;padding:.55rem .85rem;font-weight:750;background:#145770;color:#fff;border:1px solid #145770;border-radius:.5rem;cursor:pointer}
+.hf101-action:disabled{background:#d8e2e6;color:#4c6170;border-color:#c3d2d9;cursor:not-allowed}
+.hf101-action:focus-visible{outline:3px solid #b87820;outline-offset:3px}
+.hf101-route [role=status]{font-size:.9rem;color:#1d4f66;line-height:1.5}
+@media(max-width:420px){.hf101-steps{grid-template-columns:1fr}.hf101-action{width:100%}}
+
 [hidden]{display:none!important}
 @media(max-width:420px){.hf93-controls button{flex:1 1 120px}.hf93-choice{display:block}.hf93-choice label{margin:.4rem 0}}
 </style></head><body>
@@ -201,9 +217,9 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <a href="/learn/conversation-rehearsal/" data-v1840-current="conversation-rehearsal">Free Professional Conversation Rehearsal</a>
 <a href="/learn/reading-precision/" data-v1840-current="reading-precision">Free Reading Precision Lab</a>
 <a href="/learn/smartteacher-free-trial/" data-v1840-current="smartteacher-free-trial">Free SmartTeacher AI Trial</a><span class="v1850-nav-heading">8 Business English tools</span><a href="/learn/business-resources/business-email/">Email Writing</a><a href="/learn/business-resources/business-meetings/">Meetings</a><a href="/learn/business-resources/business-negotiations/">Negotiations</a><a href="/learn/business-resources/business-presentations/">Presentations</a><a href="/learn/business-resources/business-interviews/">Interviews</a><a href="/learn/business-resources/business-global/">Global Communication</a><a href="/learn/business-resources/investor-earnings/">Earnings Calls</a><a href="/learn/business-resources/investor-markets/">Markets</a></nav></details><details class="v1840-resource-menu"><summary>Teachers &amp; Classes ▾</summary><nav class="v1840-resource-items" aria-label="Teachers and live classroom programs"><a href="/learn/teachers/">Teachers</a><a href="/learn/teach-with-us/">Teach with us</a><a href="/learn/live-classes/">Class schedules</a><a href="/learn/classroom-programs/">16-session lesson plans</a><a href="/learn/enroll/">Enroll in a class</a><a href="/learn/employers/">Employer training</a><a href="/learn/study-planner/">Study planner</a><a href="/learn/language-support/">Languages</a><a href="/learn/trust/">Trust &amp; privacy</a><a href="/learn/smartteacher/">SmartTeacher AI</a></nav></details><a href="/pricing/">Pricing</a><a href="/learn/enroll/">Enroll</a><a href="/learn/account/">Account</a></nav></details></header>
-<!-- HF99 development preview: preserved original predecessor baseline; HF100 is the current development draft. -->
+<!-- HF99 development preview / HF100 development preview: preserved predecessor baseline; HF101 is the current development draft. -->
 <main id="main">
-<section class="hero" aria-labelledby="mobile-title"><p class="eyebrow">Mobile learning | HF100 development preview</p>
+<section class="hero" aria-labelledby="mobile-title"><p class="eyebrow">Mobile learning | HF101 development preview</p>
 <h1 id="mobile-title">Professional English, wherever you learn.</h1>
 <p>Build confidence in Legal English and Business English. Choose a lesson, try a free activity, or request teacher-led learning.</p>
 <a href="#learn">Explore learning options</a></section>
@@ -218,9 +234,23 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <a class="tile" href="/learn/business-resources/"><span class="symbol" aria-hidden="true">▦</span><strong>Business resources</strong><span>Explore practical workplace English</span></a></div></section>
 
 <section class="feature" id="hf93-conversation-lab" aria-labelledby="hf93-title">
- <p class="eyebrow" style="color:#14516c">Original free mobile lesson · HF100</p>
+ <p class="eyebrow" style="color:#14516c">Original free mobile lesson · HF101</p>
  <h2 id="hf93-title">Understand and say real professional English</h2>
  <p class="hf93-intro">Work through a short fictional professional conversation. First check what the speaker means, then rehearse a complete reply and use the language in a different situation. No sign-in, microphone, typed personal details, or payment.</p>
+ <section id="hf101-route" class="hf101-route" aria-labelledby="hf101-route-title">
+  <h3 id="hf101-route-title">Your six-step professional English practice route</h3>
+  <p>Understand the exchange, speak, use English in a new situation, answer a follow-up, repair a misunderstanding, and write a careful confirmation. You can practise without typing. This guide shows opened stages only; it is not a score, a teacher assessment or a saved record.</p>
+  <ol id="hf101-steps" class="hf101-steps" aria-label="Stages of the current practice">
+   <li data-hf101-stage="0"><strong aria-hidden="true">1</strong><span>Understand the conversation</span></li>
+   <li data-hf101-stage="1"><strong aria-hidden="true">2</strong><span>Speak a complete reply</span></li>
+   <li data-hf101-stage="2"><strong aria-hidden="true">3</strong><span>Use it in a new situation</span></li>
+   <li data-hf101-stage="3"><strong aria-hidden="true">4</strong><span>Answer another question</span></li>
+   <li data-hf101-stage="4"><strong aria-hidden="true">5</strong><span>Correct a misunderstanding</span></li>
+   <li data-hf101-stage="5"><strong aria-hidden="true">6</strong><span>Write a confirmation note</span></li>
+  </ol>
+  <p id="hf101-route-status" role="status" aria-live="polite">Choose Legal English or Business English, then press Start. Nothing here records or grades you.</p>
+  <button id="hf101-route-focus" class="hf101-action" type="button" disabled>Go to my current exercise</button>
+ </section>
  <fieldset class="hf93-choice" id="hf93-tracks"><legend>Choose a professional context</legend>
   <label><input type="radio" name="hf93-subject" value="legal" checked> Legal English</label>
   <label><input type="radio" name="hf93-subject" value="business"> Business English</label>
@@ -360,4 +390,5 @@ main{max-width:1080px;margin:auto;padding:0 1rem 3rem}
 <script src="/assets/hf98-conversation-followup.js" defer></script>
 <script src="/assets/hf99-misunderstanding-repair.js" defer></script>
 <script src="/assets/hf100-confirmation-note.js" defer></script>
+<script src="/assets/hf101-practice-route.js" defer></script>
 </body></html>

@@ -17,14 +17,26 @@ async function reach(page,track,index){
   if(i<index)await page.locator('#hf93-next').click();
  }
 }
-test('HF100: six authored fictional confirmation-note cases gated behind original sequence',async({page})=>{
- const unexpected=[];page.on('request',r=>{if(r.method()!=='GET'||/\/api\//.test(r.url()))unexpected.push(r.method()+' '+r.url());});
- await page.goto('/learn/app/');
- await expect(page.locator('#hf100-note')).toBeHidden();
- for(const track of ['legal','business']){
-  await page.locator(`input[name="hf93-subject"][value="${track}"]`).check();
-  await page.locator('#hf93-start').click();
-  for(let index=0;index<3;index++){
+// HF101 WebKit reliability repair: same six scenarios and assertions, with one 30-second
+// Playwright test budget per scenario instead of one timeout shared across all six.
+for(const track of ['legal','business']){
+ for(let index=0;index<3;index++){
+  test(`HF100: authored fictional confirmation-note case ${track} ${index+1}, gated behind original sequence`,async({page})=>{
+   const unexpected=[];
+   page.on('request',r=>{if(r.method()!=='GET'||/\/api\//.test(r.url()))unexpected.push(r.method()+' '+r.url());});
+   await page.goto('/learn/app/');
+   await expect(page.locator('#hf100-note')).toBeHidden();
+   await page.locator(`input[name="hf93-subject"][value="${track}"]`).check();
+   await page.locator('#hf93-start').click();
+   for(let previous=0;previous<index;previous++){
+    await page.locator('#hf93-answers button').nth(original[track][previous]).click();
+    await page.locator('#hf93-to-transfer').click();
+    await page.locator('#hf93-reveal').click();
+    await page.locator('#hf98-show-model').click();
+    await page.locator('#hf99-choices button').nth(correctRepair[track][previous]).click();
+    await page.locator('#hf99-show-sample').click();
+    await page.locator('#hf93-next').click();
+   }
    await expect(page.locator('#hf100-note')).toBeHidden();
    await page.locator('#hf93-answers button').nth(original[track][index]).click();
    await page.locator('#hf93-to-transfer').click();await page.locator('#hf93-reveal').click();
@@ -49,10 +61,10 @@ test('HF100: six authored fictional confirmation-note cases gated behind origina
    await expect(page.locator('#hf100-note')).toBeHidden();
    await expect(page.locator('#hf100-body')).toHaveValue('');
    await expect(page.locator('#hf100-subject')).toHaveValue('');
-  }
+   expect(unexpected).toEqual([]);
+  });
  }
- expect(unexpected).toEqual([]);
-});
+}
 test('HF100: Stop, Restart, pagehide, tamper and no-voice all clear and fail closed',async({page})=>{
  await page.addInitScript(()=>{Object.defineProperty(window,'speechSynthesis',{value:undefined,configurable:true});});
  await page.goto('/learn/app/');await reach(page,'legal',0);
