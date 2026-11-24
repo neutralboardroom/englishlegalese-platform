@@ -331,7 +331,10 @@ class ProductionServices {
       record.video_status = `${String(provider).toLowerCase().replace(/[^a-z0-9]+/g, '_')}_placeholder`;
       record.join_url = `/classroom/dev-${record.id}`;
     }
-    await this.audit('calendar_video.session_requested', { entity_type: 'calendar_video_session', entity_id: record.id, ...record }, req);
+    // Do not publish classroom join URLs or bearer-equivalent meeting locations
+    // into general audit logs, which may be exposed by legacy inspection routes.
+    const { join_url: _privateJoinLink, ...auditMetadata } = record;
+    await this.audit('calendar_video.session_requested', { entity_type: 'calendar_video_session', entity_id: record.id, ...auditMetadata }, req);
     return record;
   }
 
