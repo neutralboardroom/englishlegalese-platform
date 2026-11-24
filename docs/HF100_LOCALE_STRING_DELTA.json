@@ -1,0 +1,17 @@
+{
+  "version": "HF100",
+  "new_interface_language": "en-US",
+  "new_translation_targets_activated": [],
+  "frozen_existing_target_locale_count": 13,
+  "needs_native_and_professional_review": true,
+  "new_user_facing_concepts": [
+    "confirmation note",
+    "inaccurate draft note",
+    "risk recognition",
+    "subject line",
+    "professional three-sentence follow-through",
+    "authored model",
+    "private self-review"
+  ],
+  "claim": "English source authored only; no localized UI claim"
+}

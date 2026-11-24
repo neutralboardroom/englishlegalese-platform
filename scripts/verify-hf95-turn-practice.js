@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+'use strict';
+const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');
+const root=path.resolve(__dirname,'..');const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const html=read('learn/app/index.html'),audio=read('assets/hf94-listen-shadow.js'),original=read('assets/hf93-mobile-conversations.js');
+let count=0;const ok=(condition,message)=>{assert.ok(condition,message);count++;};
+for(const id of ['hf95-turn-practice','hf95-turn-heading','hf95-turn-first','hf95-turn-back','hf95-turn-next','hf95-turn-listen','hf95-turn-text','hf95-turn-status'])ok(html.includes('id="'+id+'"'),'turn practice element '+id);
+for(const id of ['hf94-audio','hf94-audio-dialogue','hf94-audio-model','hf94-audio-transfer','hf94-audio-stop','hf94-audio-rate','hf94-audio-status','hf93-conversation-lab','hf93-case','hf93-answers','hf93-speak-model','hf93-transfer-answer'])ok(html.includes('id="'+id+'"'),'original HF93/HF94 UI untouched '+id);
+for(const s of ['Focus on first turn','Listen to this turn','Next speaker turn','Previous turn','repeat the sentence aloud','Nothing is recorded or graded','role="status"','aria-live="polite"'])ok(html.includes(s),'accessibility and privacy '+s);
+for(const s of ['function allTurns','function turnSpeech','function updateTurnButtons','function resetTurns','function chooseTurn','turnUI.first.addEventListener','turnUI.back.addEventListener','turnUI.next.addEventListener','turnUI.listen.addEventListener','controls.rate.value','stopPlayback','visibilitychange','pagehide','SpeechSynthesisUtterance'])ok(audio.includes(s),'integrated native speech compatibility '+s);
+for(const forbidden of [/(^|[^\w])fetch\s*\(/,/\bXMLHttpRequest\b/,/\blocalStorage\b/,/\bsessionStorage\b/,/\bindexedDB\b/,/\bWebSocket\b/,/\bgetUserMedia\b/,/\bSpeechRecognition\b/,/\bMediaRecorder\b/,/\.innerHTML\s*=/,/navigator\.mediaDevices/])ok(!forbidden.test(audio),'do not collect/send data: '+forbidden);
+for(const rule of ['RDR-001','RDR-002'])ok(read('owner-rules/'+rule+'.md').includes('RDR-00'),'retained exact complete rule '+rule);
+ok(original.includes('const scenarios={')&&original.includes('legal:[')&&original.includes('business:['),'original scenario bank preserved');
+ok(html.indexOf('hf93-mobile-conversations.js')<html.indexOf('hf94-listen-shadow.js'),'HF93 teaching engine always first');
+ok(!read('sw.js').includes('hf95-turn'),'HF95 not cached offline or touching private PWA routes');
+ok(!read('sw.js').includes('hf94-listen-shadow.js'),'HF94 PWA policy preserved');
+ok(read('mobile/native/www/index.html').includes('Development build only'),'native app not misrepresented as shipped');
+ok(read('docs/HF95_TURN_BY_TURN_QA.md').includes('EL-RGR-020'),'owner automatic qualified release contract unchanged');
+ok(read('docs/HF95_TURN_BY_TURN_QA.md').includes('ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md'),'unmodified original release authority crossreference');
+for(const href of ['/learn/legal-english/','/learn/business-english/','/learn/account/','/learn/enroll/','/learn/conversation-rehearsal/'])ok(html.includes(href),'working navigation retained '+href);
+console.log('HF95 guided full-sentence speaker-turn practice: '+count+' assertions PASS.');
