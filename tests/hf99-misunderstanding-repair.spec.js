@@ -15,14 +15,24 @@ async function reach(page,track,index){
  await page.locator('#hf98-show-model').click();
  await expect(page.locator('#hf99-repair')).toBeVisible();
 }
-test('HF99: all six professional misunderstanding corrections require HF98 model, then prompt a complete next-action sentence',async({page})=>{
- const unexpected=[];page.on('request',r=>{if(r.method()!=='GET'||/\/api\//.test(r.url()))unexpected.push(r.method()+' '+r.url());});
- await page.goto('/learn/app/');
- await expect(page.locator('#hf99-repair')).toBeHidden();
- for(const track of ['legal','business']){
-  await page.locator(`input[name="hf93-subject"][value="${track}"]`).check();
-  await page.locator('#hf93-start').click();
-  for(let index=0;index<3;index++){
+// HF107: one independently bounded browser test per original scenario.
+for(const track of ['legal','business']){
+ for(let index=0;index<3;index++){
+  test(`HF99: professional misunderstanding correction: ${track} case ${index+1}`,async({page})=>{
+   const unexpected=[];page.on('request',r=>{if(r.method()!=='GET'||/\/api\//.test(r.url()))unexpected.push(r.method()+' '+r.url());});
+   await page.goto('/learn/app/');
+   await expect(page.locator('#hf99-repair')).toBeHidden();
+   await page.locator(`input[name="hf93-subject"][value="${track}"]`).check();
+   await page.locator('#hf93-start').click();
+   for(let prior=0;prior<index;prior++){
+    await expect(page.locator('#hf99-repair')).toBeHidden();
+    await page.locator('#hf93-answers button').nth(tracks[track][prior]).click();
+    await page.locator('#hf93-to-transfer').click();
+    await page.locator('#hf93-reveal').click();
+    await expect(page.locator('#hf99-repair')).toBeHidden();
+    await page.locator('#hf93-next').click();
+    await expect(page.locator('#hf99-draft')).toHaveValue('');
+   }
    await expect(page.locator('#hf99-repair')).toBeHidden();
    await page.locator('#hf93-answers button').nth(tracks[track][index]).click();
    await page.locator('#hf93-to-transfer').click();
@@ -49,10 +59,10 @@ test('HF99: all six professional misunderstanding corrections require HF98 model
    await page.locator('#hf93-next').click();
    await expect(page.locator('#hf99-repair')).toBeHidden();
    await expect(page.locator('#hf99-draft')).toHaveValue('');
-  }
+   expect(unexpected).toEqual([]);
+  });
  }
- expect(unexpected).toEqual([]);
-});
+}
 test('HF99: privacy reset, original source mismatch, voice-free access and overflow',async({page})=>{
  await page.addInitScript(()=>{Object.defineProperty(window,'speechSynthesis',{configurable:true,value:undefined});});
  await page.goto('/learn/app/');
@@ -76,4 +86,41 @@ test('HF99: privacy reset, original source mismatch, voice-free access and overf
  await expect(page.locator('#hf99-draft')).toHaveValue('');
  const width=await page.evaluate(()=>({page:document.documentElement.scrollWidth,screen:innerWidth}));
  expect(width.page).toBeLessThanOrEqual(width.screen+1);
+});
+
+// HF107: separately preserve the original completed-track to next-track lifecycle.
+test('HF107: completed Legal track clears meaning and repair before Business starts',async({page})=>{
+ const unexpected=[];page.on('request',r=>{if(r.method()!=='GET'||/\/api\//.test(r.url()))unexpected.push(r.method()+' '+r.url());});
+ await page.goto('/learn/app/');
+ await page.locator('input[name="hf93-subject"][value="legal"]').check();
+ await page.locator('#hf93-start').click();
+ for(let prior=0;prior<2;prior++){
+  await page.locator('#hf93-answers button').nth(tracks.legal[prior]).click();
+  await page.locator('#hf93-to-transfer').click();
+  await page.locator('#hf93-reveal').click();
+  await page.locator('#hf93-next').click();
+ }
+ await page.locator('#hf95-turn-first').click();
+ await page.locator('#hf96-meaning-reveal').click();
+ await expect(page.locator('#hf96-meaning-example')).toBeVisible();
+ await page.locator('#hf93-answers button').nth(tracks.legal[2]).click();
+ await page.locator('#hf93-to-transfer').click();
+ await page.locator('#hf93-reveal').click();
+ await page.locator('#hf98-show-model').click();
+ await expect(page.locator('#hf99-repair')).toBeVisible();
+ await page.locator('#hf99-choices button').nth(repairs.legal[2]).click();
+ await page.locator('#hf99-draft').fill('Private legal-track rehearsal.');
+ await page.locator('#hf93-next').click();
+ await expect(page.locator('#hf96-meaning-reveal')).toBeDisabled();
+ await expect(page.locator('#hf96-meaning-example')).toBeHidden();
+ await expect(page.locator('#hf99-repair')).toBeHidden();
+ await expect(page.locator('#hf99-draft')).toHaveValue('');
+ await page.locator('input[name="hf93-subject"][value="business"]').check();
+ await page.locator('#hf93-start').click();
+ await expect(page.locator('#hf99-repair')).toBeHidden();
+ await expect(page.locator('#hf99-draft')).toHaveValue('');
+ await page.locator('#hf95-turn-first').click();
+ await page.locator('#hf96-meaning-reveal').click();
+ await expect(page.locator('#hf96-meaning-example')).toContainText('complete the entire report by Wednesday');
+ expect(unexpected).toEqual([]);
 });
