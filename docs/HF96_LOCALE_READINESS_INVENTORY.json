@@ -1,0 +1,1275 @@
+{
+  "schema": "englishlegalese.hf96.locales.readiness.v0.1",
+  "status": "PARTIAL_INVENTORY_REVIEW_REQUIRED",
+  "source": "EnglishLegalese HF96 development only",
+  "owner": "TR-EnglishLegaleseWebsite",
+  "published_ui_changed_to_multilingual": false,
+  "public_translation_launch_ready": false,
+  "legal_market_release_approved": false,
+  "frozen_target_locales": [
+    "en-US",
+    "th-TH",
+    "vi-VN",
+    "zh-Hans-CN",
+    "zh-Hant-HK",
+    "zh-Hant-TW",
+    "ja-JP",
+    "ko-KR",
+    "id-ID",
+    "ms-MY",
+    "es",
+    "pt-BR",
+    "ar"
+  ],
+  "frozen_scope_basis": "TRCC-MULTILINGUAL-13-ARABIC19-20261121-001 (frozen owner target, not current capability or launch)",
+  "locale_records": {
+    "en-US": {
+      "target": true,
+      "uiTranslated": "source_english_only",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    },
+    "th-TH": {
+      "target": true,
+      "uiTranslated": "unverified",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    },
+    "vi-VN": {
+      "target": true,
+      "uiTranslated": "unverified",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    },
+    "zh-Hans-CN": {
+      "target": true,
+      "uiTranslated": "unverified",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    },
+    "zh-Hant-HK": {
+      "target": true,
+      "uiTranslated": "unverified",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    },
+    "zh-Hant-TW": {
+      "target": true,
+      "uiTranslated": "unverified",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    },
+    "ja-JP": {
+      "target": true,
+      "uiTranslated": "unverified",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    },
+    "ko-KR": {
+      "target": true,
+      "uiTranslated": "unverified",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    },
+    "id-ID": {
+      "target": true,
+      "uiTranslated": "unverified",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    },
+    "ms-MY": {
+      "target": true,
+      "uiTranslated": "unverified",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    },
+    "es": {
+      "target": true,
+      "uiTranslated": "unverified",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    },
+    "pt-BR": {
+      "target": true,
+      "uiTranslated": "unverified",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    },
+    "ar": {
+      "target": true,
+      "uiTranslated": "unverified",
+      "lessonContentReviewed": "unverified",
+      "providerSpeechVerified": false,
+      "publicReleaseApproved": false,
+      "nativeReviewerAck": "PENDING",
+      "regionLegalReview": "unassigned",
+      "paymentsApproved": false,
+      "nativeLanguageExplanationAvailable": false
+    }
+  },
+  "language_separation": {
+    "english_learning_target": "en-US",
+    "learnerNativeLanguage": null,
+    "marketRegion": null,
+    "country_inferred_from_locale": false,
+    "additional_locales_authorized": false,
+    "arabic_dialect_supported": false,
+    "cantonese_speech_supported": false,
+    "native_translation_review_complete": false
+  },
+  "static_text_inventory": [
+    {
+      "locator": "[document]",
+      "kind": "static_text",
+      "en_source": "html",
+      "sha256": "e5e239560bc125a20ff2ac1fea50915bc198dd4f5b5256ec447a8a71e00132b3"
+    },
+    {
+      "locator": "title",
+      "kind": "static_text",
+      "en_source": "EnglishLegalese mobile learning home | Legal & Business English",
+      "sha256": "76712b001e6aab9751ae8a872ff0529173c0c276c0f0eb49b12adb00047a394c"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Skip to learning options",
+      "sha256": "4f3b72162d461698190c1dde4e2dd28c3217328fc8b921cbeed5eb47474d3557"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Install options",
+      "sha256": "3ff83169ff5047077543d3954166f1c0eed7dcaffb4d1e88893c05d7b899f3a7"
+    },
+    {
+      "locator": "summary",
+      "kind": "static_text",
+      "en_source": "Full website navigation and all free tools",
+      "sha256": "11ef76fa04cbc1927a404e0c1f75ab28d397b39b724ad6a213863e9d281b715a"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Start",
+      "sha256": "e4bb9f1ece9af9264a3b9e3913bbdb2cf497457167b14ced5f85688bfde74644"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Courses",
+      "sha256": "aaad9d92e6b47727da806339397a8c7082a5c3dda2728dc7db2b7ff93d039369"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Legal English",
+      "sha256": "f9ac1d61293bb9c9084a0b312dd7cfd6c6cfc35998cdc60ad8792fccf3f25079"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Business English",
+      "sha256": "dc55a179e2a48d1b6ec5dbce5066475fe6c35e95faeeb9027ab2df4bb09f73df"
+    },
+    {
+      "locator": "summary",
+      "kind": "static_text",
+      "en_source": "Free learning resources ▾",
+      "sha256": "bef27e88901e3679dbc08e1c8c7393ee48f187761a69d671fde0bf76e8d83c44"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Explore both resource libraries",
+      "sha256": "8e89958a61168cc5afd530f0b75d3059ea8ef56e73189049d11185d2ca92ad23"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Legal English · all free tools",
+      "sha256": "c906668f682fdb42b45ca4addc2442ae397be359a57d774c19570843da4e44e7"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Business English · all free tools",
+      "sha256": "a74ddbed96d344e103e6dd330ec0cbffdb6ccd3512ee0a168c89ebc710fb7aee"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "14 Legal English tools",
+      "sha256": "3850f6ba036bcea1286529dd1ffef2a6b7196cbe1904db7bbc3fda37e8722cc7"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free Legal English Writing Exercise",
+      "sha256": "dd5f03085949c16dfc55450be7ab2a1634ed578108dc75392d2c1fa1eacc65fb"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free AI Draft Review Lab",
+      "sha256": "2b80800e99e97510c598f1e238c79ea920db9e967b599428b89a0e431b6179c7"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free Contract Clause Reading Lab",
+      "sha256": "e9ecc7e91a92345b8ba7a6b186d17d7ff374f5469acdc7f98d3274086692a8fd"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free Meeting Follow-up Lab",
+      "sha256": "b75d3e4936e4c86e3d7164ea7622d6b3f159cfeb6217381dd1a233fa1c996a1b"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free Professional Email Clarity Lab",
+      "sha256": "177103489ceaac7ab788a21825449e57c62bda198c3d7efcc69e19a0a84d4799"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free Guided Legal English Practice Path",
+      "sha256": "9622807481e51694e703ae3f3c40f7f365a01c550e07c87fb98bab294d184cef"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free Case Brief Reading Lab",
+      "sha256": "ff56580b464cb0eae551909d00031307cddcd1d48af2716cdf26481d1395d691"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Legal English Vocabulary Guide",
+      "sha256": "41eb63e5c9850886e1f257fc6a647d1dba968b3429f8bfce33872826931268e3"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free Professional Revision Studio",
+      "sha256": "d707f2ba7ca65a2d60fccc45068aa357261b883dbfc5da233d5863e85d2c7460"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free Professional Message Builder",
+      "sha256": "15ad3b91667f547b03f3af4787908bc8a412733baf2de3c298d31b97cf7963ca"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free Listening & Clarification Lab",
+      "sha256": "e64f6a742c68a039977dd65c0c7b2a06b7d38ce2142e3689889cd900f2f0b938"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free Professional Conversation Rehearsal",
+      "sha256": "20a5740b4bc966e591e483086d21dfbdc257aa9a5f92564df86895422bef55d1"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free Reading Precision Lab",
+      "sha256": "08e5eb5fa129b29afd6484b833c3212f2aba0c93fd36bf49a91a099948a06c37"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Free SmartTeacher AI Trial",
+      "sha256": "927486b323f07eef6b90b1cd2254b58b3ee078ef4debd8ccdb36be470554c8d5"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "8 Business English tools",
+      "sha256": "23cbb7073764924c142d704fc004a7ab434d4a162cf37f0efec123018b17c367"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Email Writing",
+      "sha256": "3fc905b42c803a9004279c0bcbcb4e041fe89fa38c1b8508761a94ba1355db63"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Meetings",
+      "sha256": "bca705b63a3cf58504af9d281ab45042c0cc234fa8cfe08b6121514270b02c8f"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Negotiations",
+      "sha256": "e118b8b104814007c28f11cc75cf462591337e4686c50908a368b947d3fc29b0"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Presentations",
+      "sha256": "cf31f39501ec79cc84987e224fc9dfad7940465184c676054b3dd7b91e947f40"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Interviews",
+      "sha256": "0b9e49cf035bd75bd6a9e6d4c4bc8efea296515e471fcd905c30133d3fd08955"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Global Communication",
+      "sha256": "72283c7fabbb63fa992f404e30959442a26ab0e5d504be003d5a84ba9f8e4a61"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Earnings Calls",
+      "sha256": "571be7d53e27cdb985dbade392fd208c699639a793098b7fd7002e5283de472a"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Markets",
+      "sha256": "97f5c16fcbfb4d9df3b735796322796e4d35d142e8fa80a2a290a20a0a9c9006"
+    },
+    {
+      "locator": "summary",
+      "kind": "static_text",
+      "en_source": "Teachers & Classes ▾",
+      "sha256": "87d0db88b27e206163745cd52935ce3b6108f3a4a6bac58067a656bb34d3e153"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Teachers",
+      "sha256": "33c512c6eec15be4ada588c8bc60c21b51565cebea3723b1f6232d7384cad37d"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Teach with us",
+      "sha256": "ab0eb6f075a712add26f2ed050c6f67822dc80e3650ed7ff16ef8967a0a0b70e"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Class schedules",
+      "sha256": "435c5a17fdd283ca864170b98ee4fa3d77f5e7fc28a28631a9c96ab1f0d9e5f1"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "16-session lesson plans",
+      "sha256": "71edd743989ee3e4ab57e5c54227e75ef25c1cbfe8c96ddad64b8a92a101297e"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Enroll in a class",
+      "sha256": "0fd6c2d0a035c5eb5a3a1aa6f8536af8582329a52bc0ea49434e7500b5f69488"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Employer training",
+      "sha256": "db9932e0d6114ce4c43b1e4a9cf7537ad35beadf1b13c46d089e81db89de6273"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Study planner",
+      "sha256": "e980a91c6b4ee42d1a416092d30be1aff2d134b85a366732583f35da9ebf9042"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Languages",
+      "sha256": "318655cea4bd2096fbfad433d7c019bac40750d1a456fc34d366df41fcc77197"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Trust & privacy",
+      "sha256": "fee13a578f0a5a3277a146c304d9b1d869aeeb9176e8f88b2b948e7ba7df4514"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "SmartTeacher AI",
+      "sha256": "389879246bf934cdc1c2da6a22df4f40b652587402e2fc1bc64bdc34c2e29eb8"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Pricing",
+      "sha256": "dfe95783edfef7918760312f94edd764f4ce3ffd38b90c2c955a0cc3b250f040"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Enroll",
+      "sha256": "11edf9e1e378013b14e6de208b93f32a31282c138ab48db90852d0b73e3523aa"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Account",
+      "sha256": "7e1b0d5641f2640ce9a953ec231eea2c27a2a7633f7d3c273e5735e2b30c10b7"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "Mobile learning | HF95 development preview",
+      "sha256": "a54b0b4ecea6a418ecd9627a0082da00172a833e8babeec2d96c086e5d06cca7"
+    },
+    {
+      "locator": "mobile-title",
+      "kind": "static_text",
+      "en_source": "Professional English, wherever you learn.",
+      "sha256": "d2eb1f1b0a4f7552355a0575ea4f004d4600e60719543350dc212c772952f796"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "Build confidence in Legal English and Business English. Choose a lesson, try a free activity, or request teacher-led learning.",
+      "sha256": "a56ebfb4ff661ba37dabae459519ebbe3db6a9873c3f1f95c828ad98ec2250f2"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Explore learning options",
+      "sha256": "10a9ac3e8c6743923b721384986b1a01edc0ce15a90b170601f9a5400a083710"
+    },
+    {
+      "locator": "learn-title",
+      "kind": "static_text",
+      "en_source": "Choose your subject",
+      "sha256": "f7349c471f017f766046d77e43f70a28903ae7e5f2ac130ad134a7573429eea6"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "The same courses as the desktop website. No separate account or purchase is required to explore.",
+      "sha256": "c1239f4df15c9e3f0f3499f5ef28c6cefd9420f6094b4578d55ff92605605d34"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Legal English",
+      "sha256": "f9ac1d61293bb9c9084a0b312dd7cfd6c6cfc35998cdc60ad8792fccf3f25079"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Contracts, legal writing and professional conversations",
+      "sha256": "3fa17c714f8ae86459d233b110e7ab583030e42051b3d9081b62942d5fcc713b"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Business English",
+      "sha256": "dc55a179e2a48d1b6ec5dbce5066475fe6c35e95faeeb9027ab2df4bb09f73df"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Meetings, management, presentations and investors",
+      "sha256": "33c5b191668de2a20357374773564349f6fb14b9e6695c8dec05c5f8d3c7c4aa"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "All courses",
+      "sha256": "dc28d0d30d15cb6bab2d81627db407e0b23361257477cbacd510ef048cd9b1ec"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Browse the full course catalog",
+      "sha256": "c842d8470364342d87fa3eab2a69f1c2b675c5e79716e806c3bb0f9d06205c6c"
+    },
+    {
+      "locator": "practice-title",
+      "kind": "static_text",
+      "en_source": "Try a free learning exercise",
+      "sha256": "bccbfcdc43191bdd8ab0c0e34fd7e13178d0a32b6aebec6d1de0843df2a28518"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "Practice with fictional examples. Never paste confidential client or employer information into public practice tools.",
+      "sha256": "3ac1b7b34d78cf6e13839ff967c6c41d46a6e12ee7c52422b28892d4357ee47f"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Writing practice",
+      "sha256": "4d9f85d2d9529913705601e3942c0555ff9ec737e55c6f9eebeb539978aec05b"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Improve clarity with structured exercises",
+      "sha256": "88e3c9ace1353477c327b01ca6d9f8f7513b2b8d48679b4a066a4ae201a5930f"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Reading precision",
+      "sha256": "3f1754398680aac41228b36215a298dbbde6cf32fbca4f291274e841fa924c85"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Spot meaning and qualification",
+      "sha256": "4385882ca9a2f59eb74b4c4771999ef31494aa8b0134f08a8d3008ddd29661c1"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Speaking rehearsal",
+      "sha256": "1420954b3857e389bce6455456d6f0787b187cbbf5a29d149cdf29f81b7a5443"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Prepare professional dialogue",
+      "sha256": "7caeff3aba52c2f517ad3aab53c2f8482a2dab5865b174c6cffe5b99844f23f0"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Business resources",
+      "sha256": "7697b3071c0d750c8b5b06d8d11d4e4d4621d1b5dc2bb5abe9ba0ca8726371e2"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Explore practical workplace English",
+      "sha256": "c68b9ffac91d6cb1027586d9e4884e46ba187ca994ed94df46b74925790a699a"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "Original free mobile lesson · HF96",
+      "sha256": "0800f395a829bec6291e1d0b33a903411b5a240aa0802649dff00197587b73e5"
+    },
+    {
+      "locator": "hf93-title",
+      "kind": "static_text",
+      "en_source": "Understand and say real professional English",
+      "sha256": "7f46bf5adac4af3cab21a9ad3bce8fabb58e6b04bff6b703943e69ca1812ed61"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "Work through a short fictional professional conversation. First check what the speaker means, then rehearse a complete reply and use the language in a different situation. No sign-in, microphone, typed personal details, or payment.",
+      "sha256": "a1c0ec7be2c09e53a53b77f1f43728b55567f71315bfb0fcf7c1771c33ef3d0b"
+    },
+    {
+      "locator": "legend",
+      "kind": "static_text",
+      "en_source": "Choose a professional context",
+      "sha256": "4c48aaed4833da33c052f9366a321e1e938121ffae878a7bb6fc29189bfcaf7a"
+    },
+    {
+      "locator": "label",
+      "kind": "static_text",
+      "en_source": "Legal English",
+      "sha256": "f9ac1d61293bb9c9084a0b312dd7cfd6c6cfc35998cdc60ad8792fccf3f25079"
+    },
+    {
+      "locator": "label",
+      "kind": "static_text",
+      "en_source": "Business English",
+      "sha256": "dc55a179e2a48d1b6ec5dbce5066475fe6c35e95faeeb9027ab2df4bb09f73df"
+    },
+    {
+      "locator": "hf93-start",
+      "kind": "static_text",
+      "en_source": "Start conversation practice",
+      "sha256": "283739b188f734415666cd64f73ad227ee6ad099213269414be9ca9e4a513e90"
+    },
+    {
+      "locator": "hf93-stop",
+      "kind": "static_text",
+      "en_source": "Stop",
+      "sha256": "cae7d57bc067a514b8e34c9589631a95c7dc051638ddd2a190773269279a99df"
+    },
+    {
+      "locator": "hf93-restart",
+      "kind": "static_text",
+      "en_source": "Restart",
+      "sha256": "6b983a81e5e8099e4e23a368e72636e31f029f2e691e5be714106b8cf59d70a7"
+    },
+    {
+      "locator": "h3",
+      "kind": "static_text",
+      "en_source": "Listen, understand, then speak",
+      "sha256": "ea9eb3a33ddb8feff01edd18fada784408dd1502d133f6b7ad852b2139a9c566"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "Listen to the fictional exchange and, once you understand it, hear the complete reply. Repeat aloud in your own voice. Audio is optional: all written exercises work without it.",
+      "sha256": "51c0f3438181d980f259899d930965f386e3b8c5a1899b06c33cca53ccf1394f"
+    },
+    {
+      "locator": "label",
+      "kind": "static_text",
+      "en_source": "Playback speed",
+      "sha256": "afec2b22114c05f14fbe3f9cdb6afa6ae4350d5dbb011fd034731924be2dbbba"
+    },
+    {
+      "locator": "option",
+      "kind": "static_text",
+      "en_source": "Slower (practice)",
+      "sha256": "b89509be90481e188e750d2f65233b787de5fb5bdaee939b3e6b36cc7a02594f"
+    },
+    {
+      "locator": "option",
+      "kind": "static_text",
+      "en_source": "Normal",
+      "sha256": "a7248eeb45eb1ce247f81693283e22e8b39e8a50890cecd22d02e75025547d90"
+    },
+    {
+      "locator": "hf94-audio-dialogue",
+      "kind": "static_text",
+      "en_source": "Listen to exchange",
+      "sha256": "82c4760c8fbe9311091a208f732ea5370822ccd5d54698d242aaf1e11a40e993"
+    },
+    {
+      "locator": "hf94-audio-model",
+      "kind": "static_text",
+      "en_source": "Listen to model reply",
+      "sha256": "aea4314a7938d5b4abfb63004ac5ba0497ae0c967942a4062409a5174b20c100"
+    },
+    {
+      "locator": "hf94-audio-transfer",
+      "kind": "static_text",
+      "en_source": "Listen to new-context reply",
+      "sha256": "834f1cd26faeac68cf9926636d74ba27d64641c1b3826f519842bac9b51483cf"
+    },
+    {
+      "locator": "hf94-audio-stop",
+      "kind": "static_text",
+      "en_source": "Stop audio",
+      "sha256": "d69657bc9d0369749e9c3f2a704bc361a179a0de98ec83d6198c1dc597637420"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "Uses your browser or device voice when available; some system voices may use online services. This website does not listen to you, request microphone permission, record speech, or evaluate pronunciation.",
+      "sha256": "2cf4891908604100c7cc8220ca69bd613137e848a45d887a3e6ddce473e279a6"
+    },
+    {
+      "locator": "hf94-audio-status",
+      "kind": "static_text",
+      "en_source": "Checking device voice availability. The written exercise is always available.",
+      "sha256": "0c7bea5bfa58438b472f0aceb6e4f8502b0b244b8c5970182c8954b615ddbd69"
+    },
+    {
+      "locator": "hf95-turn-heading",
+      "kind": "static_text",
+      "en_source": "Practice one speaker turn at a time",
+      "sha256": "dcbdf96d3814b3bafe6e21597784369bd56b342de03f6c39e4c6853c4610d1a5"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "Focus on one complete spoken turn. Read it, optionally listen, repeat the sentence aloud, then move to the next speaker. You can also practice silently. Nothing is recorded or graded.",
+      "sha256": "0a46c9f3cfdd6e164d31e5a0c8493bf7795798c9021c4664509d536152ccb2a5"
+    },
+    {
+      "locator": "hf95-turn-first",
+      "kind": "static_text",
+      "en_source": "Focus on first turn",
+      "sha256": "373552d6ca153e6cb7c49630943890822cd744086ccd9b9a5942eb88f20c82c0"
+    },
+    {
+      "locator": "hf95-turn-back",
+      "kind": "static_text",
+      "en_source": "Previous turn",
+      "sha256": "78496d49e6437c5163f999084c36a350ff78cca308fea297814051971290b6f5"
+    },
+    {
+      "locator": "hf95-turn-listen",
+      "kind": "static_text",
+      "en_source": "Listen to this turn",
+      "sha256": "11d552303a45773610bbe197972286d6511dd46d56bec06b4acafb9e4d690673"
+    },
+    {
+      "locator": "hf95-turn-next",
+      "kind": "static_text",
+      "en_source": "Next speaker turn",
+      "sha256": "09da79382830780a3fa8c7a79af069d78e051f1ef2d7ca23e2bd3f8064c9497f"
+    },
+    {
+      "locator": "hf95-turn-status",
+      "kind": "static_text",
+      "en_source": "Start a conversation to practice its speaker turns.",
+      "sha256": "b24480068405018ba00b6dd857b9b38380d6a342d6a337e6402521a7c70b7a09"
+    },
+    {
+      "locator": "hf96-meaning-title",
+      "kind": "static_text",
+      "en_source": "Explain what this speaker means",
+      "sha256": "e8630777d91c677a877e064bfcfa8db3f2d8673905409e0d7d51466148420943"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "After reading or hearing a speaker turn, explain its meaning in your own",
+      "sha256": "c34b5d413577baffcabc59dbb1acd0485d59b54a04cbb83a02277a82d1263477"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "complete English sentence",
+      "sha256": "bd3cdac7db1dd58da2afb17261ed450d2351aa67a1b698a5ab1e1a6c5ab7a96e"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": ". Try before revealing an example. You can practise silently or aloud; nothing is recorded or graded.",
+      "sha256": "eada0658e926b26054a07b60d175c57df2c03f29af234c7ccdba5cf002fef760"
+    },
+    {
+      "locator": "hf96-meaning-reveal",
+      "kind": "static_text",
+      "en_source": "Show sample meaning",
+      "sha256": "114f7f8346ae315a6dd7efd5bab9d4ff92ccd223b139bafffc6e4347a670f0a7"
+    },
+    {
+      "locator": "hf96-meaning-status",
+      "kind": "static_text",
+      "en_source": "Focus on a speaker turn to practise explaining its meaning.",
+      "sha256": "5afc44796050555081792832984b24a234a449f9b2ad28b40d0203da704e7303"
+    },
+    {
+      "locator": "hf93-status",
+      "kind": "static_text",
+      "en_source": "Choose a subject and select Start. Nothing is saved or sent.",
+      "sha256": "853c75ad1877623b3e56814242037216759883a6b6470d2e4530893315dac40b"
+    },
+    {
+      "locator": "h4",
+      "kind": "static_text",
+      "en_source": "Say a complete reply aloud",
+      "sha256": "f254f1910fe8e659b6535c12635ded0776164725ed07700ef6b3da1e3c558ba7"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "A natural model reply:",
+      "sha256": "c17e48ab2fda4aa225325c4c7fae6731d1d68fb1ba0099a88d4a098b447b42dc"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "Practice speaking with your own voice. This page cannot hear, record, or assess pronunciation.",
+      "sha256": "2290f85906120d88949e79fd190f6e9ce35d777ca4c8be95d8d90ae8c0374274"
+    },
+    {
+      "locator": "hf93-to-transfer",
+      "kind": "static_text",
+      "en_source": "Continue to a different situation",
+      "sha256": "510d2ffd84126831c52235c02605116da8094889c8ad70bbb3b14df9d81eecd2"
+    },
+    {
+      "locator": "h4",
+      "kind": "static_text",
+      "en_source": "Transfer to a new situation",
+      "sha256": "a85edc677b9349cb4bdb2e2803ff99e40eeba9a0e0bcb807d1cfef2df2ea0338"
+    },
+    {
+      "locator": "hf93-reveal",
+      "kind": "static_text",
+      "en_source": "Show a possible complete reply",
+      "sha256": "88c202f21d081cabb8904db20c5c3c980cedd04a701f57fb4f52c20f600a54d5"
+    },
+    {
+      "locator": "hf93-next",
+      "kind": "static_text",
+      "en_source": "Next conversation",
+      "sha256": "a012558a8f9d5aa76247c633e6d088ed87b8751bd317e210c0fee0520989c347"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "These fictional adult examples teach communication, not legal or investment advice. A correct multiple-choice answer checks reading comprehension only; it does not certify speaking ability.",
+      "sha256": "407b6bd79418312336656c4876735a7c135d381bed9d697c8af7ce03f024a017"
+    },
+    {
+      "locator": "classes-title",
+      "kind": "static_text",
+      "en_source": "Learn with a teacher",
+      "sha256": "0c9afcbb4ddd25699bf8d5ac44ba84bc2a121fe82de1a408c1e93689c6b2ce60"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "Explore teaching options and request information. An inquiry does not reserve a class or make a payment.",
+      "sha256": "0bfa207a9e6a2d1b8886c687c245b4c4a0b989582e5d653739abb6cf94a62912"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Meet the teachers",
+      "sha256": "7b037efa731828fd1315c5dc5ee838bff9d5404e022a1df0a8e520ac8919cce2"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Learn about teacher-led instruction",
+      "sha256": "3f578d36d8d5981011199edd0290b7b850e83ae1db94e3cd76dea8f78c1a497b"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Request enrollment",
+      "sha256": "6aadb485656b2b5f124d6fd87923646d5d0bb9d3960edb73cb92ed951fdfa5ae"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Availability is checked before information is sent",
+      "sha256": "744bf0ac45d44d45e671ffb1c1ffa279cbf27272d9ab88f5aced699570891c73"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Pricing",
+      "sha256": "dfe95783edfef7918760312f94edd764f4ce3ffd38b90c2c955a0cc3b250f040"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Compare packages and published terms",
+      "sha256": "8129659da4dcf39f80ca860dcbe757d119c6d7f88df583746175d7e0c2efb83c"
+    },
+    {
+      "locator": "account-title",
+      "kind": "static_text",
+      "en_source": "Your account and app",
+      "sha256": "04438689b4423150a641fbf1b6707a146df4389709c033df9babc1219855ad4d"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Account",
+      "sha256": "7e1b0d5641f2640ce9a953ec231eea2c27a2a7633f7d3c273e5735e2b30c10b7"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Use the existing website sign-in and account controls",
+      "sha256": "55c678f7386505ac0b739c4303107931c5e57cc7cf2a9497edc1ccdcfe6837cf"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Install on your device",
+      "sha256": "136f1059d0752507b7b35e7cd43488030abff4de02499adcb7b18e24376d6294"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Optional browser-app installation and safe updates",
+      "sha256": "6cbb2527e853951578b3b2a97172d187d277055e6ae2f477d3203ebf5e0da396"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Privacy and trust",
+      "sha256": "8fb1864ff1526c200df0a27249577074b88c73b7dc4aeb916157c9bc24dda6f7"
+    },
+    {
+      "locator": "span",
+      "kind": "static_text",
+      "en_source": "Read how personal data and learning records are handled",
+      "sha256": "8ed1287da3083c6909500cc26ab0f319d0717142bd4b2980176c321f1e8d3e88"
+    },
+    {
+      "locator": "strong",
+      "kind": "static_text",
+      "en_source": "Connection needed:",
+      "sha256": "67ece08bcc85eaa1865297c96b4b79701c2cafa07f9173a06aab83375ac73daa"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "Classes, accounts and saved work require internet access. Offline mode shows only a generic connection message; no private learning data is cached.",
+      "sha256": "da46657b560ea96ddecc54eb9e6d2c30f07b5079dfaa1d7aded6b4aac1c689f0"
+    },
+    {
+      "locator": "p",
+      "kind": "static_text",
+      "en_source": "This is the browser-based mobile app experience. Native iOS and Android applications are in development; there is no App Store or Google Play release yet.",
+      "sha256": "887d479e997a80128c57316b8883a9e83e36a1be12ce31b0a467b49a721c1060"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Full EnglishLegalese website",
+      "sha256": "7cbf43319be1c9277da6464e24ca4cd6e83ef9096b5f01cb065f36532eaa3a2a"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Business English",
+      "sha256": "dc55a179e2a48d1b6ec5dbce5066475fe6c35e95faeeb9027ab2df4bb09f73df"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Privacy and trust",
+      "sha256": "8fb1864ff1526c200df0a27249577074b88c73b7dc4aeb916157c9bc24dda6f7"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Learn",
+      "sha256": "ce78afd0e6a225ecac96a6812b9d192e7eb35889cd5237beb38b50375b79d8dd"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Practice",
+      "sha256": "d3857b12b4cea2bc5d8ea0b8c2ce9cc3d5dc426e0bf3ea06394ddb906e6d60a0"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Classes",
+      "sha256": "84637286c5b731d749ff9574416ae2de473f72c85aca744fcd192a35c70913ca"
+    },
+    {
+      "locator": "a",
+      "kind": "static_text",
+      "en_source": "Account",
+      "sha256": "7e1b0d5641f2640ce9a953ec231eea2c27a2a7633f7d3c273e5735e2b30c10b7"
+    },
+    {
+      "locator": "a",
+      "kind": "attribute_aria-label",
+      "en_source": "EnglishLegalese website home",
+      "sha256": "4460f734421430347b920ac403a523240ebb5aa09713d7e80c1c7bc97ed3150a"
+    },
+    {
+      "locator": "img",
+      "kind": "attribute_alt",
+      "en_source": "EnglishLegalese.com",
+      "sha256": "7919f574f228c1c3371a27be5a56cb4254865d9886485a456a840e41f994745c"
+    },
+    {
+      "locator": "nav",
+      "kind": "attribute_aria-label",
+      "en_source": "Main navigation",
+      "sha256": "eb355944b92d10582856f8aea34b3e319ba465b8aa4c294973cf53f665399a2c"
+    },
+    {
+      "locator": "nav",
+      "kind": "attribute_aria-label",
+      "en_source": "Free Legal English and Business English tools",
+      "sha256": "6d9a352ad7378064df29bbe72245524b9ed1d1e84d9e5b347b637d583495452e"
+    },
+    {
+      "locator": "nav",
+      "kind": "attribute_aria-label",
+      "en_source": "Teachers and live classroom programs",
+      "sha256": "297d3e6b93660e053afd72ff3dd4e5be173d2774a42b183a8da9ba41017315a7"
+    },
+    {
+      "locator": "hf94-audio",
+      "kind": "attribute_aria-label",
+      "en_source": "Optional listening and shadowing practice",
+      "sha256": "6a849b57f3ee7f6ef620bb037bef01df3e2c72f0e5c35121111fc894fb97c430"
+    },
+    {
+      "locator": "hf93-turns",
+      "kind": "attribute_aria-label",
+      "en_source": "Fictional professional exchange",
+      "sha256": "84a77a26ddad4e8c00c182045bd7b59f8b8d00a657aa7b5f38d62dfca855db55"
+    },
+    {
+      "locator": "nav",
+      "kind": "attribute_aria-label",
+      "en_source": "Mobile app sections",
+      "sha256": "0b7c977711baa3904ca23d69cd2500984a22afb15d323abe27ea968bacc189db"
+    }
+  ],
+  "dynamic_string_candidate_sources": [
+    {
+      "source": "assets/hf93-mobile-conversations.js",
+      "sha256": "40ed3c7033cee4fdadc49e0bd03ce5f600d2614c2cccefb3ef4b243710124c08",
+      "candidate_dynamic_string_assignment_count": 19,
+      "human_review": "PENDING_PARSE_AND_CONTEXT_REVIEW"
+    },
+    {
+      "source": "assets/hf94-listen-shadow.js",
+      "sha256": "30f96f7c450387494137372b4291d5824ed6c9ee667e7fb440d71504ea766799",
+      "candidate_dynamic_string_assignment_count": 13,
+      "human_review": "PENDING_PARSE_AND_CONTEXT_REVIEW"
+    },
+    {
+      "source": "assets/hf96-meaning-guide.js",
+      "sha256": "e8a9378c68830b28379b266622851d282a2aa79d2d24cfd2382cf9393444dec6",
+      "candidate_dynamic_string_assignment_count": 7,
+      "human_review": "PENDING_PARSE_AND_CONTEXT_REVIEW"
+    }
+  ],
+  "scenario_content": [
+    {
+      "track": "legal",
+      "ordinal": 1,
+      "title": "Clarifying a contract deadline",
+      "turns": [
+        [
+          "Client",
+          "Do we have to sign this agreement today?"
+        ],
+        [
+          "Lawyer",
+          "Not today. The draft asks for comments by Friday; signing would happen after both sides agree to the terms."
+        ]
+      ],
+      "comprehension_question": "What is due by Friday?",
+      "answer_options": [
+        "A signed final agreement",
+        "Comments on the draft agreement",
+        "The final invoice"
+      ],
+      "correct_index": 1,
+      "why": "The lawyer distinguishes a comment deadline from signing the final contract.",
+      "speak_prompt": "The client says, “So we must sign it by Friday, correct?” Clarify politely.",
+      "speak_model": "Not quite. Friday is the deadline for comments on the draft; we will discuss signing once both sides agree.",
+      "transfer_prompt": "New context: your colleague thinks a proposal must be approved tomorrow, but only initial feedback is due. What could you say?",
+      "transfer_model": "Tomorrow is the deadline for initial feedback, not final approval. We will decide on approval after reviewing the comments.",
+      "translation_review": "NOT_REQUESTED_OR_VERIFIED",
+      "professional_review": "PENDING"
+    },
+    {
+      "track": "legal",
+      "ordinal": 2,
+      "title": "Explaining confidentiality scope",
+      "turns": [
+        [
+          "Colleague",
+          "Does this agreement cover every conversation we have?"
+        ],
+        [
+          "Reviewer",
+          "The draft covers specified confidential project information. Ordinary public information is not automatically confidential under that wording."
+        ]
+      ],
+      "comprehension_question": "Which statement matches the reviewer’s explanation?",
+      "answer_options": [
+        "Every conversation is automatically confidential",
+        "Only spoken conversations count",
+        "The draft focuses on specified confidential project information"
+      ],
+      "correct_index": 2,
+      "why": "The reviewer describes the scope of the particular draft rather than making a universal claim.",
+      "speak_prompt": "The colleague asks, “So all information is confidential?” Correct the misunderstanding politely.",
+      "speak_model": "Not necessarily. The current draft covers specified confidential project information, so we should review the definition carefully.",
+      "transfer_prompt": "New context: a supplier believes an attached schedule covers every product, but it lists only two products. What could you say?",
+      "transfer_model": "The schedule currently lists two products. We should not assume it covers the others unless the agreement is amended.",
+      "translation_review": "NOT_REQUESTED_OR_VERIFIED",
+      "professional_review": "PENDING"
+    },
+    {
+      "track": "legal",
+      "ordinal": 3,
+      "title": "Confirming a client instruction",
+      "turns": [
+        [
+          "Client",
+          "Please prepare a summary of the main risks before our meeting."
+        ],
+        [
+          "Team member",
+          "Of course. Would you like a brief summary by email, with the detailed analysis available at the meeting?"
+        ]
+      ],
+      "comprehension_question": "What is the team member checking?",
+      "answer_options": [
+        "The preferred format of the summary",
+        "Whether the contract has been signed",
+        "Whether the meeting must be cancelled"
+      ],
+      "correct_index": 0,
+      "why": "A clarifying question checks the client’s requested format before any work is finalized.",
+      "speak_prompt": "The client says, “Yes, a short email would be best.” Confirm the arrangement in a full sentence.",
+      "speak_model": "I will send you a short email summarizing the main risks before our meeting, and I will bring the detailed analysis.",
+      "transfer_prompt": "New context: a client asks for an update but does not specify the format. What could you ask?",
+      "transfer_model": "Would you prefer a brief written update today, or a short call to discuss the current position?",
+      "translation_review": "NOT_REQUESTED_OR_VERIFIED",
+      "professional_review": "PENDING"
+    },
+    {
+      "track": "business",
+      "ordinal": 1,
+      "title": "Checking a project deadline",
+      "turns": [
+        [
+          "Manager",
+          "Can the team finish the complete report by Wednesday?"
+        ],
+        [
+          "Analyst",
+          "We can deliver the first draft on Wednesday, but the final report needs another two days for review."
+        ]
+      ],
+      "comprehension_question": "What can the analyst deliver on Wednesday?",
+      "answer_options": [
+        "The reviewed final report",
+        "The first draft",
+        "The team’s annual budget"
+      ],
+      "correct_index": 1,
+      "why": "The analyst carefully distinguishes a draft delivery from a completed, reviewed report.",
+      "speak_prompt": "The manager asks, “So the final report is ready Wednesday?” Correct the expectation constructively.",
+      "speak_model": "We can send the first draft on Wednesday. The final reviewed report is scheduled for Friday.",
+      "transfer_prompt": "New context: your team can demonstrate a prototype next week, but the finished product will take longer. What would you say?",
+      "transfer_model": "We can demonstrate a working prototype next week, but the finished product will need more development and testing.",
+      "translation_review": "NOT_REQUESTED_OR_VERIFIED",
+      "professional_review": "PENDING"
+    },
+    {
+      "track": "business",
+      "ordinal": 2,
+      "title": "Clarifying meeting responsibilities",
+      "turns": [
+        [
+          "Chair",
+          "Lina will contact the supplier, and Arun will update the budget by Thursday."
+        ],
+        [
+          "Colleague",
+          "Just to confirm, Lina owns the supplier follow-up, while Arun owns the budget update?"
+        ]
+      ],
+      "comprehension_question": "What is the colleague doing?",
+      "answer_options": [
+        "Assigning both tasks to Lina",
+        "Confirming who is responsible for each task",
+        "Cancelling the supplier meeting"
+      ],
+      "correct_index": 1,
+      "why": "The colleague repeats task ownership to prevent confusion about responsibilities.",
+      "speak_prompt": "The chair responds, “That is correct.” Close the conversation with a useful full sentence.",
+      "speak_model": "Thank you for confirming. I will record both responsibilities and the Thursday deadline in the meeting notes.",
+      "transfer_prompt": "New context: two colleagues are sharing customer and billing follow-ups. How could you confirm who owns each?",
+      "transfer_model": "Just to confirm, Maya will contact the customer, and Daniel will check the invoice before Friday. Is that correct?",
+      "translation_review": "NOT_REQUESTED_OR_VERIFIED",
+      "professional_review": "PENDING"
+    },
+    {
+      "track": "business",
+      "ordinal": 3,
+      "title": "Reporting results without overclaiming",
+      "turns": [
+        [
+          "Director",
+          "Does the increase in orders mean revenue will definitely rise next quarter?"
+        ],
+        [
+          "Analyst",
+          "Higher orders are encouraging, but future revenue also depends on deliveries, cancellations, and payment timing."
+        ]
+      ],
+      "comprehension_question": "Which conclusion is supported?",
+      "answer_options": [
+        "Revenue is guaranteed to rise",
+        "Orders are irrelevant to revenue",
+        "Higher orders are positive but do not guarantee future revenue"
+      ],
+      "correct_index": 2,
+      "why": "The analyst acknowledges a positive indicator while explaining important uncertainties.",
+      "speak_prompt": "The director asks, “Can we announce a guaranteed increase?” Respond precisely.",
+      "speak_model": "We should not describe the increase as guaranteed. We can report that orders are higher while explaining the remaining uncertainties.",
+      "transfer_prompt": "New context: customer interest in a new course is increasing, but paid enrollments are unconfirmed. What could you say?",
+      "transfer_model": "Interest in the new course has increased, but we cannot confirm enrollment growth until customers complete their registrations.",
+      "translation_review": "NOT_REQUESTED_OR_VERIFIED",
+      "professional_review": "PENDING"
+    }
+  ],
+  "known_gaps": [
+    "Public route inventory outside learn/app/ not yet completed",
+    "Dynamic JS text generated from concatenated expressions needs native-human translation workflow",
+    "Legal terminology and native language glossaries require independent competent reviewer",
+    "RTL and mixed-script fixture is NOT actual Arabic UI or voice support",
+    "13 locale target configuration does not grant any country market/payment/provider permission",
+    "No physical iOS/Android or screen-reader/native spoken-dialect testing"
+  ],
+  "rtl_fixture": "qa/hf96-rtl-fixture.html"
+}

@@ -1,0 +1,115 @@
+{
+  "schema": "englishlegalese.rdr003.visual-audit.v1",
+  "status": "BLOCKED_INCOMPLETE_VISUAL_REVIEW",
+  "baseline": "f34aa1365044b900af864443d0a0c84390a9a7b6",
+  "rule_sha256": "1aa159beaa8ddd05e36d72ef09d4ff010532202c645065beb3636cf5c750701c",
+  "rule_source": "https://drive.google.com/file/d/1G5ylQy87diyvikU1WaoMgSwB6CLbDatJ/view",
+  "inventory_source": "https://drive.google.com/file/d/1SERfrcPfSwVo3Za1uwH_iOndeQna-gLP/view",
+  "scope": "All standalone image-extension files in predecessor manifest only; inline SVG, embedded images, remote imagery and actual rendered mapping require separate inspection. Inventory is not a visual acceptance result.",
+  "coverage": {
+    "standalone_files": 9,
+    "rendered_reviewed": 0,
+    "inline_remote_complete": false,
+    "complete": false
+  },
+  "required_evidence": [
+    "VISUAL_AUDIT_COVERAGE",
+    "WORD_IMAGE_ALIGNMENT",
+    "REALISM_AND_ANATOMY",
+    "LEARNER_CLARITY",
+    "AGE_AND_CULTURAL_SUITABILITY",
+    "PROVENANCE",
+    "DISPLAY_AND_OFFLINE_CHECK"
+  ],
+  "entries": [
+    {
+      "path": "assets/brand-board.png",
+      "sha256": "0829c45cb597f48c15d940c0947bfc011e05b32d701cf63fdd87e658b70c80dc",
+      "classification": "PENDING_RENDERED_MAPPING",
+      "review": "NOT_REVIEWED",
+      "concept_mappings": [],
+      "provenance": null,
+      "display_offline_evidence": null
+    },
+    {
+      "path": "assets/englishlegalese-app-icon-192.png",
+      "sha256": "8fc905fdd8bf327d3269817a6de8d9462fb0f48057b43bbc9e06788a3755be42",
+      "classification": "PENDING_RENDERED_MAPPING",
+      "review": "NOT_REVIEWED",
+      "concept_mappings": [],
+      "provenance": null,
+      "display_offline_evidence": null
+    },
+    {
+      "path": "assets/englishlegalese-app-icon-512.png",
+      "sha256": "bcea940b32bd9c2c01a2d5eb15a3c5b88ead572db8a6b1807aa36fb7bce6371a",
+      "classification": "PENDING_RENDERED_MAPPING",
+      "review": "NOT_REVIEWED",
+      "concept_mappings": [],
+      "provenance": null,
+      "display_offline_evidence": null
+    },
+    {
+      "path": "assets/englishlegalese-icon.png",
+      "sha256": "0c0adcc661e67a4b7122850060c763ace85c1b9471b8969e9967e699ba7616c1",
+      "classification": "PENDING_RENDERED_MAPPING",
+      "review": "NOT_REVIEWED",
+      "concept_mappings": [],
+      "provenance": null,
+      "display_offline_evidence": null
+    },
+    {
+      "path": "assets/englishlegalese-logo.png",
+      "sha256": "4fad0dc8099ae3f4ab56187bcdef0e796cd910e897544eafbf50c82ae01b4e5e",
+      "classification": "PENDING_RENDERED_MAPPING",
+      "review": "NOT_REVIEWED",
+      "concept_mappings": [],
+      "provenance": null,
+      "display_offline_evidence": null
+    },
+    {
+      "path": "assets/favicon-preview.png",
+      "sha256": "263c77fc4cb129bbcf24937e8b22a80054436bea411d216c1eec241354020d08",
+      "classification": "PENDING_RENDERED_MAPPING",
+      "review": "NOT_REVIEWED",
+      "concept_mappings": [],
+      "provenance": null,
+      "display_offline_evidence": null
+    },
+    {
+      "path": "assets/favicon.svg",
+      "sha256": "8967d8ead8157607e77223d33a24a53a44441d6f1480a97767d084f7474a295b",
+      "classification": "PENDING_RENDERED_MAPPING",
+      "review": "NOT_REVIEWED",
+      "concept_mappings": [],
+      "provenance": null,
+      "display_offline_evidence": null
+    },
+    {
+      "path": "assets/logo.svg",
+      "sha256": "70ff5794cab463fb71b2ff2307c483bca4fd6532aefcbaf825c8c94169cff385",
+      "classification": "PENDING_RENDERED_MAPPING",
+      "review": "NOT_REVIEWED",
+      "concept_mappings": [],
+      "provenance": null,
+      "display_offline_evidence": null
+    },
+    {
+      "path": "assets/teacher-classroom-photo-locked-hf26.svg",
+      "sha256": "b5a9c7e40023567fccff16f0ab0267e2be92e8c6ff0794372cb58987764aa3a0",
+      "classification": "PENDING_RENDERED_MAPPING",
+      "review": "NOT_REVIEWED",
+      "concept_mappings": [],
+      "provenance": null,
+      "display_offline_evidence": null
+    }
+  ],
+  "unresolved": [
+    "Rendered complete inventory including dynamic, inline and remote assets",
+    "Concept mapping and actual visual inspection",
+    "Provenance/licensing",
+    "Mobile/projector and offline review",
+    "Professional/native review as applicable",
+    "Independent acceptance evidence"
+  ]
+}
