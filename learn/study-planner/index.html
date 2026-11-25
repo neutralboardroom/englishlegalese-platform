@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="/product-v1840-pages.css?v=1.84.0" />
 
 <link rel="stylesheet" href="/product-v1940-saved-lessons.css?v=1.85.2-hf16" />
+<link rel="stylesheet" href="/assets/hf111-workplace-preview.css">
 </head>
 <body class="v1840-dedicated-page " data-page-slug="study-planner">
 <a class="v1840-skip" href="#main">Skip to main content</a>
@@ -50,6 +51,25 @@
 <p class="v1840-status-note">Class enrollment requests are open; joining details are confirmed after review. Stripe and paid AI billing remain off.</p>
 </aside>
 </div>
+<section class="v1840-shell" id="hf111-workplace-preview" aria-labelledby="hf111-title" lang="en">
+<h2 id="hf111-title">Your profession, your English — personalized workplace lesson preview</h2>
+<p>Choose a fictional professional task, audience and practice level. Build a speaking-first lesson preview with workplace vocabulary and a comparable follow-up task. This is a self-guided English-language preview, not a booked class, teacher assessment or legal or financial advice.</p>
+<p><strong>Privacy:</strong> Do not provide real contracts, client details or confidential information. This tool only accepts listed choices, does not upload files or submit or save selections and self-ratings. Discuss authorized, de-identified materials separately with your human teacher.</p>
+<div class="hf111-choices">
+<label for="hf111-scenario">Professional task <select id="hf111-scenario"><option value="energy">Energy contracts — Legal English</option><option value="client">Client interviews — Legal English</option><option value="meeting">International meetings — Business English</option><option value="negotiation">Negotiation — Business English</option><option value="finance">Financial reporting — Business English</option><option value="presentation">Project updates — Business English</option></select></label>
+<label for="hf111-audience">Audience <select id="hf111-audience"><option value="colleague">Colleague</option><option value="client">Client</option><option value="manager">Manager</option></select></label>
+<label for="hf111-level">Practice level <select id="hf111-level"><option value="foundation">Foundation</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></label>
+</div>
+<div class="hf111-actions"><button type="button" id="hf111-build">Build a lesson preview</button><button type="button" id="hf111-reset">Reset preview</button><button type="button" id="hf112-start">Start guided speaking practice</button></div>
+<div class="hf111-actions"><button type="button" id="hf116-prepare">Prepare teacher observation sheet</button></div><p id="hf116-status" role="status" aria-live="polite"></p><section id="hf116-sheet" aria-labelledby="hf116-title" hidden><h3 id="hf116-title">Fictional teacher observation sheet</h3><div id="hf116-summary"></div><div class="hf111-actions"><button type="button" id="hf116-download" disabled>Download printable HTML sheet</button><button type="button" id="hf116-clear">Clear observation preview</button></div></section>
+<p id="hf111-status" role="status" aria-live="polite">Choose options to build a preview.</p>
+<div id="hf111-output" hidden></div>
+<div id="hf111-rating"></div>
+<button type="button" id="hf111-compare" hidden>Compare self-ratings</button>
+<div id="hf111-comparison" role="status" aria-live="polite" hidden></div>
+<section id="hf112-guided" aria-labelledby="hf112-title" hidden><h3 id="hf112-title">Guided workplace speaking practice</h3><p id="hf112-status" role="status" aria-live="polite"></p><progress id="hf115-progress" value="0" max="5" aria-label="Guided speaking lesson progress"></progress><div id="hf112-content"></div><p><button type="button" id="hf112-stop">Stop and clear guided practice</button></p></section>
+<noscript><p>The optional interactive preview requires JavaScript. The existing study planner remains separate.</p></noscript>
+</section>
 </main>
 <footer class="v1840-footer"><p class="v1840-shell v1850-program-navigation"><a href="/learn/legal-english/">Legal English</a> · <a href="/learn/classroom-programs/">16-session plans</a> · <a href="/learn/enroll/">Enroll</a></p><p class="v1840-shell"><a href="/learn/legal-resources/">Free Legal English Resources</a> · <a href="/learn/business-resources/">Free Business English Resources</a> · <a href="/learn/enroll/">Class Enrollment</a> · <a href="/learn/teach-with-us/">Teaching Opportunities</a></p><div class="v1840-shell v1840-foot-grid">
 <div><a href="/"><img src="/assets/englishlegalese-logo.png?v=1.73.0" alt="EnglishLegalese" class="v1840-footer-logo"/></a><p>Legal English education, not legal advice or certified translation.</p><p><a href="/">Return to homepage</a></p></div>
@@ -88,4 +108,9 @@
 </div><p class="v1840-shell v1840-legal">© EnglishLegalese · Original fictional learning examples. Enrollment requests and teacher applications are open; Stripe card checkout is disabled.</p></footer>
 <script src="/product-v1840-pages.js?v=1.84.0"></script>
 <script src="/product-v1940-saved-lessons.js?v=1.85.2-hf16"></script>
+<script defer src="/assets/hf111-workplace-preview.js"></script>
+<script defer src="/assets/hf113-audience-coaching.js"></script>
+<script defer src="/assets/hf114-misunderstanding-repair.js"></script>
+<script defer src="/assets/hf112-guided-workplace.js"></script>
+<script defer src="/assets/hf116-observation-sheet.js"></script>
 </body></html>
