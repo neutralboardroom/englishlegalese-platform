@@ -1,0 +1,21 @@
+# HF80 — Interactive English-first adult professional decision practice (development only)
+
+**Status:** DRAFT, NOT LIVE, NOT AI-CONNECTED. **Parent:** HF79 R2 exact Git head `82a42e6fa97eecc250513d16c803a40a0c7dbf85`; complete 840-file ZIP SHA-256 `6cb2922e013b9798653b359e7fd8ee2ae97914d7ffd5dc91f068a56dd8f10274` and complete independent V3.9 R2 Builder PDF SHA-256 `b9cbc0c0df422cbaf9102e110c5d65f4e181e0a3049b45012534be06b2b3a1a7`.
+
+## Actual improvement
+
+New **private offline HF80** rehearsal page `labs/hf80-interactive-adult-practice-offline.html`, generated deterministically by `scripts/build-hf80-adult-practice.js`, adds intentional, practice-stage-only, fixed-choice interactive checks to the HF79 R2 five-stage English/native-language syllabus. The curriculum now has two authored decision drills per adult track (fictional legal duties versus permission, and polite business requests versus deadlines/milestones). The questions and options remain prominent in English, while rationale appears in both English and the selected native-language locale (`en-US`, `th-TH`, `vi-VN`, `zh-CN`, `ko-KR`). Every locale retains the original HF79 bilingual stage explanations, directions, glossary and no-real-avatar disclosure. Native/professional translations are **unreviewed drafts**.
+
+The learner must intentionally select an answer and click **Check my choice**, or explicitly click **Reveal model answer**. Before then, the model/rationale is not inserted into the rendered answer panel. **Next practice** resets the response. Navigating to another stage, changing language/track, STOP and restart all clear the practice state and hide feedback; no browser storage, microphone, network, paid AI model, permission, legal review or student/child information is used. A scripted match is **NOT** a semantic AI grade, accent/pronunciation judgment, legal conclusion or human teacher evaluation. Teacher Roger Avatar remains a *planned* primary teacher with human instructor intervention.
+
+New source-only module `src/trcfAdultDecisionPractice.js` validates enumerated track/locale, returns immutable authored decisions and marks its grades `SCRIPTED_OPTION_MATCH_ONLY`. English rationale and answer mapping never depend on native-language selection; locale only supplies language help. Unsupported locale/track fails closed. All four new native rationale translations require qualified bilingual professional review before production.
+
+## Test and preservation contract
+
+The new Node test (`scripts/verify-hf80-adult-decision-practice.js`) checks freeze/integrity/locale equivalence/fail-closed selections/recording and provider exclusions/HTML privacy disclosures and deterministic generator output. The new Playwright browser spec (`tests/hf80-adult-decision-practice.spec.js`) tests actual controls, refusal to check an empty answer, localized answer feedback, intentional reveal, STOP and restart, no external browser request and no layout overflow. Source `npm run check` and full browser matrix now include the new tests; legacy tests are not skipped or edited.
+
+No production HTML route, navigation, logo, locked images, courses, pricing, memberships, real accounts, workbooks, prior offline HF79 preview, Render, Stripe or mail integration is modified. No sibling Classroom source or pupil data was read/written into this application. New HF80 is a cumulative source descendant, not a substitute for real CloneFusion voice/avatar, and not grounds for auto-deployment until **every** `EL-RGR-020` release gate passes under `governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md` (dual exact-head independent green CI, correct ChatGPT Library+Google Drive full archive and Builder checksum backups, physical Android/iPhone acceptance, native professional review, genuine integration consent, Render LIVE commit/rollback verification). Missing gates remain **BLOCKED**.
+
+## Actual ControlCenter prebuild
+
+New registry consulted: TR-ControlCenter V1.40 / Builder V4.5, current checkpoint master and registry/protocol freshly read and hashed; independent TR-Classroom read-only V106 information acknowledgement seen as **self-reported**, not a permission to copy. PREBUILD HF80-V4.0 self-report was saved to the canonical folder on 19 November 2026; independent ControlCenter acknowledgment **not established**. No sibling files edited.

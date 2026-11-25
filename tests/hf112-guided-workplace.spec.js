@@ -1,0 +1,28 @@
+'use strict';
+const {test,expect}=require('@playwright/test');
+test('HF112 guided workplace stages preserve fictional privacy and reset',async({page})=>{
+ await page.goto('/learn/study-planner/');
+ const p=page.locator('#hf111-workplace-preview'),g=p.locator('#hf112-guided');
+ const before=await page.evaluate(()=>({local:JSON.stringify(localStorage),session:JSON.stringify(sessionStorage)})),writes=[];
+ page.on('request',r=>{if(['POST','PUT','PATCH','DELETE'].includes(r.method()))writes.push(r.url());});
+ await p.locator('#hf111-scenario').selectOption('energy');await p.locator('#hf111-audience').selectOption('client');
+ await p.locator('#hf112-start').click();
+ await expect(g).toContainText('Speak before seeing a model');await expect(g).not.toContainText('Model response:');
+ await expect(g.locator('input[type=file],textarea,input[type=text]')).toHaveCount(0);
+ await g.locator('#hf112-baseline-0').selectOption('no');
+ await g.getByRole('button',{name:'Continue to language coaching'}).click();
+ await expect(g).toContainText('Model response:');await expect(g).toContainText('courteous, clear language');
+ await g.locator('#hf112-target').selectOption('clarity');await expect(g.locator('#hf112-coaching')).toContainText('Lead with the main point');
+ await g.getByRole('button',{name:'Practise a comparable situation'}).click();await expect(g).toContainText('inspection is due');await expect(g).not.toContainText('Model response:');
+ await g.locator('#hf112-repeat-0').selectOption('yes');await g.getByRole('button',{name:'Review my self-reflection'}).click();
+ await expect(g).toContainText('Newly reported as completed');await expect(g).toContainText('Not compared');await expect(g).toContainText('not an assessed score');
+ await g.getByRole('button',{name:'Try one more workplace situation'}).click();await expect(g).toContainText('requires a report');
+ await g.getByRole('button',{name:'Finish and clear guided practice'}).click();await expect(g).toBeHidden();
+ await p.locator('#hf112-start').click();await p.locator('#hf111-scenario').selectOption('finance');await expect(g).toBeHidden();
+ await p.locator('#hf112-start').click();await expect(g).toContainText('forecast revenue');await p.locator('#hf111-reset').click();await expect(g).toBeHidden();
+ await p.locator('#hf111-build').click();await expect(p.locator('#hf111-output')).toBeVisible();
+ await p.locator('#hf112-start').click();await expect(p.locator('#hf111-output')).toBeHidden();await expect(g).toBeVisible();
+ await p.locator('#hf112-stop').click();await expect(g).toBeHidden();
+ const after=await page.evaluate(()=>({local:JSON.stringify(localStorage),session:JSON.stringify(sessionStorage)}));expect(after).toEqual(before);expect(writes).toEqual([]);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(4);
+});

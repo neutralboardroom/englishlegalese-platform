@@ -1,0 +1,9 @@
+{
+  "release": "HF105 R1",
+  "source_locale": "en-US",
+  "new_locales_published": [],
+  "previous_13_locale_release_freeze_unchanged": true,
+  "scope": "New English-only case-specific print controls, offline paper worksheet and explicit optional key",
+  "native_review": "required_before_new_locale_release",
+  "all_other_locales_unchanged": true
+}
