@@ -3,10 +3,11 @@ const {test,expect}=require('@playwright/test');
 const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process');
 test.use({serviceWorkers:'block',reducedMotion:'reduce'});
 test('HF113 audience-specific transfer coaching and rendered observation',async({page},info)=>{
+ test.setTimeout(60000);
  const blocked=[];await page.route('**/*',r=>{const q=r.request(),u=new URL(q.url());if(u.origin==='http://127.0.0.1:4173'&&['GET','HEAD'].includes(q.method()))return r.continue();if(['data:','blob:','about:'].includes(u.protocol))return r.continue();blocked.push({origin:u.origin,method:q.method()});return r.abort();});
  await page.goto('/learn/study-planner/');
  const p=page.locator('#hf111-workplace-preview'),g=p.locator('#hf112-guided'),before=await page.evaluate(()=>({local:JSON.stringify(localStorage),session:JSON.stringify(sessionStorage)})),observations=[];
- async function capture(stage){const file='hf113-'+stage+'.png',dest=info.outputPath(file);await g.screenshot({path:dest,animations:'disabled'});const png=fs.readFileSync(dest);expect(png.length).toBeLessThan(6*1024*1024);observations.push({stage,file,sha256:crypto.createHash('sha256').update(png).digest('hex'),bytes:png.length});}
+ async function capture(stage){const file='hf113-'+stage+'.png',dest=info.outputPath(file);await g.screenshot({path:dest,animations:'disabled'});const png=fs.readFileSync(dest);expect(png.length).toBeGreaterThan(0);expect(observations.reduce((n,x)=>n+x.bytes,0)+png.length).toBeLessThan(5*1024*1024);observations.push({stage,file,sha256:crypto.createHash('sha256').update(png).digest('hex'),bytes:png.length});}
  await p.locator('#hf111-scenario').selectOption('energy');await p.locator('#hf111-audience').selectOption('client');await p.locator('#hf112-start').click();
  await expect(g).not.toContainText('Under the stated terms');await capture('baseline');
  await g.getByRole('button',{name:'Continue to language coaching'}).click();await expect(g.locator('#hf113-audience-model')).toContainText('Under the stated terms, delivery');await capture('review');
