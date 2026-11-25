@@ -1,0 +1,25 @@
+{
+  "version": "HF99 R1",
+  "status": "ENGLISH_SOURCE_ONLY_NO_TRANSLATIONS_APPROVED",
+  "owner_locale_count_preserved": 13,
+  "module": "assets/hf99-misunderstanding-repair.js",
+  "new_user_facing_identifiers": [
+    "hf99-title",
+    "hf99-misunderstanding",
+    "hf99-decision-question",
+    "hf99-choices",
+    "hf99-feedback",
+    "hf99-next-prompt",
+    "hf99-draft",
+    "hf99-status",
+    "hf99-self-check",
+    "hf99-check-guide",
+    "hf99-show-sample",
+    "hf99-sample",
+    "hf99-coaching",
+    "hf99-clear"
+  ],
+  "independent_native_review": "NOT_DONE",
+  "rtl_review": "NOT_DONE",
+  "policy": "Do not silently translate or claim 13 market readiness. Coordinate future reviewed strings through owner-authorized localization builder; future freezes unchanged."
+}

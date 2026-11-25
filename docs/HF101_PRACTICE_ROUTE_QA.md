@@ -1,0 +1,12 @@
+# HF101 — six-step professional practice route and Safari test isolation
+
+Development draft only. HF101 adds an accessible, clearly labeled six-step route to the existing six fictional adult Legal and Business English scenarios. The route derives its state solely from the original lesson's already visible DOM reveal gates: comprehension, speaking reply, transfer, follow-up, misunderstanding correction, and confirmation note. It provides keyboard focus navigation to the current existing exercise only. It does not advance, complete or unlock any lesson; no learner answer, field value, assessment, account, network action or browsing history is read, stored or sent. “Opened” is expressly not “mastered.” The guide resets on Stop, Restart, switching subjects, next conversation and pagehide, and follows source-tamper fail-closed behavior without revealing hidden content.
+
+## HF100 independent WebKit repair
+GitHub HF100 exact-head run 45091970542 ended failure: the regular `verify` job passed, and the independent `verify-independent` job passed 357 tablet Safari WebKit tests but timed out one 30-second multi-scenario HF100 confirmation-note test. HF101 refactors the one long six-scenario test into six independently named tests, preserving each original choice, stage, privacy and no-send assertion with an unchanged 30-second per-test timeout. This change is a test isolation repair, not a waived check. New independent GitHub exact-head dual-job verification is required for HF101.
+
+## Original protected owner rules remain unmodified
+RDR-001 `owner-rules/RDR-001.md`; RDR-002 `owner-rules/RDR-002.md`; EL-RGR-020 canonical `governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md` remain the original automatic **qualified-only** release policy. The previously defined Human Teacher Roger / AI Teacher Roger / separately authenticated Owner/Admin boundaries and 13-locale freeze remain in force. No teacher identity, AI model integration, payments, account, database, Render, Neon or language release change is made.
+
+## Unmet conditions (unchanged)
+Real physical iPhone Safari and Android Chrome/PWA, real Render/Neon security and restore, professional and native-language reviews, independent ControlCenter/provider ACKs, exact-head dual independent CI browser qualification and pre-merge verified full source plus cumulative Builder backups in both Drive and ChatGPT Library. If any fails, stay draft/unmerged; no new per-version owner approval is required beyond the original policy.

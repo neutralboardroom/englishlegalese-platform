@@ -1,0 +1,37 @@
+/* HF88 real browser checks for fictional adult meeting records and hard reset. */
+'use strict';
+const {test,expect}=require('@playwright/test'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.resolve(__dirname,'../labs/hf88-professional-meeting-minutes-offline.html'),'utf8');
+test('HF88 meeting minutes preserve facts, explicitly distinguish proposal, and protect existing private writing',async({page})=>{
+ const req=[],err=[];page.on('request',r=>req.push(r.url()));page.on('pageerror',e=>err.push(e.message));
+ await page.setContent(html,{waitUntil:'load'});await expect(page.getByText('Avatar not connected')).toBeVisible();
+ for(let i=0;i<3;i++)await page.locator('#next').click();
+ await page.locator('#writing-workshop > summary').click();await page.locator('#minutes-lab > summary').click();
+ await expect(page.locator('#minutes-native-intro')).toHaveAttribute('lang','ko-KR');
+ await expect(page.locator('#minutes-model')).toBeHidden();
+ await page.locator('#minutes-compare').focus();await page.keyboard.press('Enter');await expect(page.locator('#minutes-model')).toBeHidden();
+ await page.locator('#minutes-topic').fill('Fictional clause review meeting');
+ await page.locator('#minutes-facts').fill('The sample mentions a written response due by Friday, but no legal effect was decided.');
+ await page.locator('#minutes-action').fill('Propose a plain-English summary with counsel review for any real agreement.');
+ await page.locator('#minutes-preview').focus();await page.keyboard.press('Enter');
+ await expect(page.locator('#minutes-output')).toContainText('PROPOSED — not yet agreed');
+ await page.locator('#minutes-compare').focus();await page.keyboard.press('Enter');
+ await expect(page.locator('#minutes-model')).toContainText('Authored English model');
+ await expect(page.locator('#minutes-model p[lang="ko-KR"]')).toHaveCount(2);
+ await page.locator('#minutes-agreement').selectOption('confirmed');await expect(page.locator('#minutes-model')).toBeHidden();
+ await page.locator('#minutes-preview').focus();await page.keyboard.press('Enter');await expect(page.locator('#minutes-output')).toContainText('Confirmed only in this FICTIONAL exercise');
+ await page.locator('#minutes-insert').focus();await page.keyboard.press('Enter');await expect(page.locator('#writing-draft')).toHaveValue(/Fictional clause review meeting/);
+ await page.locator('#writing-draft').fill('Protected earlier fictional answer.');
+ await page.locator('#minutes-insert').focus();await page.keyboard.press('Enter');await expect(page.locator('#writing-draft')).toHaveValue('Protected earlier fictional answer.');
+ await expect(page.locator('#minutes-insert')).toContainText('Confirm replacing');
+ await page.locator('#minutes-action').fill('A change to this proposed action revokes earlier consent.');
+ await expect(page.locator('#minutes-insert')).not.toContainText('Confirm replacing');
+ await page.locator('#minutes-insert').focus();await page.keyboard.press('Enter');await expect(page.locator('#writing-draft')).toHaveValue('Protected earlier fictional answer.');
+ await page.locator('#minutes-insert').focus();await page.keyboard.press('Enter');await expect(page.locator('#writing-draft')).toHaveValue(/revokes earlier consent/);
+ await page.locator('#dialogue-scene').selectOption('1');await expect(page.locator('#minutes-topic')).toHaveValue('');await expect(page.locator('#minutes-lab')).not.toHaveAttribute('open','');
+ await page.locator('#locale').selectOption('th-TH');for(let i=0;i<3;i++)await page.locator('#next').click();
+ await page.locator('#writing-workshop > summary').click();await page.locator('#minutes-lab > summary').click();await expect(page.locator('#minutes-native-intro')).toHaveAttribute('lang','th-TH');
+ await page.locator('#minutes-topic').fill('Private fictional notes.');await page.locator('#writing-workshop > summary').click();
+ await page.locator('#stop').focus();await page.keyboard.press('Enter');await expect(page.locator('#minutes-topic')).toHaveValue('');await expect(page.locator('#writing-workshop')).toBeHidden();
+ const dimensions=await page.evaluate(()=>({w:innerWidth,sw:document.documentElement.scrollWidth}));expect(dimensions.sw).toBeLessThanOrEqual(dimensions.w+2);expect(req).toEqual([]);expect(err).toEqual([]);
+});
