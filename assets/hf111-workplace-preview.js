@@ -16,6 +16,8 @@
  function compare(before,after){if(!Array.isArray(before)||!Array.isArray(after)||before.length!==criteria.length||after.length!==criteria.length)throw Error('Invalid rating set');return criteria.map((label,i)=>{const b=before[i],a=after[i];for(const n of [b,a])if(n!==null&&(!Number.isInteger(n)||n<1||n>3))throw Error('Invalid rating');return {label,before:b,after:a,change:b===null||a===null?'Not compared':a>b?'Higher self-rating':a<b?'Lower self-rating':'Same self-rating'};});}
  if(typeof module==='object'&&module.exports){module.exports={plan,compare,criteria,scenarios,audiences,levels};return;}
  const root=document.getElementById('hf111-workplace-preview');if(!root)return;
+ // HF112 shares only the pure planner, not selections, ratings or learner state.
+ window.EnglishLegaleseWorkplacePreview=Object.freeze({plan});
  const q=id=>root.querySelector('#hf111-'+id),el=(tag,t)=>{const n=document.createElement(tag);if(t!==undefined)n.textContent=t;return n;};
  const output=q('output'),status=q('status'),rating=q('rating'),controls=['scenario','audience','level'].map(q);
  let current=null;
