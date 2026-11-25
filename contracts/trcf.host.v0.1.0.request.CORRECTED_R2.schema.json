@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:trcf:host:0.1.0:session-turn-request",
+  "title": "TR-CloneFusion host turn request (proposed not deployed)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "interface_version",
+    "session_id",
+    "host",
+    "lesson_context",
+    "learner_turn",
+    "consent",
+    "request_id"
+  ],
+  "properties": {
+    "interface_version": {
+      "const": "trcf.host.v0.1.0"
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128
+    },
+    "host": {
+      "enum": [
+        "tr-online",
+        "englishlegalese"
+      ]
+    },
+    "lesson_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lesson_id",
+        "source_version",
+        "age_group",
+        "language",
+        "profile",
+        "authorized_excerpt"
+      ],
+      "properties": {
+        "lesson_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "source_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "age_group": {
+          "enum": [
+            "adult",
+            "minor"
+          ]
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 20
+        },
+        "profile": {
+          "enum": [
+            "general-english",
+            "business-english",
+            "legal-english"
+          ]
+        },
+        "authorized_excerpt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1600
+        },
+        "reveal_policy": {
+          "enum": [
+            "hint-only",
+            "teacher-reviewed",
+            "explicit-reveal"
+          ],
+          "default": "teacher-reviewed"
+        }
+      }
+    },
+    "learner_turn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1500
+        },
+        "interrupt": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adult_fictional_fixture",
+        "audio_capture_authorized",
+        "retention_seconds"
+      ],
+      "properties": {
+        "adult_fictional_fixture": {
+          "type": "boolean"
+        },
+        "audio_capture_authorized": {
+          "type": "boolean"
+        },
+        "retention_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400
+        }
+      }
+    },
+    "request_options": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mute": {
+          "type": "boolean"
+        },
+        "avatar_enabled": {
+          "type": "boolean"
+        },
+        "max_estimated_cost_usd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        }
+      }
+    },
+    "versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "teaching_engine": {
+          "type": "string"
+        },
+        "voice_identity": {
+          "type": "string"
+        },
+        "avatar_identity": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "properties": {
+        "lesson_context": {
+          "properties": {
+            "age_group": {
+              "const": "adult"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
