@@ -23,7 +23,16 @@ function emailValid(e){return Boolean(e&&e.length<=254&&/^[^\s@]+@[^\s@]+\.[^\s@
 function send(res,status,payload){return res.status(status).set('Cache-Control','no-store').json(payload)}
 function install(app){
  app.get('/api/v1850/schedules',(_req,res)=>send(res,200,{ok:true,schedules:schedules.map(({calendar_reference,...s})=>s),stripe_enabled:false}));
- app.get('/api/v1850/intake-status',async(_req,res)=>{if(!pool)return send(res,503,{ok:false,ready:false});try{await pool.query('select id from englishlegalese_enrollment_requests limit 0');await pool.query('select id from englishlegalese_teacher_applications limit 0');return send(res,200,{ok:true,ready:true,stripe_enabled:false})}catch{return send(res,503,{ok:false,ready:false})}});
+ app.get('/api/v1850/intake-status',async(req,res)=>{
+  const channel=typeof req.query?.channel==='string'?req.query.channel:'all';
+  if(!['all','enroll','teacher'].includes(channel))return send(res,400,{ok:false,ready:false});
+  if(!pool)return send(res,503,{ok:false,ready:false});
+  try{
+   if(channel==='all'||channel==='enroll')await pool.query('select id from englishlegalese_enrollment_requests limit 0');
+   if(channel==='all'||channel==='teacher')await pool.query('select id from englishlegalese_teacher_applications limit 0');
+   return send(res,200,{ok:true,ready:true,channel,stripe_enabled:false});
+  }catch{return send(res,503,{ok:false,ready:false})}
+ });
  app.post('/api/v1850/enroll',async(req,res)=>{
   if(!pool)return send(res,503,{ok:false,error:'Enrollment temporarily unavailable. Please try again.'});
   if(!sourceValid(req))return send(res,403,{ok:false,error:'Please use the EnglishLegalese enrollment page.'});
