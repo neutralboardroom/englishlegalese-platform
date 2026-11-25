@@ -60,12 +60,13 @@
 <label for="hf111-audience">Audience <select id="hf111-audience"><option value="colleague">Colleague</option><option value="client">Client</option><option value="manager">Manager</option></select></label>
 <label for="hf111-level">Practice level <select id="hf111-level"><option value="foundation">Foundation</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></label>
 </div>
-<div class="hf111-actions"><button type="button" id="hf111-build">Build a lesson preview</button><button type="button" id="hf111-reset">Reset preview</button></div>
+<div class="hf111-actions"><button type="button" id="hf111-build">Build a lesson preview</button><button type="button" id="hf111-reset">Reset preview</button><button type="button" id="hf112-start">Start guided speaking practice</button></div>
 <p id="hf111-status" role="status" aria-live="polite">Choose options to build a preview.</p>
 <div id="hf111-output" hidden></div>
 <div id="hf111-rating"></div>
 <button type="button" id="hf111-compare" hidden>Compare self-ratings</button>
 <div id="hf111-comparison" role="status" aria-live="polite" hidden></div>
+<section id="hf112-guided" aria-labelledby="hf112-title" hidden><h3 id="hf112-title">Guided workplace speaking practice</h3><p id="hf112-status" role="status" aria-live="polite"></p><div id="hf112-content"></div><p><button type="button" id="hf112-stop">Stop and clear guided practice</button></p></section>
 <noscript><p>The optional interactive preview requires JavaScript. The existing study planner remains separate.</p></noscript>
 </section>
 </main>
@@ -107,4 +108,5 @@
 <script src="/product-v1840-pages.js?v=1.84.0"></script>
 <script src="/product-v1940-saved-lessons.js?v=1.85.2-hf16"></script>
 <script defer src="/assets/hf111-workplace-preview.js"></script>
+<script defer src="/assets/hf112-guided-workplace.js"></script>
 </body></html>
