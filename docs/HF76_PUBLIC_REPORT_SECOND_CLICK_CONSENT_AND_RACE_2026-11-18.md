@@ -1,0 +1,28 @@
+# EnglishLegalese HF76 — explicit diagnostic-copy consent and cross-run race correctness
+
+**Status:** cumulative development candidate only; GitHub draft PR, not merged/deployed. **Date:** 18 November 2026.
+
+## Independently observed baseline and defect
+
+The last independently verified application source was HF75 draft PR #119, exact commit `f71d246d2344800d38b3e705afcd645d18104d2c`, complete 816-file ZIP SHA-256 `71a789f3bc69c17a8df860fd01ad6ee9db7d234f8f2fbf74881ce86e241fd4f5`. The most recent full Builder was V3.5 HF75, 154 pages and 40 embedded recovery attachments, PDF SHA-256 `fe97460bb0d42978bbf8cd9551227003091e748c57d3b390813ddbc288854908`. Both were independently downloaded from canonical Google Drive and byte verified in the predecessor build.
+
+**New independent CI evidence:** GitHub Actions run `44265987406`, jobs `verify` (`134670516861`) and `verify-independent` (`134670516281`), both completed with browser failures. The new real-browser Playwright case `tests/hf75-public-install-continuity.spec.js` asserted that `#el-device-check-copy-status` contain `requires another click` after completion; it was empty in desktop Chromium, tablet Chromium, tablet WebKit and mobile Chromium. The test requirement was correct: a separate action must be obvious before the visitor copies any public diagnostic result. Rather than weaken/skip the test, HF76 implements its expected accessible consent notice.
+
+## Cumulative functional improvements
+
+1. **Visible separate-consent statement:** Only after all seven public-status rows are ready, display `Copying these seven public results requires another click. Nothing has been copied or shared.` in the existing `role=status` + `aria-live=polite` element. Never claim a copy before actual separate click.
+2. **No stale report completion:** Increment a check-generation counter on every new manual diagnostic. A separately requested clipboard write snapshots its exact seven public result rows. If it settles after a new check starts, it cannot overwrite the newest check's visible status with an obsolete success or failure.
+3. **No duplicate in-flight copy actions:** A latch rejects synthetic/rapid overlapping copy clicks while an earlier explicit browser clipboard operation is unresolved. Controls recover even after permission rejection.
+4. **Explicit failure transparency:** Unsupported or denied clipboard calls keep all seven public rows visible and announce the failure without pretending a copy succeeded. A new completed manual diagnostic clears the previous copy status and presents the separate-consent notice again.
+5. **Real browser regression plus independent VM:** The inherited HF75 Playwright test remains intact and must pass on the complete device/browser matrix; a new browser test checks both consecutive manual runs. The new four-variant VM suite checks normal, denied, unavailable and delayed clipboard flows, including second-run stale completion and no early clipboard or private network requests.
+6. **Reliable cache refresh:** Add `&consent=hf76` to the existing installer script query, preserving all earlier cache tokens to satisfy inherited checks.
+
+## Explicit no-drift and privacy boundaries
+
+Existing 7 diagnostic rows, same three fixed public same-origin GET URLs, `credentials: omit`, no-store cache, strict URL/manifest/PNG integrity, 1 MiB streaming body limits, user-approved installation and updates, all Thai/Vietnamese/Chinese and English instructions remain unchanged apart from a visible consent message. The report never contains student identity, account data, email, tokens, classroom links or device identifiers and is **not** sent to a server. No automatic clipboard access, navigation, reload, service-worker activation, update, external email, outreach, payment, registration, teacher or student data mutation. Original homepage, logo, locked teacher photograph, 28-course catalog, class and pricing plans, membership, certificates, dashboard access, protected routes, service-worker cache policy, all unrelated Teacher Roger systems and historical rollback are untouched.
+
+Retain all 19 original Roger Rules, all 10 durable owner rules, their additive successors and **EL-RGR-020** at `governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md`. Qualification is never a draft/CI promise. Require two exact immutable SHA GitHub Actions jobs successful across source, security, Chromium and WebKit browser matrix; genuine physical Android Chrome and iPhone Safari install/update/private-data acceptance; independently verified complete exact GitHub source archive and *complete cumulative* Builder in BOTH canonical Drive and ChatGPT Library; and protected main/Render live+rollback verification and dual receipts. If the Library remains full or any physical evidence is unavailable, **leave DRAFT / NOT LIVE and preserve GitHub main and Render**. No explicit new owner approval is required *after* all standing gates are genuinely satisfied.
+
+## Next-version restore procedure
+
+Independently re-discover latest GitHub PR/branch and original SHA, Drive/Library backups, complete Builder PDF pages and attachment byte hashes before editing. Preserve all 816 HF75 source files, modify only the known install script, its cache URL, and test-chain wiring, plus additive regression and this document. Re-test inherited suites, compare exact original unchanged bytes, prove changed Git blob SHA-1, create full source ZIP, changed-file ZIP, machine-readable SHA manifest and tests receipt, and add full 154 prior Builder pages and 40 attachments to the new additive Builder (never summarize or discard them). Store complete new files without overwriting predecessors. Record all unqualified gates honestly.

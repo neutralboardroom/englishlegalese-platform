@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+'use strict';
+const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');
+const root=path.resolve(__dirname,'..');const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const html=read('learn/app/index.html'),audio=read('assets/hf94-listen-shadow.js'),prev=read('assets/hf93-mobile-conversations.js');
+let count=0;const ok=(value,message)=>{assert.ok(value,message);count++};
+for(const id of ['hf94-audio','hf94-audio-dialogue','hf94-audio-model','hf94-audio-transfer','hf94-audio-stop','hf94-audio-rate','hf94-audio-status'])ok(html.includes('id="'+id+'"'),'audio control present '+id);
+for(const id of ['hf93-start','hf93-stop','hf93-restart','hf93-conversation-lab','hf93-transfer-answer','hf93-answers','hf93-case'])ok(html.includes('id="'+id+'"'),'original HF93 logic preserved '+id);
+ok(html.includes('src="/assets/hf93-mobile-conversations.js"'),'original HF93 script loaded first');
+ok(html.includes('src="/assets/hf94-listen-shadow.js"'),'only add secondary progressive audio module');
+ok(html.indexOf('hf93-mobile-conversations.js')<html.indexOf('hf94-listen-shadow.js'),'HF93 loaded before optional audio');
+for(const a of ['lang=\'en-US\'','rate=controls.rate.value','function stopPlayback','visibilitychange','pagehide','controls.title.textContent','!controls.speak.hidden','!controls.transferText.hidden','SpeechSynthesisUtterance'])ok(audio.includes(a),'audio safety behavior '+a);
+for(const mention of ['does not listen to you','device voice','read along','slower','No sign-in','does not certify speaking ability'])ok((html+audio).toLowerCase().includes(mention.toLowerCase()),'honest disclosure '+mention);
+for(const re of [/(^|[^\w])fetch\s*\(/,/\bXMLHttpRequest\b/,/\blocalStorage\b/,/\bsessionStorage\b/,/\bindexedDB\b/,/\bWebSocket\b/,/\bgetUserMedia\b/,/\bSpeechRecognition\b/,/\bMediaRecorder\b/,/\.innerHTML\s*=/,/navigator\.mediaDevices/])ok(!re.test(audio),'audio implementation never collects or sends private data '+re);
+ok(prev.includes('const scenarios={')&&prev.includes('legal:[')&&prev.includes('business:['),'all HF93 learning scenarios preserved');
+for(const r of ['RDR-001','RDR-002'])ok(read('owner-rules/'+r+'.md').includes('RDR-00'),'full owner rule included '+r);
+ok(!read('sw.js').includes('hf94-listen-shadow.js'),'new audio not added to offline cache');
+ok(read('mobile/native/www/index.html').includes('Development build only'),'native app remains explicitly prototype');
+for(const s of ['/learn/legal-english/','/learn/business-english/','/learn/account/','/learn/enroll/','/learn/conversation-rehearsal/'])ok(html.includes(s),'old navigation preserved '+s);
+console.log('HF94 meaning-first/guardrail assertions PASS '+count);
