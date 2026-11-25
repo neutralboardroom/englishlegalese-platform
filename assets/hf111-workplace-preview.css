@@ -9,3 +9,8 @@
 #hf111-workplace-preview details{margin-block:1rem}
 #hf111-workplace-preview summary{cursor:pointer}
 #hf111-workplace-preview #hf111-compare{margin-block:1rem}
+
+#hf111-workplace-preview #hf112-guided{border-block-start:1px solid currentColor;margin-block:1.2rem;padding-block:1rem}
+#hf111-workplace-preview #hf112-content fieldset{margin-block:.8rem}
+#hf111-workplace-preview #hf112-content button,#hf111-workplace-preview #hf112-stop{max-width:100%;white-space:normal;margin-block:.45rem}
+#hf111-workplace-preview #hf112-content h3:focus{outline:2px solid currentColor;outline-offset:.2rem}
