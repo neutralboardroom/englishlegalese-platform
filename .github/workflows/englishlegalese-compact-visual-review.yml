@@ -75,3 +75,14 @@ jobs:
           path: visual-review/tablet-webkit/
           if-no-files-found: error
           retention-days: 30
+      - name: Capture guided speaking interaction states on all four browsers
+        run: npm run e2e:browser -- tests/hf113-audience-coaching.spec.js --project=desktop-chromium --project=tablet-chromium --project=mobile-chromium --project=tablet-webkit --workers=1
+      - name: Preserve guided speaking observation bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf113-guided-speaking-observations
+          path: |
+            test-results/**/hf113-*.png
+            test-results/**/hf113-observations.json
+          if-no-files-found: error
+          retention-days: 30
