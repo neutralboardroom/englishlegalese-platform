@@ -1,0 +1,9 @@
+# EnglishLegalese HF105 R1 — Printed Partner Worksheets for Offline Learners
+
+Development build on **exact HF104 R1 commit** `988eb99295c5dc821cd96cd4fcfd5d36c0659709` (unmerged draft PR #152). Adds a printable, case-specific, complete professional English worksheet to each of six established fictional Legal and Business English cases. The existing five-stage interactive lab and stable standalone download path are unchanged in function.
+
+Learners or facilitators can choose a case and **preview or print a complete paper partner exercise** while offline: dialogue, four source-bound multiple-choice decisions, conditional confirmation note with writing space, new fact, evidentiary analysis, a two-person speaking cue and response space. A second-page authored answer key is explicitly opt-in and **off by default**. Its answers are taken from the original authored case data, so print and online exercises cannot drift. Printable pages contain **no student draft text**, credentials, grades or server data. Printing launches only the browser or device print dialog after a user click; it never auto-sends to a printer.
+
+No new network, storage, AI, microphone, audio, PWA/service worker, backend, payments or translated-locale activation. Private interactive drafts are not exposed in the print DOM. English-only, with frozen original 13 locale targets and three role boundaries preserved. Physical print support across real iOS Safari / Android Chrome must still be tested; local Chromium print/PDF verification cannot substitute.
+
+The full source ZIP and separate cumulative Universal Builder, all original RDR-001/RDR-002/EL-RGR-020 permanent owner rules and prior artifacts are preserved with byte-exact predecessor and independently reversible recovery. Original automatic **fully-qualified-only** production release remains in force; no new per-version permission or missing gate waiver.

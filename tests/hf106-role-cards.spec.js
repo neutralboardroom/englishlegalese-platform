@@ -1,0 +1,31 @@
+'use strict';
+const {test,expect}=require('@playwright/test');
+const {pathToFileURL}=require('node:url');const path=require('node:path');
+const url=pathToFileURL(path.resolve(__dirname,'../assets/EnglishLegalese_Offline_Pocket_Lab_HF102.html')).href;
+test.use({reducedMotion:'reduce'});
+for(const track of ['legal','business'])for(let i=0;i<3;i++)test('HF106 file:// '+track+' '+i+' cards remain private',async({page})=>{
+ const net=[];page.on('request',r=>{if(!r.url().startsWith('file://'))net.push(r.url());});
+ await page.goto(url);await page.locator('#subject').selectOption(track);await page.locator('#case').selectOption(String(i));
+ await expect(page.locator('#hf106-paper-format')).toHaveValue('worksheet');
+ await expect(page.locator('#hf105-key-toggle')).not.toBeChecked();
+ await page.locator('#hf106-paper-format').selectOption('cards');await page.locator('#hf105-preview').click();
+ await expect(page.locator('#hf106-cards')).toBeVisible();await expect(page.locator('#hf106-cards article')).toHaveCount(2);
+ await expect(page.locator('#hf105-key')).toBeHidden();
+ await expect(page.locator('#hf106-a-question')).not.toBeEmpty();await expect(page.locator('#hf106-b-fact')).not.toBeEmpty();
+ await expect(page.locator('#hf105-sheet-q1')).toBeHidden();
+ await page.evaluate(()=>{document.querySelector('#draft').value='secret private draft';document.querySelector('#change-draft').value='secret changed draft';document.querySelector('#evidence-draft').value='secret evidence draft';});
+ await page.locator('#hf105-preview').click();const printable=await page.locator('#hf105-sheet').innerText();
+ for(const secret of ['secret private draft','secret changed draft','secret evidence draft'])expect(printable).not.toContain(secret);
+ await page.emulateMedia({media:'print'});await expect(page.locator('#hf106-cards')).toBeVisible();await expect(page.locator('#hf105-key')).toBeHidden();await page.emulateMedia({media:'screen'});
+ await page.locator('#hf105-key-toggle').check();await expect(page.locator('#hf105-key')).toBeVisible();
+ await page.locator('#hf106-paper-format').selectOption('worksheet');await expect(page.locator('#hf105-key-toggle')).not.toBeChecked();
+ await expect(page.locator('#hf106-cards')).toBeHidden();await expect(page.locator('#hf105-sheet-q1')).toBeVisible();
+ await page.locator('#case').selectOption(String((i+1)%3));await expect(page.locator('#hf105-sheet')).toBeHidden();
+ expect(net).toEqual([]);
+});
+test('HF106 role cards print only on deliberate user gesture',async({page})=>{
+ await page.goto(url);await page.evaluate(()=>{window.printCalls=0;window.print=()=>window.printCalls++;});
+ await page.locator('#hf106-paper-format').selectOption('cards');await page.locator('#hf105-print').click();
+ expect(await page.evaluate(()=>window.printCalls)).toBe(1);await expect(page.locator('#hf106-cards')).toBeVisible();
+ await page.locator('#hf105-close').click();await expect(page.locator('#hf105-sheet')).toBeHidden();
+});

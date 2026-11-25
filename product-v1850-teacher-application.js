@@ -7,7 +7,10 @@ const tz=field('timezone','Time zone (IANA name)','text',100);tz.value=Intl.Date
 const avail=field('weekly_availability','Weekly teaching availability','textarea',500);avail.minLength=4;avail.rows=3;
 const hp=field('website','Website (leave blank)','text',100);hp.parentElement.classList.add('v1850-hp');hp.required=false;hp.tabIndex=-1;
 const submit=E('button','Submit teaching application');submit.type='submit';submit.className='v1840-button';const status=E('p');status.className='v1850-feedback';status.setAttribute('role','status');f.append(submit,status);mount.append(f);
-f.addEventListener('submit',async e=>{e.preventDefault();if(!f.reportValidity())return;submit.disabled=true;status.textContent='Saving teaching application…';
+const intakeReadiness=window.ELPublicIntakeReadiness?.install(f,'teacher');
+f.addEventListener('submit',async e=>{e.preventDefault();if(!f.reportValidity())return;
+if(!intakeReadiness||!(await intakeReadiness.check())){status.textContent='Application NOT sent. Please check service availability and try again when available.';return;}
+submit.disabled=true;status.textContent='Saving teaching application…';
 let data=Object.fromEntries(new FormData(f));data.client_request_id=crypto.randomUUID();
 try{const r=await fetch('/api/v1850/teacher-applications',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}),result=await r.json();if(!r.ok||!result.ok)throw Error(result.error||'Could not submit');
 let p=E('p','Application received. Your reference: '+result.reference+'. Our teaching team will review your application.');p.className='v1850-success';f.replaceWith(p);

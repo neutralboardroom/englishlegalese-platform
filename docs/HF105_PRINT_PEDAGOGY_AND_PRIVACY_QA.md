@@ -1,0 +1,19 @@
+# HF105 Source-Bound Paper Pair Exercises — Teaching and Privacy QA
+
+## Student utility
+
+One off-network HTML teaching handout now also creates a print/PDF worksheet for a selected case without additional resources. Every case includes original fictional adult professional context, two-speaker exchange, original precise comprehension and clarification questions, independent short writing task, second-round new-facts analysis, evidence requirement, and a role-speaking prompt with two empty paper response lines. Four sets of three choices remain unmarked in the learner sheet. Answers come from exact original case object; no invented legal determination or investor prediction. Optional separate key lists the original authored answer, rationale and model for each stage and the full counterpart role sentence. A checkbox is **off by default**; this is a non-authenticated self-study answer key, not a secret teacher dashboard.
+
+A learner can follow original four-stage Next behavior or optional HF104 fifth evidence stage unchanged. Printed worksheets do not alter original gates. No learner device/account required once paper is printed. Print output never includes any textareas, personal drafts, email addresses or account work. Use fictional information only.
+
+## Privacy & portability
+
+`window.print()` only on explicit click; no external services, storage, cookies, network, clipboard, AI, microphone, PWA, teacher connection, server submission, localSync or print spying. The print stylesheet hides the interactive interface and displays only the new fictional worksheet. User must manually select a printer or PDF destination, whose own privacy practices are outside this app. Paper can contain manually handwritten content; take normal precautions if it is later scanned or shared. The original CSP still disallows connections and forms. Physical Android/iOS device local-file and print support must be verified before product claims.
+
+## Independent release gates
+
+Original standalone inherited HF102, HF103, HF104 source gate scripts remain unedited. HF105 adds separate static verification and Playwright saved-file + print-style assertions. Local Chromium document-load tests and print-PDF check are valuable but NOT real file-protocol, printer, physical phone or cloud backup qualifications. RDR-001/RDR-002/EL-RGR-020 and original 13-locale freeze unchanged. Original full independent exact-head dual CI, native/professional reviewer, real Render/Neon privacy backup/restore, ControlCenter ACK, separate complete source ZIP AND full cumulative Builder in both Drive and ChatGPT Library, rollback/live receipts all required prior to original standing qualified-only auto-deploy. No changed governance.
+
+## HF105 R2 canonical continuity repair (append-only)
+
+The first exact-head HF105 R1 GitHub source qualification correctly failed the original `scripts/verify-el-release-continuity.js` requirement that the newest HF-numbered source document link to the immutable canonical document `governance/ENGLISHLEGALESE_RELEASE_CONTINUITY_NO_DRIFT_2026-11-15.md`. This HF105 R2 correction adds that explicit source-grounded filename without modifying, weakening or disabling the original verifier. The authoritative original owner standing automatic **fully-qualified-only** release rule remains **EL-RGR-020**, with no new per-release permission requirement. Both independent complete exact-head GitHub jobs, real iOS/Android print/offline/PWA/voice checks, expert/native review, Render/Neon live privacy/restore, independent receiving ControlCenter ACK, and complete source and cumulative Builder backups verified in **both** Google Drive and ChatGPT Library remain mandatory before any release. The corrected source is a new unmerged development candidate, not a production deployment.
