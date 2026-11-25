@@ -97,3 +97,14 @@ jobs:
             test-results/**/hf114-observations.json
           if-no-files-found: error
           retention-days: 30
+      - name: Capture refined workplace layout on all four browsers
+        run: npm run e2e:browser -- tests/hf115-mobile-guided-layout.spec.js --project=desktop-chromium --project=tablet-chromium --project=mobile-chromium --project=tablet-webkit --workers=1
+      - name: Preserve refined workplace layout observation bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf115-workplace-layout-observations
+          path: |
+            test-results/**/hf115-*.png
+            test-results/**/hf115-observations.json
+          if-no-files-found: error
+          retention-days: 30
