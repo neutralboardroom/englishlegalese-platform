@@ -1,0 +1,77 @@
+name: EnglishLegalese Compact Visual Review
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  compact-review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+    steps:
+      - name: Ensure Git and TLS support
+        run: |
+          set -eu
+          if ! command -v git >/dev/null 2>&1 || [ ! -s /etc/ssl/certs/ca-certificates.crt ]; then
+            if [ -d /etc/apt/sources.list.d ]; then
+              find /etc/apt/sources.list.d -type f -name '*.sources' -exec sed -i 's|http://|https://|g' {} +
+              find /etc/apt/sources.list.d -type f -name '*.list' -exec sed -i 's|http://|https://|g' {} +
+            fi
+            apt-get -o Acquire::Retries=4 -o Acquire::https::Timeout=40 update -qq
+            DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=4 -o Acquire::https::Timeout=40 install -y -qq git ca-certificates
+          fi
+          git --version
+          test -s /etc/ssl/certs/ca-certificates.crt
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Confirm exact candidate
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install --ignore-scripts --no-fund
+      - run: npm run audit:high
+      - run: node scripts/test-hf110-compact-visual-review.js
+      - name: Collect the existing 24 Chromium observations
+        run: npm run e2e:browser -- tests/hf108-visual-evidence.spec.js --project=desktop-chromium --project=tablet-chromium --project=mobile-chromium
+      - name: Collect the existing eight WebKit observations and retain preceding evidence
+        run: npm run e2e:browser -- tests/hf108-visual-evidence.spec.js --project=tablet-webkit --workers=1
+      - name: Validate and partition exact review evidence
+        run: node scripts/hf110-compact-visual-review.js test-results visual-review "$(git rev-parse HEAD)"
+      - name: Preserve desktop-chromium review bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf110-review-desktop-chromium
+          path: visual-review/desktop-chromium/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Preserve tablet-chromium review bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf110-review-tablet-chromium
+          path: visual-review/tablet-chromium/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Preserve mobile-chromium review bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf110-review-mobile-chromium
+          path: visual-review/mobile-chromium/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Preserve tablet-webkit review bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf110-review-tablet-webkit
+          path: visual-review/tablet-webkit/
+          if-no-files-found: error
+          retention-days: 30
