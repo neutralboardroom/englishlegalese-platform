@@ -46,4 +46,6 @@ for(const route of routes)test('HF108 RDR-003 public visual evidence '+route,asy
  expect(report.viewport.width).toBeGreaterThan(0);
  expect(report.rows.some(x=>x.kind==='img'&&x.visible),'existing visible branding image').toBeTruthy();
  expect(blocked.filter(x=>!['GET','HEAD'].includes(x.method)),'no attempted public-view writes').toEqual([]);
+ const retained=require('../scripts/hf109-visual-evidence-retention').retainAcrossPhases(info,route,out,png);
+ if(process.env.GITHUB_ACTIONS==='true'&&info.project.name==='tablet-webkit')expect(retained,'all three earlier Chromium observations retained').toBe(3);
 });
