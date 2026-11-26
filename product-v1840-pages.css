@@ -71,3 +71,16 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #19
 .v1840-resource-menu summary{min-height:34px;display:flex;align-items:center}
 .v1850-program-navigation{padding:.7rem 0;font-size:.85rem}
 @media(max-width:650px){.v1840-topnav{gap:.45rem .65rem}.v1840-resource-items{right:auto;left:0;max-width:85vw;min-width:min(80vw,275px);max-height:65vh}.v1840-top{flex-direction:column;align-items:flex-start;padding-block:1rem}}
+
+/* HF119: compact dedicated mobile header. Preserve every link, nested menu and logo asset. */
+@media(max-width:650px){
+ body.v1840-dedicated-page .v1840-header .v1840-top{display:block;min-height:0;padding-block:.4rem .55rem}
+ body.v1840-dedicated-page .v1840-header .v1840-logo{width:126px;max-height:70px;object-fit:contain;object-position:left center}
+ body.v1840-dedicated-page .v1840-header .v1840-topnav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.15rem .4rem;margin-top:.3rem;align-items:start}
+ body.v1840-dedicated-page .v1840-header .v1840-topnav>a,body.v1840-dedicated-page .v1840-header .v1840-topnav>details>summary{display:flex;align-items:center;min-height:44px;white-space:normal;overflow-wrap:anywhere;font-size:.84rem;line-height:1.25;padding:.25rem .15rem}
+ body.v1840-dedicated-page .v1840-header .v1840-topnav>details{min-width:0}
+ body.v1840-dedicated-page .v1840-header .v1840-topnav>details[open]{grid-column:1/-1}
+ body.v1840-dedicated-page .v1840-header .v1840-resource-items{max-width:100%;min-width:0;max-height: min(50vh,300px);overflow:auto}
+ body.v1840-dedicated-page .v1840-header .v1840-resource-items a{min-height:44px;display:flex;align-items:center;white-space:normal;overflow-wrap:anywhere}
+}
+@media(max-width:350px){body.v1840-dedicated-page .v1840-header .v1840-topnav{grid-template-columns:repeat(2,minmax(0,1fr))}}
