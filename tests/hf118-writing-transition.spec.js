@@ -1,0 +1,35 @@
+'use strict';
+const {test,expect}=require('@playwright/test');
+test('HF118 outgoing editor snapshot preserves both drafts and explicit clear',async({page})=>{
+ const writes=[];page.on('request',r=>{if(['POST','PUT','PATCH','DELETE'].includes(r.method()))writes.push(r.url())});
+ await page.goto('/#v1830-writing-lab');await page.locator('body.v1590-ready').waitFor();
+ const p=page.locator('#v1830-writing-lab'),topic=p.locator('#v1830-topic'),first=p.locator('#v1830-first'),revision=p.locator('#v1830-revision'),check=p.locator('.v1830-check input').first();
+ await expect(p).toBeVisible();await topic.selectOption('class-01');
+ // Deterministically model editor content that changed before an input listener captured it.
+ await first.evaluate(e=>{e.value='Fictional first draft without input notification.'});
+ await revision.evaluate(e=>{e.value='Fictional revision without input notification.'});
+ await check.evaluate(e=>{e.checked=true});
+ await topic.selectOption('class-02');
+ await expect(first).toHaveValue('');await expect(revision).toHaveValue('');await expect(check).not.toBeChecked();
+ await first.fill('Separate fictional second topic.');await topic.selectOption('class-01');
+ await expect(first).toHaveValue('Fictional first draft without input notification.');
+ await expect(revision).toHaveValue('Fictional revision without input notification.');await expect(check).toBeChecked();
+ await expect(p.locator('.v1830-score')).toContainText('1 of 4');
+ await first.evaluate(e=>{e.value='Fictional draft after audience change.'});
+ await p.locator('#v1830-audience').selectOption('1');
+ await expect(first).toHaveValue('Fictional draft after audience change.');
+ await p.locator('#v1830-intent').selectOption('2');await expect(revision).toHaveValue('Fictional revision without input notification.');
+ await p.locator('#v1830-track').selectOption('Professional & Business English');
+ await expect(first).toHaveValue('');
+ await p.locator('#v1830-track').selectOption('all');await topic.selectOption('class-01');
+ await expect(first).toHaveValue('Fictional draft after audience change.');
+ await expect(p.locator('#v1830-audience')).toHaveValue('1');await expect(p.locator('#v1830-intent')).toHaveValue('2');
+ await p.getByRole('button',{name:'Clear this topic',exact:true}).click();
+ await expect(first).toHaveValue('');await expect(revision).toHaveValue('');await expect(check).not.toBeChecked();
+ await topic.selectOption('class-02');await expect(first).toHaveValue('Separate fictional second topic.');
+ await topic.selectOption('class-01');await expect(first).toHaveValue('');
+ await p.getByRole('button',{name:'Clear all 28 topics',exact:true}).click();
+ await topic.selectOption('class-02');await expect(first).toHaveValue('');
+ await first.fill('Transient fictional response.');await page.reload();await page.locator('body.v1590-ready').waitFor();await topic.selectOption('class-02');await expect(first).toHaveValue('');
+ expect(writes).toEqual([]);
+});
