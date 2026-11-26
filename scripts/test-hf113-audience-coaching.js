@@ -1,0 +1,7 @@
+'use strict';
+const assert=require('node:assert/strict'),{coaching}=require('../assets/hf113-audience-coaching'),base=require('../assets/hf111-workplace-preview'),guided=require('../assets/hf112-guided-workplace');
+let n=0;const check=f=>{f();n++;};
+for(const s of Object.keys(base.scenarios)){const items=[];for(const a of Object.keys(base.audiences)){const c=coaching(s,a);check(()=>assert.deepEqual(Object.keys(c),['initial','transfer','question','reply']));check(()=>assert.ok(Object.values(c).every(x=>typeof x==='string'&&x.length>10)));check(()=>assert.notEqual(c.initial,c.transfer));check(()=>assert.match(c.question,/\?$/));items.push(c);check(()=>assert.ok(guided.guidance(s,a,'clarity').transfer));c.initial='modified';check(()=>assert.notEqual(coaching(s,a).initial,c.initial));}check(()=>assert.equal(new Set(items.map(x=>x.transfer)).size,3));}
+for(const x of ['__proto__','constructor','bad',null,{},1]){check(()=>assert.throws(()=>coaching(x,'client')));check(()=>assert.throws(()=>coaching('energy',x)));}
+for(const a of Object.keys(base.audiences)){check(()=>assert.match(coaching('finance',a).transfer,/15 units (lower|below)/));check(()=>assert.match(coaching('energy',a).transfer,/ten days of written notice/));check(()=>assert.match(coaching('presentation',a).transfer,/(six|Six) of (the )?seven tasks/));}
+console.log('HF113 audience and transfer coaching: '+n+' PASS (fictional examples, not learner assessment)');

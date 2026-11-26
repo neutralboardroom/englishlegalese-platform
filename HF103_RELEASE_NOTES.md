@@ -1,0 +1,7 @@
+# EnglishLegalese HF103 R1 — Offline Adaptation Round
+
+HF103 builds exactly on HF102 R2 complete unmerged development source. It adds a fourth meaningful, **source-bound** stage to every original offline practice case: the learner must respond accurately when new information changes the original communication. Six individually authored second-round facts and three-option decisions (18 candidate statements) with explanations, optional in-page typed or spoken revised replies and private self-review, plus an authored appropriate model. No network, storage, AI, account, microphone, audio or service worker. The fourth stage unlocks only after the first meaning check, clarification check and explicit first-note model reveal. It does not grade any free-form language.
+
+All prior HF102 source files and mandatory owner/governance rules are preserved except explicitly documented mobile label, self-contained HTML and check-script list changes. The public download filename remains `assets/EnglishLegalese_Offline_Pocket_Lab_HF102.html` to preserve original dedicated navigation, static routing, and existing download URL. Visible offline lab label is HF103. No changes to private PWA/offline cache/credentials, production, Render, Neon or sibling builders.
+
+Exact CI, physical phone Safari/Android saved-file testing, professional and native review, original full backup readback in both Drive and ChatGPT Library, receiving ACK, real privacy and restore/rollback and every original RDR-001/RDR-002/EL-RGR-020 qualification gate remain mandatory.

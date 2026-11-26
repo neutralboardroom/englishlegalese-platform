@@ -50,11 +50,23 @@ function mount(){
  panel.append(selectors,source,brief,field('First draft (2,500 characters maximum)',first),count1,actions,results,examples,field('Revised draft (2,500 characters maximum)',rewrite),count2,rubric,score,teacher,bottom,status);
  outer.append(panel);const previous=$('#v1820-learning-studio');if(previous)previous.after(outer);else host.append(outer);
  const chosen=()=>lessons.find(c=>c.id===topic.value)||lessons[0];
- function updateList(){const old=topic.value;topic.replaceChildren();
+ // HF118: track the topic actually rendered in these editors, not the select value
+ // (which has already changed by the time the native change event runs).
+ let displayedId=null;
+ function captureDisplayed(){
+  if(displayedId===null)return;
+  const s=state(displayedId);
+  s.draft=first.value.slice(0,2500);s.rewrite=rewrite.value.slice(0,2500);
+  s.checked=checks.map(x=>x.checked);s.aud=aud.value;s.purpose=intent.value;
+ }
+ function updateIndicators(){const s=state(displayedId);count1.textContent=(2500-s.draft.length)+' characters remaining';count2.textContent=(2500-s.rewrite.length)+' characters remaining';score.textContent=s.checked.filter(Boolean).length+' of 4 personal self-checks marked; not a teacher grade.';}
+ function editorChanged(){if(displayedId===null)return;captureDisplayed();updateIndicators();}
+ function updateList(){captureDisplayed();const old=topic.value;topic.replaceChildren();
  lessons.filter(c=>category.value==='all'||category.value===c.group).forEach(c=>{let o=N('option',c.title);o.value=c.id;topic.append(o)});
  if(Array.from(topic.options).some(o=>o.value===old))topic.value=old;refresh()}
  function refresh(){
  const c=chosen(),s=state(c.id);
+ displayedId=c.id;
  aud.value=s.aud;intent.value=s.purpose;first.value=s.draft;rewrite.value=s.rewrite;
  count1.textContent=(2500-s.draft.length)+' characters remaining';count2.textContent=(2500-s.rewrite.length)+' characters remaining';
  source.replaceChildren(N('h3',c.title+' · fictional case'),N('p',c.scenario));
@@ -72,6 +84,7 @@ function mount(){
  results.replaceChildren(N('p','Enter a fictional first draft and select Review wording cues. This mechanical tool cannot verify legal facts, quality or accuracy.'));
  }
  function inspectText(){
+ captureDisplayed();
  const c=chosen(),s=state(c.id),text=s.draft,words=text.trim()?text.trim().split(/\s+/).length:0;
  const risky=[...new Set(Array.from(text.matchAll(pattern),m=>m[0].toLowerCase()))];
  const vocab=c.vocab.filter(v=>text.toLowerCase().includes(v[0].toLowerCase())).map(v=>v[0]);
@@ -87,17 +100,17 @@ function mount(){
  status.textContent='Mechanical text cues generated locally. No account, teacher or AI reviewed your draft.';
  }
  category.addEventListener('change',updateList);
- topic.addEventListener('change',refresh);
- aud.addEventListener('change',()=>{state(chosen().id).aud=aud.value;refresh()});
- intent.addEventListener('change',()=>{state(chosen().id).purpose=intent.value;refresh()});
- first.addEventListener('input',()=>{let s=state(chosen().id);s.draft=first.value;count1.textContent=(2500-s.draft.length)+' characters remaining'});
- rewrite.addEventListener('input',()=>{let s=state(chosen().id);s.rewrite=rewrite.value;count2.textContent=(2500-s.rewrite.length)+' characters remaining'});
- checks.forEach((c,i)=>c.addEventListener('change',()=>{let s=state(chosen().id);s.checked[i]=c.checked;score.textContent=s.checked.filter(Boolean).length+' of 4 personal self-checks marked; not a teacher grade.'}));
+ topic.addEventListener('change',()=>{captureDisplayed();refresh()});
+ aud.addEventListener('change',()=>{captureDisplayed();refresh()});
+ intent.addEventListener('change',()=>{captureDisplayed();refresh()});
+ [first,rewrite].forEach(editor=>{editor.addEventListener('input',editorChanged);editor.addEventListener('change',editorChanged)});
+ checks.forEach(c=>c.addEventListener('change',editorChanged));
  inspect.addEventListener('click',inspectText);
  show.addEventListener('click',()=>{examples.open=!examples.open});
- reset.addEventListener('click',()=>{save.delete(chosen().id);refresh();status.textContent='Current topic cleared from temporary page memory.'});
- clearAll.addEventListener('click',()=>{save.clear();refresh();status.textContent='All 28 local drafts and checks cleared.'});
+ reset.addEventListener('click',()=>{save.delete(displayedId);displayedId=null;refresh();status.textContent='Current topic cleared from temporary page memory.'});
+ clearAll.addEventListener('click',()=>{save.clear();displayedId=null;refresh();status.textContent='All 28 local drafts and checks cleared.'});
  exportBtn.addEventListener('click',()=>{
+ captureDisplayed();
  const c=chosen(),s=state(c.id);
  local('EnglishLegalese-'+c.id+'-writing-workbook.txt',[
  'ENGLISHLEGALESE · PRIVATE WRITING & TEACHER WORKBOOK',
